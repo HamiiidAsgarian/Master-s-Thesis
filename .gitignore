@@ -1,0 +1,16 @@
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Results (if you want to keep them separate)
+results/*.csv
