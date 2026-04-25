@@ -233,8 +233,8 @@ def plot_results(history, title="Simulation Results"):
 
 # ========== SIMULATION RUNNER ==========
 def run_simulation(num_houses=6, episodes=8000, battery_cap=7.0, solar_max=1.3,
-                   personality_mix=None, seed=42, verbose=True, save_path=None):
-    
+                   personality_mix=None, seed=42, verbose=True,
+                   save_path=None, weather_cloud_prob=0.15):   # <-- new parameter    
     if personality_mix is None:
         personality_mix = ['prosocial']*3 + ['pure_selfish']*3
 
@@ -274,7 +274,7 @@ def run_simulation(num_houses=6, episodes=8000, battery_cap=7.0, solar_max=1.3,
 
     for ep in range(episodes):
         community.reset_day()
-        weather_factor = 1.0 if np.random.random() > 0.15 else 0.5
+        weather_factor = 1.0 if np.random.random() > weather_cloud_prob else 0.5
         ep_rewards = np.zeros(len(agents))
 
         for hour in range(24):
