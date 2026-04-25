@@ -1,0 +1,10 @@
+STATISTICAL TEST RESULTS
+============================================================
+
+1. All-Selfish vs All-Prosocial Comfort: t=3.043, p=0.1514
+
+2. Mixed Prosocial vs Selfish: t=4.299, p=0.0127
+
+3. Varied Prosocial vs Selfish: t=3.043, p=0.0383
+
+4. ANOVA all scenarios: F=2.022, p=0.1514
