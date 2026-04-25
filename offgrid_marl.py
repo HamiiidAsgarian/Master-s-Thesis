@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import os, json, csv
 
 # ========== PERSONALITY PROFILES ==========
 PERSONALITIES = {
@@ -27,7 +28,7 @@ class House:
         self.demand = np.array(demand)
         self.daily_demand = np.sum(demand)
         self.battery_cap = battery_cap
-        self.battery = battery_cap * 0.5          # start half‑full
+        self.battery = battery_cap * 0.5
         self.solar_max = solar_max
         self.personality = personality
         self.w_self = personality['w_self']
@@ -35,7 +36,7 @@ class House:
         self.demand_met = 1.0
         self.exported = 0.0
         self.received = 0.0
-        self.wasted = 0.0   # energy surplus that could not be stored or shared
+        self.wasted = 0.0
         self.total_blackout_hours = 0
 
     def reset_day(self):
@@ -55,7 +56,6 @@ class House:
         return self.solar(hour, weather_factor) - self.demand[hour]
 
     def step_energy(self, hour, net, share_fraction=0.0):
-        """Returns to_share, wasted (energy that could not be stored)."""
         wasted = 0.0
         if net > 0:
             to_share = net * share_fraction
@@ -63,7 +63,7 @@ class House:
             free = self.battery_cap - self.battery
             charge = min(keep, free)
             self.battery += charge
-            wasted = keep - charge   # portion of kept energy that didn't fit
+            wasted = keep - charge
             self.wasted += wasted
             self.demand_met = 1.0
             return to_share, wasted
@@ -81,7 +81,6 @@ class House:
             return 0.0, 0.0
 
     def receive_help(self, amount, hour):
-        """Use received energy to reduce unmet demand, then store remainder."""
         unmet = (1.0 - self.demand_met) * self.demand[hour] if self.demand_met < 1.0 else 0.0
         reduce = 0.0
         if unmet > 0 and amount > 0:
@@ -114,7 +113,6 @@ class Community:
         return (sum_c**2) / (self.N * sum_sq)
 
     def step(self, hour, actions, weather_factor=1.0):
-        # 1. own energy update
         transfers = {}
         for h_id, house in self.houses.items():
             net = house.get_net(hour, weather_factor)
@@ -122,7 +120,6 @@ class Community:
             to_share, _ = house.step_energy(hour, net, share_fraction=frac)
             transfers[h_id] = to_share
 
-        # 2. send shared energy to recipients
         for donor_id, amount in transfers.items():
             if amount <= 0:
                 continue
@@ -187,9 +184,57 @@ class QLAgent:
         return self.w_self * own_comfort + self.w_fair * community_fairness
 
 
+# ========== PLOTTING ==========
+def plot_results(history, title="Simulation Results"):
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+
+    ax = axes[0, 0]
+    ax.plot(history['comfort_mean'], label='Mean Comfort', alpha=0.8)
+    ax.plot(history['fairness'], label="Jain's Fairness", alpha=0.8)
+    ax.set_xlabel('Episode'); ax.set_ylabel('Score')
+    ax.set_title('Community Performance'); ax.legend(); ax.set_ylim([0,1.05]); ax.grid(alpha=0.3)
+
+    ax = axes[0, 1]
+    blackout = np.array(history['blackout_days'])
+    window = 500
+    if len(blackout) > window:
+        rolling = np.convolve(blackout, np.ones(window)/window, mode='valid')
+        ax.plot(range(window-1, len(blackout)), rolling, color='red')
+    else:
+        ax.plot(blackout, color='red')
+    ax.set_xlabel('Episode'); ax.set_ylabel('Frequency')
+    ax.set_title(f'Blackout Rate ({window}-ep moving avg)'); ax.set_ylim([0,1.05]); ax.grid(alpha=0.3)
+
+    ax = axes[1, 0]
+    n_agents = len(history['agent_comforts'])
+    final_comf = [np.mean(history['agent_comforts'][i][-1000:]) for i in range(n_agents)]
+    colors = ['coral' if i >= n_agents//2 else 'skyblue' for i in range(n_agents)]
+    ax.bar(range(n_agents), final_comf, color=colors)
+    ax.set_xlabel('Agent ID'); ax.set_ylabel('Mean Comfort (last 1000 ep)')
+    ax.set_title('Final Comfort per Agent'); ax.set_ylim([0,1]); ax.grid(axis='y', alpha=0.3)
+    from matplotlib.patches import Patch
+    ax.legend(handles=[Patch(facecolor='skyblue', label='Prosocial'),
+                       Patch(facecolor='coral', label='Selfish')])
+
+    ax = axes[1, 1]
+    for i in range(n_agents):
+        rewards = np.array(history['agent_rewards'][i])
+        if len(rewards) > 200:
+            smoothed = np.convolve(rewards, np.ones(200)/200, mode='valid')
+            label = f"Agent {i} ({'Prosocial' if i<n_agents//2 else 'Selfish'})"
+            ax.plot(smoothed, label=label, alpha=0.7)
+    ax.set_xlabel('Episode'); ax.set_ylabel('Smoothed Reward')
+    ax.set_title('Agent Rewards (200‑ep smoothing)'); ax.legend(fontsize=8); ax.grid(alpha=0.3)
+
+    fig.suptitle(title, fontsize=14, fontweight='bold')
+    plt.tight_layout()
+    return fig
+
+
 # ========== SIMULATION RUNNER ==========
 def run_simulation(num_houses=6, episodes=8000, battery_cap=7.0, solar_max=1.3,
-                   personality_mix=None, seed=42, verbose=True):
+                   personality_mix=None, seed=42, verbose=True, save_path=None):
+    
     if personality_mix is None:
         personality_mix = ['prosocial']*3 + ['pure_selfish']*3
 
@@ -222,14 +267,14 @@ def run_simulation(num_houses=6, episodes=8000, battery_cap=7.0, solar_max=1.3,
 
     history = {
         'comfort_mean': [], 'fairness': [], 'blackout_days': [],
-        'total_waste': [],   # total wasted energy across all houses per episode
+        'total_waste': [],
         'agent_rewards': [[] for _ in agents],
         'agent_comforts': [[] for _ in agents],
     }
 
     for ep in range(episodes):
         community.reset_day()
-        weather_factor = 1.0 if np.random.random() > 0.15 else 0.5   # 15% cloudy
+        weather_factor = 1.0 if np.random.random() > 0.15 else 0.5
         ep_rewards = np.zeros(len(agents))
 
         for hour in range(24):
@@ -285,77 +330,52 @@ def run_simulation(num_houses=6, episodes=8000, battery_cap=7.0, solar_max=1.3,
             print(f"Ep {ep+1:4d}: comfort={mean_comfort:.3f}, fairness={fairness:.3f}, "
                   f"blackout%={blackout_pct:.1f}%, waste={avg_waste:.2f} kWh, eps={agents[0].epsilon:.3f}")
 
+    # ===== SAVE RESULTS =====
+    if save_path:
+        os.makedirs(save_path, exist_ok=True)
+        last_n = 1000
+        final_comfort = np.mean(history['comfort_mean'][-last_n:])
+        final_fairness = np.mean(history['fairness'][-last_n:])
+        final_blackout = np.mean(history['blackout_days'][-last_n:])
+        final_waste = np.mean(history['total_waste'][-last_n:])
+        
+        n_pro = num_houses // 2
+        pro_comf = np.mean([np.mean(history['agent_comforts'][i][-last_n:]) for i in range(n_pro)])
+        self_comf = np.mean([np.mean(history['agent_comforts'][i][-last_n:]) for i in range(n_pro, num_houses)])
+
+        metrics = {
+            'seed': seed,
+            'comfort': final_comfort,
+            'fairness': final_fairness,
+            'blackout_rate': final_blackout,
+            'waste': final_waste,
+            'prosocial_comfort': pro_comf,
+            'selfish_comfort': self_comf
+        }
+        with open(os.path.join(save_path, 'final_metrics.csv'), 'w', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=metrics.keys())
+            writer.writeheader()
+            writer.writerow(metrics)
+
+        config = {
+            'personality_mix': personality_mix,
+            'num_houses': num_houses,
+            'episodes': episodes,
+            'battery_cap': battery_cap,
+            'solar_max': solar_max,
+            'seed': seed
+        }
+        with open(os.path.join(save_path, 'config.json'), 'w') as f:
+            json.dump(config, f, indent=2)
+
+        fig = plot_results(history, title=f"Scenario: {personality_mix}")
+        fig.savefig(os.path.join(save_path, 'results_plot.png'), dpi=150, bbox_inches='tight')
+        plt.close(fig)
+
     return agents, community, history
 
 
-# ========== PLOTTING ==========
-def plot_results(history, title="Simulation Results"):
-    fig, axes = plt.subplots(2, 3, figsize=(18, 10))
-
-    # 1. Comfort & Fairness
-    ax = axes[0, 0]
-    ax.plot(history['comfort_mean'], label='Mean Comfort', alpha=0.8)
-    ax.plot(history['fairness'], label="Jain's Fairness", alpha=0.8)
-    ax.set_xlabel('Episode'); ax.set_ylabel('Score')
-    ax.set_title('Community Performance'); ax.legend(); ax.set_ylim([0,1.05]); ax.grid(alpha=0.3)
-
-    # 2. Blackout rate
-    ax = axes[0, 1]
-    blackout = np.array(history['blackout_days'])
-    window = 500
-    if len(blackout) > window:
-        rolling = np.convolve(blackout, np.ones(window)/window, mode='valid')
-        ax.plot(range(window-1, len(blackout)), rolling, color='red')
-    else:
-        ax.plot(blackout, color='red')
-    ax.set_xlabel('Episode'); ax.set_ylabel('Frequency')
-    ax.set_title(f'Blackout Rate ({window}-ep moving avg)'); ax.set_ylim([0,1.05]); ax.grid(alpha=0.3)
-
-    # 3. Total waste
-    ax = axes[0, 2]
-    waste = np.array(history['total_waste'])
-    if len(waste) > window:
-        rolling_waste = np.convolve(waste, np.ones(window)/window, mode='valid')
-        ax.plot(range(window-1, len(waste)), rolling_waste, color='green')
-    else:
-        ax.plot(waste, color='green')
-    ax.set_xlabel('Episode'); ax.set_ylabel('Energy (kWh)')
-    ax.set_title(f'Avg Daily Waste ({window}-ep moving avg)'); ax.grid(alpha=0.3)
-
-    # 4. Final comfort per agent
-    ax = axes[1, 0]
-    n_agents = len(history['agent_comforts'])
-    final_comf = [np.mean(history['agent_comforts'][i][-1000:]) for i in range(n_agents)]
-    colors = ['coral' if i >= n_agents//2 else 'skyblue' for i in range(n_agents)]
-    ax.bar(range(n_agents), final_comf, color=colors)
-    ax.set_xlabel('Agent ID'); ax.set_ylabel('Mean Comfort (last 1000 ep)')
-    ax.set_title('Final Comfort per Agent'); ax.set_ylim([0,1]); ax.grid(axis='y', alpha=0.3)
-    from matplotlib.patches import Patch
-    ax.legend(handles=[Patch(facecolor='skyblue', label='Prosocial'),
-                       Patch(facecolor='coral', label='Selfish')])
-
-    # 5. Reward convergence
-    ax = axes[1, 1]
-    for i in range(n_agents):
-        rewards = np.array(history['agent_rewards'][i])
-        if len(rewards) > 200:
-            smoothed = np.convolve(rewards, np.ones(200)/200, mode='valid')
-            label = f"Agent {i} ({'Prosocial' if i<n_agents//2 else 'Selfish'})"
-            ax.plot(smoothed, label=label, alpha=0.7)
-    ax.set_xlabel('Episode'); ax.set_ylabel('Smoothed Reward')
-    ax.set_title('Agent Rewards (200‑ep smoothing)'); ax.legend(fontsize=8); ax.grid(alpha=0.3)
-
-    # 6. Waste per agent type (last 1000 episodes)
-    ax = axes[1, 2]
-    # We didn't track waste per agent, but we can compute later if needed. Leave empty or remove.
-    ax.axis('off')
-
-    fig.suptitle(title, fontsize=14, fontweight='bold')
-    plt.tight_layout()
-    return fig
-
-
-# ========== MAIN ==========
+# ========== MAIN (for single test run) ==========
 if __name__ == "__main__":
     print("=" * 60)
     print("OFF-GRID ENERGY SHARING MARL SIMULATION")
@@ -367,10 +387,11 @@ if __name__ == "__main__":
     agents, community, history = run_simulation(
         num_houses=6,
         episodes=8000,
-        battery_cap=7.0,      # large enough to store surplus, but waste still possible
-        solar_max=1.3,        # 1.3 kW → ~9.9 kWh/day
+        battery_cap=7.0,
+        solar_max=1.3,
         personality_mix=mix,
-        seed=42
+        seed=42,
+        save_path='results/mixed/seed_42'  # save this test run
     )
 
     last_n = 1000
@@ -394,6 +415,5 @@ if __name__ == "__main__":
     print(f"  Difference:            {abs(pro_comf - self_comf):.3f}")
     print("=" * 60)
 
-    fig = plot_results(history, title="Mixed Community – Final Balanced Model")
     plt.show()
     print("\nSimulation complete!")

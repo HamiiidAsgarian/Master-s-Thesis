@@ -1,0 +1,15 @@
+{
+  "personality_mix": [
+    "prosocial",
+    "prosocial",
+    "prosocial",
+    "prosocial",
+    "prosocial",
+    "prosocial"
+  ],
+  "num_houses": 6,
+  "episodes": 8000,
+  "battery_cap": 7.0,
+  "solar_max": 1.3,
+  "seed": 42
+}
