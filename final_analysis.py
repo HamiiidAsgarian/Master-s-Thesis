@@ -23,7 +23,7 @@ def analyze_scenario_gini_and_sharing(scenario_name, mix, seed=42):
     - sharing_freq: array of sharing frequency per agent (proportion of Q-table states where best action is share)
     """
     agents, community, history = run_simulation(
-        num_houses=6, episodes=8000, battery_cap=7.0, solar_max=1.3,
+        num_houses=10, episodes=8000, battery_cap=7.0, solar_max=1.3,
         personality_mix=mix, seed=seed, verbose=False
     )
 
@@ -48,10 +48,11 @@ def analyze_scenario_gini_and_sharing(scenario_name, mix, seed=42):
 
 # ========== 3. RUN GINI & SHARING ANALYSIS ==========
 scenarios = {
-    'All Selfish': ['pure_selfish']*6,
-    'All Prosocial': ['prosocial']*6,
-    'Mixed': ['prosocial']*3 + ['pure_selfish']*3,
-    'Varied Altruism': ['altruistic','prosocial','prosocial','individualist','individualist','pure_selfish']
+    'All Selfish': ['pure_selfish']*10,
+    'All Prosocial': ['prosocial']*10,
+    'Mixed': ['prosocial']*5 + ['pure_selfish']*5,
+    'Varied Altruism': ['altruistic', 'prosocial', 'prosocial', 'prosocial', 'individualist', 'individualist', 'individualist', 'pure_selfish', 'pure_selfish', 'pure_selfish'],
+    'Innovator Effect': ['high_openness_innovator'] + ['prosocial']*4 + ['individualist']*3 + ['pure_selfish']*2
 }
 
 gini_results = {}
@@ -68,7 +69,7 @@ for name, mix in scenarios.items():
 # Plot Gini
 plt.figure(figsize=(8,5))
 bars = plt.bar(gini_results.keys(), gini_results.values(),
-               color=['#e74c3c','#2ecc71','#3498db','#9b59b6'])
+               color=['#e74c3c','#2ecc71','#3498db','#9b59b6','#f39c12'])
 plt.ylabel('Gini Coefficient (comfort inequality)')
 plt.title('Inequality Across Community Types')
 plt.grid(axis='y', alpha=0.3)
@@ -80,22 +81,25 @@ plt.savefig('results/gini_comparison.png', dpi=150)
 plt.show()
 
 # Plot Sharing Frequency per agent type
-fig, ax = plt.subplots(figsize=(10,6))
-# Group sharing frequencies: for mixed and varied, separate prosocial vs selfish
-# We'll plot a grouped bar chart
-labels = ['All Selfish','All Prosocial','Mixed (Prosocial)','Mixed (Selfish)',
-          'Varied (Prosocial)','Varied (Selfish)']
+fig, ax = plt.subplots(figsize=(12,6))
+# Group sharing frequencies: for mixed, varied, innovator separate prosocial vs selfish
+labels = ['All Selfish','All Prosocial',
+          'Mixed\n(Prosocial)','Mixed\n(Selfish)',
+          'Varied\n(Prosocial)','Varied\n(Selfish)',
+          'Innovator\n(Explorers)','Innovator\n(Selfish)']
 freqs = [
     np.mean(sharing_results['All Selfish']),
     np.mean(sharing_results['All Prosocial']),
-    np.mean(sharing_results['Mixed'][:3]),   # first 3 are prosocial
-    np.mean(sharing_results['Mixed'][3:]),   # last 3 are selfish
-    np.mean(sharing_results['Varied Altruism'][:3]),  # altruistic+prosocial+prosocial
-    np.mean(sharing_results['Varied Altruism'][3:])   # individualist*2 + selfish
+    np.mean(sharing_results['Mixed'][:5]),        # first 5 are prosocial
+    np.mean(sharing_results['Mixed'][5:]),        # last 5 are selfish
+    np.mean(sharing_results['Varied Altruism'][:4]),  # altruistic+3 prosocial
+    np.mean(sharing_results['Varied Altruism'][4:]),  # 3 individualist+3 selfish
+    np.mean(sharing_results['Innovator Effect'][:5]), # innovator+4 prosocial
+    np.mean(sharing_results['Innovator Effect'][5:]), # 3 individualist+2 selfish
 ]
-colors = ['#e74c3c','#2ecc71','#3498db','#e74c3c','#3498db','#e74c3c']
-ax.bar(range(6), freqs, color=colors)
-ax.set_xticks(range(6))
+colors = ['#e74c3c','#2ecc71','#3498db','#e74c3c','#3498db','#e74c3c','#9b59b6','#e74c3c']
+ax.bar(range(8), freqs, color=colors)
+ax.set_xticks(range(8))
 ax.set_xticklabels(labels, rotation=30, ha='right', fontsize=10)
 ax.set_ylabel('Proportion of states where best action is Share')
 ax.set_title('Learned Sharing Behaviour by Agent Type')
@@ -116,13 +120,13 @@ for cp in cloud_probs:
     for seed in seeds:
         print(f"Running mixed scenario with cloud_prob={cp}, seed={seed}...")
         agents, _, history = run_simulation(
-            num_houses=6, episodes=8000, battery_cap=7.0, solar_max=1.3,
-            personality_mix=['prosocial']*3+['pure_selfish']*3,
+            num_houses=10, episodes=8000, battery_cap=7.0, solar_max=1.3,
+            personality_mix=['prosocial']*5+['pure_selfish']*5,
             seed=seed, verbose=False,
             weather_cloud_prob=cp)
         last_n = 1000
-        pro_comf = np.mean([np.mean(history['agent_comforts'][i][-last_n:]) for i in range(3)])
-        self_comf = np.mean([np.mean(history['agent_comforts'][i][-last_n:]) for i in range(3,6)])
+        pro_comf = np.mean([np.mean(history['agent_comforts'][i][-last_n:]) for i in range(5)])
+        self_comf = np.mean([np.mean(history['agent_comforts'][i][-last_n:]) for i in range(5,10)])
         sensitivity_data[cp]['prosocial'].append(pro_comf)
         sensitivity_data[cp]['selfish'].append(self_comf)
 

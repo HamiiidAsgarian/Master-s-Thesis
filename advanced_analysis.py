@@ -5,7 +5,7 @@ import os, json, csv
 from scipy import stats
 
 # ========== CONFIGURATION ==========
-scenarios = ['all_selfish', 'all_prosocial', 'mixed', 'varied_altruism']
+scenarios = ['all_selfish', 'all_prosocial', 'mixed', 'varied_altruism', 'innovator_effect']
 base_dir = 'results'
 
 # Re‑run a single simulation with verbose=False to get the final agents
@@ -16,23 +16,24 @@ from offgrid_marl import run_simulation
 def get_agents_for_scenario(scenario_name, mix, seed=42):
     """Run a short simulation and return the trained agents."""
     agents, community, history = run_simulation(
-        num_houses=6, episodes=8000, battery_cap=7.0, solar_max=1.3,
+        num_houses=10, episodes=8000, battery_cap=7.0, solar_max=1.3,
         personality_mix=mix, seed=seed, verbose=False
     )
     return agents
 
 # ========== 1. Q‑TABLE HEATMAPS ==========
 mixes = {
-    'all_selfish': ['pure_selfish']*6,
-    'all_prosocial': ['prosocial']*6,
-    'mixed': ['prosocial']*3 + ['pure_selfish']*3,
-    'varied_altruism': ['altruistic','prosocial','prosocial','individualist','individualist','pure_selfish']
+    'all_selfish': ['pure_selfish']*10,
+    'all_prosocial': ['prosocial']*10,
+    'mixed': ['prosocial']*5 + ['pure_selfish']*5,
+    'varied_altruism': ['altruistic', 'prosocial', 'prosocial', 'prosocial', 'individualist', 'individualist', 'individualist', 'pure_selfish', 'pure_selfish', 'pure_selfish'],
+    'innovator_effect': ['high_openness_innovator'] + ['prosocial']*4 + ['individualist']*3 + ['pure_selfish']*2
 }
 
-fig, axes = plt.subplots(2, 4, figsize=(20, 10))
+fig, axes = plt.subplots(2, 5, figsize=(24, 10))
 plot_idx = 0
 
-for scenario_name in ['all_selfish', 'all_prosocial', 'mixed', 'varied_altruism']:
+for scenario_name in ['all_selfish', 'all_prosocial', 'mixed', 'varied_altruism', 'innovator_effect']:
     print(f"Training agents for {scenario_name} heatmap...")
     agents = get_agents_for_scenario(scenario_name, mixes[scenario_name], seed=42)
     
@@ -120,8 +121,18 @@ if p_val < 0.05:
 else:
     print("   → No significant difference")
 
-# Test 4: Community comfort comparison across all scenarios (ANOVA)
-print("\n4. One‑way ANOVA: Community Comfort across all scenarios:")
+# Test 4: Innovator Effect vs Mixed community comfort
+print("\n4. Innovator Effect vs Mixed Community Comfort:")
+t_stat, p_val = stats.ttest_ind(all_data['innovator_effect']['comfort'],
+                                 all_data['mixed']['comfort'])
+print(f"   t = {t_stat:.3f}, p = {p_val:.4f}")
+if p_val < 0.05:
+    print("   → Statistically significant difference (p < 0.05)")
+else:
+    print("   → No significant difference")
+
+# Test 5: Community comfort comparison across all scenarios (ANOVA)
+print("\n5. One‑way ANOVA: Community Comfort across all scenarios:")
 scenario_comforts = [all_data[s]['comfort'].values for s in scenarios]
 f_stat, p_val = stats.f_oneway(*scenario_comforts)
 print(f"   F = {f_stat:.3f}, p = {p_val:.4f}")
@@ -134,18 +145,21 @@ else:
 results_text = []
 results_text.append("STATISTICAL TEST RESULTS")
 results_text.append("="*60)
-results_text.append(f"\n1. All-Selfish vs All-Prosocial Comfort: t={t_stat:.3f}, p={p_val:.4f}")
 
-t_stat, p_val = stats.ttest_rel(all_data['mixed']['prosocial_comfort'],
-                                 all_data['mixed']['selfish_comfort'])
-results_text.append(f"\n2. Mixed Prosocial vs Selfish: t={t_stat:.3f}, p={p_val:.4f}")
+t1 = stats.ttest_ind(all_data['all_selfish']['comfort'], all_data['all_prosocial']['comfort'])
+results_text.append(f"\n1. All-Selfish vs All-Prosocial Comfort: t={t1.statistic:.3f}, p={t1.pvalue:.4f}")
 
-t_stat, p_val = stats.ttest_rel(all_data['varied_altruism']['prosocial_comfort'],
-                                 all_data['varied_altruism']['selfish_comfort'])
-results_text.append(f"\n3. Varied Prosocial vs Selfish: t={t_stat:.3f}, p={p_val:.4f}")
+t2 = stats.ttest_rel(all_data['mixed']['prosocial_comfort'], all_data['mixed']['selfish_comfort'])
+results_text.append(f"\n2. Mixed Prosocial vs Selfish: t={t2.statistic:.3f}, p={t2.pvalue:.4f}")
+
+t3 = stats.ttest_rel(all_data['varied_altruism']['prosocial_comfort'], all_data['varied_altruism']['selfish_comfort'])
+results_text.append(f"\n3. Varied Prosocial vs Selfish: t={t3.statistic:.3f}, p={t3.pvalue:.4f}")
+
+t4 = stats.ttest_ind(all_data['innovator_effect']['comfort'], all_data['mixed']['comfort'])
+results_text.append(f"\n4. Innovator vs Mixed Community Comfort: t={t4.statistic:.3f}, p={t4.pvalue:.4f}")
 
 f_stat, p_val = stats.f_oneway(*scenario_comforts)
-results_text.append(f"\n4. ANOVA all scenarios: F={f_stat:.3f}, p={p_val:.4f}")
+results_text.append(f"\n5. ANOVA all scenarios: F={f_stat:.3f}, p={p_val:.4f}")
 
 with open('results/statistical_tests.txt', 'w') as f:
     f.write('\n'.join(results_text))

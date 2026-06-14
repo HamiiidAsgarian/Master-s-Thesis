@@ -4,12 +4,13 @@ import matplotlib.pyplot as plt
 import os, json
 
 # ========== CONFIGURATION ==========
-scenarios = ['all_selfish', 'all_prosocial', 'mixed', 'varied_altruism']
+scenarios = ['all_selfish', 'all_prosocial', 'mixed', 'varied_altruism', 'innovator_effect']
 scenario_labels = {
     'all_selfish': 'All Selfish',
     'all_prosocial': 'All Prosocial',
-    'mixed': 'Mixed\n(3 Prosocial + 3 Selfish)',
-    'varied_altruism': 'Varied Altruism\n(1 Altruistic, 2 Prosocial,\n2 Individualist, 1 Selfish)'
+    'mixed': 'Mixed\n(5 Prosocial + 5 Selfish)',
+    'varied_altruism': 'Varied Altruism\n(1 Altruistic, 3 Prosocial,\n3 Individualist, 3 Selfish)',
+    'innovator_effect': 'Innovator Effect\n(1 High-O, 4 Prosocial,\n3 Individualist, 2 Selfish)'
 }
 base_dir = 'results'
 
@@ -27,7 +28,7 @@ for scenario in scenarios:
 
 # ========== PLOT 1: Comfort Comparison ==========
 fig, axes = plt.subplots(1, 3, figsize=(16, 6))
-colors_scenarios = ['#e74c3c', '#2ecc71', '#3498db', '#9b59b6']
+colors_scenarios = ['#e74c3c', '#2ecc71', '#3498db', '#9b59b6', '#f39c12']
 
 # 1a. Mean Community Comfort
 ax = axes[0]
@@ -85,8 +86,8 @@ plt.show()
 # ========== PLOT 2: Agent-Type Comfort Comparison ==========
 fig, ax = plt.subplots(figsize=(10, 6))
 
-# Only mixed and varied_altruism have meaningful agent-type splits
-scenarios_with_types = ['mixed', 'varied_altruism']
+# Only mixed, varied_altruism, and innovator_effect have meaningful agent-type splits
+scenarios_with_types = ['mixed', 'varied_altruism', 'innovator_effect']
 x_labels = []
 prosocial_means = []
 selfish_means = []
