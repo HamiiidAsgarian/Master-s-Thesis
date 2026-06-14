@@ -4,10 +4,11 @@ import os, json, csv
 
 # ========== PERSONALITY PROFILES ==========
 PERSONALITIES = {
-    'pure_selfish':    {'w_self': 1.0, 'w_fair': 0.0},
-    'individualist':   {'w_self': 0.8, 'w_fair': 0.2},
-    'prosocial':       {'w_self': 0.5, 'w_fair': 0.5},
-    'altruistic':      {'w_self': 0.2, 'w_fair': 0.8},
+    'pure_selfish':            {'w_self': 1.0, 'w_fair': 0.0},
+    'individualist':           {'w_self': 0.8, 'w_fair': 0.2},
+    'prosocial':               {'w_self': 0.5, 'w_fair': 0.5},
+    'altruistic':              {'w_self': 0.2, 'w_fair': 0.8},
+    'high_openness_innovator': {'w_self': 0.5, 'w_fair': 0.5},
 }
 
 # ========== DEMAND PROFILES (24h) ==========
@@ -232,11 +233,11 @@ def plot_results(history, title="Simulation Results"):
 
 
 # ========== SIMULATION RUNNER ==========
-def run_simulation(num_houses=6, episodes=8000, battery_cap=7.0, solar_max=1.3,
+def run_simulation(num_houses=10, episodes=8000, battery_cap=7.0, solar_max=1.3,
                    personality_mix=None, seed=42, verbose=True,
-                   save_path=None, weather_cloud_prob=0.15):   # <-- new parameter    
+                   save_path=None, weather_cloud_prob=0.15):
     if personality_mix is None:
-        personality_mix = ['prosocial']*3 + ['pure_selfish']*3
+        personality_mix = ['prosocial']*5 + ['pure_selfish']*5
 
     demand_keys = list(DEMAND_PROFILES.keys())
     house_configs = []
@@ -253,7 +254,11 @@ def run_simulation(num_houses=6, episodes=8000, battery_cap=7.0, solar_max=1.3,
     for i, cfg in enumerate(house_configs):
         house = House(i, cfg['demand'], battery_cap, cfg['personality'], solar_max)
         houses.append(house)
-        agent = QLAgent(i, cfg['personality'])
+        pers_name = personality_mix[i]
+        if pers_name == 'high_openness_innovator':
+            agent = QLAgent(i, cfg['personality'], min_eps=0.05)
+        else:
+            agent = QLAgent(i, cfg['personality'])
         agents.append(agent)
 
     sharing_pairs = {i: [(i+1) % num_houses] for i in range(num_houses)}
@@ -378,14 +383,13 @@ def run_simulation(num_houses=6, episodes=8000, battery_cap=7.0, solar_max=1.3,
 # ========== MAIN (for single test run) ==========
 if __name__ == "__main__":
     print("=" * 60)
-    print("OFF-GRID ENERGY SHARING MARL SIMULATION")
+    print("SMART NEIGHBORHOOD ENERGY SHARING MARL SIMULATION")
     print("=" * 60)
 
-    mix = ['prosocial', 'prosocial', 'prosocial',
-           'pure_selfish', 'pure_selfish', 'pure_selfish']
+    mix = ['prosocial']*5 + ['pure_selfish']*5
 
     agents, community, history = run_simulation(
-        num_houses=6,
+        num_houses=10,
         episodes=8000,
         battery_cap=7.0,
         solar_max=1.3,
@@ -407,9 +411,9 @@ if __name__ == "__main__":
     print(f"  Blackout Day Rate:    {final_blackout:.1%}")
     print(f"  Avg Daily Waste:      {final_waste:.2f} kWh")
 
-    n_pro = 3
+    n_pro = 5
     pro_comf = np.mean([np.mean(history['agent_comforts'][i][-last_n:]) for i in range(n_pro)])
-    self_comf = np.mean([np.mean(history['agent_comforts'][i][-last_n:]) for i in range(n_pro, 6)])
+    self_comf = np.mean([np.mean(history['agent_comforts'][i][-last_n:]) for i in range(n_pro, 10)])
     print(f"  Prosocial avg comfort: {pro_comf:.3f}")
     print(f"  Selfish avg comfort:   {self_comf:.3f}")
     print(f"  Difference:            {abs(pro_comf - self_comf):.3f}")
