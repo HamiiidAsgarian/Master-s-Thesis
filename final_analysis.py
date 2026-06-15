@@ -170,7 +170,7 @@ plt.close()
 
 # ========== 4. SENSITIVITY TO CLOUD PROBABILITY ==========
 cloud_probs = [0.15, 0.25, 0.35]
-seeds = [42, 123, 456]
+seeds = [42, 123, 456, 789, 1011]
 
 sensitivity_data = {cp: {'prosocial':[], 'selfish':[]} for cp in cloud_probs}
 

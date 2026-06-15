@@ -46,6 +46,8 @@ Standard multi-agent reinforcement learning (MARL) approaches to energy manageme
 
 This study introduces a personality-driven reward framework where each agent's objective function encodes not only self-interest (personal comfort) but also community-level fairness (Jain's fairness index). By varying the relative weight assigned to fairness across agents, we simulate heterogeneous communities where agents differ in their willingness to share — from purely selfish to fully altruistic.
 
+Recent work in MARL for energy management has progressed along two main lines: efficiency-optimisation approaches that treat buildings as homogeneous rational agents (Li & Zhang, 2022), and fairness-aware frameworks that explicitly model distributional outcomes (Qiu et al., 2021). However, existing fairness-aware approaches typically impose a single community-level fairness constraint rather than allowing agents to differ in their intrinsic concern for equity. Alshehri & Gaunt (2020) demonstrated that heterogeneous agent preferences can produce qualitatively different system-level outcomes in residential energy management, but their framework did not ground those preferences in established psychological theory. The present study bridges these gaps by introducing personality-modulated reward weights drawn from the OCEAN (Big Five) model, enabling a systematic investigation of how heterogeneous fairness preferences — rather than a uniform fairness constraint — shape emergent community dynamics.
+
 **Primary Research Question:**
 
 > How do heterogeneous, personality-influenced fairness preferences in a multi-agent reinforcement learning energy-sharing system affect the community's overall efficiency, fairness, and robustness, compared to a community of purely self-interested agents?
@@ -308,7 +310,7 @@ All Q-learning hyperparameters are identical across scenarios and agents, except
 
    **Regarding All Prosocial vs. All Selfish specifically**: All Selfish achieves 0.920 comfort and All Prosocial achieves 0.914 — a difference of 0.006. This might appear to suggest that selfish communities outperform prosocial ones, but the independent t-test shows this difference is not statistically significant (t = 0.845, p = 0.4229). In other words, the two communities perform identically within statistical noise. The small observed gap is not a real effect of personality composition at the community level. This is stated explicitly because the counter-intuitive direction of the (non-significant) difference invites misinterpretation.
 
-2. **Waste is lowest in prosocial-dominated communities**. The All Prosocial and Mixed scenarios waste 4.41 and 4.34 kWh respectively, compared to 4.98 kWh for All Selfish. This is a 12% reduction in waste, supporting the intuition that sharing norms reduce hoarding-induced inefficiency. The mechanism is straightforward: selfish agents store surplus even when their battery is nearly full, which causes overflow waste; prosocial agents share earlier, freeing battery capacity for future surplus.
+2. **Waste is lowest in prosocial-dominated communities**. The All Prosocial and Mixed scenarios waste 4.41 and 4.34 kWh respectively, compared to 4.98 kWh for All Selfish. This is an apparent 11.5% reduction in waste, consistent with the intuition that sharing norms reduce hoarding-induced inefficiency. However, an independent t-test between All Selfish and All Prosocial waste shows this difference is not statistically significant (t = 1.422, p = 0.193), due to the high within-scenario variance. The direction is consistent — prosocial-dominated communities waste less in all three comparisons — but the magnitude should be interpreted cautiously. The mechanism is nonetheless plausible: selfish agents store surplus even when their battery is nearly full, which causes overflow waste; prosocial agents share earlier, freeing battery capacity for future surplus.
 
 3. **Blackout rates are nearly identical across scenarios** (14.5% ± 1.4% for all except Innovator Effect at 15.7% ± 1.1%). This uniformity — including the identical standard deviations — suggests that the blackout rate is primarily driven by the weather model (15% cloudy day probability) rather than by agent personality. A blackout occurs on any day where at least one house experiences comfort below 0.95, and cloudy days (which halve solar output) consistently trigger such events regardless of sharing behaviour. Personality has minimal effect on this metric except in the Innovator scenario, where the destabilising effect of the exploratory agent increases blackout frequency slightly. This finding is itself noteworthy: community-level blackout risk in this setting is determined more by external weather shocks than by internal sharing norms, except when an unpredictable agent is present.
 
@@ -437,31 +439,29 @@ Each heatmap visualises the learned policy for a single agent after 8000 episode
 
 ![Sensitivity Analysis](results/sensitivity_cloud.png)
 
-**Figure 6: Prosocial vs. selfish comfort as a function of cloudy day probability.** Each point is the mean comfort (last 1000 episodes) for prosocial agents (blue) and selfish agents (red) in the Mixed scenario, averaged across 3 random seeds (42, 123, 456). Error bars show ±1 standard deviation. Cloud probability varies from 15% (baseline) to 25% to 35%.
+**Figure 6: Prosocial vs. selfish comfort as a function of cloudy day probability.** Each point is the mean comfort (last 1000 episodes) for prosocial agents (blue) and selfish agents (red) in the Mixed scenario, averaged across 5 random seeds (42, 123, 456, 789, 1011). Error bars show ±1 standard deviation. Cloud probability varies from 15% (baseline) to 25% to 35%.
 
 #### Quantitative Results
 
-**Table 9: Comfort by Cloud Probability and Agent Type**
+**Table 9: Comfort by Cloud Probability and Agent Type (Mean ± Std, 5 seeds)**
 
-| Cloud Probability | Prosocial Comfort | Selfish Comfort | Gap | % Change in Gap |
-|---|---|---|---|---|
-| 15% (baseline) | ~0.935 | ~0.905 | ~0.030 | — |
-| 25% | ~0.920 | ~0.885 | ~0.035 | +17% |
-| 35% | ~0.900 | ~0.855 | ~0.045 | +50% |
-
-*Note: Exact numbers depend on seed and stochastic factors; the trend direction and magnitude are robust across seeds.*
+| Cloud Probability | Prosocial Comfort | Selfish Comfort | Gap | t-statistic | p-value |
+|---|---|---|---|---|---|
+| 15% (baseline) | 0.9345 ± 0.0063 | 0.9051 ± 0.0086 | 0.0295 | 6.206 | 0.0034 |
+| 25% | 0.8631 ± 0.0221 | 0.8373 ± 0.0245 | 0.0258 | 1.729 | 0.1591 |
+| 35% | 0.8125 ± 0.0271 | 0.7820 ± 0.0142 | 0.0305 | 2.352 | 0.0782 |
 
 #### Key Finding
 
-**The personality-driven comfort gap widens significantly as resource scarcity increases.** At 15% cloud probability (baseline), prosocial agents outperform selfish agents by approximately 3 percentage points. At 35% cloud probability (more than doubling the frequency of cloudy days), the gap widens to approximately 4.5 percentage points — a 50% increase.
+**Both prosocial and selfish agents experience significant comfort losses under resource scarcity, but the prosocial advantage is consistent rather than widening.** At 15% cloud probability (baseline), prosocial agents outperform selfish agents by 2.95 percentage points (p = 0.0034). At 25% and 35% cloud probabilities, the gap is 2.58 pp and 3.05 pp respectively — essentially unchanged in magnitude. The earlier observation of a widening gap (based on a preliminary 3-seed analysis) was not robust to the addition of more seeds; the 5-seed results show the gap remains stable at approximately 2.5–3.0 percentage points across all scarcity levels.
 
-This finding has important practical implications:
+However, two important patterns do emerge:
 
-1. **Fairness-oriented agents add the most value when resources are tightest.** In a sunny, resource-abundant community, the difference between prosocial and selfish behaviour is modest because there is enough energy for everyone. But when scarcity bites — more cloudy days, or equivalently higher demand or smaller batteries — the cooperative behaviour of prosocial agents becomes critically important.
+1. **Scarcity imposes large absolute losses on both groups.** When cloud probability rises from 15% to 35%, prosocial comfort drops by 0.122 (from 0.9345 to 0.8125), and selfish comfort drops by 0.123 (from 0.9051 to 0.7820). Both groups lose approximately 13% of their baseline comfort — the difference is not in the magnitude of the loss but in the absolute level from which they fall.
 
-2. **Selfish agents suffer disproportionately from scarcity.** When cloudy days increase from 15% to 35%, prosocial comfort drops by ~3.5% (from ~0.935 to ~0.900), while selfish comfort drops by ~5.5% (from ~0.905 to ~0.855). Selfish agents experience 1.6× the comfort loss of prosocial agents under the same scarcity increase.
+2. **Group-level variance increases substantially under scarcity.** The standard deviation of prosocial comfort rises from ±0.0063 at 15% to ±0.0271 at 35%, and selfish comfort from ±0.0086 to ±0.0142. At high cloud probabilities, the weather sequence (which days are cloudy) creates more stochastic variation in outcomes, making individual seed results less predictable. The prosocial agent advantage remains directionally consistent across seeds (prosocial outperforms selfish in 14 of 15 seed-cloud combinations), but the magnitude of the advantage varies substantially.
 
-3. **This suggests a policy lever**: in communities where resource scarcity is expected (e.g., high-latitude locations with winter cloud cover, communities with limited battery capacity, or growing populations), encouraging even a modest degree of prosocial sharing behaviour can yield outsized benefits in equity and resilience.
+**The core insight is therefore**: prosocial agents maintain a consistent comfort advantage over selfish agents regardless of resource availability. This advantage does not grow under scarcity, but it also does not shrink — the cooperative behaviour that generates higher comfort in good times continues to provide the same relative benefit when resources are tight. The policy implication is that fairness-oriented reward design provides reliable rather than conditional benefits.
 
 ### 4.7 Statistical Significance Testing
 
@@ -485,7 +485,7 @@ The following statistical tests establish the reliability of the observed differ
 
 **Test 4 (Innovator Effect vs. Mixed):** The Innovator Effect scenario produces significantly lower community comfort than the Mixed scenario (p = 0.0074). This confirms that the presence of a single high-Openness exploratory agent has a measurable negative impact on community outcomes.
 
-**Test 5 (ANOVA across all scenarios):** The overall ANOVA is significant (p = 0.0293), indicating that at least one scenario differs from the others. Post-hoc inspection reveals that the Innovator Effect scenario is the primary driver of this significance — it is the only scenario that consistently underperforms across all metrics.
+**Test 5 (ANOVA across all scenarios):** The overall ANOVA is significant (p = 0.0293), indicating that at least one scenario differs from the others. Visual inspection of the means and confidence intervals, combined with post-hoc pairwise inspection, reveals that the Innovator Effect scenario is the primary driver of this significance — it is the only scenario that consistently underperforms across all metrics.
 
 ### 4.8 The Innovator Effect — Surprising Finding
 
@@ -538,14 +538,15 @@ This learning requires repeated interaction — the Q-learning framework, with i
 
 ### 5.3 Personality Matters Most Under Scarcity
 
-The sensitivity analysis (Section 4.6) reveals a critical dynamic: **the value of prosocial personality is amplified under resource scarcity**. As cloudy day probability increases from 15% to 35%:
+The sensitivity analysis (Section 4.6) reveals a critical dynamic: **both prosocial and selfish agents suffer large comfort losses under scarcity, but the prosocial advantage remains consistent**. As cloudy day probability increases from 15% to 35%:
 
-- The prosocial-selfish comfort gap grows by 50%
-- Selfish agents suffer 1.6× the comfort loss of prosocial agents
+- Both groups lose approximately 13% of baseline comfort
+- The prosocial agent advantage stays stable at 2.5–3.0 percentage points across all scarcity levels
+- Group-level variance increases substantially, with standard deviations more than doubling
 
-This finding directly addresses one of the sub-questions: "What trade-offs appear between community-wide energy efficiency and distributional fairness?" The answer is that the trade-off is not constant — it depends on resource availability. Under abundance, personality differences are muted. Under scarcity, they become critical.
+This finding directly addresses one of the sub-questions: "What trade-offs appear between community-wide energy efficiency and distributional fairness?" The answer is that the prosocial advantage is reliable rather than conditional — it persists across scarcity levels but does not grow. The increased variance at higher cloud probabilities means that individual outcomes become less predictable, but the directional benefit of prosocial reward design is robust.
 
-This has a clear design implication: **energy management systems for communities facing frequent scarcity (northern latitudes, developing regions, communities with limited storage) should prioritise fairness-encouraging mechanisms**, because that is precisely when they yield the greatest benefit.
+This has a clear design implication: **energy management systems should embed fairness mechanisms as a reliable feature, not one that depends on scarcity conditions**. Even under stress, prosocial agents maintain their advantage, and the consistency of this benefit across resource regimes makes it a safe design choice.
 
 ### 5.4 Curiosity Destabilizes: The Innovator Effect
 
@@ -591,11 +592,13 @@ This study has several limitations that should be acknowledged when interpreting
 
 9. **Innovator ε_min parameter not tested for sensitivity**: The innovator agent's exploration floor was set to ε_min = 0.05 (vs. 0.01 for standard agents) to operationalise High Openness. This specific value was chosen to maintain measurable exploratory behaviour at convergence while avoiding purely random policies. However, sensitivity to this parameter value was not tested — a higher or lower floor might produce different magnitudes of the Innovator Effect. This is a modelling choice that should be investigated in future work.
 
+10. **Sensitivity analysis restricted to 5 seeds**: The scarcity sensitivity analysis (Section 4.6) was run across 5 seeds after an initial 3-seed analysis showed a trend that did not hold when additional seeds were added. The final 5-seed results are more reliable, but 5 seeds still provides limited statistical power for detecting interaction effects between cloud probability and personality. A larger seed count would be needed to estimate the scarcity-personality interaction with confidence.
+
 ---
 
 ## 7. Conclusion
 
-This simulation demonstrated that personality-driven fairness preferences significantly affect individual outcomes in smart neighborhood energy sharing, while having a more muted effect on aggregate community performance. Prosocial agents learned to share surplus at personal cost, leading to higher comfort for themselves and the community as a whole. The effect became stronger under resource scarcity, with the prosocial-selfish comfort gap widening by 50% as cloud probability doubled.
+This simulation demonstrated that personality-driven fairness preferences significantly affect individual outcomes in smart neighborhood energy sharing, while having a more muted effect on aggregate community performance. Prosocial agents learned to share surplus at personal cost, leading to higher comfort for themselves and the community as a whole. The prosocial advantage was consistent across scarcity levels: under both baseline (15% cloud probability) and high-scarcity (35%) conditions, prosocial agents maintained a 2.5–3.0 percentage point comfort advantage over selfish neighbours.
 
 The most surprising finding was the **Innovator Effect**: a single high-Openness agent with prolonged exploration behaviour destabilised the community, reducing overall comfort by 2%, increasing inequality by 22%, and raising blackout rates. This highlights a critical insight for the design of autonomous energy systems: predictable, stable policies are more important for community coordination than individual exploration, even when exploration leads to individually optimal sharing behaviour.
 
@@ -607,7 +610,7 @@ The key contributions of this work are:
 
 3. **Identification of the Innovator Effect** — a novel finding that exploratory behaviour by a single agent can destabilise cooperative equilibria in community resource-sharing systems.
 
-4. **Sensitivity analysis showing that personality effects are amplified under resource scarcity**, with practical implications for the design of resilient energy management systems.
+4. **Sensitivity analysis showing that the prosocial advantage remains consistent across scarcity levels**, with practical implications for the design of reliable fairness-embedding mechanisms.
 
 These findings support the integration of psychological realism into MARL-based energy management, demonstrating that how we encode agent preferences directly shapes emergent community outcomes.
 
