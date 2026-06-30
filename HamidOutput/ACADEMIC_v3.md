@@ -136,7 +136,7 @@ where $h$ is the hour (0–23), $G_{\text{max}} = 1.3$ kW (following Charbonnier
 
 | Symbol | Definition | Unit | Source |
 | :--- | :--- | :--- | :--- |
-| $h$ | Hour of the day (0–23) | hour | |
+| $h$ | Hour of the day (0–23) | hour | Skoplaki & Palyvos (2009) |
 | $G_{\text{max}}$ | Peak solar panel capacity (1.3 kW) | kW | Charbonnier et al. (2022) |
 | $W$ | Weather factor (1.0 clear, 0.5 cloudy) | — | Kusatake et al. (2023) |
 | $G(h)$ | Instantaneous solar power generation | kW | Skoplaki & Palyvos (2009) |
@@ -225,9 +225,9 @@ $$R_i = w_{\text{self}} \cdot C_i + w_{\text{fair}} \cdot F$$
 
 | Symbol | Definition | Unit | Source |
 | :--- | :--- | :--- | :--- |
-| $R_i$ | Total scalar reward for agent $i$ | — | |
+| $R_i$ | Total scalar reward for agent $i$ | — | This work (Eq. 1) |
 | $w_{\text{self}}$ | Weight assigned to personal comfort | — | OCEAN mapping |
-| $C_i$ | Personal comfort level of agent $i$ | — | |
+| $C_i$ | Personal comfort level of agent $i$ | — | This work (Eq. 2) |
 | $w_{\text{fair}}$ | Weight assigned to community fairness | — | Adaptation of Hughes et al. (2018) |
 | $F$ | Jain's Fairness Index for the community | — | Jain et al. (1984) |
 
@@ -237,8 +237,8 @@ $$C_i = \frac{\text{demand met}_i}{\text{demand}_i}$$
 
 | Symbol | Definition | Unit | Source |
 | :--- | :--- | :--- | :--- |
-| $C_i$ | Personal comfort (range [0,1]) | — | |
-| $\text{demand met}_i$ | Energy supplied via solar, battery, or sharing | kWh | |
+| $C_i$ | Personal comfort (range [0,1]) | — | This work (Eq. 2) |
+| $\text{demand met}_i$ | Energy supplied via solar, battery, or sharing | kWh | — |
 | $\text{demand}_i$ | Total electricity requested by the household | kWh | Alshehri & Gaunt (2020) |
 
 If a house's battery and current solar generation together cannot satisfy demand, the unmet fraction results in $C_i < 1.0$, which we classify as a **partial blackout**. When $C_i < 0.95$, the day is classified as a **blackout day** for that house.
@@ -294,9 +294,9 @@ where $\alpha$ is the learning rate, $\gamma$ is the discount factor, $R$ is the
 | :--- | :--- | :--- | :--- |
 | $Q(s, a)$ | Action-value estimate for state $s$ and action $a$ | — | Watkins & Dayan (1992) |
 | $\alpha$ | Learning rate (0.2) | — | Sutton & Barto (2018) |
-| $R$ | Instantaneous reward | — | |
+| $R$ | Instantaneous reward | — | This work (Eq. 1) |
 | $\gamma$ | Discount factor (0.99) | — | Sutton & Barto (2018) |
-| $s, s'$ | Current and subsequent states | — | |
+| $s, s'$ | Current and subsequent states | — | Watkins & Dayan (1992) |
 
 #### Hyperparameters
 
@@ -469,10 +469,10 @@ where the superscript $+$ indicates that only positive surplus after sharing is 
 
 | Symbol | Definition | Unit | Source |
 | :--- | :--- | :--- | :--- |
-| $W$ | Average daily community energy waste | kWh/day | |
-| $T$ | Total evaluation time steps | hours | |
-| $N$ | Total houses (10) | — | |
-| $()^+$ | Positive part operator (rectified linear) | — | |
+| $W$ | Average daily community energy waste | kWh/day | This work (Eq. 5) |
+| $T$ | Total evaluation time steps | hours | — |
+| $N$ | Total houses (10) | — | Alshehri & Gaunt (2020) |
+| $()^+$ | Positive part operator (rectified linear) | — | — |
 
 **Prosocial vs. Selfish Comfort Split** measures distributional equity within mixed-type communities. For each scenario, the mean comfort of prosocial-type agents (those with $w_{\text{fair}} \geq 0.5$) is compared against selfish-type agents (those with $w_{\text{fair}} \leq 0.2$) over the evaluation window. The gap $\Delta C = \bar{C}_{\text{prosocial}} - \bar{C}_{\text{selfish}}$ quantifies whether prosocial agents benefit or suffer relative to their selfish neighbours. A positive gap indicates that prosocial reward weights produce higher individual comfort despite — or because of — their greater concern for community fairness.
 
@@ -485,8 +485,8 @@ where $\bar{C}_{(i)}$ are the per-house average comfort values sorted in ascendi
 | Symbol | Definition | Unit | Source |
 | :--- | :--- | :--- | :--- |
 | $G$ | Gini Coefficient (range [0, 1]) | — | Gini (1912) |
-| $\bar{C}_{(i)}$ | Comfort values sorted in ascending order | — | |
-| $N$ | Number of households (10) | — | |
+| $\bar{C}_{(i)}$ | Comfort values sorted in ascending order | — | — |
+| $N$ | Number of households (10) | — | Alshehri & Gaunt (2020) |
 
 **Sharing Frequency ($S$)** measures the learned propensity to cooperate by examining the final Q-table of each agent after training:
 
@@ -496,9 +496,9 @@ where $|S| = 96$ is the total number of states and the numerator counts the stat
 
 | Symbol | Definition | Unit | Source |
 | :--- | :--- | :--- | :--- |
-| $S_i$ | Agent $i$'s frequency of sharing | — | |
-| $S$ | Total number of discrete states (96) | — | |
-| $a$ | Greedy action selected by the policy | — | |
+| $S_i$ | Agent $i$'s frequency of sharing | — | This work (Eq. 7) |
+| $S$ | Total number of discrete states (96) | — | — |
+| $a$ | Greedy action selected by the policy | — | — |
 
 #### Metric-to-Research-Question Mapping
 
@@ -533,6 +533,8 @@ All Q-learning hyperparameters are identical across scenarios and agents, except
 ---
 
 ## 5. Results
+
+All scenarios are compared against the **All Selfish** baseline, which represents the absence of the proposed OCEAN-modulated reward shaping — agents optimise only their personal comfort ($w_{\text{self}} = 1.0, w_{\text{fair}} = 0.0$). Every other scenario incorporates the proposed method and is evaluated against this baseline to isolate the effect of personality-driven rewards.
 
 ### 5.1 Community-Level Metrics
 

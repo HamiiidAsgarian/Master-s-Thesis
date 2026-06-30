@@ -24,14 +24,12 @@
 | Issue | Location | Severity | Fix |
 |---|---|---|---|
 | **Cross-reference bug** | §5.10, line 784: "Sections **4.1** through **4.9**" | Medium | Should be "Sections **5.1** through **5.9**" — Fixed ✔️ |
-| Baseline framing (Point 9) | §5 — all results subsections | Medium | "All Selfish" should be presented as method-absent baseline before comparing OCEAN-based variants. Data is there; narrative frame needs adjustment. |
-| Empty source cells | Parameter tables throughout §3–§4 | Low | Symbols derived from the formula itself (R_i, C_i, R, s, s', W) have blank source columns. Consider adding "— Derived" or citing the defining equation. |
+| Baseline framing (Point 9) | §5 — all results subsections | Medium | "All Selfish" should be presented as method-absent baseline before comparing OCEAN-based variants. — Fixed ✔️ |
+| Empty source cells | Parameter tables throughout §3–§4 | Low | Symbols derived from the formula itself (R_i, C_i, R, s, s', W) have blank source columns. — Fixed ✔️ |
 
 ## Remaining Action Items
 
-1. **Baseline framing (Point 9)**: Add a sentence at the start of §5 (Results) explicitly stating: "All Selfish serves as the baseline condition — it represents the absence of the proposed OCEAN-modulated reward shaping. All other scenarios incorporate the proposed method and are compared against this baseline." No structural changes needed.
-
-2. **Empty source cells (Point 14)**: Fill any blank source cells with a justification or "— (see Equation N)" reference. This is cosmetic but professor-visible.
+None — all identified issues are resolved.
 
 ## Key Numbers
 
