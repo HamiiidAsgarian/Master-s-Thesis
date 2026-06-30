@@ -92,7 +92,7 @@ The global energy landscape is undergoing a fundamental shift from centralized p
 
 ### 2.2 Peer-to-Peer Trading and Pricing Mechanisms
 
-Peer-to-peer (P2P) energy trading has been proposed as a consumer-centric solution that allows prosumers to share surplus energy directly with neighbours. Current literature classifies P2P markets into three categories — full P2P, community-based, and hybrid models — with the community-based design recognised as the most suitable for residential clusters due to the presence of a central mediator or aggregator. Pricing strategies commonly rely on the supply-and-demand ratio (SDR), mid-market rate (MMR), or bill sharing (BS). Many studies employ non-cooperative game theory, such as Stackelberg games where a central leader sets prices and agents act as followers, or Nash bargaining to distribute benefits (Behrunani et al., 2023). However, these models typically assume "economic rationality," where agents possess full knowledge of others' strategies or act with consistent self-interest — an assumption that is at odds with the heterogeneous social preferences observed in real human communities.
+Peer-to-peer (P2P) energy trading has been proposed as a consumer-centric solution that allows prosumers to share surplus energy directly with neighbours. Current literature classifies P2P markets into three categories — full P2P, community-based, and hybrid models — with the community-based design recognised as the most suitable for residential clusters due to the presence of a central mediator or aggregator (Zhou & Lund, 2023). Pricing strategies commonly rely on the supply-and-demand ratio (SDR), mid-market rate (MMR), or bill sharing (BS). Many studies employ non-cooperative game theory, such as Stackelberg games where a central leader sets prices and agents act as followers, or Nash bargaining to distribute benefits (Behrunani et al., 2023). However, these models typically assume "economic rationality," where agents possess full knowledge of others' strategies or act with consistent self-interest — an assumption that is at odds with the heterogeneous social preferences observed in real human communities.
 
 ### 2.3 Multi-Agent Reinforcement Learning for Distributed Control
 
@@ -165,7 +165,7 @@ The average daily demand across all profiles is approximately **8.8 kWh**, consi
 
 #### Battery Storage
 
-Each house has a **7.0 kWh battery** (Alshehri & Gaunt, 2020) with the following characteristics:
+Each house has a **7.0 kWh battery** (Alshehri & Gaunt, 2020; Bui et al., 2019) with the following characteristics:
 
 - **Starting state**: 50% charged (3.5 kWh) at the beginning of each simulated day
 - **Charge/discharge**: Unlimited rate within capacity bounds (simplified model)
@@ -816,7 +816,7 @@ The classic tension in resource allocation is between efficiency (maximising tot
 
 - **At the individual level**, there is a clear trade-off. Prosocial agents in mixed communities achieve higher personal comfort than their selfish neighbours (0.935 vs. 0.905, p = 0.0011). This is not because prosocial agents are sacrificing; rather, their sharing creates a more stable community that benefits everyone, and they themselves benefit disproportionately because they are never the ones triggering cascading failures.
 
-The policy implication is important: **fairness norms do not necessarily reduce efficiency**. In resource-sharing systems with storage, sharing surplus that would otherwise be wasted is Pareto-improving — it makes some agents better off without making anyone worse off.
+The policy implication is important: **fairness norms do not necessarily reduce efficiency**. In resource-sharing systems with storage, sharing surplus that would otherwise be wasted is a potential efficiency benefit — it makes some agents better off without making anyone worse off. However, this efficiency gain should be interpreted as a directional trend: the 11.5% reduction in energy waste in prosocial-dominated communities was not statistically significant (p = 0.193), and more seeds would be required to confirm the pattern.
 
 ### 6.2 Emergent Reciprocity
 
@@ -932,6 +932,7 @@ These extensions would test the boundaries of the core finding: that psychologic
 - Aloor, J., Nair, A., & Krishnan, S. (2024). Fairness in multi-agent reinforcement learning: A min-max approach. _arXiv preprint_, arXiv:2410.14916.
 - Alshehri, J., & Gaunt, C. (2020). Heterogeneous multi-agent reinforcement learning for residential energy management. _IEEE Transactions on Smart Grid_, 11(5), 4143–4152.
 - Behrunani, V., Heer, P., & Hug, G. (2023). A game-theoretic approach to peer-to-peer energy trading with fairness constraints. _arXiv preprint_, arXiv:2302.04771.
+- Bui, V.-H., Hussain, A., & Kim, H.-M. (2019). Q-learning-based operation strategy for community battery energy storage system (CBESS) in microgrid system. _Energies_, 12(9), 1789.
 - Charbonnier, M., Morin, L., & Petit, P. (2022). Residential multi-agent reinforcement learning for energy management. _arXiv preprint_, arXiv:2203.03417.
 - Fehr, E., & Gächter, S. (2000). Cooperation and punishment in public goods experiments. _American Economic Review_, 90(4), 980–994.
 - Fischbacher, U., & Gächter, S. (2010). Social preferences, beliefs, and the dynamics of free riding in public goods experiments. _American Economic Review_, 100(1), 541–556.
@@ -951,6 +952,7 @@ These extensions would test the boundaries of the core finding: that psychologic
 - Sutton, R. S., & Barto, A. G. (2018). _Reinforcement Learning: An Introduction_ (2nd ed.). MIT Press.
 - Watkins, C. J. C. H., & Dayan, P. (1992). Q-learning. _Machine Learning_, 8(3), 279–292.
 - Zhang, Y., Liu, X., & Chen, W. (2025). Optimistic epsilon-greedy exploration in cooperative multi-agent reinforcement learning. _arXiv preprint_, arXiv:2502.03506.
+- Zhou, Y., & Lund, P. D. (2023). Peer-to-peer energy sharing and trading of renewable energy in smart communities — trading pricing models, decision-making and agent-based collaboration. _Renewable Energy_, 206, 992–1007.
 - Zhou, Y., & Sun, Q. (2023). Jain's fairness index in community energy storage systems: A case study. _Journal of Energy Storage_, 65, 107311.
 - IEA PVPS. (2021). _Trends in Photovoltaic Applications 2021_. International Energy Agency Photovoltaic Power Systems Programme, Report IEA-PVPS T1-41.
 - Jadhav, A., Singh, R., & Patel, D. (2024). FairMarket-RL: Integrating LLM-based fairness critics in multi-agent energy markets. _arXiv preprint_, arXiv:2408.11243.

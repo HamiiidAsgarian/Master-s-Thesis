@@ -20,6 +20,25 @@
 | 6 | **Forward reference to Table 5** from Introduction | §1 line 63: added "Table 5 provides the complete mapping from each research question to its associated evaluation metrics" | ✅ Added |
 | 7 | **Waste reduction claim** | Already correctly worded as "directional trend, not statistically significant" | ✅ Pre-existing |
 
+## overall.md Action Items — Applied
+
+| # | Item | Fix Location | Status |
+|---|------|-------------|--------|
+| 1 | **Statistical wording in §6.1** | §6.1 (Discussion): added "potential efficiency benefit... directional trend: the 11.5% reduction... was not statistically significant (p = 0.193)" | ✅ Added |
+
+## AZAD_THESIS_Format.md — No Content Changes Needed
+
+The following are formatting/publishing tasks for Word/PDF conversion, not content changes to the markdown:
+
+| Item | Notes |
+|------|-------|
+| **5-chapter IAU structure** | Content already maps correctly (§1→Ch1, §2→Ch2, §3–§4→Ch3, §5→Ch4, §6–§8→Ch5, §9→Refs) |
+| **Hyphen-based numbering** | Change `2.4.5` → `2-4-5` during Farsi conversion |
+| **Table/Figure captions** | Table captions above, Figure captions below; Nazanin 11 Bold / TNR 11 Bold |
+| **Fonts** | Lotus Thin 14 Farsi, Times New Roman 12 English |
+| **Preliminary pages** | Add per IAU checklist (Bismillah, Farsi abstract, etc.) |
+| **Appendices** | Python code / sample Q-tables |
+
 ## FB1.md Items That Are Formatting/Publishing (Not Content Changes to v3)
 
 | # | Item | Notes |
