@@ -1,45 +1,36 @@
-# Final State — ACADEMIC_v3.md Audit
+# Final State — ACADEMIC_v3.md Audit (Post-FB1.md)
 
-## Compliance Summary
+## Professor's 14-Point Audit Summary
 
-| Professor Point | Status | Notes |
-|---|---|---|
-| 1. Intro → Lit Review → Proposed Method | ✅ Resolved | §1 → §2 → §3 with flowchart/pseudocode/box-by-box |
-| 2. Mathematical grounding with citations | ✅ Resolved | Every equation has citations (Watkins & Dayan, Sutton & Barto, Jain, Gini, Skoplaki & Palyvos) |
-| 3. Innovation clearly stated in Intro + Gap at end of Lit Review | ✅ Resolved | §1 line 63 explicitly states innovation; §2.7 has gap summary |
-| 4. Comparative table (10–12 papers) in Lit Review | ✅ Resolved | Table 3 (§2.6) covers 10 papers |
-| 5. Flowchart + pseudocode + box-by-box | ✅ Resolved | §3.4: System Architecture Flowchart (line 322), box-by-box (line 357), pseudocode (line 359) |
-| 6. Physical environment ground truth + parameter citations | ✅ Resolved | §3.1 (solar, demand, battery) with citations; §4.3 hyperparameter table with sources |
-| 7. Metric definitions with formulas, not bullets | ✅ Resolved | §4.2: each metric has formula + paragraph interpretation + parameter table |
-| 8. Results step-by-step by metric with interpretation | ✅ Resolved | §5.1–5.8 per metric with data + statistical tests |
-| 9. Baseline condition explicitly framed | ⚠️ Partial | Results compare All Selfish alongside others but do not explicitly frame it as "absence of the proposed OCEAN-based method." Professor likely wants: first present baseline, then compare variants against it, not just side-by-side. Data is present; narrative emphasis needed. |
-| 10. SOTA comparison after baseline | ✅ Resolved | §5.9 (Comparison with State-of-the-Art) |
-| 11. Neutral overall analysis (what worked/didn't/why) | ✅ Resolved | §5.10 with sub-headings: What worked / What did not work / Surprising / Caveats |
-| 12. Limitations as paragraphs, not bullets | ✅ Resolved | §7: 4 focused paragraphs, each explaining why + effect |
-| 13. Deepened conclusion (summary, findings, implications, future work) | ✅ Resolved | §8.1–8.4: summary, findings, implications, future work |
-| 14. Reference audit (every parameter must have source) | ⚠️ Minor Gaps | Some parameter table source cells are empty (h in solar table, R_i in reward table, C_i in comfort table, R/s/s' in Q-update table, W in waste table). These are formula-derived quantities, but professor may expect a justification or reference for each. |
+| # | Point | Status |
+|---|-------|--------|
+| 1–8, 10–13 | Full compliance (flowchart, math, innovation, comparative table, pseudocode, environment grounding, metric definitions, step-by-step results, SOTA, neutral analysis, paragraph limitations, deepened conclusion) | ✅ Resolved |
+| 9 | Baseline framing | ✅ Resolved — sentence added at §5 intro |
+| 14 | Parameter source completeness | ✅ Resolved — all empty cells filled |
 
-## Additional Issues Found
+## FB1.md Action Items — Applied
 
-| Issue | Location | Severity | Fix |
-|---|---|---|---|
-| **Cross-reference bug** | §5.10, line 784: "Sections **4.1** through **4.9**" | Medium | Should be "Sections **5.1** through **5.9**" — Fixed ✔️ |
-| Baseline framing (Point 9) | §5 — all results subsections | Medium | "All Selfish" should be presented as method-absent baseline before comparing OCEAN-based variants. — Fixed ✔️ |
-| Empty source cells | Parameter tables throughout §3–§4 | Low | Symbols derived from the formula itself (R_i, C_i, R, s, s', W) have blank source columns. — Fixed ✔️ |
+| # | Item | Fix Location | Status |
+|---|------|-------------|--------|
+| 1 | **Operational Definitions** section in Chapter 1 | §1.1 (new subsection): defines Prosumer, MARL, OCEAN, Innovator Effect | ✅ Added |
+| 2 | **Defend tabular Q-learning** as deliberate choice | §7 (Limitations) — strengthened "deliberate choice: Q-value heatmaps provide interpretability that Deep RL obscures" | ✅ Strengthened |
+| 3 | **Physical grounding to residential standards** | §4.3 end — added "1.3 kW peak (typical UK residential 3–4 panel PV, MCS Standard), 7.0 kWh battery (standard Tesla Powerwall 1)" with IEA PVPS (2021) citation | ✅ Added |
+| 4 | **Reference audit** — missing entries added | Added: Ma et al. (2025), Jadhav et al. (2024), Leng (2025), Rathnayaka et al. (2014), IEA PVPS (2021) | ✅ Added |
+| 5 | **Reference audit** — uncited entries removed | Removed: Bui et al. (2019), Shah et al. (2024) — not cited in text | ✅ Cleaned |
+| 6 | **Forward reference to Table 5** from Introduction | §1 line 63: added "Table 5 provides the complete mapping from each research question to its associated evaluation metrics" | ✅ Added |
+| 7 | **Waste reduction claim** | Already correctly worded as "directional trend, not statistically significant" | ✅ Pre-existing |
 
-## Remaining Action Items
+## FB1.md Items That Are Formatting/Publishing (Not Content Changes to v3)
 
-None — all identified issues are resolved.
+| # | Item | Notes |
+|---|------|-------|
+| 1 | **Insert visuals physically** (Figures 1–6, flowchart) | Must be inserted with Nazanin 11 Bold captions per IAU style guide — formatting task after content finalisation |
+| 2 | **Format adherence** (Nazanin 14 Farsi, TNR 12 English, margins) | University formatting — not content |
+| 3 | **Appendices** (Python code / sample Q-tables) | Structural addition outside v3 scope |
 
 ## Key Numbers
 
-- Total lines: 943 (was 828 before integration; +115 with lit review, tables, parameter tables, metric mapping)
-- Tables: 13 (integrated: comparative lit table, parameter tables × 8, metric mapping)
-- Sections: 9 (§1–§9 with consistent numbering)
-- References: 26 entries in §9
-
-## Document Integrity
-
-- All numerical results/statistics from simulation runs preserved (verified against ACADEMIC_v2.md)
-- All 4 review fixes from academic-v2-review.md applied and confirmed
-- No data changed — only structural additions and cross-reference corrections
+- Total lines: ~965 (after additions)
+- Sections: 9 (§1–§9) with §1.1 operational definitions
+- References: 29 entries (was 26; +5 added, −2 removed)
+- All numerical data from simulation runs preserved (verified)

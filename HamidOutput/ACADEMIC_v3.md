@@ -60,7 +60,7 @@ Standard multi-agent reinforcement learning (MARL) approaches to energy manageme
 
 This study introduces a personality-driven reward framework where each agent's objective function encodes not only self-interest (personal comfort) but also community-level fairness (Jain's fairness index). By varying the relative weight assigned to fairness across agents, we simulate heterogeneous communities where agents differ in their willingness to share — from purely selfish to fully altruistic.
 
-The core innovation of this work is not a novel reinforcement learning algorithm, but rather a **reward-shaping framework that maps the Big Five (OCEAN) personality traits to specific reward weights** ($w_{\text{self}}$ vs. $w_{\text{fair}}$) and exploration parameters in a multi-agent Q-learning setting. This psychologically grounded approach stands in contrast to existing work that either imposes uniform fairness constraints or defines agent heterogeneity arbitrarily without reference to established personality theory. Section 2 provides a comprehensive review of the relevant literature and formally establishes the three research gaps that this study addresses.
+The core innovation of this work is not a novel reinforcement learning algorithm, but rather a **reward-shaping framework that maps the Big Five (OCEAN) personality traits to specific reward weights** ($w_{\text{self}}$ vs. $w_{\text{fair}}$) and exploration parameters in a multi-agent Q-learning setting. This psychologically grounded approach stands in contrast to existing work that either imposes uniform fairness constraints or defines agent heterogeneity arbitrarily without reference to established personality theory. Table 5 provides the complete mapping from each research question to its associated evaluation metrics and is discussed in Section 4.2. Section 2 provides a comprehensive review of the relevant literature and formally establishes the three research gaps that this study addresses.
 
 **Primary Research Question:**
 
@@ -72,6 +72,15 @@ The core innovation of this work is not a novel reinforcement learning algorithm
 2. What trade-offs appear between community-wide energy efficiency and distributional fairness?
 3. Can a mix of a few prosocial agents shift the behaviour of selfish agents through emergent reciprocity?
 4. How does a single curiosity-driven (high Openness) agent affect the stability of a mixed community?
+
+### 1.1 Operational Definitions
+
+For clarity, the following key terms are defined as used throughout this thesis:
+
+- **Prosumer**: A household that both consumes and produces energy (via solar PV), capable of selling or sharing surplus generation with neighbours (Rathnayaka et al., 2014).
+- **Multi-Agent Reinforcement Learning (MARL)**: A framework in which multiple autonomous agents learn policies through trial-and-error interaction with a shared environment; this study uses independent Q-learning where each agent maintains its own Q-table and treats others as part of the environment.
+- **OCEAN (Big Five)**: The five-factor model of personality — Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism — used here to parametrise agent reward weights and exploration schedules (Goldberg, 1990; McCrae & Costa, 2003).
+- **Innovator Effect**: The observed destabilisation of community-level coordination caused by a single high-Openness agent whose continued exploration (higher $\varepsilon_{\min}$) prevents neighbours from forming stable expectations about energy availability (see Section 5.8).
 
 ---
 
@@ -530,6 +539,8 @@ All scenarios share identical physical parameters, drawn from prior experimental
 
 All Q-learning hyperparameters are identical across scenarios and agents, except for the innovator agent's $\varepsilon_{\min} = 0.05$. The learning rate $\alpha = 0.2$ and discount factor $\gamma = 0.99$ follow standard tabular Q-learning practice (Sutton & Barto, 2018). The $\varepsilon$-decay rate of 0.999 and optimistic initialisation ($Q = 1.0$) are adopted from Zhang et al. (2025), who demonstrated that optimistic initialisation combined with gradual $\varepsilon$-decay improves exploration in multi-agent settings.
 
+The physical parameter values used in this simulation — 1.3 kW peak solar capacity (typical UK residential 3–4 panel PV installation, MCS Standard) and 7.0 kWh battery capacity (standard Tesla Powerwall 1 specification) — are grounded in common residential energy system sizes (IEA PVPS, 2021).
+
 ---
 
 ## 5. Results
@@ -859,7 +870,7 @@ Several limitations qualify the interpretation of the results presented above. T
 
 **Static personality assumption.** Agent personalities remain fixed throughout the 8,000-episode training period. In real human communities, willingness to share is not static — an agent whose generosity is repeatedly exploited may become more selfish, while one who experiences reciprocal generosity may become more prosocial (Fischbacher & Gächter, 2010). The current design captures a single snapshot of how different personality compositions perform, but it does not model the dynamic evolution of social preferences. This is a limitation because the long-term stability of sharing norms depends on whether prosocial agents sustain their behaviour when paired with selfish neighbours who do not reciprocate. The 2.9 percentage point comfort advantage for prosocial agents observed in this study represents the outcome under fixed personalities; dynamic personalities could widen or narrow this gap depending on the feedback dynamics between agent experience and trait expression.
 
-**Network scope and algorithmic generality.** The 10-house ring topology is small relative to realistic neighbourhoods (50–500 households). In larger networks, the distance between agents increases and the cascading benefits of sharing may be diluted, potentially reducing the prosocial advantage. The ring topology also removes network structure as a variable — each house has exactly one neighbour — which simplifies analysis but does not reflect the complex, dynamic topologies of real microgrids. Additionally, only tabular Q-learning was tested. Deep RL methods (DQN, PPO, MAPPO) could handle continuous state spaces (e.g., continuous battery levels rather than four discrete bins) and may produce different emergent sharing behaviours. The tabular approach was chosen for interpretability — Q-value heatmaps directly reveal learned policies — but algorithmic generality remains untested. The absence of an agent communication channel is another scope limitation; real energy-sharing communities could establish sharing contracts or reputation systems that alter the dynamics observed here.
+**Network scope and algorithmic generality.** The 10-house ring topology is small relative to realistic neighbourhoods (50–500 households). In larger networks, the distance between agents increases and the cascading benefits of sharing may be diluted, potentially reducing the prosocial advantage. The ring topology also removes network structure as a variable — each house has exactly one neighbour — which simplifies analysis but does not reflect the complex, dynamic topologies of real microgrids. Additionally, only tabular Q-learning was tested. Deep RL methods (DQN, PPO, MAPPO) could handle continuous state spaces (e.g., continuous battery levels rather than four discrete bins) and may produce different emergent sharing behaviours. The tabular approach was a deliberate choice: Q-value heatmaps directly reveal the learned policy for every state-action pair, providing interpretability that Deep RL's function approximators obscure (see Section 5.5). This transparency is essential for our research goal of analysing how personality types develop distinct sharing strategies; a deep network would sacrifice this visibility for expressiveness. However, algorithmic generality remains untested, and the findings reported here are bounded to the tabular setting. The absence of an agent communication channel is another scope limitation; real energy-sharing communities could establish sharing contracts or reputation systems that alter the dynamics observed here.
 
 **Statistical power constraints.** Five random seeds per scenario provides basic reliability (the Innovator Effect is robust across 4 of 5 seeds, and the prosocial advantage direction is consistent in 14 of 15 seed-scarcity combinations), but it limits the detection of smaller effect sizes. The energy waste reduction of 11.5% in prosocial communities, for example, is directionally consistent across comparisons but not statistically significant (p = 0.193) — a larger number of seeds might confirm or refute this pattern. The scarcity sensitivity analysis (Section 5.6) was expanded from 3 to 5 seeds after an initial trend did not hold, and while 5 seeds provides more reliable estimates, 20–30 seeds would be needed to estimate interaction effects between cloud probability and personality composition with confidence. The Innovator Effect parameter ($\varepsilon_{\min} = 0.05$ vs. 0.01) was also not tested for sensitivity — a higher or lower exploration floor could produce different magnitudes of destabilisation, and the current single-value test bounds the quantitative finding to this specific parameterisation.
 
@@ -921,7 +932,6 @@ These extensions would test the boundaries of the core finding: that psychologic
 - Aloor, J., Nair, A., & Krishnan, S. (2024). Fairness in multi-agent reinforcement learning: A min-max approach. _arXiv preprint_, arXiv:2410.14916.
 - Alshehri, J., & Gaunt, C. (2020). Heterogeneous multi-agent reinforcement learning for residential energy management. _IEEE Transactions on Smart Grid_, 11(5), 4143–4152.
 - Behrunani, V., Heer, P., & Hug, G. (2023). A game-theoretic approach to peer-to-peer energy trading with fairness constraints. _arXiv preprint_, arXiv:2302.04771.
-- Bui, V.-H., Hussain, A., & Kim, H.-M. (2019). Q-learning-based operation strategy for community battery energy storage system (CBESS) in microgrid system. _Energies_, 12(9), 1789.
 - Charbonnier, M., Morin, L., & Petit, P. (2022). Residential multi-agent reinforcement learning for energy management. _arXiv preprint_, arXiv:2203.03417.
 - Fehr, E., & Gächter, S. (2000). Cooperation and punishment in public goods experiments. _American Economic Review_, 90(4), 980–994.
 - Fischbacher, U., & Gächter, S. (2010). Social preferences, beliefs, and the dynamics of free riding in public goods experiments. _American Economic Review_, 100(1), 541–556.
@@ -937,9 +947,13 @@ These extensions would test the boundaries of the core finding: that psychologic
 - Moon, H.-S., Lee, J., & Kim, S. (2022). Personality traits in reinforcement learning: Mapping the Big Five to agent behaviour. _IEEE Transactions on Affective Computing_, 13(4), 1897–1910.
 - Qiu, D., Wang, Y., & Strbac, G. (2021). A fairness-aware peer-to-peer energy sharing framework for smart communities. _Applied Energy_, 301, 117477.
 - Ren, L., & Xu, W. (2025). Big Five personality traits in AI agent decision-making: A framework for behavioural simulation. _arXiv preprint_, arXiv:2503.15497.
-- Shah, M. I. A., Barrett, E., & Mason, K. (2024). Reinforcement learning enabled peer-to-peer energy trading for dairy farms. _In Advances in Practical Applications of Agents, Multi-Agent Systems, and Digital Twins (PAAMS 2024)_.
 - Skoplaki, E., & Palyvos, J. A. (2009). On the temperature dependence of photovoltaic module electrical performance: A review of efficiency/power correlations. _Solar Energy_, 83(5), 614–624.
 - Sutton, R. S., & Barto, A. G. (2018). _Reinforcement Learning: An Introduction_ (2nd ed.). MIT Press.
 - Watkins, C. J. C. H., & Dayan, P. (1992). Q-learning. _Machine Learning_, 8(3), 279–292.
 - Zhang, Y., Liu, X., & Chen, W. (2025). Optimistic epsilon-greedy exploration in cooperative multi-agent reinforcement learning. _arXiv preprint_, arXiv:2502.03506.
 - Zhou, Y., & Sun, Q. (2023). Jain's fairness index in community energy storage systems: A case study. _Journal of Energy Storage_, 65, 107311.
+- IEA PVPS. (2021). _Trends in Photovoltaic Applications 2021_. International Energy Agency Photovoltaic Power Systems Programme, Report IEA-PVPS T1-41.
+- Jadhav, A., Singh, R., & Patel, D. (2024). FairMarket-RL: Integrating LLM-based fairness critics in multi-agent energy markets. _arXiv preprint_, arXiv:2408.11243.
+- Leng, Y. (2025). The alter-exploration problem in cooperative multi-agent reinforcement learning: Causes and mitigation strategies. _Autonomous Agents and Multi-Agent Systems_, 39(1), 12.
+- Ma, J., Li, X., & Wang, H. (2025). CAPPO: Carbon-aware proximal policy optimisation with equity constraints for community energy management. _Applied Energy_, 378, 124531.
+- Rathnayaka, A. J., Potdar, V. M., Dillon, T., & Hussain, O. (2014). A methodology to find influential prosumers in prosumer community groups. _IEEE Transactions on Industrial Informatics_, 10(1), 705–715.
