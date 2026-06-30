@@ -211,12 +211,12 @@ ax.set_ylabel('Final Comfort')
 ax.set_title('Personality Gap Grows with Scarcity')
 ax.legend()
 ax.grid(axis='y', alpha=0.3)
-ax.set_ylim(bottom=0.85, top=1.0)   # adjust based on your data
-for bar, val in zip(bars1, pro_means):
-    ax.text(bar.get_x()+bar.get_width()/2., bar.get_height()+0.002,
+ax.set_ylim(0.7, 1.0)
+for bar, val, std in zip(bars1, pro_means, pro_stds):
+    ax.text(bar.get_x()+bar.get_width()/2., bar.get_height()+std+0.005,
             f'{val:.3f}', ha='center', fontsize=9)
-for bar, val in zip(bars2, self_means):
-    ax.text(bar.get_x()+bar.get_width()/2., bar.get_height()+0.002,
+for bar, val, std in zip(bars2, self_means, self_stds):
+    ax.text(bar.get_x()+bar.get_width()/2., bar.get_height()+std+0.005,
             f'{val:.3f}', ha='center', fontsize=9)
 plt.tight_layout()
 plt.savefig('results/sensitivity_cloud.png', dpi=150)

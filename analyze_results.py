@@ -26,62 +26,63 @@ for scenario in scenarios:
     if metrics_list:
         all_data[scenario] = pd.DataFrame(metrics_list)
 
-# ========== PLOT 1: Comfort Comparison ==========
+# ========== PLOT 1: Community-Level Metrics (Figure 4-1) ==========
 fig, axes = plt.subplots(1, 3, figsize=(16, 6))
 colors_scenarios = ['#e74c3c', '#2ecc71', '#3498db', '#9b59b6', '#f39c12']
+short_labels = ['All Selfish', 'All Prosocial', 'Mixed', 'Varied Altruism', 'Innovator\nEffect']
 
 # 1a. Mean Community Comfort
 ax = axes[0]
 x_pos = np.arange(len(scenarios))
 comfort_means = [all_data[s]['comfort'].mean() for s in scenarios]
 comfort_stds = [all_data[s]['comfort'].std() for s in scenarios]
-bars = ax.bar(x_pos, comfort_means, yerr=comfort_stds, 
-              color=colors_scenarios, capsize=8, alpha=0.8)
+bars = ax.bar(x_pos, comfort_means, yerr=comfort_stds,
+              color=colors_scenarios, capsize=8, alpha=0.85, edgecolor='gray', linewidth=0.5)
 ax.set_xticks(x_pos)
-ax.set_xticklabels([scenario_labels[s] for s in scenarios], fontsize=9)
-ax.set_ylabel('Mean Comfort')
-ax.set_title('Community Comfort by Scenario')
-ax.set_ylim([0, 1])
+ax.set_xticklabels(short_labels, fontsize=10)
+ax.set_ylabel('Mean Comfort', fontsize=12)
+ax.set_title('Community Comfort by Scenario', fontsize=13, fontweight='bold')
+ax.set_ylim([0.85, 1.0])
 ax.grid(axis='y', alpha=0.3)
-for bar, val in zip(bars, comfort_means):
-    ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 0.02,
-            f'{val:.3f}', ha='center', fontweight='bold')
+for bar, val, std in zip(bars, comfort_means, comfort_stds):
+    ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + std + 0.003,
+            f'{val:.3f} ± {std:.3f}', ha='center', fontsize=8, fontweight='bold')
 
 # 1b. Jain's Fairness
 ax = axes[1]
 fairness_means = [all_data[s]['fairness'].mean() for s in scenarios]
 fairness_stds = [all_data[s]['fairness'].std() for s in scenarios]
 bars = ax.bar(x_pos, fairness_means, yerr=fairness_stds,
-              color=colors_scenarios, capsize=8, alpha=0.8)
+              color=colors_scenarios, capsize=8, alpha=0.85, edgecolor='gray', linewidth=0.5)
 ax.set_xticks(x_pos)
-ax.set_xticklabels([scenario_labels[s] for s in scenarios], fontsize=9)
-ax.set_ylabel("Jain's Fairness Index")
-ax.set_title('Community Fairness by Scenario')
-ax.set_ylim([0, 1])
+ax.set_xticklabels(short_labels, fontsize=10)
+ax.set_ylabel("Jain's Fairness Index", fontsize=12)
+ax.set_title('Community Fairness by Scenario', fontsize=13, fontweight='bold')
+ax.set_ylim([0.85, 1.0])
 ax.grid(axis='y', alpha=0.3)
-for bar, val in zip(bars, fairness_means):
-    ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 0.02,
-            f'{val:.3f}', ha='center', fontweight='bold')
+for bar, val, std in zip(bars, fairness_means, fairness_stds):
+    ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + std + 0.003,
+            f'{val:.3f} ± {std:.3f}', ha='center', fontsize=8, fontweight='bold')
 
 # 1c. Blackout Rate
 ax = axes[2]
 blackout_means = [all_data[s]['blackout_rate'].mean() * 100 for s in scenarios]
 blackout_stds = [all_data[s]['blackout_rate'].std() * 100 for s in scenarios]
 bars = ax.bar(x_pos, blackout_means, yerr=blackout_stds,
-              color=colors_scenarios, capsize=8, alpha=0.8)
+              color=colors_scenarios, capsize=8, alpha=0.85, edgecolor='gray', linewidth=0.5)
 ax.set_xticks(x_pos)
-ax.set_xticklabels([scenario_labels[s] for s in scenarios], fontsize=9)
-ax.set_ylabel('Blackout Rate (%)')
-ax.set_title('Blackout Frequency by Scenario')
+ax.set_xticklabels(short_labels, fontsize=10)
+ax.set_ylabel('Blackout Rate (%)', fontsize=12)
+ax.set_title('Blackout Frequency by Scenario', fontsize=13, fontweight='bold')
+ax.set_ylim(0, max(blackout_means) + max(blackout_stds) + 3)
 ax.grid(axis='y', alpha=0.3)
-for bar, val in zip(bars, blackout_means):
-    ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 0.5,
-            f'{val:.1f}%', ha='center', fontweight='bold')
+for bar, val, std in zip(bars, blackout_means, blackout_stds):
+    ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + std + 0.3,
+            f'{val:.1f}% ± {std:.1f}%', ha='center', fontsize=8, fontweight='bold')
 
 plt.suptitle('Community-Level Metrics Across Scenarios', fontsize=14, fontweight='bold')
 plt.tight_layout()
 plt.savefig('results/community_metrics.png', dpi=150, bbox_inches='tight')
-plt.show()
 
 # ========== PLOT 2: Agent-Type Comfort Comparison ==========
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -127,7 +128,6 @@ for bar, val in zip(bars2, selfish_means):
 
 plt.tight_layout()
 plt.savefig('results/agent_type_comfort.png', dpi=150, bbox_inches='tight')
-plt.show()
 
 # ========== PRINT SUMMARY TABLE ==========
 print("\n" + "="*80)
