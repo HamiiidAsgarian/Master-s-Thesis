@@ -1,10 +1,8 @@
-# Smart Neighborhood Energy Sharing MARL Simulation — V3
+# Smart Neighborhood Energy Sharing MARL Simulation
 
 ## What It Is
 
-A **Multi-Agent Reinforcement Learning (MARL)** simulation where houses in a smart neighborhood micro-grid decide whether to share surplus solar energy with neighbours. Each house has a **personality** (selfish → altruistic) that determines how much it values personal comfort vs. community fairness in its reward function. The project studies emergent sharing behaviour, fairness-efficiency trade-offs, and the impact of personality diversity under resource scarcity.
-
----
+A **Multi-Agent Reinforcement Learning (MARL)** simulation of a smart neighborhood micro-grid where houses (agents) decide whether to share surplus solar energy with neighbours. Each agent follows a fixed personality profile (selfish, prosocial, altruistic) that shapes its reward function, enabling the study of emergent fairness and efficiency trade‑offs under resource scarcity.
 
 ## How It Works
 
@@ -51,28 +49,94 @@ A **Multi-Agent Reinforcement Learning (MARL)** simulation where houses in a sma
 - Comfort gap **widens under scarcity** (higher cloud probability), showing personality matters most when resources are tight.
 - Scenario 5 (Innovator Effect) pending results: tests whether a single high-Openness exploratory agent stabilizes or disrupts mixed community energy sharing.
 
----
+## Module Descriptions
+
+### `offgrid_marl.py`
+The heart of the simulation. Contains:
+- **Personality profiles** (`PERSONALITIES` dict): weights for self‑interest vs. fairness.
+- **Demand profiles** (`DEMAND_PROFILES`): hourly electricity demand for different house types.
+- **`House` class**: models solar generation (half‑sine curve), battery storage, demand, and sharing logic. Energy flows: generation → own demand → battery → surplus → possible sharing.
+- **`Community` class**: coordinates multiple houses, manages sharing pairs (ring topology), computes Jain's fairness index.
+- **`QLAgent` class**: independent tabular Q‑learner with state (hour, discretised battery level), actions (share 0%, 50%, 100% of net generation), and personality‑weighted reward (own comfort + fairness).
+- **`run_simulation()`**: main loop, configurable with house count, battery capacity, solar peak, personality mix, cloud probability, saving options.
+
+### `run_experiments.py`
+Defines five scenarios (all‑selfish, all‑prosocial, mixed, varied‑altruism, innovator_effect) and loops over five random seeds. Calls `run_simulation()` for each combination and saves metrics in `results/<scenario>/seed_<N>/`.
+
+### `analyze_results.py`
+Loads all `final_metrics.csv` files, computes means and standard deviations, and produces:
+- `community_metrics.png`: bar charts of comfort, fairness, blackout rate across scenarios.
+- `agent_type_comfort.png`: grouped bar chart comparing prosocial vs selfish comfort in mixed communities.
+Prints a summary table to console.
+
+### `advanced_analysis.py`
+- Retrains a set of agents for each scenario to extract Q‑tables.
+- Generates `qtable_heatmaps.png`: average Q‑values per hour for representative agents.
+- Runs statistical tests (independent t‑test, paired t‑test, one‑way ANOVA) and saves results in `statistical_tests.txt`.
+
+### `final_analysis.py`
+- Computes **Gini coefficient** of comfort across houses for one seed per scenario → `gini_comparison.png`.
+- Extracts **sharing frequency** from Q‑tables (fraction of states where best action is share) → `sharing_frequency.png`.
+- **Sensitivity analysis**: runs the mixed community with cloud probabilities 15%, 25%, 35% and plots the prosocial‑selfish comfort gap → `sensitivity_cloud.png`.
+
+## Key Parameters
+
+- `solar_max = 1.3` kW → daily generation ~9.9 kWh (clear)
+- `battery_cap = 7.0` kWh (starts at 50%)
+- `weather_cloud_prob = 0.15` (15% chance of cloudy day with 50% solar)
+- Demand profiles total ~8.8 kWh/day
+- Episodes = 8000, ε‑greedy decay from 1.0 to 0.01, α = 0.2, γ = 0.99
+
+## Output Data per Experiment Seed
+
+- `final_metrics.csv`: comfort, fairness, blackout rate, waste, prosocial/selfish comfort
+- `config.json`: record of parameters used
+- `results_plot.png`: learning curves and final comfort bar chart
+
+## Dependencies
+
+Install from `requirements.txt`:
+
+```
+numpy==1.24.3
+matplotlib==3.7.1
+pandas==2.0.3
+scipy==1.10.1
+```
+
+Use Python 3.8 or newer.
+
+## How to Run
+
+```bash
+pip install -r requirements.txt
+python offgrid_marl.py                  # single test run (mixed, saves to results/mixed/seed_42/)
+python run_experiments.py               # full batch (5 scenarios × 5 seeds, ~25-35 min)
+python analyze_results.py               # community-level plots from saved CSVs
+python advanced_analysis.py             # Q-table heatmaps + statistical tests (~15-20 min)
+python final_analysis.py                # Gini + sharing freq + sensitivity (~10-15 min)
+```
 
 ## Project Structure
 
 ```
-sim/
-├── offgrid_marl.py          # MAIN: full simulation (House, Community, QLAgent, run_simulation, plotting)
-├── run_experiments.py.py    # Batch runner: 5 scenarios × 5 seeds, saves results/
-├── analyze_results.py       # Loads CSVs → community_metrics.png + agent_type_comfort.png + summary table
-├── advanced_analysis.py     # Q-table heatmaps + statistical tests (t-tests, ANOVA)
-├── final_analysis.py        # Gini coefficient, sharing frequency, sensitivity analysis (cloud probability)
-├── agent.py                 # Alternate/legacy Q-learning agent (unused, superseded by offgrid_marl.py)
-├── environment.py           # Alternate/legacy House + EnergyCommunity (unused, superseded by offgrid_marl.py)
-├── simulation.py            # Alternate/legacy simulation runner (incomplete, unused)
+offgrid-energy-marl/
+├── offgrid_marl.py          # Core simulation environment, agents, and learning loop
+├── run_experiments.py       # Batch runner for multiple scenarios and seeds
+├── analyze_results.py       # Statistical analysis and main comparison plots
+├── advanced_analysis.py     # Q‑table heatmaps and t‑tests / ANOVA
+├── final_analysis.py        # Gini coefficient, sharing frequency, sensitivity analysis
+├── agent.py                 # Alternate/legacy Q-learning agent (unused)
+├── environment.py           # Alternate/legacy House + EnergyCommunity (unused)
+├── simulation.py            # Alternate/legacy simulation runner (incomplete)
 ├── t.py                     # Quick dependency test script
-├── requirements.txt         # numpy, matplotlib, pandas, scipy, seaborn, jupyter
-├── results/                 # All outputs (CSVs, plots, configs)
-│   ├── all_selfish/         #   seed_42, seed_123, seed_456, seed_789, seed_1011
-│   ├── all_prosocial/       #   (same seeds)
-│   ├── mixed/               #   (same seeds)
-│   ├── varied_altruism/     #   (same seeds)
-│   ├── innovator_effect/    #   (same seeds)
+├── requirements.txt         # Python dependencies
+├── results/                 # Output directory (generated)
+│   ├── all_selfish/
+│   ├── all_prosocial/
+│   ├── mixed/
+│   ├── varied_altruism/
+│   ├── innovator_effect/
 │   ├── community_metrics.png
 │   ├── agent_type_comfort.png
 │   ├── qtable_heatmaps.png
@@ -80,21 +144,16 @@ sim/
 │   ├── sharing_frequency.png
 │   ├── sensitivity_cloud.png
 │   └── statistical_tests.txt
-├── README.md                # This file — project overview
-├── TECHNICAL.md             # Technical documentation (setup, modules, how to run)
+├── README.md                # Project overview, technical reference, and usage (this file)
 ├── ACADEMIC.md              # Academic write‑up (thesis-style paper with results)
-├── REVIEW.md                # Review feedback from advisor (identifies OCEAN gap)
-├── THESIS_ADVISOR_BRIEF.md  # Brief for academic assistant guiding student's thesis
-└── TASK_v4.md               # Archived implementation instructions (v4 changes)
+├── REVIEW.md                # Review feedback from advisor
+├── THESIS_ADVISOR_BRIEF.md  # Internal brief for academic assistant guiding the thesis
+└── TASK_v4.md               # Archived implementation instructions
 ```
 
-## How to Run
+## Related Documents
 
-```bash
-pip install -r requirements.txt
-python offgrid_marl.py                  # single test run (mixed, saves to results/mixed/seed_42/)
-python run_experiments.py.py            # full batch (25 runs, ~25-35 min)
-python analyze_results.py               # plots from saved CSVs
-python advanced_analysis.py             # Q-table heatmaps + stats (~15-20 min)
-python final_analysis.py                # Gini + sharing freq + sensitivity (~10-15 min)
-```
+- **`ACADEMIC.md`** — Full academic write‑up formatted as a thesis chapter, including OCEAN mapping table, ethics framing, and detailed results discussion.
+- **`THESIS_ADVISOR_BRIEF.md`** — Internal operational document for the AI academic assistant (student profile, pacing plan, communication strategy). Not part of the public project documentation.
+- **`REVIEW.md`** — Advisor review feedback and action items.
+- **`Final_state.md`** — Working audit log tracking professor feedback items and revision status (thesis-writing process only).
