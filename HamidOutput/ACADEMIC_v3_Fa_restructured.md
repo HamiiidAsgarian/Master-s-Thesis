@@ -10,107 +10,52 @@ supervisor: "دکتر نوری مقدم"
 advisor: ""
 author: "حمید اصغریان"
 defense_date: "۱۴۰۵"
+university_en: "Islamic Azad University, Ardabil Branch"
+branch_en: "Ardabil Branch"
+faculty_en: "Faculty of Technical and Engineering"
+degree_en: "A Master Thesis Submitted in Partial Fulfillment of the Requirements for the Degree of Master of Science in Computer Engineering (Software)"
+field_en: "Computer Engineering - Software"
+supervisor_en: "Dr. Nuri Moghaddam"
+advisor_en: ""
+author_en: "Hamid Asgharian"
+defense_date_en: "2025"
+acknowledgements: "بسم الله الرحمن الرحیم حمد و سپاس بیکران پروردگار متعال را که توفیق علم‌آموزی و تحقیق را به این بنده ناچیز عطا فرمود. بدین وسیله از استاد راهنمای گرانقدر، جناب آقای دکتر ...، که با راهنمایی‌های ارزشمند خود مرا در این مسیر یاری نمودند، صمیمانه سپاسگزاری می‌نمایم. همچنین از تمامی اساتید محترم گروه کامپیوتر دانشگاه آزاد اسلامی واحد اردبیل که در طول دوران تحصیل از دانش و تجربیات خود بهره‌مند شدم، کمال تشکر را دارم."
+dedication: "تقدیم به خانواده عزیزم که همواره پشتیبان و مشوق من در تمام مراحل تحصیل بوده‌اند."
+abstract_fa: |-
+  **زمینه و هدف:** ریزشبکه‌های هوشمند محله‌ای نشان‌دهنده یک پارادایم انرژی غیرمتمرکز هستند که در آن خانوارهای مجهز به پنل‌های خورشیدی و ذخیره‌ساز باتری می‌توانند انرژی مازاد خود را با همسایگان به اشتراک بگذارند. رویکردهای استاندارد یادگیری تقویتی چندعاملی (MARL) در مدیریت انرژی معمولاً بهینه‌سازی کارایی جمعی را هدف قرار می‌دهند، اما این بهینه‌سازی صرفاً مبتنی بر کارایی می‌تواند پیامدهای ناعادلانه ایجاد کند. این مطالعه با معرفی چارچوب پاداش مبتنی بر شخصیت، به این مسئله می‌پردازد که چگونه ترجیحات عدالت ناهمگن و برگرفته از شخصیت، پویایی‌های اشتراک انرژی را در یک محله هوشمند شکل می‌دهد. **روش‌شناسی:** یک شبیه‌سازی مبتنی بر عامل با ۱۰ خانه در توپولوژی حلقه طراحی شد. هر خانه توسط یک عامل یادگیری Q مستقل با فضای حالت گسسته (۹۶ حالت) کنترل می‌شود. پنج نوع شخصیت (خودخواه محض، فردگرا، اجتماعی، نوع‌دوست، و مبتکر با گشودگی بالا) بر اساس مدل پنج‌عاملی شخصیت (OCEAN) تعریف شدند. پنج سناریوی اجتماع با ترکیب‌های شخصیتی متفاوت و ۵ دانه تصادفی (مجموعاً ۲۵ اجرای مستقل، هر یک ۸۰۰۰ اپیزود) آزمایش شدند. معیارهای ارزیابی شامل راحتی متوسط جامعه، شاخص عدالت جین، ضریب جینی، نرخ روزهای قطعی برق، هدررفت انرژی، و فراوانی اشتراک بودند. **یافته‌ها:** عوامل اجتماعی در جوامع مختلط به راحتی ۲/۹ درصد بالاتر از همسایگان خودخواه دست یافتند (۰/۰۰۱۱ = p). این مزیت در تمام سطوح کمبود منابع پایدار بود. شگفت‌انگیزترین یافته، اثر مبتکر بود: یک عامل واحد با گشودگی بالا (کاوشگری مداوم) باعث کاهش ۲ درصدی راحتی جامعه، افزایش ۲۲ درصدی نابرابری (ضریب جینی)، و افزایش ۳/۸ درصدی نرخ قطعی برق شد. در سطح جامعه، تفاوت معنی‌داری بین سناریوهای همگن خودخواه و همگن اجتماعی مشاهده نشد. **نتیجه‌گیری:** چارچوب پاداش مبتنی بر شخصیت پیشنهادی نشان می‌دهد که عدالت توزیعی را می‌توان بدون کاهش کارایی در سیستم‌های اشتراک انرژی بهبود بخشید. اثر مبتکر یک هشدار مهم برای طراحی سیستم‌های هوش مصنوعی در مدیریت منابع اشتراکی است: عوامل غیرقابل پیش‌بینی، حتی با نیت خوب، می‌توانند همکاری جامعه را تضعیف کنند.
+abstract_fa_keywords:
+  [
+    "یادگیری تقویتی چندعاملی",
+    "ریزشبکه هوشمند",
+    "عدالت",
+    'مدل پنج\u200cعاملی شخصیت (OCEAN)',
+    "اشتراک انرژی همتا-به-همتا",
+    "اثر مبتکر",
+  ]
+abstract_en: |-
+  **Title:** Smart Neighborhood Energy Sharing with Personality-Driven Fairness: A Multi-Agent Reinforcement Learning Study
+
+  **Background and Objective:** Smart neighborhood microgrids represent a decentralized energy paradigm where households equipped with solar panels and battery storage can share surplus energy with neighbours. Standard multi-agent reinforcement learning (MARL) approaches to energy management optimise for collective efficiency, but efficiency-only optimisation can produce inequitable outcomes. This study introduces a personality-driven reward framework to investigate how heterogeneous, psychologically-grounded fairness preferences shape energy-sharing dynamics in a smart neighbourhood.
+
+  **Methodology:** An agent-based simulation of 10 houses in a ring topology was designed. Each house is controlled by an independent tabular Q-learning agent with a discrete state space (96 states). Five personality types (pure_selfish, individualist, prosocial, altruistic, and high_openness_innovator) were defined based on the Big Five (OCEAN) model. Five community compositions with 5 random seeds each (25 independent runs, 8000 episodes per run) were tested. Evaluation metrics include mean community comfort, Jain's fairness index, Gini coefficient, blackout day rate, energy waste, and sharing frequency.
+
+  **Findings:** Prosocial agents in mixed communities achieved 2.9 percentage points higher comfort than selfish neighbours (p = 0.0011). This advantage was consistent across all scarcity levels. The most surprising finding was the Innovator Effect: a single high-Openness agent with sustained exploration reduced community comfort by 2%, increased inequality by 22% (Gini coefficient), and raised blackout rates by 8.3%. At the community level, no significant differences were observed between homogeneous selfish and prosocial scenarios.
+
+  **Conclusion:** The proposed personality-driven reward framework demonstrates that distributional fairness can be improved without sacrificing efficiency in energy-sharing systems. The Innovator Effect carries a cautionary implication for AI safety in community resource-sharing systems: unpredictable agents, even with good intentions, can undermine cooperative norms.
+abstract_en_keywords:
+  [
+    "Multi-Agent Reinforcement Learning",
+    "Smart Microgrid",
+    "Fairness",
+    "Big Five (OCEAN) Personality Model",
+    "Peer-to-Peer Energy Sharing",
+    "Innovator Effect",
+  ]
 ---
 
-![Agent-Type Comfort](../results/agent_type_comfort.png)
-
-# صفحه عنوان انگلیسی
-
-**Islamic Azad University, Ardabil Branch**
-**Faculty of Technical and Engineering**
-
-**A Master Thesis Submitted in Partial Fulfillment of the Requirements for the Degree of Master of Science in Computer Engineering (Software)**
-
-**Title:**
-Smart Neighborhood Energy Sharing with Personality-Driven Fairness: A Multi-Agent Reinforcement Learning Study
-
-**Supervisor:**
-Dr. Nuri
-
-**Student:**
-Hamid Asgharian
-
-**Academic Year: 2025**
-
-# سپاسگزاری
-
-بسم الله الرحمن الرحیم
-
-حمد و سپاس بیکران پروردگار متعال را که توفیق علم‌آموزی و تحقیق را به این بنده ناچیز عطا فرمود. بدین وسیله از استاد راهنمای گرانقدر، جناب آقای دکتر ...، که با راهنمایی‌های ارزشمند خود مرا در این مسیر یاری نمودند، صمیمانه سپاسگزاری می‌نمایم. همچنین از تمامی اساتید محترم گروه کامپیوتر دانشگاه آزاد اسلامی واحد اردبیل که در طول دوران تحصیل از دانش و تجربیات خود بهره‌مند شدم، کمال تشکر را دارم.
-
-# تقدیم
-
-تقدیم به خانواده عزیزم که همواره پشتیبان و مشوق من در تمام مراحل تحصیل بوده‌اند.
-
-# فهرست مطالب
-
-| عنوان                                                         | صفحه |
-| :------------------------------------------------------------ | :--: |
-| **فصل اول: کلیات تحقیق**                                      |      |
-| ۱-۱- تعاریف عملیاتی                                           |      |
-| **فصل دوم: ادبیات و پیشینه تحقیق**                            |      |
-| ۲-۱- تحول ریزشبکه‌های هوشمند و پارادایم مصرف‌کننده-تولیدکننده |      |
-| ۲-۲- تجارت همتا-به-همتا و مکانیزم‌های قیمت‌گذاری              |      |
-| ۲-۳- یادگیری تقویتی چندعاملی برای کنترل توزیع‌شده             |      |
-| ۲-۴- مدل‌سازی عدالت و معماهای اجتماعی                         |      |
-| ۲-۵- تصمیم‌گیری مبتنی بر شخصیت در هوش مصنوعی                  |      |
-| ۲-۶- مقایسه کیفی ادبیات مرتبط                                 |      |
-| ۲-۷- خلاصه شکاف‌های تحقیقاتی                                  |      |
-| **فصل سوم: روش‌شناسی تحقیق**                                  |      |
-| ۳-۱- محیط فیزیکی                                              |      |
-| ۳-۲- مدل شخصیت و نگاشت OCEAN                                  |      |
-| ۳-۳- طراحی تابع پاداش                                         |      |
-| ۳-۴- الگوریتم یادگیری                                         |      |
-| ۳-۵- مکانیزم اشتراک انرژی                                     |      |
-| ۳-۶- ترکیب‌های جامعه (سناریوها)                               |      |
-| ۳-۷- معیارهای عملکرد                                          |      |
-| ۳-۸- فراپارامترها و آموزش                                     |      |
-| **فصل چهارم: تجزیه و تحلیل داده‌ها**                          |      |
-| ۴-۱- معیارهای سطح جامعه                                       |      |
-| ۴-۲- تفاوت‌های راحتی بر اساس نوع عامل                         |      |
-| ۴-۳- تحلیل نابرابری (ضریب جینی)                               |      |
-| ۴-۴- رفتار اشتراکی آموخته‌شده                                 |      |
-| ۴-۵- نقشه‌های حرارتی Q-Table — سیاست‌های آموخته‌شده           |      |
-| ۴-۶- حساسیت به کمبود منابع                                    |      |
-| ۴-۷- آزمون‌های معنی‌داری آماری                                |      |
-| ۴-۸- اثر مبتکر — یافته شگفت‌انگیز                             |      |
-| ۴-۹- مقایسه با آخرین دستاوردهای علمی                          |      |
-| ۴-۱۰- تحلیل کلی خنثی                                          |      |
-| **فصل پنجم: نتیجه‌گیری و پیشنهادات**                          |      |
-| ۵-۱- سازش عدالت در برابر کارایی                               |      |
-| ۵-۲- دوجانبه‌گرایی پیدایشی                                    |      |
-| ۵-۳- مزیت اجتماعی در تمام سطوح کمبود پایدار است               |      |
-| ۵-۴- کنجکاوی بی‌ثباتی می‌آفریند: اثر مبتکر                    |      |
-| ۵-۵- پیامدهای سیاستی                                          |      |
-| ۵-۶- محدودیت‌ها                                               |      |
-| ۵-۷- خلاصه پژوهش                                              |      |
-| ۵-۸- خلاصه یافته‌های کلیدی                                    |      |
-| ۵-۹- پیامدها                                                  |      |
-| ۵-۱۰- پژوهش‌های آتی                                           |      |
-| **فهرست منابع**                                               |      |
-| **چکیده انگلیسی**                                             |      |
-
-# فهرست جداول
-
-(در Word پس از باز کردن فایل، کلیدهای Ctrl+A سپس F9 را بزنید تا این فهرست به‌روزرسانی شود.)
-
-# فهرست نمودارها
-
-(در Word پس از باز کردن فایل، کلیدهای Ctrl+A سپس F9 را بزنید تا این فهرست به‌روزرسانی شود.)
-
-# چکیده
-
-**زمینه و هدف:** ریزشبکه‌های هوشمند محله‌ای نشان‌دهنده یک پارادایم انرژی غیرمتمرکز هستند که در آن خانوارهای مجهز به پنل‌های خورشیدی و ذخیره‌ساز باتری می‌توانند انرژی مازاد خود را با همسایگان به اشتراک بگذارند. رویکردهای استاندارد یادگیری تقویتی چندعاملی (MARL) در مدیریت انرژی معمولاً بهینه‌سازی کارایی جمعی را هدف قرار می‌دهند، اما این بهینه‌سازی صرفاً مبتنی بر کارایی می‌تواند پیامدهای ناعادلانه ایجاد کند. این مطالعه با معرفی چارچوب پاداش مبتنی بر شخصیت، به این مسئله می‌پردازد که چگونه ترجیحات عدالت ناهمگن و برگرفته از شخصیت، پویایی‌های اشتراک انرژی را در یک محله هوشمند شکل می‌دهد.
-
-**روش‌شناسی:** یک شبیه‌سازی مبتنی بر عامل با ۱۰ خانه در توپولوژی حلقه طراحی شد. هر خانه توسط یک عامل یادگیری Q مستقل با فضای حالت گسسته (۹۶ حالت) کنترل می‌شود. پنج نوع شخصیت (خودخواه محض، فردگرا، اجتماعی، نوع‌دوست، و مبتکر با گشودگی بالا) بر اساس مدل پنج‌عاملی شخصیت (OCEAN) تعریف شدند. پنج سناریوی اجتماع با ترکیب‌های شخصیتی متفاوت و ۵ دانه تصادفی (مجموعاً ۲۵ اجرای مستقل، هر یک ۸۰۰۰ اپیزود) آزمایش شدند. معیارهای ارزیابی شامل راحتی متوسط جامعه، شاخص عدالت جین، ضریب جینی، نرخ روزهای قطعی برق، هدررفت انرژی، و فراوانی اشتراک بودند.
-
-**یافته‌ها:** عوامل اجتماعی در جوامع مختلط به راحتی ۲/۹ درصد بالاتر از همسایگان خودخواه دست یافتند (۰/۰۰۱۱ = p). این مزیت در تمام سطوح کمبود منابع پایدار بود. شگفت‌انگیزترین یافته، اثر مبتکر بود: یک عامل واحد با گشودگی بالا (کاوشگری مداوم) باعث کاهش ۲ درصدی راحتی جامعه، افزایش ۲۲ درصدی نابرابری (ضریب جینی)، و افزایش ۳/۸ درصدی نرخ قطعی برق شد. در سطح جامعه، تفاوت معنی‌داری بین سناریوهای همگن خودخواه و همگن اجتماعی مشاهده نشد.
-
-**نتیجه‌گیری:** چارچوب پاداش مبتنی بر شخصیت پیشنهادی نشان می‌دهد که عدالت توزیعی را می‌توان بدون کاهش کارایی در سیستم‌های اشتراک انرژی بهبود بخشید. اثر مبتکر یک هشدار مهم برای طراحی سیستم‌های هوش مصنوعی در مدیریت منابع اشتراکی است: عوامل غیرقابل پیش‌بینی، حتی با نیت خوب، می‌توانند همکاری جامعه را تضعیف کنند.
-
-**واژگان کلیدی:** یادگیری تقویتی چندعاملی، ریزشبکه هوشمند، عدالت، مدل پنج‌عاملی شخصیت (OCEAN)، اشتراک انرژی همتا-به-همتا، اثر مبتکر
-
 # فصل اول: کلیات تحقیق
+
+![Agent-Type Comfort](../results/agent_type_comfort.png)
 
 ## ۱-۱- مقدمه
 
@@ -859,17 +804,3 @@ $$S_i = \frac{\left| \{ (s, a) \mid a \in \{1, 2\} \land a = \arg\max_{a'} Q_i(s
 - Zhang, Y., Liu, X., & Chen, W. (2025). Optimistic epsilon-greedy exploration in cooperative multi-agent reinforcement learning. _arXiv preprint_, arXiv:2502.03506.
 - Zhou, Y., & Lund, P. D. (2023). Peer-to-peer energy sharing and trading of renewable energy in smart communities — trading pricing models, decision-making and agent-based collaboration. _Renewable Energy_, 206, 992–1007.
 - Zhou, Y., & Sun, Q. (2023). Jain's fairness index in community energy storage systems: A case study. _Journal of Energy Storage_, 65, 107311.
-
-# چکیده انگلیسی
-
-**Title:** Smart Neighborhood Energy Sharing with Personality-Driven Fairness: A Multi-Agent Reinforcement Learning Study
-
-**Background and Objective:** Smart neighborhood microgrids represent a decentralized energy paradigm where households equipped with solar panels and battery storage can share surplus energy with neighbours. Standard multi-agent reinforcement learning (MARL) approaches to energy management optimise for collective efficiency, but efficiency-only optimisation can produce inequitable outcomes. This study introduces a personality-driven reward framework to investigate how heterogeneous, psychologically-grounded fairness preferences shape energy-sharing dynamics in a smart neighbourhood.
-
-**Methodology:** An agent-based simulation of 10 houses in a ring topology was designed. Each house is controlled by an independent tabular Q-learning agent with a discrete state space (96 states). Five personality types (pure_selfish, individualist, prosocial, altruistic, and high_openness_innovator) were defined based on the Big Five (OCEAN) model. Five community compositions with 5 random seeds each (25 independent runs, 8000 episodes per run) were tested. Evaluation metrics include mean community comfort, Jain's fairness index, Gini coefficient, blackout day rate, energy waste, and sharing frequency.
-
-**Findings:** Prosocial agents in mixed communities achieved 2.9 percentage points higher comfort than selfish neighbours (p = 0.0011). This advantage was consistent across all scarcity levels. The most surprising finding was the Innovator Effect: a single high-Openness agent with sustained exploration reduced community comfort by 2%, increased inequality by 22% (Gini coefficient), and raised blackout rates by 8.3%. At the community level, no significant differences were observed between homogeneous selfish and prosocial scenarios.
-
-**Conclusion:** The proposed personality-driven reward framework demonstrates that distributional fairness can be improved without sacrificing efficiency in energy-sharing systems. The Innovator Effect carries a cautionary implication for AI safety in community resource-sharing systems: unpredictable agents, even with good intentions, can undermine cooperative norms.
-
-**Keywords:** Multi-Agent Reinforcement Learning, Smart Microgrid, Fairness, Big Five (OCEAN) Personality Model, Peer-to-Peer Energy Sharing, Innovator Effect

@@ -550,6 +550,23 @@ def build_styles(doc: Document, cfg: dict):
         c.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
         c.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
 
+    # ---- List styles (may be missing in custom templates) ------------------
+    for list_style, base_name in [("List Bullet", "Normal"), ("List Number", "Normal")]:
+        try:
+            _ = styles[list_style]
+        except KeyError:
+            ls = styles.add_style(list_style, WD_STYLE_TYPE.PARAGRAPH)
+            ls.base_style = styles[base_name]
+            ls.font.name = cfg["en_font"]
+            ls.font.size = Pt(cfg["body_size"])
+            ls.paragraph_format.space_before = Pt(0)
+            ls.paragraph_format.space_after = Pt(2)
+            ls.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+            rpr = ls.element.get_or_add_rPr()
+            rFonts = get_or_create(rpr, "rFonts", RPR_ORDER)
+            rFonts.set(qn("w:cs"), cfg["fa_body_font"])
+            insert_ordered(rpr, _font_size_cs(cfg["body_size"]), RPR_ORDER)
+
 
 # ==========================================================================
 # PAGE SETUP
@@ -844,6 +861,8 @@ UNORDERED_RE = re.compile(r"^\s*[-*+]\s+(.*)$")
 HEADING_RE = re.compile(r"^(#{1,4})\s+(.*)$")
 FOOTNOTE_DEF_RE = re.compile(r"^\[\^([^\]]+)\]:\s*(.*)$")
 DISPLAY_MATH_RE = re.compile(r"^\$\$(.+)\$\$\s*$")
+# Matches \qquad \text{(...)} label at end of display math (to split off from OMML)
+TEXT_LABEL_RE = re.compile(r"^(.*?)\\qquad\s*\\text\{([^}]*)\}\s*$")
 
 
 def strip_yaml_frontmatter(md_text: str):
@@ -1019,14 +1038,31 @@ def convert_markdown_body(doc: Document, md_text: str, cfg: dict, state: dict, l
         dm_m = DISPLAY_MATH_RE.match(stripped)
         if dm_m:
             eq_text = dm_m.group(1).strip()
+            # Split off \qquad \text{(label)} so it renders as a regular LTR
+            # text run outside the OMML zone, avoiding mirrored parentheses.
+            label_text = None
+            label_match = TEXT_LABEL_RE.match(eq_text)
+            if label_match:
+                eq_text = label_match.group(1).strip()
+                label_text = label_match.group(2)
             p = doc.add_paragraph()
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            set_paragraph_rtl(p, False)
             omp = latex_to_omml(eq_text, display=True)
             if omp is not None:
                 p._p.append(copy.deepcopy(omp))
+                if label_text:
+                    r = p.add_run(f"  {label_text}")
+                    r.font.name = cfg["en_font"]
+                    r.font.size = Pt(cfg["en_body_size"])
+                    set_run_fonts(r, latin_font=cfg["en_font"], cs_font=cfg["en_font"])
+                    set_run_rtl(r, False)
             else:
                 set_paragraph_rtl(p, False)
-                r = p.add_run(eq_text)
+                full_text = eq_text
+                if label_text:
+                    full_text += f"  {label_text}"
+                r = p.add_run(full_text)
                 r.font.name = cfg["en_font"]
                 r.font.size = Pt(cfg["en_body_size"])
                 set_run_fonts(r, latin_font=cfg["en_font"], cs_font=cfg["en_font"])
@@ -1296,18 +1332,25 @@ def inject_footnotes_part(docx_path: Path, footnotes_xml: bytes):
         content_types = zin.read("[Content_Types].xml").decode("utf-8")
         rels = zin.read("word/_rels/document.xml.rels").decode("utf-8")
 
+        # Ensure content-type override exists
         if FOOTNOTES_CONTENT_TYPE not in content_types:
             content_types = content_types.replace(
                 "</Types>",
                 f'<Override PartName="/word/footnotes.xml" ContentType="{FOOTNOTES_CONTENT_TYPE}"/></Types>',
             )
 
-        existing_ids = [int(m) for m in re.findall(r'Id="rId(\d+)"', rels)]
-        new_id = f"rId{(max(existing_ids) + 1) if existing_ids else 1000}"
-        rels = rels.replace(
-            "</Relationships>",
-            f'<Relationship Id="{new_id}" Type="{FOOTNOTES_REL_TYPE}" Target="footnotes.xml"/></Relationships>',
-        )
+        # Ensure relationship exists; re-use existing one if present
+        existing_footnote_rel = re.search(r'Target="footnotes\.xml"', rels)
+        if existing_footnote_rel:
+            # relationship already exists (from template); keep the same Id
+            new_id = None  # signal: don't add another relationship
+        else:
+            existing_ids = [int(m) for m in re.findall(r'Id="rId(\d+)"', rels)]
+            new_id = f"rId{(max(existing_ids) + 1) if existing_ids else 1000}"
+            rels = rels.replace(
+                "</Relationships>",
+                f'<Relationship Id="{new_id}" Type="{FOOTNOTES_REL_TYPE}" Target="footnotes.xml"/></Relationships>',
+            )
 
         with zipfile.ZipFile(tmp_path, "w", zipfile.ZIP_DEFLATED) as zout:
             for item in zin.infolist():
@@ -1315,6 +1358,8 @@ def inject_footnotes_part(docx_path: Path, footnotes_xml: bytes):
                     zout.writestr(item, content_types)
                 elif item.filename == "word/_rels/document.xml.rels":
                     zout.writestr(item, rels)
+                elif item.filename == "word/footnotes.xml":
+                    continue  # skip template's footnotes; we write our own
                 else:
                     zout.writestr(item, zin.read(item.filename))
             zout.writestr("word/footnotes.xml", footnotes_xml)
@@ -1335,6 +1380,27 @@ def _fix_zoom_setting(doc: Document):
 # MAIN
 # ==========================================================================
 
+def _open_doc(template_path=None):
+    """Create a new document, optionally inheriting styles from *template_path*.
+
+    When a template is given, its style definitions and section properties are
+    carried over, but all body content (paragraphs, tables) is stripped so the
+    document starts clean.
+    """
+    if template_path:
+        doc = Document(template_path)
+        body = doc.element.body
+        # Keep only <w:sectPr>, remove everything else
+        sectPr = body.find(qn("w:sectPr"))
+        for child in list(body):
+            if child.tag != qn("w:sectPr"):
+                body.remove(child)
+        if sectPr is not None and sectPr not in body:
+            body.append(sectPr)
+        return doc
+    return Document()
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Convert a Farsi Markdown thesis into an IAU-styled .docx file "
@@ -1353,6 +1419,9 @@ def main():
     parser.add_argument("--fa-chapter-font", default=None, help="Override Persian chapter-title font")
     parser.add_argument("--en-font", default=None, help="Override Latin font")
     parser.add_argument("--body-size", type=int, default=None, help="Override Persian body text size (pt)")
+    parser.add_argument("--template", default=None,
+                        help="Path to a .docx template file; its styles are used as the base while "
+                             "branch-specific fonts/margins still override where needed")
     args = parser.parse_args()
 
     cfg = dict(BRANCH_PROFILES[args.branch])
@@ -1380,7 +1449,7 @@ def main():
     md_text = input_path.read_text(encoding="utf-8")
     meta, body_text = strip_yaml_frontmatter(md_text)
 
-    doc = Document()
+    doc = _open_doc(args.template)
     _fix_zoom_setting(doc)
     build_styles(doc, cfg)
     margins = BRANCH_PROFILES[args.branch]["margins_cm"]
