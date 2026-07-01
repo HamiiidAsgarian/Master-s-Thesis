@@ -2,8 +2,6 @@
 
 > **Single source of truth** for all methodology, experimental design, results, figures, statistical findings, and discussion points. Every number, figure reference, and claim below is drawn from the actual simulation runs conducted with 10 houses, 5 scenarios, 5 seeds each, 8000 episodes per run.
 
----
-
 ## Table of Contents
 
 1- [Introduction and Generalities](#1-introduction-and-generalities)
@@ -49,8 +47,6 @@
    - 5-10 [Future Work](#5-10-future-work)
 - [References](#references)
 
----
-
 ## 1- Introduction and Generalities
 
 Smart neighborhood micro-grids represent a decentralised energy paradigm where households equipped with solar panels and battery storage can share surplus energy with neighbours. In such communities, energy sharing decisions are not purely technical but inherently social: a household with surplus generation must decide whether to store energy for its own future use or share it with a neighbour who faces a deficit.
@@ -80,8 +76,6 @@ For clarity, the following key terms are defined as used throughout this thesis:
 - **Multi-Agent Reinforcement Learning (MARL)**: A framework in which multiple autonomous agents learn policies through trial-and-error interaction with a shared environment; this study uses independent Q-learning where each agent maintains its own Q-table and treats others as part of the environment.
 - **OCEAN (Big Five)**: The five-factor model of personality — Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism — used here to parametrise agent reward weights and exploration schedules (Goldberg, 1990; McCrae & Costa, 2003).
 - **Innovator Effect**: The observed destabilisation of community-level coordination caused by a single high-Openness agent whose continued exploration (higher $\varepsilon_{\min}$) prevents neighbours from forming stable expectations about energy availability (see Section 4-8).
-
----
 
 ## 2- Literature Review
 
@@ -127,8 +121,6 @@ Table 2-1 positions the present study against the existing state-of-the-art acro
 ### 2-7 Summary of Research Gaps
 
 Three research gaps emerge from the literature surveyed above. First, no existing energy MARL study grounds agent heterogeneity in a validated psychological model such as the Big Five (OCEAN) framework. Second, fairness constraints in the literature are applied uniformly across all agents rather than reflecting individual variation in prosocial concern. Third, the social cost of exploratory behaviour in cooperative energy-sharing communities remains unexamined. While Alshehri & Gaunt (2020) demonstrated that heterogeneous agent preferences can produce qualitatively different system-level outcomes in residential energy management, their framework did not ground those preferences in established psychological theory. Ren & Xu (2025) and Moon et al. (2022) established that OCEAN-to-RL mappings are viable, but neither applied these mappings to physical resource management. The present study bridges these gaps by introducing personality-modulated reward weights drawn from the OCEAN model in a multi-agent energy-sharing simulation, enabling systematic investigation of how heterogeneous fairness preferences — rather than a uniform fairness constraint — shape emergent community dynamics.
-
----
 
 ## 3- Research Methodology
 
@@ -538,8 +530,6 @@ All Q-learning hyperparameters are identical across scenarios and agents, except
 
 The physical parameter values used in this simulation — 1.3 kW peak solar capacity (typical UK residential 3–4 panel PV installation, MCS Standard) and 7.0 kWh battery capacity (standard Tesla Powerwall 1 specification) — are grounded in common residential energy system sizes (IEA PVPS, 2021).
 
----
-
 ## 4- Data Analysis
 
 All scenarios are compared against the **All Selfish** baseline, which represents the absence of the proposed OCEAN-modulated reward shaping — agents optimise only their personal comfort ($w_{\text{self}} = 1.0, w_{\text{fair}} = 0.0$). Every other scenario incorporates the proposed method and is evaluated against this baseline to isolate the effect of personality-driven rewards.
@@ -801,8 +791,6 @@ The results presented in Sections 4-1 through 4-9 support three central conclusi
 
 **Caveats.** The lack of statistical significance for waste reduction and the community-level metric uniformity may be artefacts of the relatively mild scarcity regime (15% cloud probability). Under more severe scarcity, or with larger communities, these patterns might change. The sharing frequencies (12–14% of states) indicate that the structural incentive to share is modest in this environment, and stronger effects may require environments where sharing is more instrumentally valuable.
 
----
-
 ## 5- Discussion and Conclusion
 
 ### 5-1 Fairness vs. Efficiency Trade-off
@@ -914,8 +902,6 @@ Several extensions of this work would address the limitations identified in Sect
 **Multi-objective and multi-trait reward functions.** The current framework encodes only Agreeableness (through $w_{\text{fair}}$) and Openness (through $\varepsilon_{\min}$) as active personality dimensions. Future work could operationalise all five OCEAN traits simultaneously — for example, Conscientiousness as reward consistency, Neuroticism as blackout penalty scaling, and Extraversion as communication propensity — to study interactions between multiple personality dimensions in a single community.
 
 These extensions would test the boundaries of the core finding: that psychologically grounded reward shaping produces measurable and practically meaningful differences in community energy-sharing outcomes, and that the design of agent preferences is as important as the design of learning algorithms for building resilient, fair autonomous energy systems.
-
----
 
 ## References
 
