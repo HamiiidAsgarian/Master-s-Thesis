@@ -1,50 +1,51 @@
-# Smart Neighborhood Energy Sharing with Personality-Driven Fairness: A Multi-Agent Reinforcement Learning Study — Comprehensive Thesis Document
+    # A New Method of Fair and Efficient Energy Sharing in Smart Neighborhoods Using Personality-Driven Multi-Agent Reinforcement Learning
 
 > **Single source of truth** for all methodology, experimental design, results, figures, statistical findings, and discussion points. Every number, figure reference, and claim below is drawn from the actual simulation runs conducted with 10 houses, 5 scenarios, 5 seeds each, 8000 episodes per run.
 
 ## Table of Contents
 
 1- [Introduction and Generalities](#1-introduction-and-generalities)
-   - 1-1 [Operational Definitions](#1-1-operational-definitions)
-2- [Literature Review](#2-literature-review)
-   - 2-1 [Evolution of Smart Microgrids and the Prosumer Paradigm](#2-1-evolution-of-smart-microgrids-and-the-prosumer-paradigm)
-   - 2-2 [Peer-to-Peer Trading and Pricing Mechanisms](#2-2-peer-to-peer-trading-and-pricing-mechanisms)
-   - 2-3 [Multi-Agent Reinforcement Learning for Distributed Control](#2-3-multi-agent-reinforcement-learning-for-distributed-control)
-   - 2-4 [Modelling Fairness and Social Dilemmas](#2-4-modelling-fairness-and-social-dilemmas)
-   - 2-5 [Personality-Driven Decision Making in AI](#2-5-personality-driven-decision-making-in-ai)
-   - 2-6 [Qualitative Comparison of Related Literature](#2-6-qualitative-comparison-of-related-literature)
-   - 2-7 [Summary of Research Gaps](#2-7-summary-of-research-gaps)
-3- [Research Methodology](#3-research-methodology)
-   - 3-1 [Physical Environment](#3-1-physical-environment)
-   - 3-2 [Personality Model and OCEAN Mapping](#3-2-personality-model-and-ocean-mapping)
-   - 3-3 [Reward Function Design](#3-3-reward-function-design)
-   - 3-4 [Learning Algorithm](#3-4-learning-algorithm)
-   - 3-5 [Energy Sharing Mechanism](#3-5-energy-sharing-mechanism)
-   - 3-6 [Community Compositions (Scenarios)](#3-6-community-compositions-scenarios)
-   - 3-7 [Performance Metrics](#3-7-performance-metrics)
-   - 3-8 [Hyperparameters and Training](#3-8-hyperparameters-and-training)
-4- [Data Analysis](#4-data-analysis)
-   - 4-1 [Community-Level Metrics](#4-1-community-level-metrics)
-   - 4-2 [Agent-Type Comfort Differences](#4-2-agent-type-comfort-differences)
-   - 4-3 [Inequality Analysis (Gini Coefficient)](#4-3-inequality-analysis-gini-coefficient)
-   - 4-4 [Learned Sharing Behaviour](#4-4-learned-sharing-behaviour)
-   - 4-5 [Q-Table Heatmaps — Learned Policies](#4-5-q-table-heatmaps--learned-policies)
-   - 4-6 [Sensitivity to Resource Scarcity](#4-6-sensitivity-to-resource-scarcity)
-   - 4-7 [Statistical Significance Testing](#4-7-statistical-significance-testing)
-   - 4-8 [The Innovator Effect — Surprising Finding](#4-8-the-innovator-effect--surprising-finding)
-   - 4-9 [Comparison with State-of-the-Art](#4-9-comparison-with-state-of-the-art)
-   - 4-10 [Neutral Overall Analysis](#4-10-neutral-overall-analysis)
-5- [Discussion and Conclusion](#5-discussion-and-conclusion)
-   - 5-1 [Fairness vs. Efficiency Trade-off](#5-1-fairness-vs-efficiency-trade-off)
-   - 5-2 [Emergent Reciprocity](#5-2-emergent-reciprocity)
-   - 5-3 [Prosocial Advantage Is Consistent Across Scarcity Levels](#5-3-prosocial-advantage-is-consistent-across-scarcity-levels)
-   - 5-4 [Curiosity Destabilizes: The Innovator Effect](#5-4-curiosity-destabilizes-the-innovator-effect)
-   - 5-5 [Policy Implications](#5-5-policy-implications)
-   - 5-6 [Limitations](#5-6-limitations)
-   - 5-7 [Summary of the Work](#5-7-summary-of-the-work)
-   - 5-8 [Summary of Key Findings](#5-8-summary-of-key-findings)
-   - 5-9 [Implications](#5-9-implications)
-   - 5-10 [Future Work](#5-10-future-work)
+
+- 1-1 [Operational Definitions](#1-1-operational-definitions)
+  2- [Literature Review](#2-literature-review)
+- 2-1 [Evolution of Smart Microgrids and the Prosumer Paradigm](#2-1-evolution-of-smart-microgrids-and-the-prosumer-paradigm)
+- 2-2 [Peer-to-Peer Trading and Pricing Mechanisms](#2-2-peer-to-peer-trading-and-pricing-mechanisms)
+- 2-3 [Multi-Agent Reinforcement Learning for Distributed Control](#2-3-multi-agent-reinforcement-learning-for-distributed-control)
+- 2-4 [Modelling Fairness and Social Dilemmas](#2-4-modelling-fairness-and-social-dilemmas)
+- 2-5 [Personality-Driven Decision Making in AI](#2-5-personality-driven-decision-making-in-ai)
+- 2-6 [Qualitative Comparison of Related Literature](#2-6-qualitative-comparison-of-related-literature)
+- 2-7 [Summary of Research Gaps](#2-7-summary-of-research-gaps)
+  3- [Research Methodology](#3-research-methodology)
+- 3-1 [Physical Environment](#3-1-physical-environment)
+- 3-2 [Personality Model and OCEAN Mapping](#3-2-personality-model-and-ocean-mapping)
+- 3-3 [Reward Function Design](#3-3-reward-function-design)
+- 3-4 [Learning Algorithm](#3-4-learning-algorithm)
+- 3-5 [Energy Sharing Mechanism](#3-5-energy-sharing-mechanism)
+- 3-6 [Community Compositions (Scenarios)](#3-6-community-compositions-scenarios)
+- 3-7 [Performance Metrics](#3-7-performance-metrics)
+- 3-8 [Hyperparameters and Training](#3-8-hyperparameters-and-training)
+  4- [Data Analysis](#4-data-analysis)
+- 4-1 [Community-Level Metrics](#4-1-community-level-metrics)
+- 4-2 [Agent-Type Comfort Differences](#4-2-agent-type-comfort-differences)
+- 4-3 [Inequality Analysis (Gini Coefficient)](#4-3-inequality-analysis-gini-coefficient)
+- 4-4 [Learned Sharing Behaviour](#4-4-learned-sharing-behaviour)
+- 4-5 [Q-Table Heatmaps — Learned Policies](#4-5-q-table-heatmaps--learned-policies)
+- 4-6 [Sensitivity to Resource Scarcity](#4-6-sensitivity-to-resource-scarcity)
+- 4-7 [Statistical Significance Testing](#4-7-statistical-significance-testing)
+- 4-8 [The Innovator Effect — Surprising Finding](#4-8-the-innovator-effect--surprising-finding)
+- 4-9 [Comparison with State-of-the-Art](#4-9-comparison-with-state-of-the-art)
+- 4-10 [Neutral Overall Analysis](#4-10-neutral-overall-analysis)
+  5- [Discussion and Conclusion](#5-discussion-and-conclusion)
+- 5-1 [Fairness vs. Efficiency Trade-off](#5-1-fairness-vs-efficiency-trade-off)
+- 5-2 [Emergent Reciprocity](#5-2-emergent-reciprocity)
+- 5-3 [Prosocial Advantage Is Consistent Across Scarcity Levels](#5-3-prosocial-advantage-is-consistent-across-scarcity-levels)
+- 5-4 [Curiosity Destabilizes: The Innovator Effect](#5-4-curiosity-destabilizes-the-innovator-effect)
+- 5-5 [Policy Implications](#5-5-policy-implications)
+- 5-6 [Limitations](#5-6-limitations)
+- 5-7 [Summary of the Work](#5-7-summary-of-the-work)
+- 5-8 [Summary of Key Findings](#5-8-summary-of-key-findings)
+- 5-9 [Implications](#5-9-implications)
+- 5-10 [Future Work](#5-10-future-work)
 - [References](#references)
 
 ## 1- Introduction and Generalities
@@ -105,18 +106,18 @@ Table 2-1 positions the present study against the existing state-of-the-art acro
 
 **Table 2-1: Qualitative Comparison of MARL Energy Management and Social Simulation Literature**
 
-| Study | Algorithm | Environment | Fairness Mechanism | Personality? | Pros | Cons |
-|---|---|---|---|---|---|---|
-| Charbonnier et al. (2022) | Q-Learning (Distributed) | UK Residential Flexibility | None (Efficiency focus) | No | Scalable fixed-size Q-tables for privacy | No focus on distributive justice or individual preferences |
-| May & Huang (2023) | PPO (Two-level inner-outer) | Swedish building prosumer market | Income equality | No (Assumes economic rationality) | Emergent price elasticity in P2P | Assumes homogeneous rational actors |
-| Kusatake et al. (2023) | Evolutionary / Multi-objective | P2P energy trading | Profit fairness / Min-max benefit | No | Effective supply-demand balance | Slow computation; not real-time adaptive |
-| Behrunani et al. (2023) | Bilevel Game Theory | Smart energy hubs | Cost reduction variance | No | Provably fair price mediation | Requires semi-central coordinator |
-| Aloor et al. (2024) | MARL (Graph Neural Networks) | Multi-agent navigation | 1 / Coeff. of Variation | No | Scalable to arbitrary agent counts via GNNs | Focused on navigation, not residential sharing |
-| Jadhav et al. (2024) | IPPO + LLM Fairness Critic | P2P market (FairMarket-RL) | LLM-guided FTB and FBS scores | Indirect (Moral reasoning) | Human-centric assessments | Dependent on real-time LLM API stability |
-| Hughes et al. (2018) | A3C (Deep RL) | Cleanup & Harvest Games | Inequity aversion rewards | No | Solves Tragedy of the Commons | Not grounded in Big Five psychology |
-| Ma et al. (2025) | CAPPO + LLM workflow | 99-tract Florida census market | Carbon allowance / Equity signals | Indirect (User intent) | Addresses energy poverty with multimodal data | LLM-RL loop brittle to prompt variations |
-| Ren & Xu (2025) | Generative Agents (LLM) | Classroom social simulation | N/A | **Yes (Big Five)** | Robust trait stability analysis | No physical resource management |
-| **This study** | **OCEAN-MARL (IQL)** | **10-house neighbourhood (ring)** | **Personality-modulated Jain's Index** | **Yes (Big Five)** | **Integrates OCEAN psychology with physical energy sharing** | Tabular state space (96 states) limits granularity |
+| Study                     | Algorithm                      | Environment                       | Fairness Mechanism                     | Personality?                      | Pros                                                         | Cons                                                       |
+| ------------------------- | ------------------------------ | --------------------------------- | -------------------------------------- | --------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------- |
+| Charbonnier et al. (2022) | Q-Learning (Distributed)       | UK Residential Flexibility        | None (Efficiency focus)                | No                                | Scalable fixed-size Q-tables for privacy                     | No focus on distributive justice or individual preferences |
+| May & Huang (2023)        | PPO (Two-level inner-outer)    | Swedish building prosumer market  | Income equality                        | No (Assumes economic rationality) | Emergent price elasticity in P2P                             | Assumes homogeneous rational actors                        |
+| Kusatake et al. (2023)    | Evolutionary / Multi-objective | P2P energy trading                | Profit fairness / Min-max benefit      | No                                | Effective supply-demand balance                              | Slow computation; not real-time adaptive                   |
+| Behrunani et al. (2023)   | Bilevel Game Theory            | Smart energy hubs                 | Cost reduction variance                | No                                | Provably fair price mediation                                | Requires semi-central coordinator                          |
+| Aloor et al. (2024)       | MARL (Graph Neural Networks)   | Multi-agent navigation            | 1 / Coeff. of Variation                | No                                | Scalable to arbitrary agent counts via GNNs                  | Focused on navigation, not residential sharing             |
+| Jadhav et al. (2024)      | IPPO + LLM Fairness Critic     | P2P market (FairMarket-RL)        | LLM-guided FTB and FBS scores          | Indirect (Moral reasoning)        | Human-centric assessments                                    | Dependent on real-time LLM API stability                   |
+| Hughes et al. (2018)      | A3C (Deep RL)                  | Cleanup & Harvest Games           | Inequity aversion rewards              | No                                | Solves Tragedy of the Commons                                | Not grounded in Big Five psychology                        |
+| Ma et al. (2025)          | CAPPO + LLM workflow           | 99-tract Florida census market    | Carbon allowance / Equity signals      | Indirect (User intent)            | Addresses energy poverty with multimodal data                | LLM-RL loop brittle to prompt variations                   |
+| Ren & Xu (2025)           | Generative Agents (LLM)        | Classroom social simulation       | N/A                                    | **Yes (Big Five)**                | Robust trait stability analysis                              | No physical resource management                            |
+| **This study**            | **OCEAN-MARL (IQL)**           | **10-house neighbourhood (ring)** | **Personality-modulated Jain's Index** | **Yes (Big Five)**                | **Integrates OCEAN psychology with physical energy sharing** | Tabular state space (96 states) limits granularity         |
 
 ### 2-7 Summary of Research Gaps
 
@@ -136,12 +137,12 @@ $$G(h) = \max\!\left(0,\; G_{\text{max}} \cdot \sin\!\left(\frac{\pi \cdot (h - 
 
 where $h$ is the hour (0–23), $G_{\text{max}} = 1.3$ kW (following Charbonnier et al., 2022), and $W$ is a weather factor (1.0 on clear days, 0.5 on cloudy days). On clear days, total daily generation is approximately **9.9 kWh**. Cloudy days occur with probability **15%** and reduce solar output by 50%, consistent with the stochastic weather model of Kusatake & colleagues (2023).
 
-| Symbol | Definition | Unit | Source |
-| :--- | :--- | :--- | :--- |
-| $h$ | Hour of the day (0–23) | hour | Skoplaki & Palyvos (2009) |
-| $G_{\text{max}}$ | Peak solar panel capacity (1.3 kW) | kW | Charbonnier et al. (2022) |
-| $W$ | Weather factor (1.0 clear, 0.5 cloudy) | — | Kusatake et al. (2023) |
-| $G(h)$ | Instantaneous solar power generation | kW | Skoplaki & Palyvos (2009) |
+| Symbol           | Definition                             | Unit | Source                    |
+| :--------------- | :------------------------------------- | :--- | :------------------------ |
+| $h$              | Hour of the day (0–23)                 | hour | Skoplaki & Palyvos (2009) |
+| $G_{\text{max}}$ | Peak solar panel capacity (1.3 kW)     | kW   | Charbonnier et al. (2022) |
+| $W$              | Weather factor (1.0 clear, 0.5 cloudy) | —    | Kusatake et al. (2023)    |
+| $G(h)$           | Instantaneous solar power generation   | kW   | Skoplaki & Palyvos (2009) |
 
 #### Demand Profiles
 
@@ -225,23 +226,23 @@ The reward function is the key design element that embeds ethical constraints in
 
 $$R_i = w_{\text{self}} \cdot C_i + w_{\text{fair}} \cdot F \qquad \text{(Eq. 3-2)}$$
 
-| Symbol | Definition | Unit | Source |
-| :--- | :--- | :--- | :--- |
-| $R_i$ | Total scalar reward for agent $i$ | — | This work (Eq. 3-2) |
-| $w_{\text{self}}$ | Weight assigned to personal comfort | — | OCEAN mapping |
-| $C_i$ | Personal comfort level of agent $i$ | — | This work (Eq. 3-3) |
-| $w_{\text{fair}}$ | Weight assigned to community fairness | — | Adaptation of Hughes et al. (2018) |
-| $F$ | Jain's Fairness Index for the community | — | Jain et al. (1984) |
+| Symbol            | Definition                              | Unit | Source                             |
+| :---------------- | :-------------------------------------- | :--- | :--------------------------------- |
+| $R_i$             | Total scalar reward for agent $i$       | —    | This work (Eq. 3-2)                |
+| $w_{\text{self}}$ | Weight assigned to personal comfort     | —    | OCEAN mapping                      |
+| $C_i$             | Personal comfort level of agent $i$     | —    | This work (Eq. 3-3)                |
+| $w_{\text{fair}}$ | Weight assigned to community fairness   | —    | Adaptation of Hughes et al. (2018) |
+| $F$               | Jain's Fairness Index for the community | —    | Jain et al. (1984)                 |
 
 **Personal comfort $C_i$** is the fraction of the house's hourly demand that was met:
 
 $$C_i = \frac{\text{demand met}_i}{\text{demand}_i} \qquad \text{(Eq. 3-3)}$$
 
-| Symbol | Definition | Unit | Source |
-| :--- | :--- | :--- | :--- |
-| $C_i$ | Personal comfort (range [0,1]) | — | This work (Eq. 3-3) |
-| $\text{demand met}_i$ | Energy supplied via solar, battery, or sharing | kWh | — |
-| $\text{demand}_i$ | Total electricity requested by the household | kWh | Alshehri & Gaunt (2020) |
+| Symbol                | Definition                                     | Unit | Source                  |
+| :-------------------- | :--------------------------------------------- | :--- | :---------------------- |
+| $C_i$                 | Personal comfort (range [0,1])                 | —    | This work (Eq. 3-3)     |
+| $\text{demand met}_i$ | Energy supplied via solar, battery, or sharing | kWh  | —                       |
+| $\text{demand}_i$     | Total electricity requested by the household   | kWh  | Alshehri & Gaunt (2020) |
 
 If a house's battery and current solar generation together cannot satisfy demand, the unmet fraction results in $C_i < 1.0$, which we classify as a **partial blackout**. When $C_i < 0.95$, the day is classified as a **blackout day** for that house.
 
@@ -249,11 +250,11 @@ If a house's battery and current solar generation together cannot satisfy demand
 
 $$F = \frac{\left(\sum_{i=1}^{N} C_i\right)^2}{N \cdot \sum_{i=1}^{N} C_i^2} \qquad \text{(Eq. 3-4)}$$
 
-| Symbol | Definition | Unit | Source |
-| :--- | :--- | :--- | :--- |
-| $F$ | Jain's Fairness Index (range [1/N, 1]) | — | Jain et al. (1984) |
-| $N$ | Number of households (10) | — | Alshehri & Gaunt (2020) |
-| $C_i$ | Comfort level of household $i$ | — | |
+| Symbol | Definition                             | Unit | Source                  |
+| :----- | :------------------------------------- | :--- | :---------------------- |
+| $F$    | Jain's Fairness Index (range [1/N, 1]) | —    | Jain et al. (1984)      |
+| $N$    | Number of households (10)              | —    | Alshehri & Gaunt (2020) |
+| $C_i$  | Comfort level of household $i$         | —    |                         |
 
 where $N$ is the number of houses and $C_i$ is the comfort of house $i$. This index ranges from $\frac{1}{N}$ (maximum inequality — one house gets everything, others nothing) to 1.0 (perfect equality — all houses have identical comfort). Jain's index is widely used in network engineering and resource allocation literature because it is scale-invariant, continuous, and independent of population size (Zhou & Sun, 2023).
 
@@ -292,13 +293,13 @@ $$Q(s, a) \leftarrow Q(s, a) + \alpha \left[ R + \gamma \max_{a'} Q(s', a') - Q(
 
 where $\alpha$ is the learning rate, $\gamma$ is the discount factor, $R$ is the reward received after taking action $a$ in state $s$, and $s'$ is the resulting next state. Tabular Q-learning is guaranteed to converge to the optimal Q-function under standard stochastic approximation conditions (Watkins & Dayan, 1992).
 
-| Symbol | Definition | Unit | Source |
-| :--- | :--- | :--- | :--- |
-| $Q(s, a)$ | Action-value estimate for state $s$ and action $a$ | — | Watkins & Dayan (1992) |
-| $\alpha$ | Learning rate (0.2) | — | Sutton & Barto (2018) |
-| $R$ | Instantaneous reward | — | This work (Eq. 3-2) |
-| $\gamma$ | Discount factor (0.99) | — | Sutton & Barto (2018) |
-| $s, s'$ | Current and subsequent states | — | Watkins & Dayan (1992) |
+| Symbol    | Definition                                         | Unit | Source                 |
+| :-------- | :------------------------------------------------- | :--- | :--------------------- |
+| $Q(s, a)$ | Action-value estimate for state $s$ and action $a$ | —    | Watkins & Dayan (1992) |
+| $\alpha$  | Learning rate (0.2)                                | —    | Sutton & Barto (2018)  |
+| $R$       | Instantaneous reward                               | —    | This work (Eq. 3-2)    |
+| $\gamma$  | Discount factor (0.99)                             | —    | Sutton & Barto (2018)  |
+| $s, s'$   | Current and subsequent states                      | —    | Watkins & Dayan (1992) |
 
 #### Hyperparameters
 
@@ -465,12 +466,12 @@ $$W = \frac{1}{T} \sum_{t=1}^{T} \sum_{i=1}^{N} \left( \text{exportable surplus}
 
 where the superscript $+$ indicates that only positive surplus after sharing is counted as waste. Waste occurs when an agent's battery is full and the sharing action does not transfer the excess to a neighbour. Lower waste indicates a more efficient community. This metric is expressed in kWh/day.
 
-| Symbol | Definition | Unit | Source |
-| :--- | :--- | :--- | :--- |
-| $W$ | Average daily community energy waste | kWh/day | This work (Eq. 4-4) |
-| $T$ | Total evaluation time steps | hours | — |
-| $N$ | Total houses (10) | — | Alshehri & Gaunt (2020) |
-| $()^+$ | Positive part operator (rectified linear) | — | — |
+| Symbol | Definition                                | Unit    | Source                  |
+| :----- | :---------------------------------------- | :------ | :---------------------- |
+| $W$    | Average daily community energy waste      | kWh/day | This work (Eq. 4-4)     |
+| $T$    | Total evaluation time steps               | hours   | —                       |
+| $N$    | Total houses (10)                         | —       | Alshehri & Gaunt (2020) |
+| $()^+$ | Positive part operator (rectified linear) | —       | —                       |
 
 **Prosocial vs. Selfish Comfort Split** measures distributional equity within mixed-type communities. For each scenario, the mean comfort of prosocial-type agents (those with $w_{\text{fair}} \geq 0.5$) is compared against selfish-type agents (those with $w_{\text{fair}} \leq 0.2$) over the evaluation window. The gap $\Delta C = \bar{C}_{\text{prosocial}} - \bar{C}_{\text{selfish}}$ quantifies whether prosocial agents benefit or suffer relative to their selfish neighbours. A positive gap indicates that prosocial reward weights produce higher individual comfort despite — or because of — their greater concern for community fairness.
 
@@ -480,11 +481,11 @@ $$G = \frac{2 \sum_{i=1}^{N} i \cdot \bar{C}_{(i)}}{N \sum_{i=1}^{N} \bar{C}_{(i
 
 where $\bar{C}_{(i)}$ are the per-house average comfort values sorted in ascending order. The Gini coefficient ranges from 0 (perfect equality: all houses have identical comfort) to approximately 1 (maximum inequality: one house receives all comfort). Unlike Jain's index, the Gini is more sensitive to transfers at the middle of the distribution and provides a complementary perspective on inequality (Kusatake et al., 2023).
 
-| Symbol | Definition | Unit | Source |
-| :--- | :--- | :--- | :--- |
-| $G$ | Gini Coefficient (range [0, 1]) | — | Gini (1912) |
-| $\bar{C}_{(i)}$ | Comfort values sorted in ascending order | — | — |
-| $N$ | Number of households (10) | — | Alshehri & Gaunt (2020) |
+| Symbol          | Definition                               | Unit | Source                  |
+| :-------------- | :--------------------------------------- | :--- | :---------------------- |
+| $G$             | Gini Coefficient (range [0, 1])          | —    | Gini (1912)             |
+| $\bar{C}_{(i)}$ | Comfort values sorted in ascending order | —    | —                       |
+| $N$             | Number of households (10)                | —    | Alshehri & Gaunt (2020) |
 
 **Sharing Frequency ($S$)** measures the learned propensity to cooperate by examining the final Q-table of each agent after training:
 
@@ -492,11 +493,11 @@ $$S_i = \frac{\left| \{ (s, a) \mid a \in \{1, 2\} \land a = \arg\max_{a'} Q_i(s
 
 where $|S| = 96$ is the total number of states and the numerator counts the states where the greedy action is to share (action 1: share 50%, or action 2: share 100%). This metric captures the agent's learned sharing strategy at convergence, distinguishing between agents that have internalised sharing as a norm and those that only store surplus.
 
-| Symbol | Definition | Unit | Source |
-| :--- | :--- | :--- | :--- |
-| $S_i$ | Agent $i$'s frequency of sharing | — | This work (Eq. 4-6) |
-| $S$ | Total number of discrete states (96) | — | — |
-| $a$ | Greedy action selected by the policy | — | — |
+| Symbol | Definition                           | Unit | Source              |
+| :----- | :----------------------------------- | :--- | :------------------ |
+| $S_i$  | Agent $i$'s frequency of sharing     | —    | This work (Eq. 4-6) |
+| $S$    | Total number of discrete states (96) | —    | —                   |
+| $a$    | Greedy action selected by the policy | —    | —                   |
 
 #### Metric-to-Research-Question Mapping
 
@@ -504,27 +505,27 @@ To make explicit how each quantitative result supports the research inquiries, T
 
 **Table 3-4: Metric-to-Research-Question Mapping**
 
-| Research Question | Associated Metrics | Role in Evaluation |
-| :--- | :--- | :--- |
-| **Primary:** Overall impact on efficiency, fairness, and robustness | Energy Waste ($W$); Jain's Fairness Index ($F$); Mean Community Comfort ($\bar{C}$); Blackout Day Rate ($B$) | Provide the community-level health report, comparing each scenario against the All Selfish baseline to assess the holistic value of personality-driven rewards |
-| **Sub-question 1:** Emergent sharing patterns from fairness norms | Sharing Frequency ($S$); Q-Table Heatmaps | Sharing Frequency quantifies the propensity to share; heatmaps visualise the temporal window where personality types learn to share most effectively |
-| **Sub-question 2:** Trade-offs between efficiency and distributional fairness | Energy Waste ($W$) vs. Jain's Fairness Index ($F$) and Gini Coefficient ($G$) | Tests whether increasing equality costs technical efficiency; findings showed no conflict, as sharing surplus reduces waste |
-| **Sub-question 3:** Shift in selfish agent behaviour via emergent reciprocity | Prosocial vs. Selfish Comfort Split ($\Delta C$); Sharing Frequency of selfish agents in Mixed scenarios | Evaluates whether prosocial agents lift their selfish neighbours; the comfort split proves prosocial agents achieve +2.9% higher individual welfare through stabilised reciprocity |
-| **Sub-question 4:** Impact of high-Openness innovator on community stability | Gini Coefficient ($G$); Blackout Day Rate ($B$); Mean Community Comfort ($\bar{C}$) | Captures destabilisation: the 22% increase in Gini and 8.3% rise in blackouts prove that individual unpredictability erodes community-level resilience |
+| Research Question                                                             | Associated Metrics                                                                                           | Role in Evaluation                                                                                                                                                                 |
+| :---------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primary:** Overall impact on efficiency, fairness, and robustness           | Energy Waste ($W$); Jain's Fairness Index ($F$); Mean Community Comfort ($\bar{C}$); Blackout Day Rate ($B$) | Provide the community-level health report, comparing each scenario against the All Selfish baseline to assess the holistic value of personality-driven rewards                     |
+| **Sub-question 1:** Emergent sharing patterns from fairness norms             | Sharing Frequency ($S$); Q-Table Heatmaps                                                                    | Sharing Frequency quantifies the propensity to share; heatmaps visualise the temporal window where personality types learn to share most effectively                               |
+| **Sub-question 2:** Trade-offs between efficiency and distributional fairness | Energy Waste ($W$) vs. Jain's Fairness Index ($F$) and Gini Coefficient ($G$)                                | Tests whether increasing equality costs technical efficiency; findings showed no conflict, as sharing surplus reduces waste                                                        |
+| **Sub-question 3:** Shift in selfish agent behaviour via emergent reciprocity | Prosocial vs. Selfish Comfort Split ($\Delta C$); Sharing Frequency of selfish agents in Mixed scenarios     | Evaluates whether prosocial agents lift their selfish neighbours; the comfort split proves prosocial agents achieve +2.9% higher individual welfare through stabilised reciprocity |
+| **Sub-question 4:** Impact of high-Openness innovator on community stability  | Gini Coefficient ($G$); Blackout Day Rate ($B$); Mean Community Comfort ($\bar{C}$)                          | Captures destabilisation: the 22% increase in Gini and 8.3% rise in blackouts prove that individual unpredictability erodes community-level resilience                             |
 
 ### 3-8 Hyperparameters and Training
 
 All scenarios share identical physical parameters, drawn from prior experimental studies to ensure scientific grounding:
 
-| Parameter          | Value               | Source                                                       |
-| ------------------ | ------------------- | ------------------------------------------------------------ |
-| Houses             | 10                  | Alshehri & Gaunt (2020); Charbonnier et al. (2022)           |
-| Battery capacity   | 7.0 kWh             | Alshehri & Gaunt (2020); Ali et al. (2023)                   |
-| Solar peak         | 1.3 kW              | Charbonnier et al. (2022); Zhou & Sun (2023)                 |
-| Cloud probability  | 0.15                | Kusatake et al. (2023); Behrunani et al. (2023)              |
+| Parameter          | Value               | Source                                                                                                                               |
+| ------------------ | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Houses             | 10                  | Alshehri & Gaunt (2020); Charbonnier et al. (2022)                                                                                   |
+| Battery capacity   | 7.0 kWh             | Alshehri & Gaunt (2020); Ali et al. (2023)                                                                                           |
+| Solar peak         | 1.3 kW              | Charbonnier et al. (2022); Zhou & Sun (2023)                                                                                         |
+| Cloud probability  | 0.15                | Kusatake et al. (2023); Behrunani et al. (2023)                                                                                      |
 | Episodes per run   | 8,000               | Determined via pilot experiments: 96-state Q-table converges within 4,000–6,000 episodes; 8,000 ensures full convergence with margin |
-| Seeds per scenario | 5                   | Standard for MARL energy studies (Alshehri & Gaunt, 2020)    |
-| Evaluation window  | Last 1,000 episodes | Sufficient for stable mean estimates after convergence       |
+| Seeds per scenario | 5                   | Standard for MARL energy studies (Alshehri & Gaunt, 2020)                                                                            |
+| Evaluation window  | Last 1,000 episodes | Sufficient for stable mean estimates after convergence                                                                               |
 
 All Q-learning hyperparameters are identical across scenarios and agents, except for the innovator agent's $\varepsilon_{\min} = 0.05$. The learning rate $\alpha = 0.2$ and discount factor $\gamma = 0.99$ follow standard tabular Q-learning practice (Sutton & Barto, 2018). The $\varepsilon$-decay rate of 0.999 and optimistic initialisation ($Q = 1.0$) are adopted from Zhang et al. (2025), who demonstrated that optimistic initialisation combined with gradual $\varepsilon$-decay improves exploration in multi-agent settings.
 
@@ -766,16 +767,16 @@ To contextualise the performance of the proposed OCEAN-based reward shaping fram
 
 **Table 4-8: Comparison with State-of-the-Art Energy MARL Studies**
 
-| Study | Method | Fairness Mechanism | Community Comfort | Jain's Fairness Index | Key Differentiator |
-|---|---|---|---|---|---|
-| Charbonnier et al. (2022) | MARL (CTDE) | None (efficiency-only) | ~0.91† | Not reported | Fixed-size Q-tables for scalability |
-| May & Huang (2023) | MARL (PPO) | Income equality | ~0.89† | Not reported | Emergent price elasticity in P2P markets |
-| Kusatake et al. (2023) | Evolutionary optimisation | Profit fairness | ~0.89† | ~0.90† | Supply-demand balance optimisation |
-| Behrunani et al. (2023) | Bilevel game theory | Cost reduction variance | ~0.88† | ~0.88† | Provably fair price mediation |
-| Aloor et al. (2024) | MARL (GNN) | Coefficient of variation | ~0.90† | ~0.89† | Min-max fair task assignment |
-| **This study (Mixed)** | **OCEAN-MARL (IQL)** | **Personality-modulated Jain's index** | **0.920 ± 0.007** | **0.923 ± 0.008** | **Psychologically grounded reward shaping** |
+| Study                     | Method                    | Fairness Mechanism                     | Community Comfort | Jain's Fairness Index | Key Differentiator                          |
+| ------------------------- | ------------------------- | -------------------------------------- | ----------------- | --------------------- | ------------------------------------------- |
+| Charbonnier et al. (2022) | MARL (CTDE)               | None (efficiency-only)                 | ~0.91†            | Not reported          | Fixed-size Q-tables for scalability         |
+| May & Huang (2023)        | MARL (PPO)                | Income equality                        | ~0.89†            | Not reported          | Emergent price elasticity in P2P markets    |
+| Kusatake et al. (2023)    | Evolutionary optimisation | Profit fairness                        | ~0.89†            | ~0.90†                | Supply-demand balance optimisation          |
+| Behrunani et al. (2023)   | Bilevel game theory       | Cost reduction variance                | ~0.88†            | ~0.88†                | Provably fair price mediation               |
+| Aloor et al. (2024)       | MARL (GNN)                | Coefficient of variation               | ~0.90†            | ~0.89†                | Min-max fair task assignment                |
+| **This study (Mixed)**    | **OCEAN-MARL (IQL)**      | **Personality-modulated Jain's index** | **0.920 ± 0.007** | **0.923 ± 0.008**     | **Psychologically grounded reward shaping** |
 
-† *Estimated from reported figures, as exact numeric values were not available in the original publications.*
+† _Estimated from reported figures, as exact numeric values were not available in the original publications._
 
 The Mixed scenario in this study achieves community comfort of 0.920 and a Jain's fairness index of 0.923, which are competitive with or exceed the reported performance of comparable methods. For comparison, May & Huang (2023) reported approximately 0.89 community comfort using PPO-based MARL agents that optimise for collective net loss without individual personality modulation — our prosocial agents achieve 2.9 percentage points higher comfort in mixed communities, demonstrating that personality-modulated rewards can outperform pure profit maximisation by fostering emergent reciprocity. Notably, this is achieved with independent Q-learning — a simpler algorithm than the centralised training (CTDE) or graph neural network (GNN) approaches used in other comparison studies — suggesting that the reward-shaping mechanism itself, rather than algorithmic complexity, drives the observed fairness outcomes. However, direct comparison is limited by differences in environment configuration (number of houses, weather models, battery capacities) and the absence of reported standard deviations in some comparison studies.
 
