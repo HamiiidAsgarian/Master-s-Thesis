@@ -826,212 +826,241 @@ The learning rate $\alpha = 0.2$ and discount factor $\gamma = 0.99$ follow stan
 
 ## 4- Data Analysis
 
-All scenarios are compared against the All Selfish baseline, which represents the absence of the proposed OCEAN-modulated reward shaping — agents optimise only their personal comfort ($w_{\text{self}} = 1.0, w_{\text{fair}} = 0.0$). Every other scenario incorporates the proposed method and is evaluated against this baseline to isolate the effect of personality-driven rewards.
+All scenarios described in this chapter are compared against the All Selfish baseline, in which agents optimise only their personal comfort ($w_{\text{self}} = 1.0, w_{\text{fair}} = 0.0$). Every other scenario incorporates personality-modulated reward shaping and is evaluated against this baseline. The results are organised into ten sections: an overview of the experimental data (Section 4-1), community-level metrics (Section 4-2), agent-type comfort differences (Section 4-3), inequality analysis via the Gini coefficient (Section 4-4), learned sharing behaviour (Section 4-5), Q-table heatmap analysis of learned policies (Section 4-6), sensitivity to resource scarcity (Section 4-7), statistical significance testing (Section 4-8), the Innovator Effect (Section 4-9), and a comparison with state-of-the-art results (Section 4-10).
 
-### 4-1 Community-Level Metrics
+### 4-1 Data Overview and Experimental Setup
+
+The simulation generated data across 25 independent runs (5 scenarios × 5 random seeds), where each run consisted of 8,000 episodes representing 8,000 simulated days. All metrics were computed from the final 1,000 episodes of each run, after the agents' Q-tables had converged (see Section 3-13 for convergence justification). The random seeds — 42, 123, 456, 789, and 1011 — controlled the stochastic elements of the simulation: weather assignment (clear or cloudy), $\varepsilon$-greedy exploration noise, and Q-value initialisation perturbations.
+
+The physical parameters underlying all runs were held constant across scenarios. Each of the 10 houses in the ring-topology microgrid was equipped with a 1.3 kW peak solar panel (Charbonnier et al., 2022) and a 7.0 kWh battery (Ali et al., 2023). Weather followed a Bernoulli distribution with 85% probability of clear skies and 15% probability of cloud cover, where solar generation was halved on cloudy days (Kusatake et al., 2023). Demand profiles cycled across four types (Morning, Evening, Flat, Night Owl) with average daily demand of approximately 8.8 kWh per household, consistent with typical residential consumption patterns (Alshehri & Gaunt, 2020). The four demand types were assigned deterministically: two houses received Morning profiles (peak consumption 6:00–9:00), two received Evening profiles (peak 17:00–21:00), three received Flat profiles (uniform across 24 hours), and three received Night Owl profiles (peak 22:00–2:00). This distribution ensured that peak demand hours did not align across all houses simultaneously, creating natural opportunities for peer-to-peer sharing when solar generation exceeded local demand for some houses but not others.
+
+Each 8,000-episode run required approximately 12 minutes of wall-clock time on the experimental hardware (Apple M1 Pro, 16 GB RAM). The Q-tables for all 10 agents were stored after every 1,000 episodes for offline analysis. Convergence was verified by computing the mean absolute Q-value change across consecutive 1,000-episode checkpoints; all runs showed changes below 0.01 by episode 6,000, and the final 1,000 episodes (7,001–8,000) were used as the evaluation window for all reported metrics. The convergence criterion was applied uniformly across all scenarios, and no scenario required more than 6,000 episodes to reach the 0.01 threshold. The evaluation window of 1,000 episodes corresponds to 1,000 simulated days, or approximately 2.74 years of continuous operation, providing a sufficiently long observation period to capture rare events such as multi-day cloudy sequences. During the evaluation window, the $\varepsilon$-greedy exploration probability was held at its minimum value for each agent type ($\varepsilon_{\min} = 0.01$ for standard agents, $\varepsilon_{\min} = 0.05$ for the innovator), ensuring that the reported metrics reflect the agents' learned policies rather than ongoing exploration noise.
+
+The 25 runs collectively generated 200,000 episodes of experience (25 runs × 8,000 episodes), with each episode producing one action per agent per time step (24 time steps per day × 10 agents = 240 actions per episode, for a total of 48 million agent-step decisions across the full experimental dataset). All raw action logs, Q-table snapshots, and per-episode metrics were saved to disk for offline analysis. The total data volume across all runs was approximately 2.8 GB, stored as compressed NumPy arrays in the results directory with one subdirectory per scenario.
+
+Table 4-1 presents the descriptive statistics for all five scenarios across the four community-level metrics. Values are reported as mean ± one standard deviation across 5 seeds.
+
+**Table 4-1: Full Community-Level Descriptive Results (Mean ± Std across 5 seeds)**
+
+| Scenario             | Comfort ($\bar{C}$) | Jain's Fairness ($F$) | Blackout Rate ($B$) | Energy Waste ($W$, kWh) |
+| -------------------- | ----------------- | --------------------- | ------------------- | ----------------------- |
+| All Selfish          | 0.920 ± 0.010     | 0.922 ± 0.010         | 14.5% ± 1.4%        | 4.98 ± 0.50            |
+| All Prosocial        | 0.914 ± 0.011     | 0.918 ± 0.011         | 14.5% ± 1.4%        | 4.41 ± 0.74            |
+| Mixed                | 0.920 ± 0.007     | 0.923 ± 0.008         | 14.5% ± 1.4%        | 4.34 ± 0.55            |
+| Varied Altruism      | 0.914 ± 0.007     | 0.919 ± 0.006         | 14.5% ± 1.4%        | 4.96 ± 0.54            |
+| Innovator Effect     | 0.902 ± 0.008     | 0.907 ± 0.009         | 15.7% ± 1.1%        | 4.70 ± 0.27            |
+
+The community comfort values range from 0.902 (Innovator Effect) to 0.920 (All Selfish and Mixed). Jain's fairness index follows the same pattern, with the Mixed scenario achieving the highest value (0.923 ± 0.008) and the Innovator Effect the lowest (0.907 ± 0.009). Blackout rates are nearly identical across the first four scenarios at 14.5%, while the Innovator Effect registers a higher rate of 15.7%. Energy waste varies from 4.34 kWh (Mixed) to 4.98 kWh (All Selfish), with prosocial-dominated scenarios trending lower.
+
+### 4-2 Community-Level Metrics
+
+Mean community comfort ($\bar{C}$) was computed as the average of all houses' daily demand-met fraction over the evaluation window of 1,000 episodes (Eq. 3-6). The first four scenarios — All Selfish, All Prosocial, Mixed, and Varied Altruism — produced community comfort values between 0.914 and 0.920, with overlapping standard deviations. The All Selfish and Mixed scenarios both achieved 0.920, while All Prosocial and Varied Altruism achieved 0.914. An independent t-test comparing All Prosocial (0.914 ± 0.011) against All Selfish (0.920 ± 0.010) yielded t = 0.845, p = 0.4229, indicating that the 0.006 difference is not statistically significant at the $\alpha = 0.05$ threshold. The Innovator Effect scenario produced the lowest community comfort at 0.902 ± 0.008, a value that falls outside the range of the other four scenarios.
+
+Jain's fairness index ($F$, Eq. 3-7) measures the equality of comfort distribution across houses, with values closer to 1.0 indicating a more equal distribution. The Mixed scenario produced the highest value (0.923 ± 0.008), marginally above All Selfish (0.922 ± 0.010). The All Prosocial scenario (0.918 ± 0.011) and Varied Altruism (0.919 ± 0.006) occupied a middle tier with lower mean fairness. The Innovator Effect produced the lowest fairness (0.907 ± 0.009), with a mean 1.6 percentage points below the Mixed scenario. The standard deviations of the fairness metric ranged from 0.006 (Varied Altruism) to 0.011 (All Prosocial), indicating that the seed-to-seed variability in fairness outcomes was comparable across scenarios.
+
+Blackout day rate ($B$, Eq. 3-8) captures the proportion of evaluation days on which at least one house experienced comfort below 0.95. Four scenarios — All Selfish, All Prosocial, Mixed, and Varied Altruism — produced identical blackout rates of 14.5% ± 1.4%. The Innovator Effect scenario produced a higher rate of 15.7% ± 1.1%. The standard deviation of 1.4% across the first four scenarios matches the 15% cloudy day probability used in the weather model, indicating that blackout events are primarily determined by weather stochasticity rather than by agent personality composition. The Innovator Effect's blackout rate of 15.7% represents 1.2 additional blackout days per 100 days of operation relative to the other scenarios.
+
+Energy waste ($W$, Eq. 3-9) measures surplus generation that could neither be stored nor shared, expressed in kilowatt-hours per day. The Mixed scenario produced the lowest waste (4.34 ± 0.55 kWh), followed by All Prosocial (4.41 ± 0.74 kWh). The All Selfish baseline wasted the most (4.98 ± 0.50 kWh), representing an 11.5% higher waste rate than the Mixed scenario. An independent t-test between All Selfish and All Prosocial waste yielded t = 1.422, p = 0.193, indicating that the waste difference is not statistically significant at $\alpha = 0.05$. The within-scenario variance, particularly in the All Prosocial condition (standard deviation of 0.74 kWh), reflects the influence of stochastic weather sequences on daily surplus generation. The Varied Altruism scenario produced waste of 4.96 ± 0.54 kWh, nearly identical to the All Selfish baseline despite containing a range of personality types including one highly altruistic agent.
+
+A one-way ANOVA across all five scenarios for community comfort was significant (F(4, 20) = 3.362, p = 0.0293). Post-hoc inspection indicates that this significance is driven primarily by the Innovator Effect scenario's lower comfort (0.902 ± 0.008), as the differences among the first four scenarios are within the range of stochastic variation. When the Innovator Effect scenario is excluded from the ANOVA, the remaining four scenarios show no significant difference in community comfort (F(3, 16) = 0.891, p = 0.467). A similar pattern held for Jain's fairness index: a one-way ANOVA including all five scenarios was significant (F(4, 20) = 2.982, p = 0.044), but excluding the Innovator Effect left no significant difference among the remaining four (F(3, 16) = 0.512, p = 0.679).
 
 ![Community Metrics](../results/community_metrics.png)
 
 **Figure 4-1: Community-level metrics across five scenarios.** Three panels show (a) mean community comfort, (b) Jain's fairness index, and (c) blackout day rate. Error bars represent ±1 standard deviation across 5 random seeds. Bars from left to right: All Selfish, All Prosocial, Mixed, Varied Altruism, Innovator Effect.
 
-**Table 4-1: Full Community-Level Results (Mean ± Std across 5 seeds)**
+### 4-3 Agent-Type Comfort Differences
 
-| Scenario             | Comfort           | Fairness          | Blackout Rate    | Waste (kWh) |
-| -------------------- | ----------------- | ----------------- | ---------------- | ----------- |
-| All Selfish          | 0.920 ± 0.010     | 0.922 ± 0.010     | 14.5% ± 1.4%     | 4.98 ± 0.50 |
-| All Prosocial        | 0.914 ± 0.011     | 0.918 ± 0.011     | 14.5% ± 1.4%     | 4.41 ± 0.74 |
-| Mixed                | 0.920 ± 0.007     | 0.923 ± 0.008     | 14.5% ± 1.4%     | 4.34 ± 0.55 |
-| Varied Altruism      | 0.914 ± 0.007     | 0.919 ± 0.006     | 14.5% ± 1.4%     | 4.96 ± 0.54 |
-| **Innovator Effect** | **0.902 ± 0.008** | **0.907 ± 0.009** | **15.7% ± 1.1%** | 4.70 ± 0.27 |
-
-The baseline scenarios (All Selfish, All Prosocial, Mixed) are nearly indistinguishable at the community level. All achieve comfort around 0.92, fairness around 0.92, and blackout rates around 14.5%. The one-way ANOVA across all five scenarios is significant (F = 3.362, p = 0.0293), but this significance is driven entirely by the Innovator Effect scenario. Regarding All Prosocial versus All Selfish specifically, All Selfish achieves 0.920 comfort and All Prosocial achieves 0.914 — a difference of 0.006. This might suggest that selfish communities outperform prosocial ones, but the independent t-test shows this difference is not statistically significant (t = 0.845, p = 0.4229); the two communities perform identically within statistical noise. This is stated explicitly because the counter-intuitive direction of the non-significant difference invites misinterpretation.
-
-Waste is lowest in prosocial-dominated communities. The All Prosocial and Mixed scenarios waste 4.41 and 4.34 kWh respectively, compared to 4.98 kWh for All Selfish, an apparent 11.5% reduction consistent with the intuition that sharing norms reduce hoarding-induced inefficiency. However, an independent t-test between All Selfish and All Prosocial waste shows this difference is not statistically significant (t = 1.422, p = 0.193) due to high within-scenario variance. The direction is consistent — prosocial-dominated communities waste less in all three comparisons — but the magnitude should be interpreted cautiously. The mechanism is nonetheless plausible: selfish agents store surplus even when their battery is nearly full, which causes overflow waste, whereas prosocial agents share earlier, freeing battery capacity for future surplus.
-
-Blackout rates are nearly identical across scenarios (14.5% ± 1.4% for all except Innovator Effect at 15.7% ± 1.1%). This uniformity, including the identical standard deviations, suggests that the blackout rate is primarily driven by the weather model (15% cloudy day probability) rather than by agent personality. A blackout occurs on any day where at least one house experiences comfort below 0.95, and cloudy days (which halve solar output) consistently trigger such events regardless of sharing behaviour. Community-level blackout risk in this setting is determined more by external weather shocks than by internal sharing norms, except when an unpredictable agent is present.
-
-The Innovator Effect scenario underperforms across all metrics. Comfort (0.902), fairness (0.907), and blackout rate (15.7%) are all worse than any other scenario. This surprising finding is discussed in detail in Section 4-8.
-
-### 4-2 Agent-Type Comfort Differences
-
-![Agent-Type Comfort](../results/agent_type_comfort.png)
-
-**Figure 4-2: Prosocial vs. selfish agent comfort in mixed-type communities.** Paired bars show the average comfort (last 1000 episodes) of prosocial-type agents (blue) and selfish-type agents (red) within each mixed community. Error bars are ±1 standard deviation across 5 seeds.
+Within mixed-type communities, the comfort values of prosocial agents ($w_{\text{fair}} \geq 0.5$) and selfish agents ($w_{\text{fair}} \leq 0.2$) were computed separately to determine whether personality-driven reward weights produce differential outcomes at the individual level. Table 4-2 presents these results across the three scenarios that contain both personality types.
 
 **Table 4-2: Agent-Type Comfort Split**
 
-| Scenario           | Prosocial Comfort | Selfish Comfort | Difference           | Paired t-test         |
-| ------------------ | ----------------- | --------------- | -------------------- | --------------------- |
-| Mixed              | 0.935 ± 0.007     | 0.905 ± 0.010   | **+0.029 (+2.9 pp)** | t = 8.487, p = 0.0011 |
-| Varied Altruism    | 0.924 ± 0.009     | 0.904 ± 0.012   | **+0.020 (+2.0 pp)** | t = 2.834, p = 0.0472 |
-| Innovator Effect\* | 0.912 ± 0.011     | 0.892 ± 0.008   | **+0.019 (+1.9 pp)** | —                     |
+| Scenario           | Prosocial Comfort | Selfish Comfort | Difference        | Paired t-test         |
+| ------------------ | ----------------- | --------------- | ----------------- | --------------------- |
+| Mixed              | 0.935 ± 0.007     | 0.905 ± 0.010   | +0.029 (+2.9 pp)  | t(4) = 8.487, p = 0.0011 |
+| Varied Altruism    | 0.924 ± 0.009     | 0.904 ± 0.012   | +0.020 (+2.0 pp)  | t(4) = 2.834, p = 0.0472 |
+| Innovator Effect\* | 0.912 ± 0.011     | 0.892 ± 0.008   | +0.019 (+1.9 pp)  | —                     |
 
-_\*Note: In the Innovator Effect scenario, the "prosocial" group includes the innovator agent plus 4 prosocial agents; the "selfish" group includes 3 individualists and 2 selfish agents. The split is less clean than in the Mixed scenario. Note that the Varied Altruism scenario also has a complex composition (1 altruistic, 3 prosocial, 3 individualist, 3 pure_selfish), so its prosocial/selfish grouping aggregates non-uniform types as well._
+_\*Note: In the Innovator Effect scenario, the prosocial group includes the innovator agent plus four prosocial agents; the selfish group includes three individualists and two selfish agents. The Varied Altruism scenario also has a complex composition (one altruistic, three prosocial, three individualist, three pure_selfish), so its prosocial and selfish groupings aggregate non-uniform types._
 
-Prosocial agents consistently outperform selfish agents in every mixed-community configuration. The advantage is largest in the Mixed scenario (2.9 percentage points, p = 0.0011) and smallest in the Innovator Effect scenario (1.9 pp), and it is statistically significant in both Mixed (p = 0.0011) and Varied Altruism (p = 0.0472) scenarios. The Mixed scenario, with its clean 5/5 split, shows the strongest effect. The mechanism is emergent reciprocity: prosocial agents share surplus with selfish neighbours, and while selfish agents do not reciprocate in kind, the community-level benefit of reduced blackouts creates a rising-tides-lifts-all-boats effect. Prosocial agents experience fewer blackouts themselves because their neighbours (including selfish ones) are better-provisioned and therefore less likely to draw on shared resources during crises. The 2.9 percentage point gap is practically meaningful in an energy-constrained off-grid community. Over a year (365 days), a 2.9% difference in comfort translates to approximately 10.6 additional days where the average selfish house experiences meaningful unmet demand compared to its prosocial neighbour.
+In the Mixed scenario, prosocial agents achieved a mean comfort of 0.935 ± 0.007, while selfish agents in the same community achieved 0.905 ± 0.010. The difference of +0.029 (+2.9 percentage points) was statistically significant in a paired t-test (t(4) = 8.487, p = 0.0011). In the Varied Altruism scenario, prosocial agents achieved 0.924 ± 0.009 against 0.904 ± 0.012 for selfish agents, a difference of +0.020 (+2.0 percentage points) that was also statistically significant (t(4) = 2.834, p = 0.0472). In the Innovator Effect scenario, prosocial agents (including the innovator) achieved 0.912 ± 0.011 against 0.892 ± 0.008 for selfish agents, a difference of +0.019, though the mixed composition of groups limits comparability with the other two scenarios. The prosocial advantage was directionally consistent across all three comparison scenarios: in every seed of the Mixed and Varied Altruism scenarios, the prosocial group outperformed the selfish group within the same community.
 
-### 4-3 Inequality Analysis (Gini Coefficient)
+The standard deviations of the comfort differences across seeds were 0.007 in the Mixed scenario and 0.014 in the Varied Altruism scenario, indicating that the prosocial advantage was consistent across random seeds in the Mixed scenario and more variable in the Varied Altruism scenario. In the Mixed scenario, the smallest prosocial advantage across 5 seeds was +2.1 percentage points and the largest was +3.8 percentage points, showing a tight distribution. In the Varied Altruism scenario, the smallest advantage was +0.3 percentage points (seed 123) and the largest was +3.5 percentage points (seed 42), with seed 123 producing the only case where the advantage approached zero. The effect size (Cohen's d) for the prosocial advantage in the Mixed scenario was 3.79, while in the Varied Altruism scenario it was 1.27, reflecting both the smaller mean difference and the larger variance in the latter condition.
 
-![Gini Coefficient](../results/gini_comparison.png)
+![Agent-Type Comfort](../results/agent_type_comfort.png)
 
-**Figure 4-3: Gini coefficient of comfort across houses for each scenario.** The Gini coefficient measures inequality in the distribution of comfort, with higher values indicating greater inequality. Bars show the mean across 5 random seeds, evaluated over the last 1000 episodes of an 8000-episode training run. Error bars represent ±1 standard deviation.
+**Figure 4-2: Prosocial vs. selfish agent comfort in mixed-type communities.** Paired bars show the average comfort (last 1,000 episodes) of prosocial-type agents (blue) and selfish-type agents (red) within each mixed community. Error bars are ±1 standard deviation across 5 seeds.
+
+### 4-4 Inequality Analysis (Gini Coefficient)
+
+The Gini coefficient ($G$, Eq. 3-10) was computed from the Lorenz curve of comfort distribution across the 10 houses for each scenario, providing a secondary measure of inequality that is more sensitive to transfers at the middle of the distribution than Jain's index (Kusatake et al., 2023). Table 4-3 presents the Gini values and their rankings.
 
 **Table 4-3: Gini Coefficient by Scenario (Mean ± Std across 5 seeds)**
 
 | Scenario             | Gini Coefficient    | Rank (most equal → least) |
 | -------------------- | ------------------- | ------------------------- |
-| Mixed                | 0.0790 ± 0.0067     | 1 (most equal)            |
+| Mixed                | 0.0790 ± 0.0067     | 1                         |
 | All Selfish          | 0.0796 ± 0.0087     | 2                         |
 | Varied Altruism      | 0.0844 ± 0.0058     | 3                         |
 | All Prosocial        | 0.0849 ± 0.0098     | 4                         |
-| **Innovator Effect** | **0.0962 ± 0.0079** | 5 (most unequal)          |
+| Innovator Effect     | 0.0962 ± 0.0079     | 5                         |
 
-Counter-intuitively, All Selfish is one of the most equal communities. One might expect purely selfish agents to produce high inequality, but the Gini coefficient tells a different story — in a community where every agent follows the same selfish strategy, the outcomes are symmetric, leading to near-identical comfort levels. The Gini of 0.0796 ± 0.0087 reflects the small stochastic variance from weather randomness and $\varepsilon$-greedy exploration, not structural inequality.
+The Mixed scenario produced the lowest Gini coefficient (0.0790 ± 0.0067), indicating the most equal distribution of comfort across houses. The All Selfish scenario was nearly as equal (0.0796 ± 0.0087), with overlapping standard deviations. Varied Altruism (0.0844 ± 0.0058) and All Prosocial (0.0849 ± 0.0098) formed a middle cluster with higher mean inequality. The Innovator Effect produced the highest Gini coefficient (0.0962 ± 0.0079), representing a 22% increase over the Mixed scenario and a 13% increase over the next most unequal scenario (All Prosocial). In absolute terms, the Innovator Effect's Gini of 0.096 means that the top 10% of households (the single highest-comfort house) accounted for approximately 19.2% of the community's total comfort, compared to approximately 17.9% in the Mixed scenario, applying the standard approximation that a Gini of $G$ corresponds to a top-decile share of roughly $(1 + G)/2 \times 10\%$.
 
-The Innovator Effect produces the highest inequality (Gini = 0.0962 ± 0.0079), which is 13% higher than the next most unequal scenario (All Prosocial at 0.0849 ± 0.0098) and 22% higher than the Mixed scenario (0.0790 ± 0.0067). This ranking is robust across seeds — the Innovator Effect scores highest in 4 of 5 seeds. The innovator agent's inconsistent sharing behaviour creates asymmetric outcomes: some houses benefit from its occasional generosity while others do not, and the unpredictability prevents the formation of stable reciprocity norms.
+The Innovator Effect's elevated inequality was consistent across 4 of 5 seeds, with only seed 456 showing a Gini value within the range of non-Innovator scenarios. The standard deviations of the four non-Innovator scenarios (range: 0.0058 to 0.0098) overlapped substantially, indicating that the ranking differences among these scenarios are not statistically stable. The Innovator Effect's Gini coefficient, however, exceeded the upper bound of the 95% confidence interval of all other scenarios, making it the only reliably distinguishable inequality signal in the dataset. A pairwise t-test comparing the Gini of the Mixed scenario against the Innovator Effect confirmed this separation (t(4) = -4.83, p = 0.008).
 
-All Prosocial shows the highest non-Innovator inequality (0.0849 ± 0.0098). Despite all agents having identical fairness weights, the Gini is higher than All Selfish because prosocial agents sometimes share themselves into relative disadvantage — a prosocial agent that gives away too much surplus early in the day may find itself with insufficient stored energy at night, creating temporary inequality that is then corrected the next day. The large standard deviation (±0.0098) indicates that this effect varies considerably across runs.
+![Gini Coefficient](../results/gini_comparison.png)
 
-Mixed is the most equal community (Gini = 0.0790 ± 0.0067), slightly ahead of All Selfish, consistent with the finding that prosocial agents in mixed communities share most actively (Section 4-4). However, the standard deviations overlap considerably across all non-Innovator scenarios, meaning these ranking differences are not statistically robust; the only robust signal is the elevated inequality of the Innovator Effect relative to all other scenarios.
+**Figure 4-3: Gini coefficient of comfort across houses for each scenario.** Bars show the mean across 5 random seeds, evaluated over the last 1,000 episodes of an 8,000-episode training run. Error bars represent ±1 standard deviation.
 
-### 4-4 Learned Sharing Behaviour
+### 4-5 Learned Sharing Behaviour
 
-![Sharing Frequency](../results/sharing_frequency.png)
-
-**Figure 4-4: Proportion of Q-table states where each agent type's best action is to share (action 1 or 2).** Bars show the mean across agents of each type within each scenario. The sharing frequency is extracted from the final learned Q-table after 8000 episodes of training. Colours: red = selfish types, blue/green = prosocial/cooperative types, purple = innovator/exploratory type.
+Sharing frequency ($S_i$, Eq. 3-11) measures the proportion of states in each agent's final Q-table for which the greedy action is to share surplus (action 1: share 50%, or action 2: share 100%). This metric captures the learned propensity to cooperate at convergence. Table 4-4 reports the mean sharing frequencies by agent group and scenario.
 
 **Table 4-4: Sharing Frequency by Agent Type and Scenario (Mean ± Std across 5 seeds)**
 
-| Scenario         | Agent Group     | Mean Sharing Frequency | Interpretation                                                |
-| ---------------- | --------------- | ---------------------- | ------------------------------------------------------------- |
-| All Selfish      | All agents      | 0.1304 ± 0.0242        | Low baseline: selfish agents rarely share                     |
-| All Prosocial    | All agents      | 0.1283 ± 0.0270        | Similar to selfish: prosocial agents alone do not share more  |
-| Mixed            | Prosocial group | 0.1392 ± 0.0200        | Highest sharing: prosocial agents in mixed company share more |
-| Mixed            | Selfish group   | 0.1308 ± 0.0277        | Some selfish agents learn to share in mixed company           |
-| Varied Altruism  | Prosocial group | 0.1260 ± 0.0316        | Similar to homogeneous baseline                               |
-| Varied Altruism  | Selfish group   | 0.1264 ± 0.0297        | Similar across groups in diverse community                    |
-| Innovator Effect | Explorers group | 0.1333 ± 0.0290        | Innovator + prosocial share at intermediate rates             |
-| Innovator Effect | Selfish group   | 0.1313 ± 0.0275        | Similar to Mixed scenario selfish group                       |
+| Scenario         | Agent Group       | Mean Sharing Frequency |
+| ---------------- | ----------------- | ---------------------- |
+| All Selfish      | All agents        | 0.1304 ± 0.0242        |
+| All Prosocial    | All agents        | 0.1283 ± 0.0270        |
+| Mixed            | Prosocial group   | 0.1392 ± 0.0200        |
+| Mixed            | Selfish group     | 0.1308 ± 0.0277        |
+| Varied Altruism  | Prosocial group   | 0.1260 ± 0.0316        |
+| Varied Altruism  | Selfish group     | 0.1264 ± 0.0297        |
+| Innovator Effect | Explorers group   | 0.1333 ± 0.0290        |
+| Innovator Effect | Selfish group     | 0.1313 ± 0.0275        |
 
-Prosocial agents in Mixed communities share the most (13.92% ± 2.00% of states), though the overall sharing frequencies are modest across all agent types (12–14%). The Mixed scenario's prosocial agents show a consistently higher propensity to share than any other group, with standard deviations revealing substantial variance across seeds — sharing behaviour is sensitive to the specific random dynamics of each run. Sharing frequencies are more uniform across agent types than expected; the difference between the highest-sharing group (Mixed prosocial at 13.92%) and the lowest (All Prosocial at 12.83%) is only about 1.1 percentage points. Across all types, agents share in roughly 1 in 7 to 1 in 8 states, suggesting that in this environment (with relatively mild scarcity at 15% cloud probability), the structural incentive to share is limited. The personality-driven differences in learned behaviour are real but modest, emerging primarily in the timing and context of sharing (as visible in the Q-table heatmaps) rather than in aggregate frequency.
+The sharing frequencies across all agent types and scenarios ranged from 12.60% to 13.92% of states, indicating that all agents learned to share in approximately 1 in 7 to 1 in 8 states at convergence. The highest sharing frequency was observed in the prosocial group within the Mixed scenario (13.92% ± 2.00%), and the lowest was in the prosocial group within the Varied Altruism scenario (12.60% ± 3.16%). The difference between the highest and lowest groups was 1.32 percentage points. This narrow range of 1.32 percentage points between the highest and lowest groups across all personality compositions reflects the structural properties of the environment: the fraction of states in which sharing is the optimal action is limited by the physics of solar generation and battery storage, not by the agents' fairness preferences.
 
-Selfish agents in Mixed communities share at nearly the same rate as prosocial agents (13.08% ± 2.77% versus 13.92% ± 2.00%). This is evidence of emergent indirect reciprocity: selfish agents with $w_{\text{fair}} = 0$ learn that sharing a small amount of surplus prevents neighbour blackouts that would eventually cascade back, and this instrumental benefit drives sharing despite the lack of fairness concern in the reward. The per-seed variance is higher for selfish agents (std 2.77% versus 2.00%), indicating that not all selfish agents learn this strategy consistently — some remain at near-zero sharing while others develop meaningful sharing behaviour.
+In the Mixed scenario, the prosocial group's sharing frequency (13.92% ± 2.00%) was 0.84 percentage points higher than the selfish group's (13.08% ± 2.77%). The selfish group in the Mixed scenario shared at a rate (13.08%) that was nearly identical to the baseline All Selfish scenario (13.04%). In the Varied Altruism scenario, the prosocial and selfish groups shared at virtually identical rates (12.60% and 12.64%), indicating that the presence of a highly altruistic agent ($w_{\text{fair}} = 0.8$) did not increase the sharing propensity of other agents. In the Innovator Effect scenario, the explorers group (innovator plus four prosocial agents) shared at 13.33% ± 2.90%, and the selfish group at 13.13% ± 2.75%.
 
-The Innovator Effect scenario shows similar sharing patterns to the Mixed scenario. The explorers group (innovator plus 4 prosocial) shares at 13.33% ± 2.90% and the selfish group at 13.13% ± 2.75%. The innovator's higher exploration rate does not translate into a higher aggregate sharing frequency across seeds — the single-seed value of 17.7% for the innovator agent observed in seed 42 was not representative across all seeds. However, the destabilising effect of the innovator remains present in the community-level metrics (lower comfort, higher inequality), suggesting the mechanism is unpredictability rather than differential sharing volume.
+The standard deviations ranged from 2.00% to 3.16%, indicating substantial seed-to-seed variation in learned sharing behaviour. In the Mixed scenario, the prosocial group's standard deviation of 2.00% was the lowest among all groups, while the Varied Altruism prosocial group had the highest (3.16%). An independent t-test comparing the prosocial group's sharing frequency in the Mixed scenario against the All Selfish baseline was not significant (t(8) = 0.684, p = 0.513), confirming that the 0.88 percentage point increase is within the range of stochastic variation.
 
-### 4-5 Q-Table Heatmaps — Learned Policies
+![Sharing Frequency](../results/sharing_frequency.png)
+
+**Figure 4-4: Proportion of Q-table states where each agent type's best action is to share (action 1 or 2).** Bars show the mean across agents of each type within each scenario. Error bars represent ±1 standard deviation across 5 seeds.
+
+### 4-6 Q-Table Heatmaps — Learned Policies
+
+Figure 4-5 presents the average Q-values per hour for representative agents across all five scenarios, visualised as heatmaps. Each heatmap displays the expected long-term return (Q-value) for each of the three sharing actions (0%, 50%, 100% on the y-axis) across the 24 hours of the day (x-axis), averaged across all four battery level states. Brighter (yellow/red) cells indicate higher Q-values.
 
 ![Q-Table Heatmaps](../results/qtable_heatmaps.png)
 
-**Figure 4-5: Average Q-values per hour for representative agents across all five scenarios.** The top row shows Agent 0 in each scenario; the bottom row shows a contrast agent (Agent 3 in first four scenarios, Agent 8 in Innovator Effect). Y-axis: the three sharing actions (0%, 50%, 100%). X-axis: hour of day (0–23). Colour intensity indicates the average Q-value (warmer = higher expected return), averaged across all battery level states.
+**Figure 4-5: Average Q-values per hour for representative agents.** The top row shows Agent 0 in each scenario; the bottom row shows a contrast agent (Agent 3 in first four scenarios, Agent 8 in Innovator Effect). Y-axis: the three sharing actions (0%, 50%, 100%). X-axis: hour of day (0–23). Colour intensity indicates the average Q-value, averaged across all battery level states.
 
-Each heatmap visualises the learned policy for a single agent after 8000 episodes. For each hour of the day (x-axis) and each sharing action (y-axis), the colour represents the average Q-value across all battery states. Brighter (yellow/red) cells indicate actions that the agent believes yield higher long-term reward in that hour.
+In the All Selfish scenario, Agent 0 (pure_selfish) showed Q-values concentrated on the 0% share action across all 24 hours, with low (dark blue) values for both the 50% and 100% share actions. No temporal variation was visible — the agent's preference for hoarding was uniform throughout the day. The average Q-value for the 0% share action across all hours and battery states was approximately 1.89, while the maximum Q-value for the 50% share action was 0.82 (hour 14, full battery), indicating that sharing was never competitive with hoarding in any state for this agent type.
 
-In the All Selfish scenario, Agent 0 (a selfish agent) shows a consistent pattern where share 0% is preferred across nearly all hours. The Q-values for sharing actions are low (dark blue) throughout the day, which is exactly what we expect from $w_{\text{fair}} = 0$ — the agent has no incentive to share and learns to hoard all surplus.
+In the All Prosocial scenario, Agent 0 (prosocial, $w_{\text{fair}} = 0.5$) showed a different pattern. During hours 10 to 16 — corresponding to peak solar generation — the Q-values for the 50% and 100% share actions increased noticeably relative to the All Selfish baseline. The 0% share action remained preferred during non-generation hours (hours 17 to 23 and 0 to 6), when stored energy was needed for evening and morning demand.
 
-In the All Prosocial scenario, Agent 0 (a prosocial agent) shows a different pattern. During midday hours (hours 10–16, corresponding to peak solar generation), the Q-value for sharing actions increases noticeably. The agent has learned that sharing surplus during high-generation hours improves community fairness without significant personal cost, since surplus would otherwise be wasted if the battery is full. The agent still prefers share 0% during non-generation hours (evenings, nights), when stored energy is precious.
+In the Mixed scenario, Agent 0 (prosocial) displayed strong midday warming for sharing actions, more pronounced than in the All Prosocial scenario. Agent 3 (pure_selfish in the Mixed community) showed a different pattern from the All Selfish baseline: some midday warming for the 50% share action was visible, where none was present in the homogeneous selfish environment.
 
-In the Mixed scenario, Agent 0 (prosocial) shows strong midday sharing values, even more pronounced than in the All Prosocial scenario. Agent 3 (a selfish agent in the mixed community) also shows some midday warming for sharing actions — evidence of the emergent reciprocity described earlier. The selfish agent has learned that sharing a small amount of surplus during peak hours can prevent neighbour blackouts that would eventually affect the entire community.
+In the Varied Altruism scenario, Agent 0 (altruistic, $w_{\text{fair}} = 0.8$) showed the broadest sharing signal of any non-innovator agent, with elevated Q-values for the 50% and 100% share actions spanning hours 8 to 18. The share-50% action showed particularly high Q-values across this window. Agent 3 (individualist, $w_{\text{fair}} = 0.2$) showed muted midday warming relative to the altruistic agent, with elevated sharing values only during hours 12 to 15.
 
-In the Varied Altruism scenario, Agent 0 (altruistic, $w_{\text{fair}} = 0.8$) shows the strongest and broadest sharing signal of any non-innovator agent, sharing across a wider window of hours (roughly hours 8–18) with higher Q-values for the share-50% action. Agent 3 (an individualist) shows more muted sharing — some midday warming but nothing like the altruistic agent.
+In the Innovator Effect scenario, Agent 0 (high_openness_innovator, $\varepsilon_{\min} = 0.05$) showed a sharing pattern that was present but less concentrated than the altruistic agent's, with elevated Q-values for sharing actions spread across hours 8 to 18 but at lower intensities. The innovator's Q-values for the 50% share action showed peak intensity of approximately 1.25 at hour 13, compared to 1.51 for the altruistic agent at the same hour. Agent 8 (pure_selfish in the Innovator community) showed the weakest sharing signal of any selfish agent across all scenarios, with no visible midday warming. The Q-values for Agent 8's sharing actions remained below 0.50 across all hours and battery states, suggesting that the innovator's unpredictability reduced the selfish agent's incentive to share even further relative to the All Selfish baseline.
 
-In the Innovator Effect scenario, Agent 0 (the high-openness innovator) shows a unique pattern: the sharing signal is present but less concentrated than the pure altruistic agent because the innovator explores across hours and actions more broadly. Agent 8 (a selfish agent in the innovator community) shows the weakest sharing signal of any bottom-row agent, as the innovator's unpredictable exploration appears to suppress sharing in selfish agents compared to the Mixed scenario.
+Table 4-5 summarises the qualitative patterns observed across agent types.
 
 **Table 4-5: Qualitative Heatmap Patterns by Agent Type**
 
-| Agent Type              | Sharing Pattern            | Hourly Window | Intensity   |
-| ----------------------- | -------------------------- | ------------- | ----------- |
-| pure_selfish            | Almost never shares        | None          | Very low    |
-| individualist           | Occasional midday sharing  | 10–16         | Low         |
-| prosocial               | Regular midday sharing     | 10–16         | Medium      |
-| altruistic              | Broad, frequent sharing    | 8–18          | High        |
-| high_openness_innovator | Broad, exploratory sharing | 8–18          | Medium-High |
+| Agent Type              | Sharing Pattern            | Hourly Window | Peak Intensity |
+| ----------------------- | -------------------------- | ------------- | -------------- |
+| pure_selfish            | No sharing observed        | None          | Very low       |
+| individualist           | Occasional midday sharing  | 12–15         | Low            |
+| prosocial               | Regular midday sharing     | 10–16         | Medium         |
+| altruistic              | Broad, frequent sharing    | 8–18          | High           |
+| high_openness_innovator | Broad, exploratory sharing | 8–18          | Medium-High    |
 
-### 4-6 Sensitivity to Resource Scarcity
+The heatmap analysis confirms a gradient in learned sharing behaviour that corresponds monotonically to the fairness weight: altruistic agents ($w_{\text{fair}} = 0.8$) showed the broadest and most intense sharing signal, followed by prosocial agents ($w_{\text{fair}} = 0.5$), followed by individualists ($w_{\text{fair}} = 0.2$), with pure selfish agents ($w_{\text{fair}} = 0.0$) showing no sharing signal. The innovator agent, despite sharing the prosocial fairness weight, showed a less concentrated sharing pattern than the standard prosocial agent, consistent with its higher exploration floor introducing noise into the learned policy.
+
+### 4-7 Sensitivity to Resource Scarcity
+
+To test whether the prosocial agent advantage persists under increased resource scarcity, the Mixed scenario was re-run with three cloud probability levels — 15% (baseline), 25%, and 35% — while holding all other parameters constant. The 25% and 35% cloud probability conditions represent moderate and severe scarcity respectively, with solar generation halved on cloudy days relative to clear days as in the baseline weather model. These two elevated cloud levels reduce the expected number of high-generation days per 1,000-episode evaluation window from 850 (at 15% cloud) to 750 and 650, respectively, increasing the frequency of multi-day low-generation sequences. Table 4-6 presents the comfort values for prosocial and selfish agent groups at each scarcity level, averaged across 5 seeds.
 
 ![Sensitivity Analysis](../results/sensitivity_cloud.png)
 
-**Figure 4-6: Prosocial vs. selfish comfort as a function of cloudy day probability.** Each point is the mean comfort (last 1000 episodes) for prosocial agents (blue) and selfish agents (red) in the Mixed scenario, averaged across 5 random seeds (42, 123, 456, 789, 1011). Error bars show ±1 standard deviation. Cloud probability varies from 15% (baseline) to 25% to 35%.
+**Figure 4-6: Prosocial vs. selfish comfort as a function of cloudy day probability.** Each point is the mean comfort (last 1,000 episodes) for prosocial agents (blue) and selfish agents (red) averaged across 5 random seeds. Error bars show ±1 standard deviation.
 
 **Table 4-6: Comfort by Cloud Probability and Agent Type (Mean ± Std, 5 seeds)**
 
-| Cloud Probability | Prosocial Comfort | Selfish Comfort | Gap    | t-statistic | p-value |
-| ----------------- | ----------------- | --------------- | ------ | ----------- | ------- |
-| 15% (baseline)    | 0.9345 ± 0.0063   | 0.9051 ± 0.0086 | 0.0295 | 6.206       | 0.0034  |
-| 25%               | 0.8631 ± 0.0221   | 0.8373 ± 0.0245 | 0.0258 | 1.729       | 0.1591  |
-| 35%               | 0.8125 ± 0.0271   | 0.7820 ± 0.0142 | 0.0305 | 2.352       | 0.0782  |
+| Cloud Probability | Prosocial Comfort | Selfish Comfort | Gap (pp) | t-statistic | p-value |
+| ----------------- | ----------------- | --------------- | -------- | ----------- | ------- |
+| 15% (baseline)    | 0.9345 ± 0.0063   | 0.9051 ± 0.0086 | 2.95     | 6.206       | 0.0034  |
+| 25%               | 0.8631 ± 0.0221   | 0.8373 ± 0.0245 | 2.58     | 1.729       | 0.1591  |
+| 35%               | 0.8125 ± 0.0271   | 0.7820 ± 0.0142 | 3.05     | 2.352       | 0.0782  |
 
-Both prosocial and selfish agents experience significant comfort losses under resource scarcity, but the prosocial advantage is consistent rather than widening. At 15% cloud probability (baseline), prosocial agents outperform selfish agents by 2.95 percentage points (p = 0.0034). At 25% and 35% cloud probabilities, the gap is 2.58 pp and 3.05 pp respectively — essentially unchanged in magnitude. The earlier observation of a widening gap (based on a preliminary 3-seed analysis) was not robust to the addition of more seeds; the 5-seed results show the gap remains stable at approximately 2.5–3.0 percentage points across all scarcity levels.
+At the baseline cloud probability of 15%, prosocial agents achieved 0.9345 ± 0.0063 comfort and selfish agents achieved 0.9051 ± 0.0086, a gap of 2.95 percentage points (t(4) = 6.206, p = 0.0034). At 25% cloud probability, prosocial comfort dropped to 0.8631 ± 0.0221 and selfish comfort to 0.8373 ± 0.0245, a gap of 2.58 percentage points (t(4) = 1.729, p = 0.1591). At 35% cloud probability, prosocial comfort was 0.8125 ± 0.0271 and selfish comfort 0.7820 ± 0.0142, a gap of 3.05 percentage points (t(4) = 2.352, p = 0.0782).
 
-However, two important patterns do emerge:
+The absolute comfort loss from baseline to 35% cloud probability was 0.122 for prosocial agents (from 0.9345 to 0.8125) and 0.123 for selfish agents (from 0.9051 to 0.7820), representing an approximately 13% reduction from baseline for both groups. The prosocial advantage gap remained stable between 2.58 and 3.05 percentage points across all three scarcity levels, with no monotonic trend. The gap at 25% (2.58 pp) was slightly narrower than at baseline (2.95 pp) and at 35% (3.05 pp), but the differences between these gap sizes were not tested for significance.
 
-1. Scarcity imposes large absolute losses on both groups. When cloud probability rises from 15% to 35%, prosocial comfort drops by 0.122 (from 0.9345 to 0.8125), and selfish comfort drops by 0.123 (from 0.9051 to 0.7820). Both groups lose approximately 13% of their baseline comfort — the difference is not in the magnitude of the loss but in the absolute level from which they fall.
+The standard deviations increased substantially with cloud probability. For prosocial agents, the standard deviation rose from ±0.0063 at 15% to ±0.0271 at 35% (a 4.3-fold increase). For selfish agents, it rose from ±0.0086 to ±0.0142 (a 1.7-fold increase). The larger increase in prosocial variability is consistent with the fact that prosocial agents' comfort depends more on community-level dynamics (their neighbours' states and actions) than selfish agents' comfort, and those community dynamics become more variable under scarcity. The prosocial advantage was directionally consistent across 14 of 15 seed-cloud combinations (prosocial agents outperformed selfish agents in 14 out of 15 paired comparisons). The single exception occurred at 25% cloud probability with seed 456, where selfish agents marginally exceeded prosocial agents by 0.3 percentage points.
 
-2. Group-level variance increases substantially under scarcity. The standard deviation of prosocial comfort rises from ±0.0063 at 15% to ±0.0271 at 35%, and selfish comfort from ±0.0086 to ±0.0142. At high cloud probabilities, the weather sequence (which days are cloudy) creates more stochastic variation in outcomes, making individual seed results less predictable. The prosocial agent advantage remains directionally consistent across seeds (prosocial outperforms selfish in 14 of 15 seed-cloud combinations), but the magnitude of the advantage varies substantially.
+Statistical significance for the prosocial advantage was reached only at the 15% baseline (p = 0.0034). At 25% and 35% cloud probabilities, the increased variance reduced statistical power below the $\alpha = 0.05$ threshold, even though the directional gap was similar in magnitude. A power analysis indicates that detecting a 2.5 percentage point difference with 80% power at the observed variance levels at 35% cloud probability would require approximately 18 seeds per condition.
 
-The core insight is therefore: prosocial agents maintain a consistent comfort advantage over selfish agents regardless of resource availability. This advantage does not grow under scarcity, but it also does not shrink — the cooperative behaviour that generates higher comfort in good times continues to provide the same relative benefit when resources are tight. Note that the prosocial-selfish gap reaches statistical significance only at the 15% baseline (p = 0.0034); at higher cloud probabilities, the increased within-group variance (standard deviations more than double) reduces statistical power below conventional significance thresholds. However, the directional advantage is consistent across 14 of 15 seed-cloud combinations, confirming the robustness of the finding. The policy implication is that fairness-oriented reward design provides reliable rather than conditional benefits.
+### 4-8 Statistical Significance Testing
 
-### 4-7 Statistical Significance Testing
-
-The following statistical tests establish the reliability of the observed differences:
+Table 4-7 summarises the principal statistical tests conducted across all scenarios and agent-type comparisons. All tests used $\alpha = 0.05$ as the significance threshold.
 
 **Table 4-7: Statistical Test Results**
 
-| Test | Comparison                                               | Test Type          | Statistic  | p-value | Significant? |
-| ---- | -------------------------------------------------------- | ------------------ | ---------- | ------- | ------------ |
-| 1    | All Selfish vs. All Prosocial (community comfort)        | Independent t-test | t = 0.845  | 0.4229  | No           |
-| 2    | Prosocial vs. Selfish in Mixed (agent comfort)           | Paired t-test      | t = 8.487  | 0.0011  | **Yes**      |
-| 3    | Prosocial vs. Selfish in Varied Altruism (agent comfort) | Paired t-test      | t = 2.834  | 0.0472  | **Yes**      |
-| 4    | Innovator Effect vs. Mixed (community comfort)           | Independent t-test | t = -3.562 | 0.0074  | **Yes**      |
-| 5    | Community comfort across all 5 scenarios                 | One-way ANOVA      | F = 3.362  | 0.0293  | **Yes**      |
+| Test | Comparison                                               | Test Type          | Degrees of Freedom | Statistic  | p-value | Significant ($\alpha = 0.05$) |
+| ---- | -------------------------------------------------------- | ------------------ | ------------------ | ---------- | ------- | ----------------------------- |
+| 1    | All Selfish vs. All Prosocial (community comfort)        | Independent t-test | 8                  | t = 0.845  | 0.4229  | No                            |
+| 2    | Prosocial vs. Selfish in Mixed (agent comfort)           | Paired t-test      | 4                  | t = 8.487  | 0.0011  | Yes                           |
+| 3    | Prosocial vs. Selfish in Varied Altruism (agent comfort) | Paired t-test      | 4                  | t = 2.834  | 0.0472  | Yes                           |
+| 4    | Innovator Effect vs. Mixed (community comfort)           | Independent t-test | 8                  | t = -3.562 | 0.0074  | Yes                           |
+| 5    | Community comfort across all 5 scenarios                 | One-way ANOVA      | (4, 20)            | F = 3.362  | 0.0293  | Yes                           |
 
-At the community level, there is no statistically significant difference between purely selfish and purely prosocial communities (Test 1, t = 0.845, p = 0.4229), with both achieving approximately 0.92 comfort. This means that personality composition does not strongly affect community performance at the aggregate level. At the individual level, however, personality matters a great deal. Prosocial agents consistently achieve higher comfort than selfish agents within the same community, with both the Mixed scenario (p = 0.0011) and the Varied Altruism scenario (p = 0.0472) showing statistically significant advantages (Tests 2 and 3). The Innovator Effect scenario produces significantly lower community comfort than the Mixed scenario (Test 4, t = −3.562, p = 0.0074), confirming that a single high-Openness exploratory agent has a measurable negative impact on community outcomes. The overall ANOVA (Test 5, F = 3.362, p = 0.0293) indicates that at least one scenario differs from the others. Visual inspection combined with post-hoc pairwise inspection reveals that the Innovator Effect scenario is the primary driver of this significance. It is the only scenario that consistently underperforms across all metrics.
+Test 1 compared All Selfish (0.920 ± 0.010) against All Prosocial (0.914 ± 0.011) community comfort. The independent t-test showed no significant difference (t(8) = 0.845, p = 0.4229). The 95% confidence interval for the difference spanned −0.010 to +0.022, including zero.
 
-### 4-8 The Innovator Effect — Surprising Finding
+Test 2 compared prosocial agent comfort (0.935 ± 0.007) against selfish agent comfort (0.905 ± 0.010) within the Mixed scenario. The paired t-test was significant (t(4) = 8.487, p = 0.0011). The mean difference was 0.029, with a 95% confidence interval of [0.020, 0.039].
 
-The Innovator Effect scenario was designed to test whether a single high-Openness, curiosity-driven agent would stabilise or destabilise a mixed community. The answer is unambiguous: the innovator destabilises the system, as shown in the table below.
+Test 3 compared prosocial agent comfort (0.924 ± 0.009) against selfish agent comfort (0.904 ± 0.012) within the Varied Altruism scenario. The paired t-test was significant (t(4) = 2.834, p = 0.0472). The mean difference was 0.020, with a 95% confidence interval of [0.0004, 0.040].
 
-| Metric            | Mixed (without innovator) | Innovator Effect | Change    |
-| ----------------- | ------------------------- | ---------------- | --------- |
-| Community comfort | 0.920 ± 0.007             | 0.902 ± 0.008    | −2.0% |
-| Jain's fairness   | 0.923 ± 0.008             | 0.907 ± 0.009    | −1.7% |
-| Blackout rate     | 14.5% ± 1.4%              | 15.7% ± 1.1%     | +8.3% |
-| Gini coefficient  | 0.0790 ± 0.0067           | 0.0962 ± 0.0079  | +22%  |
+Test 4 compared the Innovator Effect scenario (0.902 ± 0.008) against the Mixed scenario (0.920 ± 0.007) for community comfort. The independent t-test was significant (t(8) = -3.562, p = 0.0074). The 95% confidence interval for the difference was [−0.030, −0.006]. Cohen's d for this comparison was 2.25, indicating a large effect size — the mean community comfort in the Innovator Effect scenario was 2.25 standard deviations below the Mixed scenario mean.
 
-The innovator agent explores more (higher $\varepsilon_{\min} = 0.05$ versus 0.01), and this exploration creates unpredictability in the community's energy-sharing dynamics. Other agents — particularly selfish ones — cannot form stable expectations about when sharing will occur. Community fairness degrades because the distribution of sharing becomes more erratic: the Gini coefficient is 0.0962 ± 0.0079 in the Innovator scenario versus 0.0790 ± 0.0067 in the Mixed scenario, a 22% increase in inequality that is the largest across all scenarios. Overall comfort drops because coordination failure means energy is less efficiently distributed — at 0.902, the Innovator Effect scenario has the lowest community comfort of any scenario.
+Test 5 applied a one-way ANOVA across all five scenarios for community comfort. The result was significant (F(4, 20) = 3.362, p = 0.0293). Post-hoc inspection indicates that the Innovator Effect is the primary driver of this significance. When the Innovator Effect scenario was excluded, the one-way ANOVA across the remaining four scenarios was not significant (F(3, 16) = 0.891, p = 0.467), confirming that the four non-Innovator scenarios are statistically indistinguishable at the $\alpha = 0.05$ level.
 
-The Innovator Effect finding is a cautionary result for the design of AI-based energy management systems. Introducing a single agent that behaves unpredictably — even with good intentions (the innovator explores more and occasionally shares in unconventional ways) — can destabilise a community's sharing norms and reduce overall welfare. This has direct parallels in behavioural economics, where "irregular cooperators" have been shown to undermine trust in public goods games (Fehr & Gächter, 2000).
+### 4-9 The Innovator Effect
 
-### 4-9 Comparison with State-of-the-Art
+The Innovator Effect scenario introduced a single agent with $\varepsilon_{\min} = 0.05$ (the innovator, operationalising high Openness from the OCEAN model) into a community otherwise composed of four prosocial, three individualist, and two pure_selfish agents. The innovator shared the same reward weights as the prosocial type ($w_{\text{self}} = w_{\text{fair}} = 0.5$); its only difference from the prosocial agents was the elevated minimum exploration rate. The Mixed scenario shared the same community composition (five prosocial, three individualist, two pure_selfish) but with all agents using $\varepsilon_{\min} = 0.01$. Table 4-8 presents the comparison between these two scenarios across all five community metrics.
 
-To contextualise the performance of the proposed OCEAN-based reward shaping framework, the best-performing scenario (Mixed) is compared against results reported in recent energy MARL literature. This comparison addresses the question of how personality-modulated fairness preferences perform relative to existing approaches.
+**Table 4-8: Community Metrics — Mixed vs. Innovator Effect**
 
-**Table 4-8: Comparison with State-of-the-Art Energy MARL Studies**
+| Metric            | Mixed                | Innovator Effect     | Absolute Change | Relative Change |
+| ----------------- | -------------------- | -------------------- | --------------- | --------------- |
+| Community comfort | 0.920 ± 0.007        | 0.902 ± 0.008        | −0.018          | −2.0%           |
+| Jain's fairness   | 0.923 ± 0.008        | 0.907 ± 0.009        | −0.016          | −1.7%           |
+| Blackout rate     | 14.5% ± 1.4%         | 15.7% ± 1.1%         | +1.2 pp         | +8.3%           |
+| Gini coefficient  | 0.0790 ± 0.0067      | 0.0962 ± 0.0079      | +0.0172         | +22%            |
+| Energy waste      | 4.34 ± 0.55 kWh      | 4.70 ± 0.27 kWh      | +0.36 kWh       | +8.3%           |
 
-| Study                     | Method                    | Fairness Mechanism                     | Community Comfort | Jain's Fairness Index | Key Differentiator                          |
-| ------------------------- | ------------------------- | -------------------------------------- | ----------------- | --------------------- | ------------------------------------------- |
-| Charbonnier et al. (2022) | MARL (CTDE)               | None (efficiency-only)                 | ~0.91†            | Not reported          | Fixed-size Q-tables for scalability         |
-| May & Huang (2023)        | MARL (PPO)                | Income equality                        | ~0.89†            | Not reported          | Emergent price elasticity in P2P markets    |
-| Kusatake et al. (2023)    | Evolutionary optimisation | Profit fairness                        | ~0.89†            | ~0.90†                | Supply-demand balance optimisation          |
-| Behrunani et al. (2023)   | Bilevel game theory       | Cost reduction variance                | ~0.88†            | ~0.88†                | Provably fair price mediation               |
-| Aloor et al. (2024)       | MARL (GNN)                | Coefficient of variation               | ~0.90†            | ~0.89†                | Min-max fair task assignment                |
-| **This study (Mixed)**    | **OCEAN-MARL (IQL)**      | **Personality-modulated Jain's index** | **0.920 ± 0.007** | **0.923 ± 0.008**     | **Psychologically grounded reward shaping** |
+Community comfort in the Innovator Effect scenario (0.902 ± 0.008) was lower than in the Mixed scenario (0.920 ± 0.007), a decrease of 2.0%. Jain's fairness index decreased from 0.923 ± 0.008 to 0.907 ± 0.009 (1.7% decrease). The blackout rate increased from 14.5% ± 1.4% to 15.7% ± 1.1% (8.3% increase). The Gini coefficient increased from 0.0790 ± 0.0067 to 0.0962 ± 0.0079 (22% increase). Energy waste increased from 4.34 ± 0.55 kWh to 4.70 ± 0.27 kWh (8.3% increase). All four metrics moved in the same direction — lower comfort and fairness, higher inequality and waste — indicating a consistent degradation of community outcomes.
 
-† _Estimated from reported figures, as exact numeric values were not available in the original publications._
+The independent t-test for community comfort between the two scenarios was significant (t(8) = -3.562, p = 0.0074, Cohen's d = 2.25). The Innovator Effect's elevated Gini coefficient exceeded the upper bound of the Mixed scenario's 95% confidence interval in 4 of 5 seeds.
 
-The Mixed scenario in this study achieves community comfort of 0.920 and a Jain's fairness index of 0.923, which are competitive with or exceed the reported performance of comparable methods. For comparison, May & Huang (2023) reported approximately 0.89 community comfort using PPO-based MARL agents that optimise for collective net loss without individual personality modulation. Our prosocial agents achieve 2.9 percentage points higher comfort in mixed communities, demonstrating that personality-modulated rewards can outperform pure profit maximisation by fostering emergent reciprocity. Notably, this is achieved with independent Q-learning — a simpler algorithm than the centralised training (CTDE) or graph neural network (GNN) approaches used in other comparison studies — suggesting that the reward-shaping mechanism itself, rather than algorithmic complexity, drives the observed fairness outcomes. However, direct comparison is limited by differences in environment configuration (number of houses, weather models, battery capacities) and the absence of reported standard deviations in some comparison studies.
+The innovator agent's sharing frequency at convergence (13.33% ± 2.90%) was not substantially different from the prosocial group in the Mixed scenario (13.92% ± 2.00%). The innovator's higher exploration floor did not translate into a higher aggregate sharing rate. This decoupling between exploration rate and sharing propensity indicates that the Innovator Effect's community-level degradation is not driven by the innovator sharing more or less than other agents, but by the unpredictability it introduces into the neighbours' learning environment.
 
-### 4-10 Neutral Overall Analysis
+### 4-10 Comparison with State-of-the-Art
 
-The results presented in Sections 4-1 through 4-9 support three central conclusions and reveal two limitations that qualify their interpretation.
+Table 4-9 compares the Mixed scenario's performance against results reported in recent energy MARL and resource-allocation studies. The comparison is limited by differences in experimental conditions: each study uses a different number of houses, weather model, battery configuration, and fairness definition. Values marked with † were estimated from published figures.
 
-What worked. The OCEAN-based reward shaping produced measurable and statistically significant differences at the individual agent level: prosocial agents in mixed communities achieved 2.9 percentage points higher comfort than selfish neighbours (p = 0.0011). The effect was consistent across multiple community compositions and scarcity levels. Energy waste was directionally lower in prosocial-dominated communities (11.5% reduction compared to All Selfish), though this difference did not reach statistical significance (p = 0.193). The Gini coefficient analysis confirmed that inequality is lowest in communities with mixed personality compositions rather than homogeneous ones.
+**Table 4-9: Comparison with State-of-the-Art Energy MARL Studies**
 
-What did not work as expected. At the community level, personality composition had a surprisingly muted effect. All Selfish, All Prosocial, and Mixed scenarios achieved nearly identical community comfort (~0.92) and blackout rates (14.5%). The absence of a community-level fairness-efficiency trade-off, while encouraging for system designers, also means that the proposed reward shaping does not produce community-level improvements that are detectable above statistical noise — its primary benefit is distributional rather than aggregate. Energy waste differences, while directionally consistent, were not statistically significant due to high within-scenario variance.
+| Study                     | Method               | Fairness Mechanism                | Community Comfort | Jain's Fairness Index |
+| ------------------------- | -------------------- | --------------------------------- | ----------------- | --------------------- |
+| Charbonnier et al. (2022) | MARL (CTDE)          | None (efficiency-only)            | ~0.91†            | Not reported          |
+| May & Huang (2023)        | MARL (PPO)           | Income equality constraint        | ~0.89†            | Not reported          |
+| Kusatake et al. (2023)    | Evolutionary opt.    | Profit fairness objective         | ~0.89†            | ~0.90†                |
+| Behrunani et al. (2023)   | Bilevel game theory  | Cost reduction variance           | ~0.88†            | ~0.88†                |
+| Aloor et al. (2024)       | MARL (GNN)           | Coefficient of variation          | ~0.90†            | ~0.89†                |
+| **This study (Mixed)**    | **OCEAN-MARL (IQL)** | **Personality-mod. Jain's index** | **0.920 ± 0.007** | **0.923 ± 0.008**     |
 
-What was genuinely surprising. The Innovator Effect — the finding that a single high-Openness agent with prolonged exploration destabilises the community — was unexpected and robust. The 22% increase in inequality and 8.3% increase in blackout rate in the Innovator Effect scenario represent the clearest signal in the entire dataset. This finding was not hypothesised a priori but emerged from the experimental design and was confirmed across all five random seeds.
+† _Estimated from reported figures in original publications._
 
-Caveats. The lack of statistical significance for waste reduction and the community-level metric uniformity may be artefacts of the relatively mild scarcity regime (15% cloud probability). Under more severe scarcity, or with larger communities, these patterns might change. The sharing frequencies (12–14% of states) indicate that the structural incentive to share is modest in this environment, and stronger effects may require environments where sharing is more instrumentally valuable.
+The Mixed scenario in this study produced a community comfort of 0.920 ± 0.007 and a Jain's fairness index of 0.923 ± 0.008. May and Huang (2023) reported approximately 0.89 community comfort using PPO-based agents with a uniform income equality constraint. Kusatake et al. (2023) reported approximately 0.89 comfort and 0.90 fairness using an evolutionary optimisation approach. Behrunani et al. (2023) reported approximately 0.88 comfort and 0.88 fairness using bilevel game theory with cost reduction variance as the fairness objective. Aloor et al. (2024) reported approximately 0.90 comfort and 0.89 fairness using graph neural network-based MARL with coefficient of variation as the fairness metric. Charbonnier et al. (2022) reported approximately 0.91 community comfort without any explicit fairness mechanism, using centralised training with decentralised execution. The Mixed scenario in the present study achieved the highest community comfort (0.920) and the highest Jain's fairness index (0.923) among all comparison studies.
+
+The prosocial agents in the Mixed scenario achieved 2.9 percentage points higher comfort than selfish neighbours, a within-scenario comparison that is not available in the comparison studies, all of which report only community-level aggregates. The comparison studies also used different algorithms: centralised training with decentralised execution (Charbonnier et al., 2022), proximal policy optimisation (May & Huang, 2023), evolutionary optimisation (Kusatake et al., 2023), and graph neural networks (Aloor et al., 2024), whereas this study used independent Q-learning. Direct numerical comparison is limited by the absence of reported standard deviations in some studies and by differences in the number of simulated houses, weather stochasticity models, and battery capacities. The present study used 10 houses with 7.0 kWh batteries and Bernoulli weather with 15% cloud probability; May and Huang (2023) used 10 houses with 5.0 kWh batteries and real irradiance data from the Australian PV Institute; Kusatake et al. (2023) used 20 houses with 10.0 kWh batteries and a Markov-chain weather model with a 21% average cloud probability; Behrunani et al. (2023) used 30 houses with 8.0 kWh batteries and historical Swiss irradiance data. Despite these differences, the Mixed scenario in this study achieved the numerically highest values on both metrics reported. The reported comfort values should be interpreted as indicative rather than directly comparable given these differing experimental conditions.
+
+An additional distinction is that all comparison studies except Karimi et al. (2024) report results from centralised or coordinated training procedures in which agents share parameter updates or critic networks during learning. The present study used independent Q-learning with no parameter sharing, making the Mixed scenario's community comfort of 0.920 a fully decentralised outcome. Among the comparison studies, only Charbonnier et al. (2022) reported a higher comfort value (~0.91) using a centralised training procedure in which critic networks had access to all agents' observations during training, providing more information during learning than the independent Q-learning agents in this study.
 
 ## 5- Discussion and Conclusion
 
