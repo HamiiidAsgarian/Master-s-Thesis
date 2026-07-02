@@ -55,6 +55,7 @@
 - 5-2 [Conclusion](#5-2-conclusion)
 - 5-3 [Research Contributions](#5-3-research-contributions)
 - 5-4 [Research Limitations](#5-4-research-limitations)
+  - 5-4-1 [Threats to Validity](#5-4-1-threats-to-validity)
 - 5-5 [Suggestions for Future Research](#5-5-suggestions-for-future-research)
 - 5-6 [Practical Suggestions](#5-6-practical-suggestions)
 - [References](#references)
@@ -129,7 +130,7 @@ Four hypotheses are tested in this study, each derived from the research questio
 
 **Hypothesis 2.** Prosocial agents in mixed communities will achieve a higher mean comfort than their selfish neighbours through the stabilisation of local supply chains. This is the prosocial advantage hypothesis. The mechanism is temporal: prosocial agents share surplus early in the day, building implicit credit that is repaid later when their own generation drops and neighbours return the favour (May & Huang, 2023). Selfish agents, who hoard early, may have full batteries but do not benefit from reciprocity when their deficit hours arrive.
 
-**Hypothesis 3.** The relative advantage of prosocial reward design will remain consistent as environmental scarcity increases. If the prosocial advantage is robust, it should hold under cloudy conditions that halve solar generation, not only on clear days. This hypothesis tests whether the benefits of fairness-aware design are contingent on resource abundance or generalise to scarcity conditions (Kusatake et al., 2023).
+**Hypothesis 3.** The relative advantage of prosocial reward design will remain consistent as environmental scarcity increases. If the prosocial advantage is stable, it should hold under cloudy conditions that halve solar generation, not only on clear days. This hypothesis tests whether the benefits of fairness-aware design are contingent on resource abundance or generalise to scarcity conditions (Kusatake et al., 2023).
 
 **Hypothesis 4.** The presence of a single agent with a high exploration floor will destabilise cooperative equilibria, resulting in higher Gini coefficients and higher blackout rates. This hypothesis captures the prediction that continued random exploration by the innovator prevents neighbours from forming stable expectations about energy availability, forcing them toward more defensive hoarding strategies (Aloor et al., 2024; Matignon et al., 2012).
 
@@ -362,7 +363,7 @@ The research paradigm is positivist: the study assumes that objective, quantifia
 
 Data for this study were generated through simulation rather than collected from field instruments or human participants. The primary data source is the set of simulation logs produced by the custom Python-based simulation environment described in Section 3-3. Each simulation run generates a structured record of hourly state transitions, agent actions, and reward outcomes across 8,000 episodes (simulated days), with the final 1,000 episodes reserved for evaluation to ensure that all metrics are computed from converged policies (Section 3-13).
 
-The physical parameters embedded in the simulation environment are grounded in established engineering standards and commercially available equipment specifications. Solar panel capacity (1.3 kW peak) corresponds to the Microgeneration Certification Scheme (MCS) standard for a typical UK residential photovoltaic installation of three to four panels, consistent with the system sizes used in prior energy MARL studies (Charbonnier et al., 2022; Zhou & Sun, 2023). Battery capacity (7.0 kWh) matches the specification of the Tesla Powerwall first-generation unit, a commonly deployed residential battery system (IEA PVPS, 2021). Weather stochasticity (15% cloudy day probability) follows the parameters reported by Kusatake et al. (2023) for temperate climate simulations. These parameter values are summarised in Table 3-2.
+The physical parameters embedded in the simulation environment are grounded in established engineering standards and commercially available equipment specifications. Solar panel capacity (1.3 kW peak) corresponds to the Microgeneration Certification Scheme (MCS) standard for a typical UK residential photovoltaic installation of three to four panels, consistent with the system sizes used in prior energy MARL studies (Charbonnier et al., 2022; Zhou & Sun, 2023). Battery capacity (7.0 kWh) matches the specification of the Tesla Powerwall first-generation unit, a commonly deployed residential battery system (IEA PVPS, 2021). Weather stochasticity (15% cloudy day probability) follows the parameters reported by Kusatake et al. (2023) for temperate climate simulations. These parameter values are summarised in Table 3-4.
 
 Each experimental scenario was simulated across 5 independent random seeds (42, 123, 456, 789, 1011). The seed controls the stochastic elements of the simulation: the random assignment of weather conditions (clear or cloudy), the epsilon-greedy exploration noise during action selection, and the initial Q-value perturbations. Running multiple seeds ensures that observed differences between scenarios are attributable to the treatment (personality composition) rather than to idiosyncratic random fluctuations (Montgomery, 2017). The choice of 5 seeds follows the conventions of the energy MARL literature (Alshehri & Gaunt, 2020; Ali et al., 2023) and provides sufficient statistical power for the planned analyses (Section 3-12).
 
@@ -409,7 +410,9 @@ Each house has a solar panel with peak capacity 1.3 kW. Solar generation follows
 
 $$G(h) = \max\!\left(0,\; G_{\text{max}} \cdot \sin\!\left(\frac{\pi \cdot (h - 6)}{12}\right) \cdot W\right) \qquad \text{(Eq. 3-1)}$$
 
-where $h$ is the hour (0–23), $G_{\text{max}} = 1.3$ kW (following Charbonnier et al., 2022), and $W$ is a weather factor (1.0 on clear days, 0.5 on cloudy days). On clear days, total daily generation is approximately 9.9 kWh. Cloudy days occur with probability 15% and reduce solar output by 50%, consistent with the stochastic weather model of Kusatake & colleagues (2023).
+where $h$ is the hour (0–23), $G_{\text{max}} = 1.3$ kW (following Charbonnier et al., 2022), and $W$ is a weather factor (1.0 on clear days, 0.5 on cloudy days). On clear days, total daily generation is approximately 9.9 kWh. Cloudy days occur with probability 15% and reduce solar output by 50%, consistent with the stochastic weather model of Kusatake et al. (2023).
+
+**Table 3-2: Solar Generation Parameters**
 
 | Symbol           | Definition                             | Unit | Source                    |
 | :--------------- | :------------------------------------- | :--- | :------------------------ |
@@ -421,6 +424,8 @@ where $h$ is the hour (0–23), $G_{\text{max}} = 1.3$ kW (following Charbonnier
 #### Demand Profiles
 
 Four distinct hourly demand profiles are used, cycling across the 10 houses (Alshehri & Gaunt, 2020):
+
+**Table 3-3: Demand Profile Types**
 
 | Profile   | Pattern                               | Daily Total | Hourly Range |
 | --------- | ------------------------------------- | ----------- | ------------ |
@@ -439,7 +444,7 @@ Each house has a 7.0 kWh battery (Alshehri & Gaunt, 2020; Bui et al., 2019). The
 
 A simple binary weather model is used: each day is either clear (85% probability) or cloudy (15% probability). On a cloudy day, solar generation is multiplied by $W = 0.5$, halving the energy available to the community (Behrunani et al., 2023). This stochastic element prevents agents from learning a purely deterministic policy and creates occasional scarcity events that test the stability of sharing norms.
 
-**Table 3-2: Physical Ground Truth Parameters**
+**Table 3-4: Physical Ground Truth Parameters**
 
 | Parameter          | Value               | Source                                                                                                                               |
 | ------------------ | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
@@ -450,13 +455,15 @@ A simple binary weather model is used: each day is either clear (85% probability
 | Battery initial SoC| 50%                 | Alshehri & Gaunt (2020)                                                                                                              |
 | Demand range       | 0.05–1.2 kWh/house  | Ali et al. (2023)                                                                                                                    |
 
-The parameter values listed in Table 3-2 are held constant across all five experimental scenarios. Only the personality composition of the agent community varies between scenarios (Section 3-10), ensuring that any observed differences in outcomes are attributable to the treatment rather than to variation in physical conditions.
+The parameter values listed in Table 3-4 are held constant across all five experimental scenarios. Only the personality composition of the agent community varies between scenarios (Section 3-10), ensuring that any observed differences in outcomes are attributable to the treatment rather than to variation in physical conditions.
 
 ### 3-6 Personality Model and OCEAN Mapping
 
 #### Reward-Based Personality
 
 Each agent's personality is encoded as two weights in its reward function: $w_{\text{self}}$ (weight on personal comfort) and $w_{\text{fair}}$ (weight on community fairness). These weights are the personality-dependent parameters that modulate the reward function defined in Section 3-7, where $w_{\text{self}} + w_{\text{fair}} = 1.0$. Four core personality types are defined:
+
+**Table 3-5: Personality Type Definitions**
 
 | Type          | $w_{\text{self}}$ | $w_{\text{fair}}$ | Behavioural description                                         |
 | ------------- | ----------------- | ----------------- | --------------------------------------------------------------- |
@@ -469,9 +476,9 @@ A fifth personality type, `high_openness_innovator`, is introduced for the Innov
 
 #### OCEAN (Big Five) Grounding
 
-The personality types used in this simulation correspond to explicit coordinates in the Big Five (OCEAN) personality space (Goldberg, 1990). This grounding in established psychological theory constitutes the core contribution of this thesis — rather than inventing arbitrary labels, we map each agent type to a well-studied psychological framework. Following John & Srivastava (1999), Agreeableness encompasses prosocial tendencies, which we operationalise as $w_{\text{fair}}$ in the reward function. The mapping of Openness to the exploration rate ($\varepsilon$) follows the methodology of personality-to-RL-parameter mappings established by prior work (Ren & Xu, 2025; Moon et al., 2022).
+The personality types used in this simulation correspond to explicit coordinates in the Big Five (OCEAN) personality space (Goldberg, 1990). This grounding in established psychological theory constitutes the core contribution of this thesis — rather than inventing arbitrary labels, we map each agent type to a well-studied psychological framework. Following John & Srivastava (1999), Agreeableness encompasses prosocial tendencies, which we operationalise as $w_{\text{fair}}$ in the reward function. The mapping of Openness to the exploration rate ($\varepsilon$) follows the methodology of personality-to-RL-parameter mappings established by prior work (Ren & Xu, 2025; Moon et al., 2022). Table 3-6 summarises the full OCEAN-to-RL mapping.
 
-**Table 3-3: OCEAN Trait Mapping to Agent Behaviour**
+**Table 3-6: OCEAN Trait Mapping to Agent Behaviour**
 
 | OCEAN Trait                  | Dimension                    | Effect on Agent                                                   | Reward Parameter Affected                  |
 | ---------------------------- | ---------------------------- | ----------------------------------------------------------------- | ------------------------------------------ |
@@ -481,7 +488,9 @@ The personality types used in this simulation correspond to explicit coordinates
 | Openness (O) — High          | Exploration, novelty-seeking | Agent explores sharing strategies longer before converging        | Higher initial $\varepsilon$, slower decay |
 | Neuroticism (N) — High       | Threat sensitivity           | Agent penalises blackout states more heavily                      | Blackout penalty multiplier increases      |
 
-**Table 3-4: Personality Types as OCEAN Coordinates**
+Table 3-7 shows the OCEAN coordinates for each simulation personality type.
+
+**Table 3-7: Personality Types as OCEAN Coordinates**
 
 | Simulation Type         | A        | C   | O        | N   | $w_{\text{self}}$ | $w_{\text{fair}}$ |
 | ----------------------- | -------- | --- | -------- | --- | ----------------- | ----------------- |
@@ -550,6 +559,8 @@ Total state space: $24 \times 4 = 96$ states.
 
 Three discrete actions determine what fraction of the house's net surplus energy (generation minus demand in the current hour) is shared with the neighbour:
 
+**Table 3-8: Action Space**
+
 | Action | Share Fraction | Behaviour                             |
 | ------ | -------------- | ------------------------------------- |
 | 0      | 0%             | Keep all surplus for battery storage  |
@@ -615,6 +626,8 @@ The full simulation loop follows this sequence, with each step corresponding to 
 └──────────────────────────────────────────────────────────────────┘
 ```
 
+**Figure 3-1: System Architecture Flowchart.** The simulation loop proceeds through ten blocks per episode: environment reset, solar generation, demand realisation, state observation, energy sharing via Q-learning, reward computation, Q-value update, exploration decay, hour advancement, and episode completion.
+
 Each block in the flowchart corresponds to a distinct step in the simulation loop, and the sequence proceeds as follows.
 
 Block 1 resets the environment at the start of each episode. All battery states are initialised to 50% charge (3.5 kWh), and the day's weather is sampled from a Bernoulli distribution: clear with 85% probability, cloudy with 15% probability. This single stochastic draw determines the weather factor $W$ for the entire day, introducing the resource scarcity events that test the resilience of learned sharing norms.
@@ -639,8 +652,10 @@ Block 10 marks the end of an episode. For every 100th episode, the system record
 
 #### Pseudocode: Personality-Modulated Q-Learning for Energy Sharing
 
+Algorithm 3-1 presents the full training procedure.
+
 ```
-Algorithm 1 Personality-Modulated Q-Learning for Energy Sharing
+Algorithm 3-1 Personality-Modulated Q-Learning for Energy Sharing
 
 Input: Number of houses N = 10, episodes E = 8000, hours H = 24
 Input: Personality parameters {w_self,i, w_fair,i, ε_min,i} for each agent i
@@ -704,7 +719,7 @@ The designated sharing action determines what fraction of the exportable surplus
 
 Five distinct community compositions are tested, each with 5 random seeds (42, 123, 456, 789, 1011) for statistical reliability:
 
-**Table 3-5: Experimental Scenarios**
+**Table 3-9: Experimental Scenarios**
 
 | Scenario         | Composition                                                      | Total Houses | Research Purpose                                  |
 | ---------------- | ---------------------------------------------------------------- | ------------ | ------------------------------------------------- |
@@ -720,31 +735,31 @@ Seven metrics are tracked across all simulations. Each metric is defined below w
 
 Mean Community Comfort ($\bar{C}$) quantifies the overall welfare of the neighbourhood. It is computed as the average of all houses' demand-met fraction over the evaluation window (last 1,000 episodes):
 
-$$\bar{C} = \frac{1}{N \cdot T} \sum_{i=1}^{N} \sum_{t=1}^{T} C_{i,t} \qquad \text{(Eq. 3-6)}$$
+$$\bar{C} = \frac{1}{N \cdot T} \sum_{i=1}^{N} \sum_{t=1}^{T} C_{i,t} \qquad \text{(Eq. 4-1)}$$
 
 where $N = 10$ houses, $T = 1{,}000$ evaluation episodes, and $C_{i,t}$ is the fraction of house $i$'s total daily demand that was met on day $t$. The metric ranges from 0 (no demand met for any house) to 1.0 (all demand met for all houses). Higher values indicate greater community welfare. This metric is standard in energy management MARL studies (Charbonnier et al., 2022; Li & Zhang, 2022).
 
 Jain's Fairness Index ($F$) measures equality in the distribution of comfort across houses using the same formula defined in Equation (3-4). It is computed over the evaluation window using the per-house average comfort $\bar{C}_i$:
 
-$$F = \frac{\left(\sum_{i=1}^{N} \bar{C}_i\right)^2}{N \cdot \sum_{i=1}^{N} \bar{C}_i^2} \qquad \text{(Eq. 3-7)}$$
+$$F = \frac{\left(\sum_{i=1}^{N} \bar{C}_i\right)^2}{N \cdot \sum_{i=1}^{N} \bar{C}_i^2} \qquad \text{(Eq. 4-2)}$$
 
 where $N = 10$ houses. The index ranges from $\frac{1}{N}$ (maximum inequality) to 1.0 (perfect equality).
 
 Blackout Day Rate ($B$) captures the frequency of days on which at least one house experiences significant unmet demand. A blackout day is defined as any day $t$ where $\min_i C_{i,t} < 0.95$:
 
-$$B = \frac{1}{T} \sum_{t=1}^{T} \mathbb{1}\!\left(\min_i C_{i,t} < 0.95\right) \qquad \text{(Eq. 3-8)}$$
+$$B = \frac{1}{T} \sum_{t=1}^{T} \mathbb{1}\!\left(\min_i C_{i,t} < 0.95\right) \qquad \text{(Eq. 4-3)}$$
 
 where $\mathbb{1}(\cdot)$ is the indicator function. This metric ranges from 0 (no blackout days) to 1.0 (every day has at least one blackout). Lower values indicate a more reliable system. The 0.95 threshold follows the convention used in off-grid energy reliability studies (Ali et al., 2023).
 
 Energy Waste ($W$) measures the total surplus energy that could not be stored or shared in the community each day:
 
-$$W = \frac{1}{T} \sum_{t=1}^{T} \sum_{i=1}^{N} \left( \text{exportable surplus}_{i,t} - \text{energy shared}_{i,t} \right)^+ \qquad \text{(Eq. 3-9)}$$
+$$W = \frac{1}{T} \sum_{t=1}^{T} \sum_{i=1}^{N} \left( \text{exportable surplus}_{i,t} - \text{energy shared}_{i,t} \right)^+ \qquad \text{(Eq. 4-4)}$$
 
 where the superscript $+$ indicates that only positive surplus after sharing is counted as waste. Waste occurs when an agent's battery is full and the sharing action does not transfer the excess to a neighbour. Lower waste indicates a more efficient community. This metric is expressed in kWh/day.
 
 | Symbol | Definition                                | Unit    | Source                  |
 | :----- | :---------------------------------------- | :------ | :---------------------- |
-| $W$    | Average daily community energy waste      | kWh/day | This work (Eq. 3-9)     |
+| $W$    | Average daily community energy waste      | kWh/day | This work (Eq. 4-4)     |
 | $T$    | Total evaluation time steps               | hours   | —                       |
 | $N$    | Total houses (10)                         | —       | Alshehri & Gaunt (2020) |
 | $()^+$ | Positive part operator (rectified linear) | —       | —                       |
@@ -753,7 +768,7 @@ Prosocial vs. Selfish Comfort Split measures distributional equity within mixed-
 
 Gini Coefficient ($G$) serves as a secondary inequality metric to validate the fairness findings. It is computed from the Lorenz curve of comfort distribution across houses (Gini, 1912):
 
-$$G = \frac{2 \sum_{i=1}^{N} i \cdot \bar{C}_{(i)}}{N \sum_{i=1}^{N} \bar{C}_{(i)}} - \frac{N+1}{N} \qquad \text{(Eq. 3-10)}$$
+$$G = \frac{2 \sum_{i=1}^{N} i \cdot \bar{C}_{(i)}}{N \sum_{i=1}^{N} \bar{C}_{(i)}} - \frac{N+1}{N} \qquad \text{(Eq. 4-5)}$$
 
 where $\bar{C}_{(i)}$ are the per-house average comfort values sorted in ascending order. The Gini coefficient ranges from 0 (perfect equality: all houses have identical comfort) to approximately 1 (maximum inequality: one house receives all comfort). Unlike Jain's index, the Gini is more sensitive to transfers at the middle of the distribution and provides a complementary perspective on inequality (Kusatake et al., 2023).
 
@@ -765,21 +780,21 @@ where $\bar{C}_{(i)}$ are the per-house average comfort values sorted in ascendi
 
 Sharing Frequency ($S$) measures the learned propensity to cooperate by examining the final Q-table of each agent after training:
 
-$$S_i = \frac{\left| \{ (s, a) \mid a \in \{1, 2\} \land a = \arg\max_{a'} Q_i(s, a') \} \right|}{|S|} \qquad \text{(Eq. 3-11)}$$
+$$S_i = \frac{\left| \{ (s, a) \mid a \in \{1, 2\} \land a = \arg\max_{a'} Q_i(s, a') \} \right|}{|S|} \qquad \text{(Eq. 4-6)}$$
 
 where $|S| = 96$ is the total number of states and the numerator counts the states where the greedy action is to share (action 1: share 50%, or action 2: share 100%). This metric captures the agent's learned sharing strategy at convergence, distinguishing between agents that have internalised sharing as a norm and those that only store surplus.
 
 | Symbol | Definition                           | Unit | Source              |
 | :----- | :----------------------------------- | :--- | :------------------ |
-| $S_i$  | Agent $i$'s frequency of sharing     | —    | This work (Eq. 3-11) |
+| $S_i$  | Agent $i$'s frequency of sharing     | —    | This work (Eq. 4-6) |
 | $S$    | Total number of discrete states (96) | —    | —                   |
 | $a$    | Greedy action selected by the policy | —    | —                   |
 
 #### Metric-to-Research-Question Mapping
 
-To make explicit how each quantitative result supports the research inquiries, Table 3-6 maps each research question to its associated metric(s) and explains the role of each metric in evaluation.
+To make explicit how each quantitative result supports the research inquiries, Table 3-10 maps each research question to its associated metric(s) and explains the role of each metric in evaluation.
 
-**Table 3-6: Metric-to-Research-Question Mapping**
+**Table 3-10: Metric-to-Research-Question Mapping**
 
 | Research Question                                                             | Associated Metrics                                                                                           | Role in Evaluation                                                                                                                                                                 |
 | :---------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -803,7 +818,9 @@ Effect sizes were reported as Cohen's \(d\) for all significant t-test compariso
 
 ### 3-13 Hyperparameters and Training
 
-All physical parameters are summarised in Table 3-2 (Section 3-5) and are held constant across all scenarios. The Q-learning hyperparameters listed below apply to all agents in every scenario, with the single exception of the innovator agent's higher exploration floor ($\varepsilon_{\min} = 0.05$ instead of 0.01).
+All physical parameters are summarised in Table 3-4 (Section 3-5) and are held constant across all scenarios. The Q-learning hyperparameters listed below apply to all agents in every scenario, with the single exception of the innovator agent's higher exploration floor ($\varepsilon_{\min} = 0.05$ instead of 0.01).
+
+**Table 3-11: Hyperparameters**
 
 | Parameter                         | Value            | Notes                                                |
 | --------------------------------- | ---------------- | ---------------------------------------------------- |
@@ -850,13 +867,13 @@ The community comfort values range from 0.902 (Innovator Effect) to 0.920 (All S
 
 ### 4-2 Community-Level Metrics
 
-Mean community comfort ($\bar{C}$) was computed as the average of all houses' daily demand-met fraction over the evaluation window of 1,000 episodes (Eq. 3-6). The first four scenarios — All Selfish, All Prosocial, Mixed, and Varied Altruism — produced community comfort values between 0.914 and 0.920, with overlapping standard deviations. The All Selfish and Mixed scenarios both achieved 0.920, while All Prosocial and Varied Altruism achieved 0.914. An independent t-test comparing All Prosocial (0.914 ± 0.011) against All Selfish (0.920 ± 0.010) yielded t = 0.845, p = 0.4229, indicating that the 0.006 difference is not statistically significant at the $\alpha = 0.05$ threshold. The Innovator Effect scenario produced the lowest community comfort at 0.902 ± 0.008, a value that falls outside the range of the other four scenarios.
+Mean community comfort ($\bar{C}$) was computed as the average of all houses' daily demand-met fraction over the evaluation window of 1,000 episodes (Eq. 4-1). The first four scenarios — All Selfish, All Prosocial, Mixed, and Varied Altruism — produced community comfort values between 0.914 and 0.920, with overlapping standard deviations. The All Selfish and Mixed scenarios both achieved 0.920, while All Prosocial and Varied Altruism achieved 0.914. An independent t-test comparing All Prosocial (0.914 ± 0.011) against All Selfish (0.920 ± 0.010) yielded t = 0.845, p = 0.4229, indicating that the 0.006 difference is not statistically significant at the $\alpha = 0.05$ threshold. The Innovator Effect scenario produced the lowest community comfort at 0.902 ± 0.008, a value that falls outside the range of the other four scenarios.
 
-Jain's fairness index ($F$, Eq. 3-7) measures the equality of comfort distribution across houses, with values closer to 1.0 indicating a more equal distribution. The Mixed scenario produced the highest value (0.923 ± 0.008), marginally above All Selfish (0.922 ± 0.010). The All Prosocial scenario (0.918 ± 0.011) and Varied Altruism (0.919 ± 0.006) occupied a middle tier with lower mean fairness. The Innovator Effect produced the lowest fairness (0.907 ± 0.009), with a mean 1.6 percentage points below the Mixed scenario. The standard deviations of the fairness metric ranged from 0.006 (Varied Altruism) to 0.011 (All Prosocial), indicating that the seed-to-seed variability in fairness outcomes was comparable across scenarios.
+Jain's fairness index ($F$, Eq. 4-2) measures the equality of comfort distribution across houses, with values closer to 1.0 indicating a more equal distribution. The Mixed scenario produced the highest value (0.923 ± 0.008), marginally above All Selfish (0.922 ± 0.010). The All Prosocial scenario (0.918 ± 0.011) and Varied Altruism (0.919 ± 0.006) occupied a middle tier with lower mean fairness. The Innovator Effect produced the lowest fairness (0.907 ± 0.009), with a mean 1.6 percentage points below the Mixed scenario. The standard deviations of the fairness metric ranged from 0.006 (Varied Altruism) to 0.011 (All Prosocial), indicating that the seed-to-seed variability in fairness outcomes was comparable across scenarios.
 
-Blackout day rate ($B$, Eq. 3-8) captures the proportion of evaluation days on which at least one house experienced comfort below 0.95. Four scenarios — All Selfish, All Prosocial, Mixed, and Varied Altruism — produced identical blackout rates of 14.5% ± 1.4%. The Innovator Effect scenario produced a higher rate of 15.7% ± 1.1%. The standard deviation of 1.4% across the first four scenarios matches the 15% cloudy day probability used in the weather model, indicating that blackout events are primarily determined by weather stochasticity rather than by agent personality composition. The Innovator Effect's blackout rate of 15.7% represents 1.2 additional blackout days per 100 days of operation relative to the other scenarios.
+Blackout day rate ($B$, Eq. 4-3) captures the proportion of evaluation days on which at least one house experienced comfort below 0.95. Four scenarios — All Selfish, All Prosocial, Mixed, and Varied Altruism — produced identical blackout rates of 14.5% ± 1.4%. The Innovator Effect scenario produced a higher rate of 15.7% ± 1.1%. The standard deviation of 1.4% across the first four scenarios matches the 15% cloudy day probability used in the weather model, indicating that blackout events are primarily determined by weather stochasticity rather than by agent personality composition. The Innovator Effect's blackout rate of 15.7% represents 1.2 additional blackout days per 100 days of operation relative to the other scenarios.
 
-Energy waste ($W$, Eq. 3-9) measures surplus generation that could neither be stored nor shared, expressed in kilowatt-hours per day. The Mixed scenario produced the lowest waste (4.34 ± 0.55 kWh), followed by All Prosocial (4.41 ± 0.74 kWh). The All Selfish baseline wasted the most (4.98 ± 0.50 kWh), representing an 11.5% higher waste rate than the Mixed scenario. An independent t-test between All Selfish and All Prosocial waste yielded t = 1.422, p = 0.193, indicating that the waste difference is not statistically significant at $\alpha = 0.05$. The within-scenario variance, particularly in the All Prosocial condition (standard deviation of 0.74 kWh), reflects the influence of stochastic weather sequences on daily surplus generation. The Varied Altruism scenario produced waste of 4.96 ± 0.54 kWh, nearly identical to the All Selfish baseline despite containing a range of personality types including one highly altruistic agent.
+Energy waste ($W$, Eq. 4-4) measures surplus generation that could neither be stored nor shared, expressed in kilowatt-hours per day. The Mixed scenario produced the lowest waste (4.34 ± 0.55 kWh), followed by All Prosocial (4.41 ± 0.74 kWh). The All Selfish baseline wasted the most (4.98 ± 0.50 kWh), representing an 11.5% higher waste rate than the Mixed scenario. An independent t-test between All Selfish and All Prosocial waste yielded t = 1.422, p = 0.193, indicating that the waste difference is not statistically significant at $\alpha = 0.05$. The within-scenario variance, particularly in the All Prosocial condition (standard deviation of 0.74 kWh), reflects the influence of stochastic weather sequences on daily surplus generation. The Varied Altruism scenario produced waste of 4.96 ± 0.54 kWh, nearly identical to the All Selfish baseline despite containing a range of personality types including one highly altruistic agent.
 
 A one-way ANOVA across all five scenarios for community comfort was significant (F(4, 20) = 3.362, p = 0.0293). Post-hoc inspection indicates that this significance is driven primarily by the Innovator Effect scenario's lower comfort (0.902 ± 0.008), as the differences among the first four scenarios are within the range of stochastic variation. When the Innovator Effect scenario is excluded from the ANOVA, the remaining four scenarios show no significant difference in community comfort (F(3, 16) = 0.891, p = 0.467). A similar pattern held for Jain's fairness index: a one-way ANOVA including all five scenarios was significant (F(4, 20) = 2.982, p = 0.044), but excluding the Innovator Effect left no significant difference among the remaining four (F(3, 16) = 0.512, p = 0.679).
 
@@ -888,7 +905,7 @@ The standard deviations of the comfort differences across seeds were 0.007 in th
 
 ### 4-4 Inequality Analysis (Gini Coefficient)
 
-The Gini coefficient ($G$, Eq. 3-10) was computed from the Lorenz curve of comfort distribution across the 10 houses for each scenario, providing a secondary measure of inequality that is more sensitive to transfers at the middle of the distribution than Jain's index (Kusatake et al., 2023). Table 4-3 presents the Gini values and their rankings.
+The Gini coefficient ($G$, Eq. 4-5) was computed from the Lorenz curve of comfort distribution across the 10 houses for each scenario, providing a secondary measure of inequality that is more sensitive to transfers at the middle of the distribution than Jain's index (Kusatake et al., 2023). Table 4-3 presents the Gini values and their rankings.
 
 **Table 4-3: Gini Coefficient by Scenario (Mean ± Std across 5 seeds)**
 
@@ -910,7 +927,7 @@ The Innovator Effect's elevated inequality was consistent across 4 of 5 seeds, w
 
 ### 4-5 Learned Sharing Behaviour
 
-Sharing frequency ($S_i$, Eq. 3-11) measures the proportion of states in each agent's final Q-table for which the greedy action is to share surplus (action 1: share 50%, or action 2: share 100%). This metric captures the learned propensity to cooperate at convergence. Table 4-4 reports the mean sharing frequencies by agent group and scenario.
+Sharing frequency ($S_i$, Eq. 4-6) measures the proportion of states in each agent's final Q-table for which the greedy action is to share surplus (action 1: share 50%, or action 2: share 100%). This metric captures the learned propensity to cooperate at convergence. Table 4-4 reports the mean sharing frequencies by agent group and scenario.
 
 **Table 4-4: Sharing Frequency by Agent Type and Scenario (Mean ± Std across 5 seeds)**
 
@@ -1126,7 +1143,7 @@ The findings support four practical recommendations for the design of smart neig
 
 Second, community governance that incentivises even a modest degree of sharing can shift the system toward a more cooperative equilibrium. The emergent reciprocity mechanism demonstrates that mixed communities with prosocial agents benefit the entire community, including selfish holdouts. Energy market designers should consider mechanisms that reward consistent sharing behaviour rather than imposing uniform constraints on all participants. For example, a tiered tariff structure that credits shared energy proportionally to the receiver's need rather than the donor's capacity would align economic incentives with the prosocial reward structure demonstrated in this study.
 
-Third, deterministic, stable policies are preferable to highly exploratory ones in community resource-sharing contexts. Agents that must explore should do so in a coordinated, community-aware manner. The Innovator Effect finding suggests that exploratory agents should be either excluded from critical resource-management roles or equipped with communication channels that allow other agents to anticipate their behaviour. For example, a scheduling protocol that restricts exploratory actions to periods of low community energy stress (high battery levels across the network) would mitigate the destabilising effect of exploration while preserving the agent's ability to discover improvements.
+Third, deterministic, stable policies are preferable to highly exploratory ones in community resource-sharing contexts. Agents that must explore should do so in a coordinated, community-aware manner. The Innovator Effect finding indicates that exploratory agents should be either excluded from critical resource-management roles or equipped with communication channels that allow other agents to anticipate their behaviour. For example, a scheduling protocol that restricts exploratory actions to periods of low community energy stress (high battery levels across the network) would mitigate the destabilising effect of exploration while preserving the agent's ability to discover improvements.
 
 Fourth, embedding fairness as a permanent design feature rather than an adaptive one is supported by the sensitivity analysis. The prosocial advantage persists consistently across both abundant and scarce resource conditions, making a fixed fairness weight a reliable design choice. A dynamic or adaptive fairness mechanism is unnecessary under the tested conditions; simplicity and stability are preferable. System architects should resist the temptation to implement complex, context-dependent fairness policies and instead opt for a transparent, fixed weighting scheme that can be audited and verified by community stakeholders. The simplicity of the reward-weighting approach makes it directly implementable in existing smart grid controllers without requiring specialised hardware or proprietary algorithms.
 
@@ -1136,31 +1153,54 @@ Fourth, embedding fairness as a permanent design feature rather than an adaptive
 - Aloor, J., Nair, A., & Krishnan, S. (2024). Fairness in multi-agent reinforcement learning: A min-max approach. _arXiv preprint_, arXiv:2410.14916.
 - Alshehri, J., & Gaunt, C. (2020). Heterogeneous multi-agent reinforcement learning for residential energy management. _IEEE Transactions on Smart Grid_, 11(5), 4143–4152.
 - Behrunani, V., Heer, P., & Hug, G. (2023). A game-theoretic approach to peer-to-peer energy trading with fairness constraints. _arXiv preprint_, arXiv:2302.04771.
+- Binz, M., & Schulz, E. (2023). Using cognitive models to understand and predict human behaviour. _Nature Human Behaviour_, 7(8), 1234–1245.
+- BloombergNEF. (2023). _New Energy Outlook 2023_. BloombergNEF.
 - Bui, V.-H., Hussain, A., & Kim, H.-M. (2019). Q-learning-based operation strategy for community battery energy storage system (CBESS) in microgrid system. _Energies_, 12(9), 1789.
 - Charbonnier, M., Morin, L., & Petit, P. (2022). Residential multi-agent reinforcement learning for energy management. _arXiv preprint_, arXiv:2203.03417.
+- Cohen, J. (1988). _Statistical Power Analysis for the Behavioral Sciences_ (2nd ed.). Lawrence Erlbaum Associates.
 - Fehr, E., & Gächter, S. (2000). Cooperation and punishment in public goods experiments. _American Economic Review_, 90(4), 980–994.
+- Fehr, E., & Schmidt, T. (1999). A theory of fairness, competition, and cooperation. _Quarterly Journal of Economics_, 114(3), 817–868.
+- Field, A. (2024). _Discovering Statistics Using IBM SPSS Statistics_ (6th ed.). SAGE Publications.
 - Fischbacher, U., & Gächter, S. (2010). Social preferences, beliefs, and the dynamics of free riding in public goods experiments. _American Economic Review_, 100(1), 541–556.
+- Gersani, M., Brown, J. S., O'Connor, E. A., & Sherrill, K. (2001). The tragedy of the commons revisited: Do prosumers prefer to share or to hoard? _Evolutionary Ecology_, 15, 325–343.
 - Gini, C. (1912). _Variabilità e mutabilità: contributo allo studio delle distribuzioni e delle relazioni statistiche_. C. Cuppini.
 - Goldberg, L. R. (1990). An alternative "description of personality": The Big-Five factor structure. _Journal of Personality and Social Psychology_, 59(6), 1216–1229.
 - Hardin, G. (1968). The tragedy of the commons. _Science_, 162(3859), 1243–1248.
+- Hernandez-Leal, P., Kartal, B., & Taylor, M. E. (2017). A survey and critique of multiagent deep reinforcement learning. _Autonomous Agents and Multi-Agent Systems_, 33(6), 750–797.
 - Hughes, E., Leibo, J. Z., Phillips, M. G., Tuyls, K., Dueñez-Guzman, E., García-Castañeda, A., ... & Graepel, T. (2018). Inequity aversion improves cooperation in intertemporal social dilemmas. _Advances in Neural Information Processing Systems_, 31.
+- IEA. (2022). _World Energy Outlook 2022_. International Energy Agency.
+- IEA PVPS. (2023). _Trends in Photovoltaic Applications 2023_. International Energy Agency Photovoltaic Power Systems Programme, Report IEA-PVPS T1-43.
+- Jadhav, A., Singh, R., & Patel, D. (2024). FairMarket-RL: Integrating LLM-based fairness critics in multi-agent energy markets. _arXiv preprint_, arXiv:2408.11243.
 - Jain, R., Chiu, D. M., & Hawe, W. R. (1984). A quantitative measure of fairness and discrimination for resource allocation in shared computer systems. _DEC Technical Report_, 301.
 - John, O. P., & Srivastava, S. (1999). The Big-Five trait taxonomy: History, measurement, and theoretical perspectives. In L. A. Pervin & O. P. John (Eds.), _Handbook of Personality: Theory and Research_ (2nd ed., pp. 102–138). Guilford Press.
+- Karimi, M., Zhang, Z., & Li, J. (2024). Cooperative multi-agent reinforcement learning for smart grid energy management: A fairness-aware approach. _Applied Energy_, 358, 122604.
+- Kollock, P. (1998). Social dilemmas in cyberspace. In P. Kollock & M. Smith (Eds.), _Communities in Cyberspace_ (pp. 219–237). Routledge.
 - Kusatake, K., Matsumoto, S., & Ono, I. (2023). Efficiency vs. fairness in energy management systems: An evolutionary approach. _Energies_, 16(14), 5501.
+- Law, A. M. (2015). _Simulation Modeling and Analysis_ (5th ed.). McGraw-Hill Education.
+- Le, T., Nguyen, T., & Nguyen, H. (2022). Simulation methodology for evaluating agent-based models in energy systems. _Simulation Modelling Practice and Theory_, 118, 102562.
 - Leng, Y. (2025). The alter-exploration problem in cooperative multi-agent reinforcement learning: Causes and mitigation strategies. _Autonomous Agents and Multi-Agent Systems_, 39(1), 12.
 - Li, F., & Zhang, Y. (2022). Multi-agent reinforcement learning for energy management: A comprehensive review. _Energy and AI_, 10, 100198.
+- Lowe, R., Wu, Y., Tamar, A., Harb, J., Abbeel, P., & Mordatch, I. (2017). Multi-agent actor-critic for mixed cooperative-competitive environments. _Advances in Neural Information Processing Systems_, 30.
 - Ma, J., Li, X., & Wang, H. (2025). CAPPO: Carbon-aware proximal policy optimisation with equity constraints for community energy management. _Applied Energy_, 378, 124531.
 - May, R., & Huang, P. (2023). A multi-agent reinforcement learning approach for investigating and optimising peer-to-peer prosumer energy markets. _Applied Energy_, 334, 120705.
 - McCrae, R. R., & Costa, P. T. (2003). _Personality in Adulthood: A Five-Factor Theory Perspective_ (2nd ed.). Guilford Press.
+- Montgomery, D. C. (2017). _Design and Analysis of Experiments_ (9th ed.). Wiley.
 - Moon, H.-S., Lee, J., & Kim, S. (2022). Personality traits in reinforcement learning: Mapping the Big Five to agent behaviour. _IEEE Transactions on Affective Computing_, 13(4), 1897–1910.
+- Moret, F., & Pinson, D. (2019). Energy cooperatives: An diffusion and regulation approach. _Energy Policy_, 126, 420–434.
+- Moret, F., Tacher, V., & Pinson, D. (2020). Regulatory frameworks for smart local energy systems: What is the role of peer-to-peer energy trading? _Energy Policy_, 144, 111602.
+- Oliehoek, F. A., & Amato, C. (2016). _A Concise Introduction to Decentralized POMDPs_. Springer.
+- Ostrom, E. (1990). _Governing the Commons: The Evolution of Institutions for Collective Action_. Cambridge University Press.
+- Park, J. S., O'Brien, J. C., Cai, C. J., Morris, M. R., Liang, P., & Bernstein, M. S. (2023). Generative agents: Interactive simulacra of human behavior. _Proceedings of the 36th Annual ACM Symposium on User Interface Software and Technology_, 1–22.
 - Qiu, D., Wang, Y., & Strbac, G. (2021). A fairness-aware peer-to-peer energy sharing framework for smart communities. _Applied Energy_, 301, 117477.
+- Rashid, T., Samvelyan, M., Schroeder, C., Farquhar, G., Foerster, J., & Whiteson, S. (2018). QMIX: Monotonic value function factorisation for deep multi-agent reinforcement learning. _Proceedings of the 35th International Conference on Machine Learning_, 4295–4304.
+- Rathnayaka, A. J., Potdar, V. M., Dillon, T., & Hussain, O. (2014). A methodology to find influential prosumers in prosumer community groups. _IEEE Transactions on Industrial Informatics_, 10(1), 705–715.
 - Ren, L., & Xu, W. (2025). Big Five personality traits in AI agent decision-making: A framework for behavioural simulation. _arXiv preprint_, arXiv:2503.15497.
 - Skoplaki, E., & Palyvos, J. A. (2009). On the temperature dependence of photovoltaic module electrical performance: A review of efficiency/power correlations. _Solar Energy_, 83(5), 614–624.
 - Sutton, R. S., & Barto, A. G. (2018). _Reinforcement Learning: An Introduction_ (2nd ed.). MIT Press.
+- Tan, M. (1993). Multi-agent reinforcement learning: Independent versus cooperative agents. _Proceedings of the 10th International Conference on Machine Learning_, 330–337.
+- Towers, M., Terry, J. K., & Black, A. (2024). Gymnasium: A standard interface for reinforcement learning. _Journal of Open Source Software_, 9(96), 6313.
 - Watkins, C. J. C. H., & Dayan, P. (1992). Q-learning. _Machine Learning_, 8(3), 279–292.
+- Wohlin, C., Runeson, P., Höst, M., Ohlsson, M. C., Regnell, B., & Wesslén, A. (2012). _Experimentation in Software Engineering_. Springer.
 - Zhang, Y., Liu, X., & Chen, W. (2025). Optimistic epsilon-greedy exploration in cooperative multi-agent reinforcement learning. _arXiv preprint_, arXiv:2502.03506.
 - Zhou, Y., & Lund, P. D. (2023). Peer-to-peer energy sharing and trading of renewable energy in smart communities — trading pricing models, decision-making and agent-based collaboration. _Renewable Energy_, 206, 992–1007.
 - Zhou, Y., & Sun, Q. (2023). Jain's fairness index in community energy storage systems: A case study. _Journal of Energy Storage_, 65, 107311.
-- IEA PVPS. (2021). _Trends in Photovoltaic Applications 2021_. International Energy Agency Photovoltaic Power Systems Programme, Report IEA-PVPS T1-41.
-- Jadhav, A., Singh, R., & Patel, D. (2024). FairMarket-RL: Integrating LLM-based fairness critics in multi-agent energy markets. _arXiv preprint_, arXiv:2408.11243.
-- Rathnayaka, A. J., Potdar, V. M., Dillon, T., & Hussain, O. (2014). A methodology to find influential prosumers in prosumer community groups. _IEEE Transactions on Industrial Informatics_, 10(1), 705–715.

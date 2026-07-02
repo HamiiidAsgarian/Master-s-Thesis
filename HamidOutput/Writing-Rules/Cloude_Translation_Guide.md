@@ -1,6 +1,8 @@
 # Instructions for Translating an English Markdown Thesis into a Farsi Academic Thesis (IAU Standard)
 
 > **Purpose:** This is a working checklist for an AI agent (or human translator) converting a completed English-language Markdown thesis into a publication-ready Farsi academic thesis matching Islamic Azad University conventions. Formatting rules (margins, fonts, numbering) are covered in the companion Rulebook — this document focuses specifically on **translation accuracy, academic register, and structural conversion risks**.
+>
+> **Terminology:** A complete locked glossary of 260+ terms with verified Farsi equivalents is in `Dictionary.md`. Consult it before translating any chapter — inconsistent term translation is the single most visible error to examiners.
 
 ---
 
@@ -13,9 +15,10 @@
 
 ### 1.2 Build a terminology glossary FIRST, before translating a single chapter
 
-- [ ] Extract every technical/domain-specific term (SE/CS terms: "requirement," "architecture," "framework," "deployment," "refactoring," etc.) and every recurring conceptual term ("research gap," "validity," "reliability," "significance") into a glossary with one fixed Farsi equivalent for each.
+- [ ] A comprehensive glossary of 260+ terms already exists in `Dictionary.md` — **read it in full before translating**. It covers all RL/MARL, energy, psychology, statistics, and thesis-specific terms with locked Farsi equivalents.
 - [ ] **Lock the glossary before translating** — this is the single biggest cause of inconsistency in AI-assisted translations: the same English term getting translated 3 different ways across 5 chapters (e.g., "framework" → چارچوب in Chapter 2, ساختار in Chapter 3, فریم‌ورک in Chapter 4).
 - [ ] For terms with no clean Farsi equivalent (common in CS/SE — "microservice," "API," "container"), decide once whether to: (a) keep the English term italicized in Latin script, (b) transliterate into Farsi script, or (c) use the Farsi equivalent with the English term in parentheses on first use. Apply that decision uniformly.
+- [ ] After translating each chapter, run a **terminology consistency audit**: search the Farsi text for every glossary term and confirm it was used identically everywhere.
 
 ### 1.3 Decide the register up front
 
