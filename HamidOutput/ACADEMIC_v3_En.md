@@ -26,14 +26,19 @@
 - 2-4 [Conceptual Framework and Research Gaps](#2-4-conceptual-framework-and-research-gaps)
   - 2-4-1 [Conceptual Framework: The Personality-Modulated Coordination Model](#2-4-1-conceptual-framework-the-personality-modulated-coordination-model)
 - 3- [Research Methodology](#3-research-methodology)
-- 3-1 [Physical Environment](#3-1-physical-environment)
-- 3-2 [Personality Model and OCEAN Mapping](#3-2-personality-model-and-ocean-mapping)
-- 3-3 [Reward Function Design](#3-3-reward-function-design)
-- 3-4 [Learning Algorithm](#3-4-learning-algorithm)
-- 3-5 [Energy Sharing Mechanism](#3-5-energy-sharing-mechanism)
-- 3-6 [Community Compositions (Scenarios)](#3-6-community-compositions-scenarios)
-- 3-7 [Performance Metrics](#3-7-performance-metrics)
-- 3-8 [Hyperparameters and Training](#3-8-hyperparameters-and-training)
+- 3-1 [Research Design and Approach](#3-1-research-design-and-approach)
+- 3-2 [Data Collection Methods](#3-2-data-collection-methods)
+- 3-3 [Tools and Instruments](#3-3-tools-and-instruments)
+- 3-4 [Population, Sample, and Sampling Method](#3-4-population-sample-and-sampling-method)
+- 3-5 [Physical Environment](#3-5-physical-environment)
+- 3-6 [Personality Model and OCEAN Mapping](#3-6-personality-model-and-ocean-mapping)
+- 3-7 [Reward Function Design](#3-7-reward-function-design)
+- 3-8 [Learning Algorithm](#3-8-learning-algorithm)
+- 3-9 [Energy Sharing Mechanism](#3-9-energy-sharing-mechanism)
+- 3-10 [Community Compositions (Scenarios)](#3-10-community-compositions-scenarios)
+- 3-11 [Performance Metrics](#3-11-performance-metrics)
+- 3-12 [Data Analysis Methods](#3-12-data-analysis-methods)
+- 3-13 [Hyperparameters and Training](#3-13-hyperparameters-and-training)
 - 4- [Data Analysis](#4-data-analysis)
 - 4-1 [Community-Level Metrics](#4-1-community-level-metrics)
 - 4-2 [Agent-Type Comfort Differences](#4-2-agent-type-comfort-differences)
@@ -154,7 +159,7 @@ The following terms are defined as they are used throughout this thesis. These d
 
 The remainder of this thesis is organised as follows. Chapter 2 presents a comprehensive review of the relevant literature, tracing the evolution of smart microgrids and the prosumer paradigm, surveying peer-to-peer trading and pricing mechanisms, reviewing multi-agent reinforcement learning approaches to distributed control, examining fairness modelling in social dilemmas, and discussing personality-driven decision making in artificial intelligence. The chapter concludes with a qualitative comparison table that positions this study against the state of the art and a summary of the three research gaps that this thesis addresses.
 
-Chapter 3 describes the research methodology in full detail. It specifies the physical environment — solar generation modelling, demand profiles, battery storage, and the weather model — and then presents the OCEAN-to-reward mapping, the reward function design, the tabular Q-learning algorithm with its hyperparameters, and the two-phase energy sharing mechanism. The chapter also describes the five experimental scenarios, the seven evaluation metrics, the metric-to-research-question mapping, and the training protocol.
+Chapter 3 describes the research methodology in full detail. It presents the research design and approach (Section 3-1), the data collection methods (Section 3-2), the tools and instruments used (Section 3-3), and the population, sample, and sampling method (Section 3-4). It then specifies the physical environment — solar generation modelling, demand profiles, battery storage, and the weather model — and presents the OCEAN-to-reward mapping, the reward function design, the tabular Q-learning algorithm with its hyperparameters, the two-phase energy sharing mechanism, the five experimental scenarios, the seven evaluation metrics, the data analysis methods, and the training protocol (Sections 3-5 through 3-13).
 
 Chapter 4 presents the simulation results across all scenarios and metrics. The analysis proceeds from community-level aggregates through agent-type differences and inequality measures to the learned Q-table policies and the sensitivity analysis under scarcity. Each finding is described objectively, with interpretation reserved for Chapter 5. The chapter also includes statistical significance testing, the Innovator Effect analysis, and a comparison with state-of-the-art baselines.
 
@@ -347,7 +352,58 @@ The framework generates specific, testable predictions that are stated as hypoth
 
 ## 3- Research Methodology
 
-### 3-1 Physical Environment
+### 3-1 Research Design and Approach
+
+This study adopts a quantitative experimental research design grounded in simulation-based computational modelling. The research is classified as applied research, as its objective is to address a practical engineering challenge — fair and efficient energy sharing in off-grid residential communities — through the operationalisation of psychological theory within a multi-agent reinforcement learning (MARL) framework. The experimental design manipulates two independent variables: the personality composition of the agent community (five levels: All Selfish, All Prosocial, Mixed, Varied Altruism, and Innovator Effect) and the resource scarcity level (two levels: clear day baseline and 15% cloudy day probability). The dependent variables are the seven performance metrics defined in Section 3-11: mean community comfort, Jain's fairness index, blackout day rate, energy waste, prosocial-versus-selfish comfort split, Gini coefficient, and sharing frequency.
+
+The decision to use simulation rather than field experiments or human-subject studies was motivated by three considerations. First, the research requires testing multiple community compositions under identical physical conditions (same solar irradiance, same battery capacity, same demand profiles) while controlling for all confounding variables, a level of control that is infeasible in field settings where weather, consumption patterns, and equipment specifications vary unpredictably (Charbonnier et al., 2022). Second, the study investigates the emergent effects of agent heterogeneity at the community level — effects that unfold over thousands of repeated interactions — which cannot be studied through static surveys or short-duration experiments (Le et al., 2022). Third, the use of computational agents allows the isolation of specific causal mechanisms, such as the effect of a single agent's exploration floor, that would be confounded by unmeasured human psychological variables in a real-world study (Moon et al., 2022).
+
+The MARL framework is formalised as a decentralised partially observable Markov decision process (Dec-POMDP) following Oliehoek and Amato (2016). In this formulation, each of the \(N = 10\) agents observes only its local state — the current hour and its own battery level — and selects a sharing action without knowledge of other agents' states or actions. The joint reward structure, in which each agent's individual reward includes a community-level fairness component weighted by its Agreeableness parameter, creates a semi-cooperative setting that lies between fully cooperative and fully competitive MARL. The independent Q-learning (IQL) approach to Dec-POMDPs (Sutton & Barto, 2018) is the dominant methodology in the energy MARL literature (Bui et al., 2019; Charbonnier et al., 2022) and enables the study of emergent coordination without centralised control.
+
+The research paradigm is positivist: the study assumes that objective, quantifiable relationships exist between community composition and system-level outcomes, and that these relationships can be discovered through controlled experimental manipulation and statistical inference. The five experimental scenarios (Section 3-10) are designed as treatments, the 5 random seeds as replications, and the evaluation metrics as dependent measures — a factorial design structure that mirrors classical experimental methodology adapted to the computational domain.
+
+### 3-2 Data Collection Methods
+
+Data for this study were generated through simulation rather than collected from field instruments or human participants. The primary data source is the set of simulation logs produced by the custom Python-based simulation environment described in Section 3-3. Each simulation run generates a structured record of hourly state transitions, agent actions, and reward outcomes across 8,000 episodes (simulated days), with the final 1,000 episodes reserved for evaluation to ensure that all metrics are computed from converged policies (Section 3-13).
+
+The physical parameters embedded in the simulation environment are grounded in established engineering standards and commercially available equipment specifications. Solar panel capacity (1.3 kW peak) corresponds to the Microgeneration Certification Scheme (MCS) standard for a typical UK residential photovoltaic installation of three to four panels, consistent with the system sizes used in prior energy MARL studies (Charbonnier et al., 2022; Zhou & Sun, 2023). Battery capacity (7.0 kWh) matches the specification of the Tesla Powerwall first-generation unit, a commonly deployed residential battery system (IEA PVPS, 2021). Weather stochasticity (15% cloudy day probability) follows the parameters reported by Kusatake et al. (2023) for temperate climate simulations. These parameter values are summarised in Table 3-2.
+
+Each experimental scenario was simulated across 5 independent random seeds (42, 123, 456, 789, 1011). The seed controls the stochastic elements of the simulation: the random assignment of weather conditions (clear or cloudy), the epsilon-greedy exploration noise during action selection, and the initial Q-value perturbations. Running multiple seeds ensures that observed differences between scenarios are attributable to the treatment (personality composition) rather than to idiosyncratic random fluctuations (Montgomery, 2017). The choice of 5 seeds follows the conventions of the energy MARL literature (Alshehri & Gaunt, 2020; Ali et al., 2023) and provides sufficient statistical power for the planned analyses (Section 3-12).
+
+All simulation data are stored in comma-separated value (CSV) format with one row per simulation step (hour per episode per seed), including columns for episode number, hour, seed, scenario, agent identifier, solar generation, demand, battery state of charge, action taken, comfort achieved, and reward components. This granular logging enables both aggregate metric computation and detailed behavioural analysis.
+
+### 3-3 Tools and Instruments
+
+The simulation experiments were implemented using a custom Python 3.x codebase that integrates several specialised libraries for numerical computation, data processing, statistical testing, and visualisation. Table 3-1 lists the primary tools, their roles, and their place in the research pipeline.
+
+**Table 3-1: Tools and Instruments**
+
+| Tool           | Version | Role in Research Pipeline                                              |
+|:---------------|:--------|:-----------------------------------------------------------------------|
+| Python         | 3.x     | Primary programming language: simulation engine, data processing, analysis |
+| NumPy          | 1.x     | Numerical computations: state-of-charge tracking, energy balance calculations |
+| Pandas         | 2.x     | Data aggregation: episode-level and seed-level summarisation across runs |
+| SciPy          | 1.x     | Statistical testing: one-way ANOVA, independent and paired t-tests     |
+| Matplotlib     | 3.x     | Visualisation: community metrics bar charts, comfort distribution plots |
+| Seaborn        | 0.x     | Statistical visualisation: Q-table heatmaps, distribution plots        |
+
+NumPy was used for all numerical computations within the simulation loop, including the half-sine solar generation calculation (Equation 3-1), battery charge and discharge tracking, and the computation of Jain's fairness index and the Gini coefficient. Pandas handled the post-simulation data pipeline: raw step-level logs were grouped by episode and seed, aggregated into per-metric summaries, and merged across scenarios for comparative analysis. SciPy's `stats` module provided the statistical testing infrastructure including one-way ANOVA for multi-group comparisons and both independent and paired t-tests for between-scenario and within-scenario contrasts.
+
+Matplotlib and Seaborn were used for generating the figures presented in Chapter 4. Bar charts of community-level metrics were produced using Matplotlib's `bar` function with error bars representing one standard deviation across seeds. Q-table heatmaps were rendered using Seaborn's `heatmap` function with a diverging colour palette. All figures are saved at 300 dpi resolution for inclusion in the thesis document.
+
+The simulation environment is implemented as a standalone Python class (`OffGridMARL`) that encapsulates all physical dynamics, agent logic, and data logging. The class follows the Gymnasium (formerly OpenAI Gym) interface convention (Towers et al., 2024), exposing methods for environment reset, step execution, and metric computation. This design choice facilitates reproducibility: the simulation can be re-run with different parameter configurations without modifying the core environment code.
+
+### 3-4 Population, Sample, and Sampling Method
+
+The target population for this study consists of all possible off-grid residential microgrid configurations in which households share surplus energy through a cooperative framework. This population is defined by a set of boundary conditions: single-neighbourhood scale (10–20 households), ring or bus topology, solar-plus-battery generation and storage, independent household-level decision-making, and temperate climate conditions with moderate solar variability. The study does not claim representativeness for larger neighbourhoods, alternative topologies (star, mesh, tree), different generation mixes (wind, diesel backup), or extreme climate conditions.
+
+The study sample is a 10-house ring-topology microgrid as described in Section 3-5. The choice of 10 houses follows the scale of prior energy MARL simulation studies (Alshehri & Gaunt, 2020; Charbonnier et al., 2022; Kusatake et al., 2023) and represents a size at which community-level emergent effects are detectable while computational cost remains manageable. The ring topology — in which each house can share energy with exactly one designated neighbour — was selected to isolate the effect of sharing decisions from the confounding influence of network routing. In a mesh or fully connected topology, an agent's action affects multiple neighbours through different paths, making it difficult to attribute observed outcomes to individual sharing decisions. The ring eliminates this ambiguity: house \(i\) shares with house \(i+1\) only, and the effect of each sharing action propagates through exactly one link in the chain.
+
+The sampling method for households within each scenario is stratified: the 10 houses are assigned to personality types according to the predefined composition of each experimental scenario (Section 3-10). In the Mixed scenario, exactly 5 houses are assigned the prosocial personality type and 5 the pure_selfish type. This stratified assignment ensures that each scenario represents a controlled manipulation of community composition rather than a random draw from a distribution — the All Selfish scenario contains exactly 10 selfish agents in every seed, and the Mixed scenario contains exactly 5 of each type. The allocation of specific personality types to specific positions in the ring is randomised across seeds to prevent position effects from confounding the results.
+
+Each scenario is replicated across 5 random seeds as described in Section 3-2. The seeds serve the methodological function of repeated sampling from the distribution of stochastic outcomes, providing the replication necessary for statistical inference. This combination of stratified compositional assignment and random seed replication follows the standard experimental design for simulation-based research (Montgomery, 2017; Law, 2015).
+
+### 3-5 Physical Environment
 
 The simulation models an off-grid smart neighborhood micro-grid consisting of 10 houses connected in a ring topology, where each house can share surplus energy with exactly one designated neighbour (the next house in the ring). This minimal topology isolates the effect of sharing decisions from network topology confounds.
 
@@ -385,23 +441,26 @@ Each house has a 7.0 kWh battery (Alshehri & Gaunt, 2020; Bui et al., 2019). The
 
 #### Cloudy Day Model
 
-A simple binary weather model is used: each day is either clear (85% probability) or cloudy (15% probability). On a cloudy day, solar generation is multiplied by $W = 0.5$, halving the energy available to the community (Behrunani et al., 2023). This stochastic element prevents agents from learning a purely deterministic policy and creates occasional scarcity events that test the robustness of sharing norms.
+A simple binary weather model is used: each day is either clear (85% probability) or cloudy (15% probability). On a cloudy day, solar generation is multiplied by $W = 0.5$, halving the energy available to the community (Behrunani et al., 2023). This stochastic element prevents agents from learning a purely deterministic policy and creates occasional scarcity events that test the stability of sharing norms.
 
-### 3-2 Personality Model and OCEAN Mapping
+**Table 3-2: Physical Ground Truth Parameters**
+
+| Parameter          | Value               | Source                                                                                                                               |
+| ------------------ | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Houses             | 10                  | Alshehri & Gaunt (2020); Charbonnier et al. (2022)                                                                                   |
+| Battery capacity   | 7.0 kWh             | Alshehri & Gaunt (2020); Ali et al. (2023)                                                                                           |
+| Solar peak         | 1.3 kW              | Charbonnier et al. (2022); Zhou & Sun (2023)                                                                                         |
+| Cloud probability  | 0.15                | Kusatake et al. (2023); Behrunani et al. (2023)                                                                                      |
+| Battery initial SoC| 50%                 | Alshehri & Gaunt (2020)                                                                                                              |
+| Demand range       | 0.05–1.2 kWh/house  | Ali et al. (2023)                                                                                                                    |
+
+The parameter values listed in Table 3-2 are held constant across all five experimental scenarios. Only the personality composition of the agent community varies between scenarios (Section 3-10), ensuring that any observed differences in outcomes are attributable to the treatment rather than to variation in physical conditions.
+
+### 3-6 Personality Model and OCEAN Mapping
 
 #### Reward-Based Personality
 
-Each agent's personality is encoded as two weights in its reward function:
-
-$$R_i = w_{\text{self}} \cdot C_i + w_{\text{fair}} \cdot F \qquad \text{(Eq. 3-2)}$$
-
-where:
-
-- $C_i$ = personal comfort (fraction of demand met, range [0,1])
-- $F$ = Jain's fairness index across all houses (range [0,1])
-- $w_{\text{self}} + w_{\text{fair}} = 1.0$
-
-Four core personality types are defined:
+Each agent's personality is encoded as two weights in its reward function: $w_{\text{self}}$ (weight on personal comfort) and $w_{\text{fair}}$ (weight on community fairness). These weights are the personality-dependent parameters that modulate the reward function defined in Section 3-7, where $w_{\text{self}} + w_{\text{fair}} = 1.0$. Four core personality types are defined:
 
 | Type          | $w_{\text{self}}$ | $w_{\text{fair}}$ | Behavioural description                                         |
 | ------------- | ----------------- | ----------------- | --------------------------------------------------------------- |
@@ -410,13 +469,13 @@ Four core personality types are defined:
 | prosocial     | 0.5               | 0.5               | Balances personal comfort and community fairness equally        |
 | altruistic    | 0.2               | 0.8               | Prioritises community fairness over personal comfort            |
 
-A fifth personality type, `high_openness_innovator`, is introduced for the Innovator Effect scenario (see Section 3-6). This type shares the same reward weights as the prosocial type ($w_{\text{self}} = w_{\text{fair}} = 0.5$) but differs in its exploration parameters (see Section 3-4).
+A fifth personality type, `high_openness_innovator`, is introduced for the Innovator Effect scenario (see Section 3-10). This type shares the same reward weights as the prosocial type ($w_{\text{self}} = w_{\text{fair}} = 0.5$) but differs in its exploration parameters (see Section 3-8).
 
 #### OCEAN (Big Five) Grounding
 
 The personality types used in this simulation correspond to explicit coordinates in the Big Five (OCEAN) personality space (Goldberg, 1990). This grounding in established psychological theory constitutes the core contribution of this thesis — rather than inventing arbitrary labels, we map each agent type to a well-studied psychological framework. Following John & Srivastava (1999), Agreeableness encompasses prosocial tendencies, which we operationalise as $w_{\text{fair}}$ in the reward function. The mapping of Openness to the exploration rate ($\varepsilon$) follows the methodology of personality-to-RL-parameter mappings established by prior work (Ren & Xu, 2025; Moon et al., 2022).
 
-**Table 3-1: OCEAN Trait Mapping to Agent Behaviour**
+**Table 3-3: OCEAN Trait Mapping to Agent Behaviour**
 
 | OCEAN Trait                  | Dimension                    | Effect on Agent                                                   | Reward Parameter Affected                  |
 | ---------------------------- | ---------------------------- | ----------------------------------------------------------------- | ------------------------------------------ |
@@ -426,7 +485,7 @@ The personality types used in this simulation correspond to explicit coordinates
 | Openness (O) — High          | Exploration, novelty-seeking | Agent explores sharing strategies longer before converging        | Higher initial $\varepsilon$, slower decay |
 | Neuroticism (N) — High       | Threat sensitivity           | Agent penalises blackout states more heavily                      | Blackout penalty multiplier increases      |
 
-**Table 3-2: Personality Types as OCEAN Coordinates**
+**Table 3-4: Personality Types as OCEAN Coordinates**
 
 | Simulation Type         | A        | C   | O        | N   | $w_{\text{self}}$ | $w_{\text{fair}}$ |
 | ----------------------- | -------- | --- | -------- | --- | ----------------- | ----------------- |
@@ -438,7 +497,7 @@ The personality types used in this simulation correspond to explicit coordinates
 
 Note that the `high_openness_innovator` differs from the prosocial type only in its Openness dimension, which manifests as a slower exploration decay rate rather than a different reward weight. This allows us to isolate the effect of exploratory behaviour from fairness preferences.
 
-### 3-3 Reward Function Design
+### 3-7 Reward Function Design
 
 The reward function is the key design element that embeds ethical constraints into the learning objective:
 
@@ -478,7 +537,7 @@ where $N$ is the number of houses and $C_i$ is the comfort of house $i$. This in
 
 The reward is computed after each hour and accumulated over the 24-hour day. At the end of each episode (day), each agent receives the sum of its hourly rewards.
 
-### 3-4 Learning Algorithm
+### 3-8 Learning Algorithm
 
 Each house is controlled by an independent tabular Q-learning agent with the following specification:
 
@@ -519,22 +578,7 @@ where $\alpha$ is the learning rate, $\gamma$ is the discount factor, $R$ is the
 | $\gamma$  | Discount factor (0.99)                             | —    | Sutton & Barto (2018)  |
 | $s, s'$   | Current and subsequent states                      | —    | Watkins & Dayan (1992) |
 
-#### Hyperparameters
-
-| Parameter                         | Value            | Notes                                                |
-| --------------------------------- | ---------------- | ---------------------------------------------------- |
-| Learning rate $\alpha$            | 0.2              | Standard for tabular Q-learning                      |
-| Discount factor $\gamma$          | 0.99             | Strong weight on future rewards (long-term planning) |
-| Initial exploration $\varepsilon$ | 1.0              | Fully explorative at start                           |
-| $\varepsilon$ decay rate          | 0.999            | Gradual decline per episode                          |
-| Minimum $\varepsilon$ (standard)  | 0.01             | Near-greedy final policy                             |
-| Minimum $\varepsilon$ (innovator) | **0.05**         | Innovator keeps exploring longer                     |
-| Q-value initialisation            | 1.0 (optimistic) | Encourages early exploration                         |
-| Episodes                          | 8,000            | Sufficient for convergence in 96-state space         |
-
-The optimistic initialisation ($Q(s,a) = 1.0$ for all state-action pairs) is a deliberate choice that encourages agents to try all actions early in training, since any real reward (capped at 1.0) will be equal to or less than the initial value, causing the agent to gradually reduce its estimates.
-
-The innovator agent differs only in its minimum epsilon value (0.05 instead of 0.01), meaning it maintains a 5% random exploration probability even at convergence. This operationalises the "high Openness to Experience" trait from the OCEAN model — the innovator remains curious and continues trying alternative strategies even after standard agents have converged.
+All Q-learning hyperparameters — learning rate, discount factor, exploration schedule, initialisation strategy, and training duration — are listed in Section 3-13. These values are identical across all agents and scenarios, with the single exception of the innovator agent's higher exploration floor ($\varepsilon_{\min} = 0.05$). The optimistic initialisation of Q-values to 1.0 encourages agents to try all actions early in training.
 
 #### System Architecture Flowchart
 
@@ -575,7 +619,27 @@ The full simulation loop follows this sequence, with each step corresponding to 
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-Box-by-box explanation: Block 1 resets battery states to 50% charge and samples the day's weather (clear with 85% probability, cloudy with 15%). Block 2 computes each house's solar generation using Equation (3-1), with the half-sine curve scaled by the weather factor. Block 3 assigns one of four demand profiles to each house. Block 4 constructs the agent's state as a tuple of (hour, discretised battery level). Block 5 selects a sharing action via $\varepsilon$-greedy policy from the current Q-table (note: $\varepsilon$ is higher for the innovator agent, operationalising Openness). Block 6 computes the reward for each agent using Equations (3-2 to 3-4), combining personal comfort and Jain's fairness index weighted by the agent's personality parameters ($w_{\text{self}}$, $w_{\text{fair}}$). Block 7 applies the standard Q-learning update (Equation 3-5). Block 8 decays the exploration rate. Block 9 advances to the next hour or terminates the episode after hour 23. Block 10 records community-level and agent-level metrics and begins the next episode.
+Each block in the flowchart corresponds to a distinct step in the simulation loop, and the sequence proceeds as follows.
+
+Block 1 resets the environment at the start of each episode. All battery states are initialised to 50% charge (3.5 kWh), and the day's weather is sampled from a Bernoulli distribution: clear with 85% probability, cloudy with 15% probability. This single stochastic draw determines the weather factor $W$ for the entire day, introducing the resource scarcity events that test the resilience of learned sharing norms.
+
+Block 2 computes solar generation for each house. Using Equation (3-1), the half-sine irradiance curve is evaluated for each hour of the day (6 AM to 6 PM) and scaled by the weather factor $W$. On clear days, the peak generation reaches 1.3 kW per house, yielding approximately 9.9 kWh daily. On cloudy days, generation is halved, reducing the total energy available to the community and creating the scarcity conditions under which sharing decisions become critical.
+
+Block 3 assigns demand profiles to each of the 10 houses using a cycling allocation of the four profile types (Morning, Evening, Flat, Night Owl). Each profile specifies an hourly demand value, and the total daily demand per house ranges from 8.4 to 9.6 kWh depending on the profile type. The cycling assignment ensures that no single profile type dominates any specific position in the ring topology across seeds.
+
+Block 4 constructs the agent's state observation. Each agent observes only its own local state, formalised as a tuple (hour, discretised battery level). The hour is a 24-valued discrete variable, and the battery level is quantised into four bins using thresholds at 25%, 50%, and 75% of the 7.0 kWh capacity. This produces a total state space of 96 discrete states per agent, which is large enough to capture time-dependent and resource-dependent decision contexts but small enough for tabular Q-learning to converge within 8,000 episodes.
+
+Block 5 selects the sharing action via an $\varepsilon$-greedy policy using the agent's current Q-table. With probability $\varepsilon$, the agent selects a random action; with probability $1 - \varepsilon$, it selects the action with the highest Q-value in the current state. The exploration rate $\varepsilon$ decays each episode (Block 8), and its minimum value differs between standard agents ($\varepsilon_{\min} = 0.01$) and the innovator agent ($\varepsilon_{\min} = 0.05$). This higher floor operationalises the Openness trait from the OCEAN model, as the innovator maintains a greater propensity for exploratory behaviour even after the rest of the community has converged.
+
+Block 6 computes the reward for each agent after the sharing action has been executed and the hourly outcomes are known. The reward is the convex combination defined in Equation (3-2): $R_i = w_{\text{self}} \cdot C_i + w_{\text{fair}} \cdot F$. Personal comfort $C_i$ (Equation 3-3) is the fraction of the house's hourly demand that was met by solar generation, battery discharge, and received shared energy. Community fairness $F$ (Equation 3-4) is Jain's index computed from the comfort values of all 10 houses. The weights $w_{\text{self}}$ and $w_{\text{fair}}$ are the personality-dependent parameters described in Section 3-6, and their sum is always 1.0.
+
+Block 7 applies the Q-learning update rule (Equation 3-5) to the state-action pair that was executed. The update shifts the Q-value toward the sum of the immediate reward and the discounted maximum Q-value of the next state. With a learning rate $\alpha = 0.2$ and discount factor $\gamma = 0.99$, the agent places strong weight on future outcomes while maintaining enough plasticity to adapt to changing conditions during early training.
+
+Block 8 decays the exploration rate by multiplying it by 0.999 at the end of each episode, subject to the agent-specific floor. This exponential decay schedule ensures that agents explore broadly in the first 1,000–2,000 episodes and then gradually shift toward greedy exploitation. By episode 8,000, the standard agent's $\varepsilon$ has decayed to approximately 0.0003, well below the 0.01 floor, so the floor is the effective exploration probability at convergence.
+
+Block 9 advances the simulation clock by one hour. If the current hour is 23, the episode terminates; otherwise, the loop returns to Block 4 for the next hour. This hourly iteration within each episode is the inner loop of the two-level training structure (hours within episodes), while the outer loop (episodes within runs) is controlled by Block 10.
+
+Block 10 marks the end of an episode. For every 100th episode, the system records community-level and agent-level metrics — mean comfort, Jain's fairness index, blackout day rate, energy waste, and per-agent sharing frequency — into a log file for analysis. The simulation then proceeds to the next episode (Block 1) or terminates after 8,000 episodes. This logging interval of 100 episodes balances temporal resolution against storage overhead, providing 80 evaluation points per run.
 
 #### Pseudocode: Personality-Modulated Q-Learning for Energy Sharing
 
@@ -626,9 +690,9 @@ Input: Personality parameters {w_self,i, w_fair,i, ε_min,i} for each agent i
 39: Return: Final Q-tables and evaluation metrics
 ```
 
-The pseudocode makes explicit the coupling between personality and learning: each agent's reward function (line 31) depends on its personality weights ($w_{\text{self},i}$, $w_{\text{fair},i}$), and its exploration schedule (line 35) depends on its Openness parameter ($\varepsilon_{\min,i}$). The innovator agent differs only in having $\varepsilon_{\min} = 0.05$ instead of 0.01. The sharing action (line 21) determines what fraction of exportable surplus is transferred, and the two-phase sharing mechanism (lines 16–19 for local, 21–25 for sharing) mirrors the description in Section 3-5.
+The pseudocode makes explicit the coupling between personality and learning: each agent's reward function (line 31) depends on its personality weights ($w_{\text{self},i}$, $w_{\text{fair},i}$), and its exploration schedule (line 35) depends on its Openness parameter ($\varepsilon_{\min,i}$). The innovator agent differs only in having $\varepsilon_{\min} = 0.05$ instead of 0.01. The sharing action (line 21) determines what fraction of exportable surplus is transferred, and the two-phase sharing mechanism (lines 16–19 for local, 21–25 for sharing) mirrors the description in Section 3-9.
 
-### 3-5 Energy Sharing Mechanism
+### 3-9 Energy Sharing Mechanism
 
 Energy sharing follows a two-phase process within each hour:
 
@@ -640,11 +704,11 @@ Phase 2 — Sharing:
 
 The designated sharing action determines what fraction of the exportable surplus is sent to the neighbour. The recipient house first uses received energy to reduce any current unmet demand, then stores any remainder in its battery (if capacity allows). Energy that cannot be stored or used is wasted. This sequence means that sharing involves a genuine sacrifice: energy shared is energy that could have been stored for the donor's own future use. This creates the core tension that personality-modulated rewards are designed to address.
 
-### 3-6 Community Compositions (Scenarios)
+### 3-10 Community Compositions (Scenarios)
 
 Five distinct community compositions are tested, each with 5 random seeds (42, 123, 456, 789, 1011) for statistical reliability:
 
-**Table 3-3: Experimental Scenarios**
+**Table 3-5: Experimental Scenarios**
 
 | Scenario         | Composition                                                      | Total Houses | Research Purpose                                  |
 | ---------------- | ---------------------------------------------------------------- | ------------ | ------------------------------------------------- |
@@ -654,37 +718,37 @@ Five distinct community compositions are tested, each with 5 random seeds (42, 1
 | Varied Altruism  | 1 altruistic, 3 prosocial, 3 individualist, 3 pure_selfish       | 10           | Heterogeneous personalities — realistic diversity |
 | Innovator Effect | 1 high-O innovator, 4 prosocial, 3 individualist, 2 pure_selfish | 10           | Does one curious destabiliser affect the system?  |
 
-### 3-7 Performance Metrics
+### 3-11 Performance Metrics
 
 Seven metrics are tracked across all simulations. Each metric is defined below with its formula, interpretation, and source citation.
 
 Mean Community Comfort ($\bar{C}$) quantifies the overall welfare of the neighbourhood. It is computed as the average of all houses' demand-met fraction over the evaluation window (last 1,000 episodes):
 
-$$\bar{C} = \frac{1}{N \cdot T} \sum_{i=1}^{N} \sum_{t=1}^{T} C_{i,t} \qquad \text{(Eq. 4-1)}$$
+$$\bar{C} = \frac{1}{N \cdot T} \sum_{i=1}^{N} \sum_{t=1}^{T} C_{i,t} \qquad \text{(Eq. 3-6)}$$
 
 where $N = 10$ houses, $T = 1{,}000$ evaluation episodes, and $C_{i,t}$ is the fraction of house $i$'s total daily demand that was met on day $t$. The metric ranges from 0 (no demand met for any house) to 1.0 (all demand met for all houses). Higher values indicate greater community welfare. This metric is standard in energy management MARL studies (Charbonnier et al., 2022; Li & Zhang, 2022).
 
 Jain's Fairness Index ($F$) measures equality in the distribution of comfort across houses using the same formula defined in Equation (3-4). It is computed over the evaluation window using the per-house average comfort $\bar{C}_i$:
 
-$$F = \frac{\left(\sum_{i=1}^{N} \bar{C}_i\right)^2}{N \cdot \sum_{i=1}^{N} \bar{C}_i^2} \qquad \text{(Eq. 4-2)}$$
+$$F = \frac{\left(\sum_{i=1}^{N} \bar{C}_i\right)^2}{N \cdot \sum_{i=1}^{N} \bar{C}_i^2} \qquad \text{(Eq. 3-7)}$$
 
 where $N = 10$ houses. The index ranges from $\frac{1}{N}$ (maximum inequality) to 1.0 (perfect equality).
 
 Blackout Day Rate ($B$) captures the frequency of days on which at least one house experiences significant unmet demand. A blackout day is defined as any day $t$ where $\min_i C_{i,t} < 0.95$:
 
-$$B = \frac{1}{T} \sum_{t=1}^{T} \mathbb{1}\!\left(\min_i C_{i,t} < 0.95\right) \qquad \text{(Eq. 4-3)}$$
+$$B = \frac{1}{T} \sum_{t=1}^{T} \mathbb{1}\!\left(\min_i C_{i,t} < 0.95\right) \qquad \text{(Eq. 3-8)}$$
 
 where $\mathbb{1}(\cdot)$ is the indicator function. This metric ranges from 0 (no blackout days) to 1.0 (every day has at least one blackout). Lower values indicate a more reliable system. The 0.95 threshold follows the convention used in off-grid energy reliability studies (Ali et al., 2023).
 
 Energy Waste ($W$) measures the total surplus energy that could not be stored or shared in the community each day:
 
-$$W = \frac{1}{T} \sum_{t=1}^{T} \sum_{i=1}^{N} \left( \text{exportable surplus}_{i,t} - \text{energy shared}_{i,t} \right)^+ \qquad \text{(Eq. 4-4)}$$
+$$W = \frac{1}{T} \sum_{t=1}^{T} \sum_{i=1}^{N} \left( \text{exportable surplus}_{i,t} - \text{energy shared}_{i,t} \right)^+ \qquad \text{(Eq. 3-9)}$$
 
 where the superscript $+$ indicates that only positive surplus after sharing is counted as waste. Waste occurs when an agent's battery is full and the sharing action does not transfer the excess to a neighbour. Lower waste indicates a more efficient community. This metric is expressed in kWh/day.
 
 | Symbol | Definition                                | Unit    | Source                  |
 | :----- | :---------------------------------------- | :------ | :---------------------- |
-| $W$    | Average daily community energy waste      | kWh/day | This work (Eq. 4-4)     |
+| $W$    | Average daily community energy waste      | kWh/day | This work (Eq. 3-9)     |
 | $T$    | Total evaluation time steps               | hours   | —                       |
 | $N$    | Total houses (10)                         | —       | Alshehri & Gaunt (2020) |
 | $()^+$ | Positive part operator (rectified linear) | —       | —                       |
@@ -693,7 +757,7 @@ Prosocial vs. Selfish Comfort Split measures distributional equity within mixed-
 
 Gini Coefficient ($G$) serves as a secondary inequality metric to validate the fairness findings. It is computed from the Lorenz curve of comfort distribution across houses (Gini, 1912):
 
-$$G = \frac{2 \sum_{i=1}^{N} i \cdot \bar{C}_{(i)}}{N \sum_{i=1}^{N} \bar{C}_{(i)}} - \frac{N+1}{N} \qquad \text{(Eq. 4-5)}$$
+$$G = \frac{2 \sum_{i=1}^{N} i \cdot \bar{C}_{(i)}}{N \sum_{i=1}^{N} \bar{C}_{(i)}} - \frac{N+1}{N} \qquad \text{(Eq. 3-10)}$$
 
 where $\bar{C}_{(i)}$ are the per-house average comfort values sorted in ascending order. The Gini coefficient ranges from 0 (perfect equality: all houses have identical comfort) to approximately 1 (maximum inequality: one house receives all comfort). Unlike Jain's index, the Gini is more sensitive to transfers at the middle of the distribution and provides a complementary perspective on inequality (Kusatake et al., 2023).
 
@@ -705,45 +769,60 @@ where $\bar{C}_{(i)}$ are the per-house average comfort values sorted in ascendi
 
 Sharing Frequency ($S$) measures the learned propensity to cooperate by examining the final Q-table of each agent after training:
 
-$$S_i = \frac{\left| \{ (s, a) \mid a \in \{1, 2\} \land a = \arg\max_{a'} Q_i(s, a') \} \right|}{|S|} \qquad \text{(Eq. 4-6)}$$
+$$S_i = \frac{\left| \{ (s, a) \mid a \in \{1, 2\} \land a = \arg\max_{a'} Q_i(s, a') \} \right|}{|S|} \qquad \text{(Eq. 3-11)}$$
 
 where $|S| = 96$ is the total number of states and the numerator counts the states where the greedy action is to share (action 1: share 50%, or action 2: share 100%). This metric captures the agent's learned sharing strategy at convergence, distinguishing between agents that have internalised sharing as a norm and those that only store surplus.
 
 | Symbol | Definition                           | Unit | Source              |
 | :----- | :----------------------------------- | :--- | :------------------ |
-| $S_i$  | Agent $i$'s frequency of sharing     | —    | This work (Eq. 4-6) |
+| $S_i$  | Agent $i$'s frequency of sharing     | —    | This work (Eq. 3-11) |
 | $S$    | Total number of discrete states (96) | —    | —                   |
 | $a$    | Greedy action selected by the policy | —    | —                   |
 
 #### Metric-to-Research-Question Mapping
 
-To make explicit how each quantitative result supports the research inquiries, Table 3-4 maps each research question to its associated metric(s) and explains the role of each metric in evaluation.
+To make explicit how each quantitative result supports the research inquiries, Table 3-6 maps each research question to its associated metric(s) and explains the role of each metric in evaluation.
 
-**Table 3-4: Metric-to-Research-Question Mapping**
+**Table 3-6: Metric-to-Research-Question Mapping**
 
 | Research Question                                                             | Associated Metrics                                                                                           | Role in Evaluation                                                                                                                                                                 |
 | :---------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Primary:** Overall impact on efficiency, fairness, and robustness           | Energy Waste ($W$); Jain's Fairness Index ($F$); Mean Community Comfort ($\bar{C}$); Blackout Day Rate ($B$) | Provide the community-level health report, comparing each scenario against the All Selfish baseline to assess the holistic value of personality-driven rewards                     |
+| **Primary:** Overall impact on efficiency, fairness, and reliability           | Energy Waste ($W$); Jain's Fairness Index ($F$); Mean Community Comfort ($\bar{C}$); Blackout Day Rate ($B$) | Provide the community-level health report, comparing each scenario against the All Selfish baseline to assess the holistic value of personality-driven rewards                     |
 | **Sub-question 1:** Emergent sharing patterns from fairness norms             | Sharing Frequency ($S$); Q-Table Heatmaps                                                                    | Sharing Frequency quantifies the propensity to share; heatmaps visualise the temporal window where personality types learn to share most effectively                               |
 | **Sub-question 2:** Trade-offs between efficiency and distributional fairness | Energy Waste ($W$) vs. Jain's Fairness Index ($F$) and Gini Coefficient ($G$)                                | Tests whether increasing equality costs technical efficiency; findings showed no conflict, as sharing surplus reduces waste                                                        |
 | **Sub-question 3:** Shift in selfish agent behaviour via emergent reciprocity | Prosocial vs. Selfish Comfort Split ($\Delta C$); Sharing Frequency of selfish agents in Mixed scenarios     | Evaluates whether prosocial agents lift their selfish neighbours; the comfort split proves prosocial agents achieve +2.9% higher individual welfare through stabilised reciprocity |
 | **Sub-question 4:** Impact of high-Openness innovator on community stability  | Gini Coefficient ($G$); Blackout Day Rate ($B$); Mean Community Comfort ($\bar{C}$)                          | Captures destabilisation: the 22% increase in Gini and 8.3% rise in blackouts prove that individual unpredictability erodes community-level resilience                             |
 
-### 3-8 Hyperparameters and Training
+### 3-12 Data Analysis Methods
 
-All scenarios share identical physical parameters, drawn from prior experimental studies to ensure scientific grounding:
+The quantitative data produced by the simulation experiments were analysed using a combination of descriptive statistics, parametric hypothesis tests, and effect size estimation. All analyses were conducted using the SciPy `stats` library (Section 3-3) at a significance threshold of \(\alpha = 0.05\), consistent with the conventions of the energy MARL literature (Charbonnier et al., 2022; Kusatake et al., 2023).
 
-| Parameter          | Value               | Source                                                                                                                               |
-| ------------------ | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Houses             | 10                  | Alshehri & Gaunt (2020); Charbonnier et al. (2022)                                                                                   |
-| Battery capacity   | 7.0 kWh             | Alshehri & Gaunt (2020); Ali et al. (2023)                                                                                           |
-| Solar peak         | 1.3 kW              | Charbonnier et al. (2022); Zhou & Sun (2023)                                                                                         |
-| Cloud probability  | 0.15                | Kusatake et al. (2023); Behrunani et al. (2023)                                                                                      |
-| Episodes per run   | 8,000               | Determined via pilot experiments: 96-state Q-table converges within 4,000–6,000 episodes; 8,000 ensures full convergence with margin |
-| Seeds per scenario | 5                   | Standard for MARL energy studies (Alshehri & Gaunt, 2020)                                                                            |
-| Evaluation window  | Last 1,000 episodes | Sufficient for stable mean estimates after convergence                                                                               |
+For comparisons involving multiple scenarios simultaneously — such as testing whether mean community comfort differs across all five scenarios — a one-way between-subjects analysis of variance (ANOVA) was used, with scenario as the independent factor and the metric of interest (comfort, fairness, blackout rate, waste, or Gini coefficient) as the dependent variable. The ANOVA tests the null hypothesis that all scenario means are equal; a significant F-statistic indicates that at least one scenario mean differs from the others, but does not identify which pairwise differences are significant. Post-hoc pairwise comparisons were conducted using independent two-sample t-tests with Bonferroni correction for multiple comparisons where appropriate.
 
-All Q-learning hyperparameters are identical across scenarios and agents, except for the innovator agent's $\varepsilon_{\min} = 0.05$. The learning rate $\alpha = 0.2$ and discount factor $\gamma = 0.99$ follow standard tabular Q-learning practice (Sutton & Barto, 2018). The $\varepsilon$-decay rate of 0.999 and optimistic initialisation ($Q = 1.0$) are adopted from Zhang et al. (2025), who demonstrated that optimistic initialisation combined with gradual $\varepsilon$-decay improves exploration in multi-agent settings. The physical parameter values used in this simulation — 1.3 kW peak solar capacity (typical UK residential 3–4 panel PV installation, MCS Standard) and 7.0 kWh battery capacity (standard Tesla Powerwall 1 specification) — are grounded in common residential energy system sizes (IEA PVPS, 2021).
+For direct pairwise comparisons between two specific scenarios (e.g., All Selfish versus All Prosocial for a given metric), independent two-sample t-tests were applied, with the 5 seed-level means per scenario as the observations. This test is appropriate because the seeds within each scenario are independent draws from the same stochastic process and there is no natural pairing between seeds across scenarios. The assumption of normality was assessed via the Shapiro-Wilk test for each group; for the sample sizes used (5 observations per group), the t-test is robust to moderate departures from normality (Montgomery, 2017).
+
+For comparisons of agent types within the same scenario (e.g., prosocial versus selfish agent comfort in the Mixed scenario), paired t-tests were used. The pairing arises naturally from the simulation design: in each seed, prosocial and selfish agents experience the same sequence of weather conditions and interact within the same community, so their outcomes are not independent. The paired t-test accounts for this dependency by computing the difference between the two group means within each seed and testing whether the mean of these paired differences is significantly different from zero (Field, 2024).
+
+Effect sizes were reported as Cohen's \(d\) for all significant t-test comparisons, providing a standardised measure of the magnitude of the observed difference independent of sample size. Cohen's \(d\) was interpreted according to the conventional thresholds: 0.2 (small), 0.5 (medium), and 0.8 (large) (Cohen, 1988). Descriptive statistics — mean and standard deviation across seeds — are reported for all metrics in all scenarios, and the complete set of statistical test results is presented in Table 4-7 (Section 4-7).
+
+### 3-13 Hyperparameters and Training
+
+All physical parameters are summarised in Table 3-2 (Section 3-5) and are held constant across all scenarios. The Q-learning hyperparameters listed below apply to all agents in every scenario, with the single exception of the innovator agent's higher exploration floor ($\varepsilon_{\min} = 0.05$ instead of 0.01).
+
+| Parameter                         | Value            | Notes                                                |
+| --------------------------------- | ---------------- | ---------------------------------------------------- |
+| Learning rate $\alpha$            | 0.2              | Standard for tabular Q-learning                      |
+| Discount factor $\gamma$          | 0.99             | Strong weight on future rewards (long-term planning) |
+| Initial exploration $\varepsilon$ | 1.0              | Fully explorative at start                           |
+| $\varepsilon$ decay rate          | 0.999            | Gradual decline per episode                          |
+| Minimum $\varepsilon$ (standard)  | 0.01             | Near-greedy final policy                             |
+| Minimum $\varepsilon$ (innovator) | **0.05**         | Innovator keeps exploring longer                     |
+| Q-value initialisation            | 1.0 (optimistic) | Encourages early exploration                         |
+| Episodes                          | 8,000            | Sufficient for convergence in 96-state space         |
+| Seeds per scenario                | 5                | Standard for MARL energy studies                     |
+| Evaluation window                 | Last 1,000       | Stable mean estimates after convergence              |
+
+The learning rate $\alpha = 0.2$ and discount factor $\gamma = 0.99$ follow standard tabular Q-learning practice (Sutton & Barto, 2018). The $\varepsilon$-decay rate of 0.999 and optimistic initialisation ($Q = 1.0$) are adopted from Zhang et al. (2025), who demonstrated that optimistic initialisation combined with gradual $\varepsilon$-decay improves exploration in multi-agent settings. The training duration of 8,000 episodes was determined through pilot experiments: the 96-state Q-table converges within 4,000–6,000 episodes, and 8,000 ensures full convergence with a safety margin.
 
 ## 4- Data Analysis
 
