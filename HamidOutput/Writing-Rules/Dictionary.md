@@ -1,6 +1,7 @@
 # Translation Dictionary: English → Farsi Academic Equivalents
 
 > **Source:** Extracted from the complete thesis (Ch.1–5, ~30,000 words). Every term that appears in the English text and may cause ambiguity during Farsi translation is listed below, organized by domain.
+> **Total entries: ~420 (Sections 1–8)**
 >
 > **Usage:** This is a **locked glossary**. During Farsi translation, each term must be translated exactly as specified here — no alternative renderings. If a term requires the English original in parentheses on first use, that instruction applies throughout the document.
 
@@ -108,6 +109,23 @@ These terms have **established, verified** Persian equivalents in academic datab
 | 94 | Renewable Sources / Renewable Technology | منابع تجدیدپذیر / فناوری تجدیدپذیر | Env |
 | 95 | Decarbonisation | کاهش انتشار کربن | Env |
 | 96 | Net Zero | خالص صفر | Env |
+| 97 | Personal Comfort | راحتی شخصی | Thesis |
+| 98 | Energy Waste | اتلاف انرژی | Energy |
+| 99 | Blackout Day / Blackout Day Rate | روز قطعی / نرخ روزهای قطعی | Energy |
+| 100 | Mean Community Comfort | میانگین راحتی جامعه | Stats |
+| 101 | Sharing Frequency | فراوانی اشتراک‌گذاری | Stats |
+| 102 | Artificial Neural Network (ANN) | شبکه عصبی مصنوعی | ML |
+| 103 | Kilowatt-hour (kWh) | کیلووات-ساعت | Energy |
+| 104 | Kilowatt (kW) | کیلووات | Energy |
+| 105 | Rule-Based Heuristics | ابتکارات مبتنی بر قانون | CS |
+| 106 | Half-Sine Curve | منحنی نیم‌سینوسی | Math |
+| 107 | Clear Day / Sunny Day | روز آفتابی | Env |
+| 108 | Cloudy Day / Overcast Day | روز ابری | Env |
+| 109 | Peak Solar Hours | ساعات اوج تابش خورشید | Energy |
+| 110 | Model Predictive Control (MPC) | کنترل پیش‌بینی‌کننده مدل | Control |
+| 111 | Public Goods Game / Public Goods Problem | بازی کالای عمومی / مسئله کالای عمومی | Psych |
+| 112 | Social Cost | هزینه اجتماعی | Econ |
+| 113 | Conditional Cooperation | همکاری شرطی | Psych |
 
 ---
 
@@ -118,18 +136,18 @@ These terms have **partial or contested** Persian equivalents. Use the Farsi for
 | # | English Term | Farsi + English Parenthetical | Domain | Notes |
 |---|---|---|---|---|
 | 97 | Reward Shaping | شکل‌دهی پاداش (Reward Shaping) | RL | Not lexicalized in Persian. Use parenthetical on first occurrence per chapter. |
-| 98 | Inequity Aversion | گریز از نابرابری (Inequity Aversion) | RL | Standard descriptive phrase. Always append English on first use. |
-| 99 | Non-stationarity | ناایستایی آماری محیط (Non-stationarity) | RL | Avoid "عدم ایستایی" (implies physical stillness). Use this exact phrase. |
+| 98 | Inequity Aversion | بی‌زاری از نابرابری (Inequity Aversion) | RL | Psychology/RL term. «گریز از نابرابری» is used in economics (taxation), not RL. Always append English on first use. |
+| 99 | Non-stationarity | ناایستایی (Non-stationarity) | RL | Avoid "عدم ایستایی" (implies physical stillness). The longer phrase «ناایستایی آماری محیط» is unnecessarily verbose; context makes the meaning clear. |
 | 100 | Curse of Dimensionality | نفرین ابعاد (Curse of Dimensionality) | RL | Rare in Persian texts. English required on first use. |
-| 101 | Exploration-Exploitation Trade-off | مبادله اکتشاف و بهره‌برداری (Exploration-Exploitation Trade-off) | RL | Confirmed phrase but not universally known. |
+| 101 | Exploration-Exploitation Trade-off | تعادل بین اکتشاف و بهره‌برداری (Exploration-Exploitation Trade-off) | RL | «مبادله» is used in management literature, not RL. The standard RL phrasing in Persian is «تعادل بین اکتشاف و بهره‌برداری». |
 | 102 | Centralised Training with Decentralised Execution (CTDE) | آموزش متمرکز با اجرای غیرمتمرکز (CTDE) | RL | Standard but lengthy. Acronym after first use. |
 | 103 | Social Externality | بیرونیت اجتماعی (Social Externality) | Econ | Economics term, rare in Persian CS literature. |
 | 104 | Distributional Equity / Distributional Fairness | عدالت توزیعی (Distributional Equity) | Stats | Use parenthetical on first occurrence. |
-| 105 | Prosocial Advantage | مزیت نوع‌دوستانه (Prosocial Advantage) | Thesis | Novel compound — define on first use in Ch.1. |
+| 105 | Prosocial Advantage | مزیت نوعدوستانه (Prosocial Advantage) | Thesis | Novel compound — define on first use in Ch.1. |
 | 106 | Alter-Exploration Problem | مسئله اکتشاف متغیر (Alter-Exploration Problem) | Thesis | Thesis-related; retain English on first use. |
 | 107 | Emergent Reciprocity | جبران پیدایشی (Emergent Reciprocity) | Thesis | Novel compound — define operationally in Ch.1. |
 | 108 | Personality-Modulated Reward | وزن‌های پاداش تعدیل‌شده توسط شخصیت (Personality-Modulated Reward) | Thesis | Core thesis concept — define once in Ch.1. |
-| 109 | Cooperative Equilibrium | تعادل مشارکتی (Cooperative Equilibrium) | Game | Standard game theory term. |
+| 109 | Cooperative Equilibrium | تعادل همکارانه (Cooperative Equilibrium) | Game | Standard game theory term in Persian academic literature. |
 | 110 | Threats to Validity | تهدیدهای اعتبار (Threats to Validity) | Method | Standard in Wohlin et al. taxonomy. |
 | 111 | Internal/Construct/External/Conclusion Validity | اعتبار درونی / اعتبار مفهومی / اعتبار بیرونی / اعتبار نتیجه‌گیری | Method | Use full Farsi on first use, then abbreviate. |
 | 112 | Power Analysis | تحلیل توان (Power Analysis) | Stats | Standard but needs parenthetical. |
@@ -139,6 +157,12 @@ These terms have **partial or contested** Persian equivalents. Use the Farsi for
 | 116 | Indirect Reciprocity | جبران غیرمستقیم (Indirect Reciprocity) | Psych | Standard behavioral econ term. |
 | 117 | Distributional Blindness | نابینایی توزیعی (Distributional Blindness) | Stats | Metaphor — needs care in translation. |
 | 118 | Defensive Hoarding Strategies | استراتژی‌های احتکار تدافعی (Defensive Hoarding) | Psych | Compound — translate as unit. |
+| 119 | Prosocial vs. Selfish Comfort Split | شکاف راحتی نوعدوستانه در برابر خودمحور (Prosocial vs. Selfish Comfort Split) | Thesis | Core metric — define on first use in Ch.4. |
+| 120 | Behavioural Economics | اقتصاد رفتاری (Behavioural Economics) | Econ | Standard field name; rare in Persian engineering texts. |
+| 121 | Computational Social Science | علوم اجتماعی محاسباتی (Computational Social Science) | Method | Interdisciplinary field — needs parenthetical. |
+| 122 | Common Knowledge | دانش مشترک (Common Knowledge) | Game | Game theory term with specific meaning. |
+| 123 | Disagreement Payoff | مبلغ عدم توافق (Disagreement Payoff) | Game | Nash bargaining concept. |
+| 124 | Sparse Action Space | فضای عمل تنک (Sparse Action Space) | RL | RL term rarely used in Persian. |
 
 ---
 
@@ -161,13 +185,14 @@ These terms have **no accepted Persian equivalent**. Transliterate into Farsi sc
 | 129 | FairMarket-RL | FairMarket-RL | RL | Proper name — retain English. |
 | 130 | Gymnasium | Gymnasium | RL | Library name — retain English. |
 | 131 | NumPy | NumPy | Tool | Library name — retain English. |
-| 132 | Energy Hub | هاب انرژی (Energy Hub) | Energy | Transliteration accepted in Persian engineering. |
+| 132 | Energy Hub | مرکز انرژی (Energy Hub) | Energy | «هاب انرژی» is used but less common; «مرکز انرژی» is the standard Persian academic term. |
 | 133 | Aggregator / Central Aggregator | تجمیع‌کننده / تجمیع‌کننده مرکزی | Energy | "تجمیع‌کننده" is used in Persian grid literature. |
 | 134 | Pseudocode | کد شبه (Pseudocode) | CS | Standard CS term in Persian. |
 | 135 | Wall-Clock Time | زمان دیواری (Wall-Clock Time) | CS | CS term — rarely seen in Persian. |
 | 136 | Ablation | حذف موردی (Ablation) | ML | ML term — retain English on first use. |
 | 137 | Populations (of agents) | جمعیت (Population) | RL | Standard ecology/stats term. |
 | 138 | Seeding / Random Seed | بذر تصادفی (Random Seed) | Stats | Transliteration needed. |
+| 139 | MCS (Microgeneration Certification Scheme) | MCS (طرح گواهی تولید خرد) | Energy | Acronym retained. Full Farsi on first use. |
 
 ---
 
@@ -188,7 +213,7 @@ These are multi-word terms whose meaning is greater than the sum of their parts.
 | 147 | Heterogeneous fairness preferences | ترجیحات عدالت ناهمگن | Thesis |
 | 148 | Agent heterogeneity / Personality heterogeneity | ناهمگنی عامل / ناهمگنی شخصیت | Thesis |
 | 149 | Exploration Floor | کف اکتشاف | Thesis |
-| 150 | Prosocial Orientation / Prosocial Behaviour | گرایش نوع‌دوستانه / رفتار نوع‌دوستانه | Psych |
+| 150 | Prosocial Orientation / Prosocial Behaviour | گرایش نوعدوستانه / رفتار نوعدوستانه | Psych |
 | 151 | Altruistic / Altruism | ایثارگری | Psych |
 | 152 | Selfish (agent type) | خودمحور / خودبین | Psych |
 | 153 | Individualist (agent type) | فردگرا | Psych |
@@ -299,6 +324,14 @@ These are multi-word terms whose meaning is greater than the sum of their parts.
 | 258 | Equity Signal / Equity Signal Generator | سیگنال عدالت / تولیدکننده سیگنال عدالت | RL |
 | 259 | Reward-Shaping Framework | چارچوب شکل‌دهی پاداش | RL |
 | 260 | Percentage Points (pp) | نقطه درصدی | Stats |
+| 261 | Binary Weather Model | مدل آب‌وهوای دودویی | Method |
+| 262 | Bernoulli Weather Model | مدل آب‌وهوای برنولی | Method |
+| 263 | Community Composition | ترکیب جامعه | Method |
+| 264 | Fixed Exploration Schedule | برنامه اکتشاف ثابت | RL |
+| 265 | Local Optimum / Global Optimum | بهینه محلی / بهینه سراسری | Math |
+| 266 | Dynamic Personality Evolution / Static Personality Assumption | تکامل پویای شخصیت / فرض ایستای شخصیت | Thesis |
+| 267 | Evolutionary Multi-Objective Optimisation | بهینه‌سازی تکاملی چندهدفه | Method |
+| 268 | Load Shifting / Flexible Loads | جابجایی بار / بارهای انعطاف‌پذیر | Energy |
 
 ---
 
@@ -309,7 +342,7 @@ The five simulation scenarios are proper names. **Retain the English name** in t
 | English Scenario Name | Farsi Descriptive Label |
 |---|---|
 | All Selfish | همه خودمحور |
-| All Prosocial | همه نوع‌دوستانه |
+| All Prosocial | همه نوعدوستانه |
 | Mixed | ترکیبی |
 | Varied Altruism | ایثارگری متغیر |
 | Innovator Effect | اثر نوآور |
@@ -353,6 +386,9 @@ All acronyms **stay in Latin script** even inside Farsi text. On first use in ea
 | API | Application Programming Interface | رابط برنامه‌نویسی کاربردی | Ch.2 |
 | FTB | Fair-to-Benefit Ratio | نسبت عدالت به منفعت | Ch.2 |
 | FBS | Fair-Benefit Score | امتیاز عدالت-منفعت | Ch.2 |
+| MCS | Microgeneration Certification Scheme | طرح گواهی تولید خرد | Ch.1 |
+| ANN | Artificial Neural Network | شبکه عصبی مصنوعی | Ch.4 |
+| MPC | Model Predictive Control | کنترل پیش‌بینی‌کننده مدل | Ch.2 |
 
 ---
 
@@ -363,8 +399,8 @@ The following Farsi renderings are **wrong or misleading**. Never use them.
 | English Term | Do NOT Use | Use Instead | Reason |
 |---|---|---|---|
 | Prosumer | مصرف‌تولیدکننده | پروسومر (Prosumer) | Rare and awkward in Persian. |
-| Non-stationarity | عدم ایستایی | ناایستایی آماری محیط | "عدم ایستایی" implies physical stillness, not statistical properties. |
-| Exploration vs. Exploitation | اکتشاف در مقابل بهره‌برداری | مبادله اکتشاف و بهره‌برداری | "در مقابل" is not the standard Persian phrase for this trade-off. |
+| Non-stationarity | عدم ایستایی | ناایستایی | "عدم ایستایی" implies physical stillness, not statistical properties. The longer phrase «ناایستایی آماری محیط» is unnecessarily verbose. |
+| Exploration vs. Exploitation | اکتشاف در مقابل بهره‌برداری | تعادل بین اکتشاف و بهره‌برداری | "در مقابل" is not the standard Persian phrase for this trade-off. The correct RL phrasing uses «تعادل بین». |
 | Robust (as AI filler) | مقاوم / مستحکم | ثبات / پایداری / قابلیت اطمینان | "robust" in AI text is a forbidden filler word — use domain-appropriate synonyms. |
 | Moreover / Furthermore / Notably | علاوه بر این / افزون بر این / قابل توجه اینکه | (omit or rephrase) | Forbidden AI vocabulary — restructure sentence instead. |
 | Delve | غوص / کاوش | (omit or rephrase) | Forbidden AI vocabulary. |

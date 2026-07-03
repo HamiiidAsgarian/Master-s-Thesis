@@ -6,6 +6,16 @@
 
 ---
 
+> **Verification note (added after a web fact-check pass):** The translation-craft advice throughout this guide (calque avoidance, SOV word order, ezafe constructions, impersonal register, digit/date/citation handling, structural conversion risks) reflects standard, well-established practice in English↔Persian academic translation and did not require correction. Two institutional/factual claims were checked against current sources and updated:
+>
+> 1. **Part 4.6 (Plagiarism check):** the original draft listed "Samim Noor/Irandoc" as if interchangeable. They are two distinct systems (Irandoc's همانندجو/Hamanandjoo vs. the Noor Computer Research Center's سمیم نور/Samim Noor, the latter specifically used by IAU) — corrected below.
+> 2. **Part 3.3 (Abstract length):** narrowed/re-sourced the word-count figure and flagged it as varying by department rather than fixed.
+>    All other **[VERIFY]** tags already in the original draft are appropriately left as open items — they concern branch-specific or department-specific conventions (digit convention, citation style, chapter-splitting requirements) that genuinely vary across IAU branches and aren't governed by one universal rule, so "verify locally" remains the correct guidance rather than a fixed answer.
+>
+> **Second verification pass (against a follow-up review):** a follow-up review proposed five further amendments. One was corrected rather than adopted as stated: the claim that the IAU title page needs Persian and English titles "side by side on one page" doesn't match verified IAU template practice, which instead uses **two separate full cover pages** (a Persian cover at the front, a complete English-language mirror cover at the back) — corrected below. Three points (abstract sequencing, term-handling default, digit convention for STEM departments) were reasonable refinements but stated with more certainty than could be verified from a citable source, so they're incorporated as recommended defaults explicitly flagged for local confirmation, not as settled IAU rules. One point (transliteration + bracketed translation + "(in Persian)" tag for citing Persian sources) is genuinely well-established convention and was added — but scoped correctly: it applies to Persian sources appearing in English-language portions of the document (e.g. the English abstract), not to the main Farsi reference list, which the follow-up review didn't distinguish.
+
+---
+
 ## PART 1 — BEFORE TRANSLATING: SETUP RISKS
 
 ### 1.1 Never translate sentence-by-sentence in isolation
@@ -18,6 +28,7 @@
 - [ ] A comprehensive glossary of 260+ terms already exists in `Dictionary.md` — **read it in full before translating**. It covers all RL/MARL, energy, psychology, statistics, and thesis-specific terms with locked Farsi equivalents.
 - [ ] **Lock the glossary before translating** — this is the single biggest cause of inconsistency in AI-assisted translations: the same English term getting translated 3 different ways across 5 chapters (e.g., "framework" → چارچوب in Chapter 2, ساختار in Chapter 3, فریم‌ورک in Chapter 4).
 - [ ] For terms with no clean Farsi equivalent (common in CS/SE — "microservice," "API," "container"), decide once whether to: (a) keep the English term italicized in Latin script, (b) transliterate into Farsi script, or (c) use the Farsi equivalent with the English term in parentheses on first use. Apply that decision uniformly.
+- **[Recommended default, confirm locally]** Formal Persian academic writing generally favors option (c) as the default — Farsi equivalent first, English original in parentheses or a footnote on first use, Farsi term alone thereafter — over phonetically rendering the English word in Farsi script (e.g., writing آی‌پی for "IP"), which tends to read as informal/colloquial in a technical thesis. Treat (c) as the default and fall back to (a) only where the department explicitly allows keeping terms in Latin script.
 - [ ] After translating each chapter, run a **terminology consistency audit**: search the Farsi text for every glossary term and confirm it was used identically everywhere.
 
 ### 1.3 Decide the register up front
@@ -60,7 +71,7 @@
 
 ### 2.6 Numbers, Digits, and Dates
 
-- [ ] Decide whether the thesis uses **Persian digits (۰-۹)** or **Arabic/Western digits (0-9)** — IAU convention typically uses Persian digits in body text but this varies by department; **[VERIFY]**.
+- [ ] Decide whether the thesis uses **Persian digits (۰-۹)** or **Arabic/Western digits (0-9)** — IAU convention typically uses Persian digits in body text but this varies by department; **[VERIFY]**. Anecdotally, CS/Engineering theses lean more toward Western digits for numerical data, equations, and tables (for readability alongside Latin variable names and code), while humanities departments lean Persian digits — but treat this as a hint to guide the conversation with the supervisor, not as a substitute for confirming the actual department requirement, since defaulting to the wrong convention fails formatting review just as surely as leaving it unresolved.
 - [ ] Be consistent — don't mix Persian and Western digits within the same document, and definitely not within the same table.
 - [ ] Convert all dates: the English thesis's Gregorian dates must be converted to **Solar Hijri (Jalali) calendar** dates for any Persian-context references (submission date, historical references to Iranian events, etc.) — but **keep Gregorian dates for international publication dates and citations** (e.g., a 2023 journal article citation stays 2023, not ۱۴۰۲).
 - [ ] Watch for silent unit/number-format errors: decimal separators, thousand separators, and percentage formatting differ by convention — verify each converted number rather than assuming a 1:1 copy is safe.
@@ -77,6 +88,7 @@
 - In-text citation format must match whichever style (Author-Year vs IEEE numeric) the Rulebook specifies — verify the English thesis's citation style doesn't get silently altered during translation.
 - Reference list: Persian sources and non-Persian (English) sources must be **split into two separate alphabetized lists** in the final Farsi thesis — this is a structural change from a typical single-list English references section, not just a translation task.
 - **Do not "translate" journal names, publisher names, or DOIs** — these remain in their original language/form always.
+- **[Verified addition]** This "don't translate" rule is for the main Farsi-language reference list only. It doesn't apply when a Persian-language source needs to appear in an **English-language** part of the document — chiefly the English abstract at the end, or any English-side citation. There, standard practice (matching general APA convention for non-Roman-script sources) is: transliterate the Persian author name(s) and title into Latin script, add an English translation of the title in square brackets immediately after it, convert the Solar Hijri publication year to its Gregorian equivalent, and append a language tag such as "(in Persian)" — e.g. `Mohammadi, A. (2021). Barrasi-ye ta'sir-e ... [The impact of ...]. ... (in Persian).` Flag to the user whether any Persian sources actually need to surface this way; if all citations in the English abstract are to English-language sources, this doesn't come up.
 
 ### 2.9 Equations, Code, Variables
 
@@ -104,13 +116,15 @@
 
 ### 3.3 Abstract Requires Independent (Not Mechanical) Translation
 
-- The Farsi abstract (چکیده) has its own word-count and single-paragraph constraints (typically 250–300 words) — a direct translation of an English abstract may run long or short.
+- The Farsi abstract (چکیده) has its own word-count and single-paragraph constraints — Iranian academic norms generally cap it at **~300 words** (some sources cite a 150–300 word range for master's-level theses), with a single, self-contained paragraph — a direct translation of an English abstract may run long or short. **[VERIFY the exact cap with the specific IAU department/Rulebook]**, since this isn't fixed by a single national standard.
 - **Write the Farsi abstract as a fresh, self-contained academic summary**, not a mechanical translation, then verify it against the English abstract for factual/scope consistency (they must say the same thing, but don't need to be sentence-for-sentence parallel).
 - The English abstract at the end of the document should match the _content_ of the Farsi one exactly — if you revise the Farsi abstract during editing, the English abstract must be updated too, and vice versa. This bidirectional sync is a common point of silent drift.
+- **[Recommended sequencing, not a universal rule]** Some departments expect the English abstract to read as a close, near sentence-for-sentence translation of the final Persian abstract rather than an independently-drafted parallel summary — this reduces the risk of an examiner noticing structural drift between the two. A safer default workflow: finalize the Persian abstract first against its word-count/structure constraints, then translate it precisely into English, rather than drafting both independently and only checking for consistency afterward. **[VERIFY which approach the specific department expects]**, since this varies and isn't fixed by a single national standard.
 
 ### 3.4 Title Page Translation
 
 - Thesis title translation deserves special care — a literal translation of an English academic title often sounds awkward in Farsi. Farsi academic titles frequently restructure using ezafe constructions and different word order than a literal rendering would produce. Get supervisor sign-off on the Farsi title specifically, since it appears on the cover and is hard to revise post-binding.
+- **[Verified addition]** IAU theses require **two full cover/title pages, not one bilingual page**: a Persian-language cover at the front of the document (university/department name, faculty, program, title, author, advisor/co-advisor, year — all in Farsi) and a **complete mirror cover page in English** using the identical structure, placed at the end of the document. This is a separate formatting requirement from the abstract — don't conflate the two, and don't assume a single side-by-side bilingual title page satisfies it; produce both full pages.
 
 ---
 
@@ -139,7 +153,11 @@
 
 ### 4.6 Plagiarism/Similarity Re-Check
 
-- [ ] Run the Farsi thesis through whatever plagiarism-detection tool the university mandates (e.g., Samim Noor/Irandoc) — a translated document should still be checked, since translation doesn't guarantee originality-detection systems will treat it identically to the source, and duplicate submission policies may apply if the English version was also submitted/published elsewhere.
+- [ ] Run the Farsi thesis through whatever plagiarism-detection tool the university mandates — a translated document should still be checked, since translation doesn't guarantee originality-detection systems will treat it identically to the source, and duplicate submission policies may apply if the English version was also submitted/published elsewhere.
+- **[Correction after verification]** "Samim Noor" and "Irandoc" are **not the same system** and should not be listed as interchangeable, as the original draft implied:
+  - **همانندجو (Hamanandjoo)**, hosted at `tik.irandoc.ac.ir`, is Irandoc's (Iran Research Institute for Information Science and Technology) official similarity-detection system. A 2017 parliamentary amendment and a 2016 Ministry of Science regulation make its use mandatory for proposals and theses at universities under the Ministry of Science, Research and Technology.
+  - **سمیم نور (Samim Noor)**, hosted at `samimnoor.ir`, is a separate tool built by the Noor Computer Research Center (a center built around Islamic-studies text databases, drawing on its Noormags/Noorlib corpora). It has been specifically rolled out as the similarity-checking system across Islamic Azad University branches.
+  - **Practical implication:** confirm with the specific IAU branch/department which system (Samim Noor, Hamanandjoo, or both) is actually required at defense — don't assume they're two names for one tool, and don't assume Irandoc's system automatically applies just because it's the default for public universities.
 
 ---
 
