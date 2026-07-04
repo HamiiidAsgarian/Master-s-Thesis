@@ -1,0 +1,95 @@
+---
+university: "دانشگاه آزاد اسلامی"
+branch: "واحد اردبیل"
+faculty: "دانشکده فنی و مهندسی"
+degree: "پایان‌نامه کارشناسی ارشد (M.Sc.)"
+field: "مهندسی کامپیوتر - نرم‌افزار"
+title_fa: "روشی نوین برای اشتراک منصفانه و کارآمد انرژی در محله‌های هوشمند با استفاده از یادگیری تقویتی چندعاملی مبتنی بر شخصیت"
+title_en: "A New Method of Fair and Efficient Energy Sharing in Smart Neighborhoods Using Personality-Driven Multi-Agent Reinforcement Learning"
+supervisor: "دکتر بابک نوری‌مقدم"
+advisor: ""
+author: "حمید اصغریان"
+defense_date: "۱۴۰۵"
+university_en: "Islamic Azad University"
+branch_en: "Ardabil Branch"
+faculty_en: "Faculty of Technical and Engineering"
+degree_en: "A Thesis Submitted in Partial Fulfillment of the Requirements for the Degree of Master of Science (M.Sc.) in Computer Engineering"
+field_en: "Computer Engineering - Software"
+supervisor_en: "Dr. Babak Nouri-Moghaddam"
+advisor_en: ""
+author_en: "Hamid Asgharian"
+defense_date_en: "2025"
+
+acknowledgements: |
+  سپاس بی‌کران پروردگار متعال را که توفیق علم‌آموزی و تحقیق را به این بنده ناچیز عطا فرمود.
+  بدین وسیله از استاد راهنمای گرانقدر، جناب آقای دکتر بابک نوری‌مقدم، که با راهنمایی‌های ارزشمند خود مرا در این مسیر یاری نمودند، صمیمانه سپاسگزاری می‌نمایم.
+  همچنین از تمامی اساتید محترم گروه کامپیوتر دانشگاه آزاد اسلامی واحد اردبیل که در طول دوران تحصیل از دانش و تجربیات خود بهره‌مند شدم، کمال تشکر را دارم.
+  در پایان، از خانواده عزیزم که همواره پشتیبان و مشوق من در تمام مراحل تحصیل بوده‌اند، قدردانی می‌نمایم.
+
+dedication: |
+  تقدیم به خانواده عزیزم که همواره پشتیبان و مشوق من در تمام مراحل تحصیل بوده‌اند.
+
+abstract_fa: |
+  ریزشبکه‌های هوشمند محله‌ای، به‌عنوان مرز محلی‌شده‌ی تمرکززدایی انرژی، امکان اشتراک انرژی مازاد بین خانوارهای مجهز به پنل‌های خورشیدی و ذخیره‌ساز باتری را فراهم می‌آورند. بااین‌حال، رویکردهای استاندارد یادگیری تقویتی چندعاملی (MARL) در مدیریت انرژی، معمولاً بهینه‌سازی کارایی جمعی را هدف قرار می‌دهند که می‌تواند پیامدهای ناعادلانه‌ای ایجاد کند. این پژوهش با معرفی چارچوب پاداش تعدیل‌شده با شخصیت، به بررسی تأثیر ترجیحات عدالت ناهمگن و زمین‌گذاری‌شده‌ی روان‌شناختی بر پویایی‌های اشتراک انرژی در یک محله‌ی هوشمند می‌پردازد. یک شبیه‌سازی مبتنی بر عامل با ۱۰ خانه در توپولوژی حلقوی طراحی شد که هر خانه توسط یک عامل یادگیری Q مستقل با فضای حالت گسسته‌ی ۹۶ وضعیتی کنترل می‌شود. پنج نوع شخصیتی (خودخواه محض، فردگرا، نوع‌گرا، نوع‌دوست و مبتکر با گشودگی بالا) بر اساس مدل پنج‌عاملی شخصیت (OCEAN) تعریف شدند. پنج سناریوی ترکیب جامعه با ۵ تصادف‌سازی (۲۵ اجرای مستقل، هر یک ۸۰۰۰ قسمت) آزمایش شدند. یافته‌ها نشان داد که عامل‌های نوع‌گرا در جوامع مختلط به ۹/۲ واحد درصد آسایش بالاتر نسبت به همسایگان خودخواه دست می‌یابند (۰۰۱۱/۰ = p) و این مزیت در تمام سطوح کمبود منابع پایدار است. شگفت‌انگیزترین یافته، اثر مبتکر بود: یک عامل منفرد با گشودگی بالا (اکتشاف ادامه‌دار) باعث کاهش ۲ درصدی آسایش جامعه، افزایش ۲۲ درصدی نابرابری (ضریب جینی) و افزایش ۳/۸ درصدی نرخ خاموشی شد. در سطح جامعه، تفاوت معنی‌داری بین سناریوهای خودخواه و نوع‌گرای همگن مشاهده نشد. این پژوهش نشان می‌دهد که عدالت توزیعی را می‌توان بدون کاهش کارایی در سیستم‌های اشتراک انرژی بهبود بخشید. اثر مبتکر به‌عنوان یک هشدار مهم برای طراحی سیستم‌های هوش مصنوعی در مدیریت منابع اشتراکی مطرح است: عامل‌های غیرقابل‌پیش‌بینی، حتی با نیت خوب، می‌توانند هنجارهای همکاری را تضعیف کنند.
+
+abstract_fa_keywords:
+  - "یادگیری تقویتی چندعاملی"
+  - "ریزشبکه هوشمند"
+  - "عدالت"
+  - "مدل پنج‌عاملی شخصیت (OCEAN)"
+  - "اشتراک انرژی همتا-به-همتا"
+  - "اثر مبتکر"
+
+abstract_en: |
+  Smart neighbourhood microgrids represent the localised frontier of energy decentralisation, enabling households equipped with solar panels and battery storage to share surplus energy with neighbours. Standard multi-agent reinforcement learning (MARL) approaches to energy management typically optimise for collective efficiency, but efficiency-only optimisation can produce inequitable outcomes. This study introduces a personality-modulated reward framework to investigate how heterogeneous, psychologically-grounded fairness preferences shape energy-sharing dynamics in a smart neighbourhood. An agent-based simulation of 10 houses in a ring topology was designed, with each house controlled by an independent tabular Q-learning agent operating in a 96-state discrete state space. Five personality types (pure_selfish, individualist, prosocial, altruistic, and high_openness_innovator) were defined based on the Big Five (OCEAN) personality model. Five community compositions with 5 random seeds each (25 independent runs, 8,000 episodes per run) were tested. Results show that prosocial agents in mixed communities achieve 2.9 percentage points higher comfort than selfish neighbours (p = 0.0011), and this advantage remains stable across all scarcity levels. The most surprising finding was the Innovator Effect: a single high-Openness agent with sustained exploration reduced community comfort by 2%, increased inequality by 22% (Gini coefficient), and raised blackout rates by 8.3%. At the community level, no significant differences were observed between homogeneous selfish and prosocial scenarios. This study demonstrates that distributional fairness can be improved without sacrificing efficiency in energy-sharing systems. The Innovator Effect carries a cautionary implication for AI safety in community resource-sharing systems: unpredictable agents, even with good intentions, can undermine cooperative norms.
+
+abstract_en_keywords:
+  - "Multi-Agent Reinforcement Learning"
+  - "Smart Microgrid"
+  - "Fairness"
+  - "Big Five (OCEAN) Personality Model"
+  - "Peer-to-Peer Energy Sharing"
+  - "Innovator Effect"
+
+abbreviations:
+  - term: "MARL"
+    definition: "یادگیری تقویتی چندعاملی (Multi-Agent Reinforcement Learning)"
+  - term: "Dec-POMDP"
+    definition: "فرایند تصمیم‌گیری مارکوف جزئی‌مشاهده‌پذیر و غیرمتمرکز (Decentralised Partially Observable Markov Decision Process)"
+  - term: "IQL"
+    definition: "یادگیری کیو مستقل (Independent Q-Learning)"
+  - term: "OCEAN"
+    definition: "مدل پنج‌عاملی شخصیت: گشودگی، وظیفه‌شناسی، برون‌گرایی، توافق‌پذیری، روان‌رنجوری (Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism)"
+  - term: "P2P"
+    definition: "همتا-به-همتا (Peer-to-Peer)"
+  - term: "CTDE"
+    definition: "آموزش متمرکز با اجرای غیرمتمرکز (Centralised Training with Decentralised Execution)"
+  - term: "VDN"
+    definition: "شبکه‌های تجزیه‌ی ارزش (Value Decomposition Networks)"
+  - term: "DQN"
+    definition: "شبکه‌ی کیو عمیق (Deep Q-Network)"
+  - term: "PPO"
+    definition: "بهینه‌سازی سیاست نزدیک‌شونده (Proximal Policy Optimisation)"
+  - term: "MAPPO"
+    definition: "PPO چندعاملی (Multi-Agent PPO)"
+  - term: "GNN"
+    definition: "شبکه‌ی عصبی گراف (Graph Neural Network)"
+  - term: "LLM"
+    definition: "مدل زبانی بزرگ (Large Language Model)"
+  - term: "MCS"
+    definition: "طرح گواهی‌نامه‌ی ریزشبکه (Microgeneration Certification Scheme)"
+  - term: "SoC"
+    definition: "وضعیت شارژ (State of Charge)"
+  - term: "PV"
+    definition: "فتوولتائیک (Photovoltaic)"
+  - term: "kWh"
+    definition: "کیلووات-ساعت (Kilowatt-hour)"
+  - term: "kW"
+    definition: "کیلووات (Kilowatt)"
+  - term: "ANN"
+    definition: "شبکه‌ی عصبی مصنوعی (Artificial Neural Network)"
+  - term: "IPCC"
+    definition: "هیئت بین‌الدول تغییرات اقلیم (Intergovernmental Panel on Climate Change)"
+  - term: "IEA"
+    definition: "آژانس بین‌المللی انرژی (International Energy Agency)"
+---

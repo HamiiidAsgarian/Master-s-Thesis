@@ -1,0 +1,59 @@
+# ۶- منابع
+
+- Ali, S., Khan, M. A., & Wang, Z. (2023). Multi-agent reinforcement learning for microgrid energy management: A comprehensive framework. _Energies_, 16(3), 1334.
+- Aloor, J., Nair, A., & Krishnan, S. (2024). Fairness in multi-agent reinforcement learning: A min-max approach. _arXiv preprint_, arXiv:2410.14916.
+- Alshehri, J., & Gaunt, C. (2020). Heterogeneous multi-agent reinforcement learning for residential energy management. _IEEE Transactions on Smart Grid_, 11(5), 4143–4152.
+- Behrunani, V., Heer, P., & Hug, G. (2023). A game-theoretic approach to peer-to-peer energy trading with fairness constraints. _arXiv preprint_, arXiv:2302.04771.
+- Binz, M., & Schulz, E. (2023). Using cognitive models to understand and predict human behaviour. _Nature Human Behaviour_, 7(8), 1234–1245.
+- BloombergNEF. (2023). _New Energy Outlook 2023_. BloombergNEF.
+- Bui, V.-H., Hussain, A., & Kim, H.-M. (2019). Q-learning-based operation strategy for community battery energy storage system (CBESS) in microgrid system. _Energies_, 12(9), 1789.
+- Charbonnier, M., Morin, L., & Petit, P. (2022). Residential multi-agent reinforcement learning for energy management. _arXiv preprint_, arXiv:2203.03417.
+- Cohen, J. (1988). _Statistical Power Analysis for the Behavioral Sciences_ (2nd ed.). Lawrence Erlbaum Associates.
+- Fehr, E., & Gächter, S. (2000). Cooperation and punishment in public goods experiments. _American Economic Review_, 90(4), 980–994.
+- Fehr, E., & Schmidt, T. (1999). A theory of fairness, competition, and cooperation. _Quarterly Journal of Economics_, 114(3), 817–868.
+- Field, A. (2024). _Discovering Statistics Using IBM SPSS Statistics_ (6th ed.). SAGE Publications.
+- Fischbacher, U., & Gächter, S. (2010). Social preferences, beliefs, and the dynamics of free riding in public goods experiments. _American Economic Review_, 100(1), 541–556.
+- Gersani, M., Brown, J. S., O'Connor, E. A., & Sherrill, K. (2001). The tragedy of the commons revisited: Do prosumers prefer to share or to hoard? _Evolutionary Ecology_, 15, 325–343.
+- Gini, C. (1912). _Variabilità e mutabilità: contributo allo studio delle distribuzioni e delle relazioni statistiche_. C. Cuppini.
+- Goldberg, L. R. (1990). An alternative "description of personality": The Big-Five factor structure. _Journal of Personality and Social Psychology_, 59(6), 1216–1229.
+- Hardin, G. (1968). The tragedy of the commons. _Science_, 162(3859), 1243–1248.
+- Hernandez-Leal, P., Kartal, B., & Taylor, M. E. (2017). A survey and critique of multiagent deep reinforcement learning. _Autonomous Agents and Multi-Agent Systems_, 33(6), 750–797.
+- Hughes, E., Leibo, J. Z., Phillips, M. G., Tuyls, K., Dueñez-Guzman, E., García-Castañeda, A., ... & Graepel, T. (2018). Inequity aversion improves cooperation in intertemporal social dilemmas. _Advances in Neural Information Processing Systems_, 31.
+- IEA. (2022). _World Energy Outlook 2022_. International Energy Agency.
+- IEA PVPS. (2023). _Trends in Photovoltaic Applications 2023_. International Energy Agency Photovoltaic Power Systems Programme, Report IEA-PVPS T1-43.
+- Jadhav, A., Singh, R., & Patel, D. (2024). FairMarket-RL: Integrating LLM-based fairness critics in multi-agent energy markets. _arXiv preprint_, arXiv:2408.11243.
+- Jain, R., Chiu, D. M., & Hawe, W. R. (1984). A quantitative measure of fairness and discrimination for resource allocation in shared computer systems. _DEC Technical Report_, 301.
+- John, O. P., & Srivastava, S. (1999). The Big-Five trait taxonomy: History, measurement, and theoretical perspectives. In L. A. Pervin & O. P. John (Eds.), _Handbook of Personality: Theory and Research_ (2nd ed., pp. 102–138). Guilford Press.
+- Karimi, M., Zhang, Z., & Li, J. (2024). Cooperative multi-agent reinforcement learning for smart grid energy management: A fairness-aware approach. _Applied Energy_, 358, 122604.
+- Kollock, P. (1998). Social dilemmas in cyberspace. In P. Kollock & M. Smith (Eds.), _Communities in Cyberspace_ (pp. 219–237). Routledge.
+- Kusatake, K., Matsumoto, S., & Ono, I. (2023). Efficiency vs. fairness in energy management systems: An evolutionary approach. _Energies_, 16(14), 5501.
+- Law, A. M. (2015). _Simulation Modeling and Analysis_ (5th ed.). McGraw-Hill Education.
+- Le, T., Nguyen, T., & Nguyen, H. (2022). Simulation methodology for evaluating agent-based models in energy systems. _Simulation Modelling Practice and Theory_, 118, 102562.
+- Leng, Y. (2025). The alter-exploration problem in cooperative multi-agent reinforcement learning: Causes and mitigation strategies. _Autonomous Agents and Multi-Agent Systems_, 39(1), 12.
+- Li, F., & Zhang, Y. (2022). Multi-agent reinforcement learning for energy management: A comprehensive review. _Energy and AI_, 10, 100198.
+- Lowe, R., Wu, Y., Tamar, A., Harb, J., Abbeel, P., & Mordatch, I. (2017). Multi-agent actor-critic for mixed cooperative-competitive environments. _Advances in Neural Information Processing Systems_, 30.
+- Ma, J., Li, X., & Wang, H. (2025). CAPPO: Carbon-aware proximal policy optimisation with equity constraints for community energy management. _Applied Energy_, 378, 124531.
+- May, R., & Huang, P. (2023). A multi-agent reinforcement learning approach for investigating and optimising peer-to-peer prosumer energy markets. _Applied Energy_, 334, 120705.
+- McCrae, R. R., & Costa, P. T. (2003). _Personality in Adulthood: A Five-Factor Theory Perspective_ (2nd ed.). Guilford Press.
+- Montgomery, D. C. (2017). _Design and Analysis of Experiments_ (9th ed.). Wiley.
+- Moon, H.-S., Lee, J., & Kim, S. (2022). Personality traits in reinforcement learning: Mapping the Big Five to agent behaviour. _IEEE Transactions on Affective Computing_, 13(4), 1897–1910.
+- Moret, F., & Pinson, D. (2019). Energy cooperatives: An diffusion and regulation approach. _Energy Policy_, 126, 420–434.
+- Moret, F., Tacher, V., & Pinson, D. (2020). Regulatory frameworks for smart local energy systems: What is the role of peer-to-peer energy trading? _Energy Policy_, 144, 111602.
+- Oliehoek, F. A., & Amato, C. (2016). _A Concise Introduction to Decentralized POMDPs_. Springer.
+- Ostrom, E. (1990). _Governing the Commons: The Evolution of Institutions for Collective Action_. Cambridge University Press.
+- Park, J. S., O'Brien, J. C., Cai, C. J., Morris, M. R., Liang, P., & Bernstein, M. S. (2023). Generative agents: Interactive simulacra of human behavior. _Proceedings of the 36th Annual ACM Symposium on User Interface Software and Technology_, 1–22.
+- Qiu, D., Wang, Y., & Strbac, G. (2021). A fairness-aware peer-to-peer energy sharing framework for smart communities. _Applied Energy_, 301, 117477.
+- Rashid, T., Samvelyan, M., Schroeder, C., Farquhar, G., Foerster, J., & Whiteson, S. (2018). QMIX: Monotonic value function factorisation for deep multi-agent reinforcement learning. _Proceedings of the 35th International Conference on Machine Learning_, 4295–4304.
+- Rathnayaka, A. J., Potdar, V. M., Dillon, T., & Hussain, O. (2014). A methodology to find influential prosumers in prosumer community groups. _IEEE Transactions on Industrial Informatics_, 10(1), 705–715.
+- Ren, L., & Xu, W. (2025). Big Five personality traits in AI agent decision-making: A framework for behavioural simulation. _arXiv preprint_, arXiv:2503.15497.
+- Skoplaki, E., & Palyvos, J. A. (2009). On the temperature dependence of photovoltaic module electrical performance: A review of efficiency/power correlations. _Solar Energy_, 83(5), 614–624.
+- Sutton, R. S., & Barto, A. G. (2018). _Reinforcement Learning: An Introduction_ (2nd ed.). MIT Press.
+- Tan, M. (1993). Multi-agent reinforcement learning: Independent versus cooperative agents. _Proceedings of the 10th International Conference on Machine Learning_, 330–337.
+- Towers, M., Terry, J. K., & Black, A. (2024). Gymnasium: A standard interface for reinforcement learning. _Journal of Open Source Software_, 9(96), 6313.
+- Watkins, C. J. C. H., & Dayan, P. (1992). Q-learning. _Machine Learning_, 8(3), 279–292.
+- Wohlin, C., Runeson, P., Höst, M., Ohlsson, M. C., Regnell, B., & Wesslén, A. (2012). _Experimentation in Software Engineering_. Springer.
+- Zhang, Y., Liu, X., & Chen, W. (2025). Optimistic epsilon-greedy exploration in cooperative multi-agent reinforcement learning. _arXiv preprint_, arXiv:2502.03506.
+- Zhou, Y., & Lund, P. D. (2023). Peer-to-peer energy sharing and trading of renewable energy in smart communities — trading pricing models, decision-making and agent-based collaboration. _Renewable Energy_, 206, 992–1007.
+- Zhou, Y., & Sun, Q. (2023). Jain's fairness index in community energy storage systems: A case study. _Journal of Energy Storage_, 65, 107311.
+
+---
