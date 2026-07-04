@@ -26,7 +26,7 @@ To regenerate, just re-run this exact command. For the English file, replace the
 
 - **YAML front matter** (`---` delimited) must be at the top of the `.md` file with keys: `title_fa`, `title_en`, `author`, `supervisor`, `university`, `branch`, `faculty`, `degree`, `field`, `abstract_fa`, `abstract_en`, `keywords_fa`, `keywords_en`, `acknowledgements`, `dedication`. See `ACADEMIC_v3_Fa_restructured.md` for a complete example.
 - **Display math** uses `$$ ... $$`. Equation labels like `\qquad \text{(معادله ۳-۱)}` at the end are automatically split off and rendered as LTR text runs (fixes mirrored parentheses in Word).
-- **Inline math** uses `$ ... $` — converted to native OMML via pandoc.
+- **Inline math** uses `$ ... $` or `\( ... \)` (LaTeX syntax) — both are normalized to native OMML via pandoc.
 - **Headings**: `#` = chapter (centered, new page), `##` = section, `###` = sub-section, `####` = sub-sub-section. Number them manually in the text (e.g. `## 2-4 عنوان بخش`).
 - **Tables**: pipe (`|`) tables. `Table: caption text` on the line immediately before the table.
 - **Images**: `![caption](path/to/image.png)`. Caption auto-numbered below the image.
@@ -60,6 +60,7 @@ To regenerate, just re-run this exact command. For the English file, replace the
 | Body text needs RTL + indentation             | `set_paragraph_rtl(p, True)` + `first_line_indent=Cm(1)`                                            |
 | Equations must be LTR                         | `set_paragraph_rtl(p, False)` + `set_run_rtl(r, False)` on display math paragraphs                  |
 | Inline math in RTL paragraphs                 | `set_run_rtl(r, False)` on the OMML math element                                                    |
+| LaTeX `\(...\)` inline math not rendering     | `_process_inline()` normalizes `\(...\)` → `$...$` before regex matching; both delimiters work now  |
 
 ## Common Issues
 
@@ -67,3 +68,4 @@ To regenerate, just re-run this exact command. For the English file, replace the
 - **`input file not found`**: Use absolute paths (the script's CWD may not be what you expect).
 - **Missing Lotus fonts**: The docx will reference them but they won't render on a machine without them. Font embedding is not handled by the script.
 - **Pandoc not found**: Hardcoded at `/opt/homebrew/bin/pandoc`. Install via `brew install pandoc` or update the path in `latex_to_omml()`.
+- **Formulas show raw `\(...\)` text**: The source uses LaTeX `\(...\)` delimiters. The script now auto-normalizes these to `$...$`, but if you see raw text, you may be using an older version — update the script or run a global find-replace: `\(` → `$`, `\)` → `$`.

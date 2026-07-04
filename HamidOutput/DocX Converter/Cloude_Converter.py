@@ -144,19 +144,19 @@ from docx.oxml import OxmlElement, parse_xml
 BRANCH_PROFILES = {
     "ardabil": {
         "margins_cm": {"top": 3.0, "bottom": 3.0, "right": 3.0, "left": 2.0},
-        "fa_body_font": "Lotus Thin",
-        "fa_chapter_font": "Lotus Bold",
-        "fa_heading_font": "Lotus Bold",
-        "fa_caption_font": "Lotus Bold",
-        "fa_footnote_font": "Lotus",
-        "fa_bold_font": "Lotus Bold",   # used for title-page labels
-        "fa_title_font": "Lotus Bold",  # thesis title on title page
+        "fa_body_font": "LMU Lotus",
+        "fa_chapter_font": "B Lotus",
+        "fa_heading_font": "B Lotus",
+        "fa_caption_font": "B Lotus",
+        "fa_footnote_font": "LMU Lotus",
+        "fa_bold_font": "B Lotus",
+        "fa_title_font": "B Lotus",
         "body_size": 14,
         "chapter_size": 25,
         "h2_size": 14,
         "h3_size": 12,
         "h4_size": 12,
-        "caption_size": 11,
+        "caption_size": 13,
         "footnote_size": 12,
     },
     "general": {
@@ -173,7 +173,7 @@ BRANCH_PROFILES = {
         "h2_size": 16,
         "h3_size": 13,
         "h4_size": 12,
-        "caption_size": 11,
+        "caption_size": 13,
         "footnote_size": 12,
     },
 }
@@ -520,7 +520,7 @@ def build_styles(doc: Document, cfg: dict):
         cap.font.name = cfg["en_font"]
         cap.font.size = Pt(cfg["caption_size"])
         cap.font.bold = True
-        cap.font.italic = False
+        cap.font.italic = True
         cap.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
         cap.paragraph_format.space_before = Pt(4)
         cap.paragraph_format.space_after = Pt(4)
@@ -690,7 +690,7 @@ def add_toc_pages(doc, cfg):
         ("فهرست جداول", 'TOC \\h \\z \\c "Table"'),
         ("فهرست نمودارها و تصاویر", 'TOC \\h \\z \\c "Figure"'),
     ]:
-        _para(doc, heading_fa, "", cfg["en_font"], 16, space_after=12)
+        _para(doc, heading_fa, cfg["fa_chapter_font"], cfg["en_font"], 16, space_after=12)
         note = doc.add_paragraph()
         set_paragraph_rtl(note, True)
         nr = note.add_run("(در Word پس از باز کردن فایل، Ctrl+A سپس F9 را بزنید تا این فهرست به‌روزرسانی شود.)")
@@ -757,12 +757,13 @@ def add_abbreviations_page(doc, abbreviations, cfg):
 # INLINE MARKDOWN (bold / italic / code / equation / footnote) -> RUNS
 # ==========================================================================
 
+# Also matches \(...\) LaTeX inline math — normalized to $...$ first.
 INLINE_TOKEN_RE = re.compile(
     r"(\*\*\*(?P<b_i>.+?)\*\*\*)"        # ***bold italic***
     r"|(\*\*(?P<bold>.+?)\*\*)"           # **bold**
     r"|(\*(?P<italic>.+?)\*)"             # *italic*
     r"|(`(?P<code>.+?)`)"                 # `code`
-    r"|(\$(?P<eq>[^$]+)\$)"               # $equation$
+    r"|(\$(?P<eq>[^$]+)\$)"               # $equation$  (or \(...\) normalized to $...$)
     r"|(\[\^(?P<fnref>[^\]]+)\])"         # [^footnote-id]
 )
 
@@ -784,6 +785,8 @@ def _process_inline(paragraph, text, cfg, rtl, normalize_punct,
     *default_bold* / *default_italic* are inherited from parent formatting
     contexts (e.g. inside ``**…**``) and applied to plain-text segments.
     """
+    # Normalize \(...\) to $...$ so both LaTeX and Markdown math delimiters work
+    text = text.replace(r"\(", "$").replace(r"\)", "$")
     pos = 0
     for m in INLINE_TOKEN_RE.finditer(text):
         if m.start() > pos:
@@ -843,6 +846,7 @@ def _append_run(paragraph, text, cfg, rtl, bold=False, italic=False, mono=False,
         set_run_fonts(r, latin_font=cfg["mono_font"], cs_font=cfg["mono_font"])
     elif equation:
         set_run_fonts(r, latin_font=cfg["en_font"], cs_font=cfg["en_font"])
+        r.font.size = Pt(10)
     else:
         set_run_fonts(r, latin_font=cfg["en_font"], cs_font=cfg["fa_body_font"])
     set_run_rtl(r, rtl)
@@ -903,6 +907,9 @@ def set_table_borders_horizontal_only(table):
     separator line under the header row, per the caption/table rule."""
     tbl = table._tbl
     tblPr = tbl.tblPr
+    # RTL table direction
+    bidi_el = get_or_create(tblPr, "bidiVisual", TBLPR_ORDER)
+    bidi_el.set(qn("w:val"), "1")
     borders = OxmlElement("w:tblBorders")
     border_specs = {
         "top": "single", "left": "nil", "bottom": "single",
@@ -952,9 +959,12 @@ def add_table_from_rows(doc, rows, cfg):
             cell.text = ""
             p = cell.paragraphs[0]
             rtl = is_persian(cell_text)
-            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            p.alignment = WD_ALIGN_PARAGRAPH.RIGHT if rtl else WD_ALIGN_PARAGRAPH.CENTER
             set_paragraph_rtl(p, rtl)
             add_inline_runs(p, cell_text.strip(), cfg, rtl=rtl, normalize_punct=rtl)
+            # Set cell text to 12pt (per IAU academic standard)
+            for run in p.runs:
+                run.font.size = Pt(12)
             if ri == 0:
                 for run in p.runs:
                     run.bold = True
@@ -980,6 +990,7 @@ def add_caption(doc, kind, caption_text, cfg, state, position="above"):
     set_paragraph_rtl(p, True)
     label_run = p.add_run(label)
     label_run.bold = True
+    label_run.italic = True
     set_run_fonts(label_run, latin_font=cfg["en_font"], cs_font=cfg["fa_caption_font"])
     set_run_rtl(label_run, True)
     if caption_text:
@@ -988,6 +999,7 @@ def add_caption(doc, kind, caption_text, cfg, state, position="above"):
         set_run_rtl(sep_run, True)
         text_run = p.add_run(normalize_persian_punctuation(caption_text))
         text_run.bold = False
+        text_run.italic = True
         set_run_fonts(text_run, latin_font=cfg["en_font"], cs_font=cfg["fa_caption_font"])
         set_run_rtl(text_run, True)
     return p
