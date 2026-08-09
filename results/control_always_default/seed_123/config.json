@@ -1,0 +1,6 @@
+{
+  "control": "always_default",
+  "episodes": 8000,
+  "seed": 123,
+  "note": "no sharing, no learning"
+}

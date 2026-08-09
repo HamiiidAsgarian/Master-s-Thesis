@@ -1,0 +1,21 @@
+{
+  "algorithm": "baseline_behrunani",
+  "method": "per-hour decentralized best-response game solved fresh each hour (no learning across days); projected gradient, Jacobi update (s_-i held at previous iteration values)",
+  "adaptation": "Behrunani et al. 2023 original \"cost reduction\" is a monetary quantity (revenue from selling surplus in a Stackelberg price game). Absent a price mechanism in our environment, we implement the inner-level equilibrium-seeking mechanism only with the direct energy-unit analog as benefit term: L_i = unmet_energy + wasted_energy (kWh). Each house minimizes J_i = L_i(s) + lambda*(DeltaL_i - mean(DeltaL))^2, DeltaL_i = L_i(0) - L_i(s). This is a mistranslation correction (comfort was never the right quantity for donors); NOT a modification of Behrunani's method.",
+  "objective": "J_i = L_i + lambda*(DeltaL_i - mean(DeltaL))^2, L_i in kWh",
+  "lambda": 5.0,
+  "eta": 0.1,
+  "max_iterations": 50,
+  "tol": 0.001,
+  "gradient": "central finite difference (eps=0.0001)",
+  "initial_s": 0.5,
+  "discretization": "continuous s in [0,1] solved in-game; rounded to {0.0, 0.5, 1.0} only at execution",
+  "topology": "ring; donor i shares to recipient (i+1)%10",
+  "num_houses": 10,
+  "days": 100,
+  "battery_cap": 7.0,
+  "solar_max": 1.3,
+  "weather_cloud_prob": 0.15,
+  "seed": 1011,
+  "env": "identical to main OCEAN-MARL runs"
+}

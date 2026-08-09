@@ -1,0 +1,20 @@
+========================================================================
+KUSATAKE NSGA-II — TIMING & SANITY CHECK
+========================================================================
+
+Runtime:
+  2.2s for 10 days  (0.220s/day)
+  extrapolated: 110s/seed, x5 seeds = 9.1 min
+
+Pareto front (per day):
+  front size: min=60, max=60, mean=60.0, nontrivial(front>1) days=10/10
+
+Chosen solution (argmax F1-F2), averaged over 10 days:
+  mean comfort:   0.960
+  Jain's fairness:0.960
+  blackout rate:  10.0%
+  avg waste:      4.30 kWh
+  chosen share fraction: 0.51 (0=never share, 1=always 100%)
+
+Always-default reference (x = all 0%, same days):
+  mean comfort: 0.950  blackout: 10.0%  waste: 9.34 kWh

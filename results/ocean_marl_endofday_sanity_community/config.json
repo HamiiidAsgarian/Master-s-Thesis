@@ -1,0 +1,25 @@
+{
+  "scenario": "mixed_endofday_community",
+  "algorithm": "ocean_marl_endofday",
+  "objective": "community",
+  "personality_mix": [
+    "prosocial",
+    "prosocial",
+    "prosocial",
+    "prosocial",
+    "prosocial",
+    "pure_selfish",
+    "pure_selfish",
+    "pure_selfish",
+    "pure_selfish",
+    "pure_selfish"
+  ],
+  "reward": "end-of-day counterfactual: r_i,t = F_end(i) - F_end^default_i(i); F_end(i) = mean(C) + F at hour 23 (role-free community objective, same as Charbonnier baseline); CF re-runs hours t..23 with action swapped to 0%",
+  "update": "standard Q-learning (alpha=0.2, symmetric), same as main runs",
+  "num_houses": 10,
+  "episodes": 3000,
+  "battery_cap": 7.0,
+  "solar_max": 1.3,
+  "weather_cloud_prob": 0.15,
+  "seed": 42
+}

@@ -1,0 +1,43 @@
+==============================================================================
+OCEAN-MARL END-OF-DAY — SANITY (mixed, episodes=3000, seed=42)
+OBJECTIVE = community  (2x2 cell: D: community objective x end-of-day horizon x OCEAN-MARL Q-learning (completes the 2x2; same objective cell as Charbonnier, same learning rule as the personality-weighted end-of-day sanity))
+==============================================================================
+
+Training metrics (last 1000 episodes, exploratory policy):
+  comfort:  0.9178
+  fairness: 0.9180
+  F:        1.8359
+  blackout: 16.9%
+  waste:    6.83 kWh
+  mean agent reward (end-of-day marginal): 0.0010
+
+Counterfactual accounting (hourly agent-steps, whole run):
+  computed (real CF):      157547
+  skipped (net<=0 or a=0): 562453
+  skip ratio:              78.1%
+  mean marginal reward of computed CF: 0.0002
+  hours with positive mean marginal: [9, 10, 11, 12, 13]
+  hours with negative mean marginal: [14, 15]
+
+Q-table policy (avg over 10 agents x 96 states):
+  prefer Share 0% : 55.1%
+  prefer Share 50%: 38.8%
+  prefer Share 100%: 6.1%
+  sharing frequency (any share): 44.9%
+  differentiated across hours: YES (range 15.0%..95.0%)
+  hour with max sharing preference: 19 (95.0%)
+
+Frozen evaluation (200 matched days, greedy policy):
+  Learned greedy (end-of-day): F=1.8850  comfort=0.943  fairness=0.943
+  Always-default (0%)        : F=1.8850  comfort=0.943  fairness=0.943
+  F gain over default        : +0.0000
+
+2x2 reference points (seed 42):
+  A. per-step personality-weighted mixed: F=1.8453 (comfort 0.9208)
+  B. end-of-day personality-weighted (prev sanity): greedy F = default, marginal ~0
+  C. Charbonnier (community x end-of-day, own learning): F=1.8714 (comfort 0.9348)
+     always_default control: F=1.8410 (comfort 0.9205)
+  D. THIS RUN: community x end-of-day x OCEAN-MARL Q-learning -> training F=1.8359, greedy F=1.8850
+
+Interpretation:
+  Learned greedy policy ~ equals always-default.

@@ -1,0 +1,6 @@
+{
+  "scenario": "control_always_default",
+  "battery_cap": 3.5,
+  "episodes": 8000,
+  "seed": 42
+}

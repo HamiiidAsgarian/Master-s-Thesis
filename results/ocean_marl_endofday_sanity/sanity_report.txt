@@ -1,0 +1,39 @@
+==============================================================================
+OCEAN-MARL END-OF-DAY — SANITY (mixed, episodes=3000, seed=42)
+==============================================================================
+
+Training metrics (last 1000 episodes, exploratory policy):
+  comfort:  0.9180
+  fairness: 0.9182
+  F:        1.8361
+  blackout: 16.8%
+  waste:    8.21 kWh
+  mean agent reward (end-of-day marginal): -0.0022
+
+Counterfactual accounting (hourly agent-steps, whole run):
+  computed (real CF):      145742
+  skipped (net<=0 or a=0): 574258
+  skip ratio:              79.8%
+  mean marginal reward of computed CF: -0.0020
+  hours with positive mean marginal: none
+  hours with negative mean marginal: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+
+Q-table policy (avg over 10 agents x 96 states):
+  prefer Share 0% : 57.2%
+  prefer Share 50%: 37.5%
+  prefer Share 100%: 5.3%
+  sharing frequency (any share): 42.8%
+  differentiated across hours: YES (range 15.0%..95.0%)
+  hour with max sharing preference: 19 (95.0%)
+
+Frozen evaluation (200 matched days, greedy policy):
+  Learned greedy (end-of-day): F=1.8850  comfort=0.943  fairness=0.943
+  Always-default (0%)        : F=1.8850  comfort=0.943  fairness=0.943
+  F gain over default        : +0.0000
+
+Reference points (seed 42, same protocol):
+  original per-step mixed: comfort=0.9208 fairness=0.9245 F=1.8453 blackout=14.8% waste=3.84
+  always_default control     : comfort=0.9205 F=1.8410 waste=8.73
+
+Interpretation:
+  Learned greedy policy ~ equals always-default.

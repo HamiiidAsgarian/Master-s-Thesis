@@ -1,0 +1,22 @@
+========================================================================
+MAY & HUANG PPO (single-level, independent per house) — SANITY (episodes=800, seed=42)
+========================================================================
+
+Training diagnostics (9 PPO updates):
+  policy loss first10%=+0.0082  last10%=+0.0075  -> down
+  value loss  first10%=+542.0822  last10%=+426.7474  -> down
+  entropy     first10%=+1.0931  last10%=+1.0835  -> down
+  KL          first10%=+0.0000  last10%=+0.0000  -> flat
+  entropy: max possible ln(3)=1.099; last entropy=1.084 (99% of max) - CHECK
+
+Training metrics (last 800 episodes, stochastic policy):
+  comfort: 0.892
+  fairness:0.896
+  blackout: 17.2%
+  waste: 4.12 kWh
+
+Frozen evaluation (200 matched days, greedy policy):
+  Learned greedy: F=1.8620  comfort=0.931  fairness=0.931  waste=7.71 kWh
+  Always-default : F=1.8850  comfort=0.943  fairness=0.943
+  F gain over default: -0.0230
+  -> learned policy is WORSE than always-default (check reward/obs).

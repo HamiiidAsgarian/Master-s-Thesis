@@ -1,0 +1,2 @@
+scenario,battery_cap,seed,comfort,fairness,blackout_rate,waste,prosocial_comfort,selfish_comfort
+control_always_default,5.0,42,0.841,0.841,0.159,17.139711094318212,0.841,0.841

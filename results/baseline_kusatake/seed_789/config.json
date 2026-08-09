@@ -1,0 +1,19 @@
+{
+  "algorithm": "baseline_kusatake",
+  "method": "each day solved independently by NSGA-II (no learning across days); decision vector x in {0,1,2}^(24h x 10 houses) -> share fraction [0%, 50%, 100%]",
+  "objectives": "F1 = mean comfort (max), F2 = std of comfort (min)",
+  "selection": "argmax(F1 - F2)",
+  "caveat": "on sunny days (wf=1.0, ~85%) comfort objectives saturate (comfort=1.0, std=0.0 for every action vector) -> NSGA-II has no selective pressure and argmax(F1-F2) returns an arbitrary but reproducible policy; on cloudy days (wf=0.5) NSGA-II genuinely optimizes. See weather_split_metrics.csv.",
+  "pymoo_algorithm": "NSGA2",
+  "pop_size": 60,
+  "generations": 40,
+  "crossover": "uniform (prob 0.5)",
+  "mutation": "integer uniform re-sample (prob 1/240)",
+  "num_houses": 10,
+  "days": 500,
+  "battery_cap": 7.0,
+  "solar_max": 1.3,
+  "weather_cloud_prob": 0.15,
+  "seed": 789,
+  "env": "identical to main OCEAN-MARL runs (demand profiles, ring topology, battery start 50%, weather generator)"
+}
