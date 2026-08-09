@@ -26,10 +26,13 @@ brew install pandoc              # or download from pandoc.org
 # Appendix: exact step used last time
 # ──────────────────────────────────────────────
 # This Python one-liner builds thesis_full.md from YAML + chapters:
+# NOTE: image paths in Sections/*.md are relative to the Sections/ dir
+# (../../results/...). After combining into thesis_full.md (which lives in
+# HamidOutput/), rewrite them to ../results/... so pandoc/converter resolve them.
 
 python3 -c "
 import re
-d = '/Users/hamidasgharian/Desktop/sim/HamidOutput/Sections'
+d = '/Users/hamidasgharian/Desktop/Thesis/sim/HamidOutput/Sections'
 # YAML
 y = open(f'{d}/0.yaml').read()
 # Ch1 — strip 7-line header, fix headings
@@ -41,8 +44,18 @@ c1 = re.sub(r'^#### ', '### ', c1, flags=re.MULTILINE)
 c1 = c1.replace('**[پایان محتوای فایل]**', '')
 # Ch2–6 as-is
 rest = '\n'.join(open(f'{d}/{i}-fa-d.md').read() for i in range(2,7))
-open('/Users/hamidasgharian/Desktop/sim/HamidOutput/thesis_full.md','w').write(y + '\n' + c1 + '\n' + rest)
+md = y + '\n' + c1 + '\n' + rest
+md = md.replace('../../results/', '../results/')
+open('/Users/hamidasgharian/Desktop/Thesis/sim/HamidOutput/thesis_full.md','w').write(md)
+print('thesis_full.md rebuilt (image paths rewritten for HamidOutput/)')
 "
+
+# To produce an image-embedded docx (Cloude_Converter does NOT embed images):
+pandoc "/Users/hamidasgharian/Desktop/Thesis/sim/HamidOutput/thesis_full.md" \
+  -o "/Users/hamidasgharian/Desktop/Thesis/sim/HamidOutput/thesis_full.docx" \
+  --from markdown+pipe_tables \
+  --resource-path="/Users/hamidasgharian/Desktop/Thesis/sim/HamidOutput"
+
 
 # ──────────────────────────────────────────────
 # Checklist Before Running the Converter
