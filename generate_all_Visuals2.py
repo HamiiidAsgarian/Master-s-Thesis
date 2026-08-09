@@ -65,9 +65,10 @@ def _load_data():
     return all_data
 
 # ═══════════════════════════════════════════════
+# Figure: OCEAN-to-RL Parameter Mapping
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.set_xlim(0, 10); ax.set_ylim(0, 8); ax.axis('off')
-ax.set_title('Figure 2-1: OCEAN-to-RL Parameter Mapping',
+ax.set_title('OCEAN-to-RL Parameter Mapping',
              fontweight='bold', fontsize=11, pad=10)
 traits = [
     ('Openness', 7.0, C['purple'],
@@ -111,7 +112,7 @@ plt.close(fig)
 fig, ax = plt.subplots(figsize=(8, 8))
 ax.set_xlim(-2.5, 2.5); ax.set_ylim(-2.5, 2.5)
 ax.axis('off'); ax.set_aspect('equal')
-ax.set_title('Figure 3-2: Ring Topology Smart Neighbourhood Microgrid',
+ax.set_title('Ring Topology Smart Neighborhood Microgrid',
              fontweight='bold', fontsize=11, pad=10)
 n = 10
 angles = np.linspace(0, 2 * np.pi, n, endpoint=False)
@@ -153,8 +154,8 @@ plt.close(fig)
 # ═══════════════════════════════════════════════
 fig, ax = plt.subplots(figsize=(12, 6))
 ax.set_xlim(0, 12); ax.set_ylim(0, 6); ax.axis('off')
-ax.set_title('Figure 3-3: Two-Phase Energy Sharing Mechanism',
-             fontweight='bold', fontsize=11, pad=10)
+ax.set_title('Two-Phase Energy Sharing Mechanism',
+              fontweight='bold', fontsize=11, pad=10)
 ax.text(0.3, 5.2, 'PHASE 1 — LOCAL', fontsize=10, fontweight='bold',
         color=C['blue'], va='center')
 ax.text(0.3, 2.2, 'PHASE 2 — SHARING', fontsize=10, fontweight='bold',
@@ -219,7 +220,7 @@ profiles = {
 for name, (vals, color, ls) in profiles.items():
     ax.plot(hours, vals, label=name, color=color, ls=ls, lw=2)
 ax.set_xlabel('Hour of Day'); ax.set_ylabel('Demand (kWh)')
-ax.set_title('Figure 3-4: The Four Hourly Demand Profile Types',
+ax.set_title('The Four Hourly Demand Profile Types',
              fontweight='bold', fontsize=11)
 ax.set_xticks([0, 6, 12, 18, 23]); ax.set_xlim(0, 23); ax.set_ylim(0, 1.4)
 ax.legend(fontsize=9, loc='upper right', framealpha=0.9); ax.grid(alpha=0.3)
@@ -246,7 +247,7 @@ ax.text(12, 0.2, 'Eq. 3-1: G(h) = G$_\\max$ sin($\\pi$(h-6)/12) W',
 ax.text(12, 0.05, 'Cloudy days with 15% probability (Bernoulli draw)',
         ha='center', fontsize=8, fontstyle='italic', color=C['grey'])
 ax.set_xlabel('Hour of Day'); ax.set_ylabel('Solar Generation (kW)')
-ax.set_title('Figure 3-5: Half-Sine Solar Irradiance Model',
+ax.set_title('Half-Sine Solar Irradiance Model',
              fontweight='bold', fontsize=11)
 ax.set_xticks([0, 6, 12, 18, 23]); ax.set_xlim(0, 23); ax.set_ylim(0, 1.5)
 ax.legend(fontsize=9, loc='upper left', framealpha=0.9); ax.grid(alpha=0.3)
@@ -256,7 +257,7 @@ plt.close(fig)
 # ═══════════════════════════════════════════════
 fig, ax = plt.subplots(figsize=(9, 5))
 ax.set_xlim(-0.5, 12); ax.set_ylim(-1.3, 6.8); ax.axis('off')
-ax.set_title('Figure 3-6: Experimental Community Compositions',
+ax.set_title('Experimental Community Compositions',
              fontweight='bold', fontsize=11, pad=10)
 scenarios_grid = [
     ('All Selfish', ['red'] * 10),
@@ -301,7 +302,7 @@ plt.close(fig)
 fig, ax = plt.subplots(figsize=(8, 8))
 ax.set_xlim(-2.5, 2.5); ax.set_ylim(-2.5, 2.5)
 ax.axis('off'); ax.set_aspect('equal')
-ax.set_title('Figure 5-1: The Emergent Reciprocity Mechanism',
+ax.set_title('The Emergent Reciprocity Mechanism',
              fontweight='bold', fontsize=11, pad=10)
 def draw_cycle(positions, edge_color, fill_color):
     for (x, y), text, _ in positions:
@@ -343,7 +344,7 @@ plt.close(fig)
 # ═══════════════════════════════════════════════
 fig, ax = plt.subplots(figsize=(11, 5.5))
 ax.set_xlim(0, 12); ax.set_ylim(-0.3, 5.5); ax.axis('off')
-ax.set_title('Figure 4-7: The Innovator Effect Mechanism',
+ax.set_title('The Innovator Effect Mechanism',
              fontweight='bold', fontsize=11, pad=10)
 _arrow(2.3, 4.2, 2.7, 4.2, C['purple'])
 _arrow(4.9, 4.2, 5.4, 4.2, C['orange'])
@@ -383,7 +384,7 @@ plt.close(fig)
 # ═══════════════════════════════════════════════
 fig, ax = plt.subplots(figsize=(10, 5))
 ax.set_xlim(0, 10); ax.set_ylim(0, 5); ax.axis('off')
-ax.set_title('Figure 1-1: The Tragedy of the Commons in Energy Sharing',
+ax.set_title('The Tragedy of the Commons in Energy Sharing',
              fontweight='bold', fontsize=11, pad=10)
 ax.add_patch(FancyBboxPatch((0.3, 0.3), 4.2, 4.2,
                              boxstyle="round,pad=0.08",
@@ -447,7 +448,7 @@ for i, (c, f) in enumerate(zip(comfort, fairness)):
         ax.text(i + w/2, 0.01, 'N/R', ha='center', fontsize=7, color=C['grey'], fontstyle='italic')
 ax.set_xticks(x); ax.set_xticklabels(studies, fontsize=9)
 ax.set_ylabel('Score')
-ax.set_title('Figure 4-8: Comparison with State-of-the-Art Energy MARL Studies',
+ax.set_title('Comparison with State-of-the-Art Energy MARL Studies',
              fontweight='bold', fontsize=11)
 ax.set_ylim(0.78, 0.97); ax.legend(fontsize=9, loc='lower right', framealpha=0.9)
 ax.grid(axis='y', alpha=0.3)
@@ -480,7 +481,7 @@ ax.annotate('Gini = 0.096', xy=(0.55, 0.44), fontsize=9,
             color=C['red'], fontweight='bold')
 ax.set_xlabel('Cumulative Share of Houses (poorest $\\to$ richest)')
 ax.set_ylabel('Cumulative Share of Comfort')
-ax.set_title('Figure 4-9: Lorenz Curves — Mixed vs. Innovator Effect',
+ax.set_title('Lorenz Curves — Mixed vs. Innovator Effect',
              fontweight='bold', fontsize=11)
 ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.set_aspect('equal')
 ax.legend(fontsize=9, loc='upper left', framealpha=0.9); ax.grid(alpha=0.3)
@@ -490,7 +491,7 @@ plt.close(fig)
 # ═══════════════════════════════════════════════
 fig, ax = plt.subplots(figsize=(10, 9))
 ax.set_xlim(0, 10); ax.set_ylim(0, 9.5); ax.axis('off')
-ax.set_title('Figure 3-1: System Architecture Flowchart',
+ax.set_title('System Architecture Flowchart',
              fontweight='bold', fontsize=12, pad=15)
 def arch_box(cx, cy, w, h, text, color, fs=8.5):
     ax.add_patch(FancyBboxPatch((cx - w/2, cy - h/2), w, h,
@@ -596,7 +597,7 @@ if all_data:
             ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 0.01,
                     f'{v:.3f}' if '3f' in fmt else f'{v:.2f}',
                     ha='center', fontsize=7, fontweight='bold')
-    fig.suptitle('Figure 4-1: Community-Level Metrics Across Five Scenarios',
+    fig.suptitle('Community-Level Metrics Across Five Scenarios',
                  fontweight='bold', fontsize=12)
     fig.tight_layout(rect=[0, 0, 1, 0.97])
     fig.savefig(f'{OUT}/v13_community_metrics.png', dpi=150, bbox_inches='tight')
@@ -619,7 +620,7 @@ if all_data:
         ax.annotate(g, xy=(i, y_max + 0.02), ha='center', fontsize=8, fontweight='bold', color=C['dark'])
     ax.set_xticks(x); ax.set_xticklabels(labels, fontsize=10)
     ax.set_ylabel('Mean Comfort (Last 1,000 Episodes)')
-    ax.set_title('Figure 4-2: Prosocial vs. Selfish Agent Comfort\nin Mixed-Type Communities',
+    ax.set_title('Prosocial vs. Selfish Agent Comfort\nin Mixed-Type Communities',
                  fontweight='bold', fontsize=11)
     ax.set_ylim(0.87, 0.97); ax.legend(fontsize=9, framealpha=0.9); ax.grid(axis='y', alpha=0.3)
     fig.tight_layout(); fig.savefig(f'{OUT}/v14_agent_comfort_split.png', dpi=150, bbox_inches='tight')
@@ -651,7 +652,7 @@ if all_data:
                 ha='center', fontsize=9, fontweight='bold', color=C['red'])
     ax.set_xticks(x); ax.set_xticklabels(gini_labels, fontsize=9)
     ax.set_ylabel('Gini Coefficient')
-    ax.set_title('Figure 4-3: Gini Coefficient by Scenario', fontweight='bold', fontsize=11)
+    ax.set_title('Gini Coefficient by Scenario', fontweight='bold', fontsize=11)
     ax.set_ylim(ymin, ymax); ax.grid(axis='y', alpha=0.3)
     for bar, v in zip(bars, gini_vals):
         ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 0.0005,
@@ -674,7 +675,7 @@ if all_data:
     ax.axhline(y=13.1, color='gray', linestyle='--', lw=1.5, alpha=0.7, label='Overall mean (~13.1%)')
     ax.set_xticks(x); ax.set_xticklabels(freq_labels, fontsize=8.5)
     ax.set_ylabel('Sharing Frequency (%)')
-    ax.set_title("Figure 4-4: Proportion of Q-Table States Where\nGreedy Action is to Share",
+    ax.set_title("Proportion of Q-Table States Where\nGreedy Action is to Share",
                  fontweight='bold', fontsize=11)
     ax.set_ylim(10, 16); ax.legend(fontsize=9, framealpha=0.9); ax.grid(axis='y', alpha=0.3)
     for bar, v in zip(bars, freq_vals):
@@ -697,7 +698,7 @@ if all_data:
     ax.annotate('Gap = 2.95 pp\n(p=0.0034)', xy=(15, 0.92), fontsize=9, fontweight='bold',
                 color=C['dark'], bbox=dict(facecolor='white', edgecolor='#CCC', boxstyle='round'))
     ax.set_xlabel('Cloudy Day Probability (%)'); ax.set_ylabel('Mean Comfort (Last 1,000 Episodes)')
-    ax.set_title('Figure 4-6: Prosocial vs. Selfish Comfort\nas a Function of Cloudy Day Probability',
+    ax.set_title('Prosocial vs. Selfish Comfort\nas a Function of Cloudy Day Probability',
                  fontweight='bold', fontsize=11)
     ax.set_xticks(cp); ax.set_xlim(10, 40); ax.set_ylim(0.75, 0.96)
     ax.legend(fontsize=9, framealpha=0.9); ax.grid(alpha=0.3)
