@@ -20,8 +20,7 @@ The project also implements **four literature baselines** (Charbonnier marginal-
 - **State**: (hour 0–23, discretised battery level 0–3).
 - **Actions**: share 0%, 50%, or 100% of net surplus.
 - **Reward**: `w_self * own_comfort + w_fair * Jain's Fairness Index`.
-- **Personality types**: `pure_selfish` (1.0, 0.0), `individualist` (0.8, 0.2), `prosocial` (0.5, 0.5), `altruistic` (0.2, 0.8), `high_openness_innovator` (0.5, 0.5, min-eps 0.05).
-- **OCEAN mapping**: personalities correspond to Big Five coordinates — see OCEAN mapping table in `ACADEMIC.md` §2.2.
+- **Personality types**: `pure_selfish` (1.0, 0.0), `individualist` (0.8, 0.2), `prosocial` (0.5, 0.5), `altruistic` (0.2, 0.8), `high_openness_innovator` (0.5, 0.5, min-eps 0.05). The weights correspond to Big Five coordinates (high/low agreeableness, openness, etc.).
 - **Learning**: ε-greedy (ε decays 1.0→0.01), α=0.2, γ=0.99, optimistic Q-init.
 
 ### Community Layer
@@ -51,30 +50,40 @@ The project also implements **four literature baselines** (Charbonnier marginal-
 - **May & Huang PPO** (`may_huang_ppo.py`): deep PPO baseline with `comfort + fairness` reward (+ waste-augmented sensitivity variant).
 - **Battery-capacity scan** (`battery_sensitivity.py`): comfort/waste vs battery size 3.5–9 kWh.
 - **End-of-day counterfactual isolation** (`ocean_marl_endofday.py`): swaps the per-step reward for a true end-of-day counterfactual, with a `--sanity` mode producing the 2×2 isolation (objective × reward horizon) that pins the mechanism on the learning rule.
+- **Re-analysis / reproduction** (`gini_cloud_reanalysis.py`, `gini_more_scenarios.py`): re-run the main scenarios with the identical seeds and validate each run against the saved `final_metrics.csv` (max re-run vs saved error < 1e-9), then recompute Gini inequality and cloud-scarcity gaps.
 
 ## Key Findings
 
 ### Main community-level results (5-seed means)
 
-- All main scenarios cluster near comfort ≈ 0.92, fairness ≈ 0.92, F = comfort + fairness ≈ 1.83–1.84, blackout ≈ 14–16% (no significant ANOVA difference at community level).
-- **Prosocial agents outperform selfish by 2.9 pp** in mixed communities (p = 0.0011, paired t-test).
-- Comfort gap **widens under scarcity** (higher cloud probability), showing personality matters most when resources are tight.
+- Main scenarios cluster near comfort ≈ 0.90–0.93, fairness ≈ 0.90–0.93, F = comfort + fairness ≈ 1.81–1.86, blackout ≈ 14–16%. One-way ANOVA across the five scenarios is now significant (F = 3.362, p = 0.0293), driven by the innovator-effect community, which underperforms mixed on comfort (t = −3.562, p = 0.0074).
+- **Prosocial agents outperform selfish by ~2.9 pp** in mixed communities (p = 0.0011, paired t-test).
+- Comfort gap **widens under scarcity** (higher cloud probability): at cloud 0.15 the prosocial–selfish gap is 2.95 pp, at cloud 0.35 it is 3.05 pp — personality matters most when resources are tight.
 
 ### Control and baselines (identical env, 5 seeds) — F = comfort + fairness
 
 | Method                     | F       | comfort | waste (kWh) | vs control |
 | -------------------------- | ------- | ------- | ----------- | ---------- |
-| Charbonnier marginal-IQL   | 1.8834  | 0.9401  | 4.02        | **+0.0336, p=0.002 (SIG)** |
-| Kusatake NSGA-II           | 1.8820  | 0.9387  | 4.22        | **+0.0322, p=0.013 (SIG)** |
+| Charbonnier marginal-IQL   | 1.8834  | 0.9401  | 4.02        | **+0.0336, p=0.0016 (SIG)** |
+| Kusatake NSGA-II           | 1.8820  | 0.9387  | 4.22        | **+0.0322, p=0.0126 (SIG)** |
 | Always-default (control)   | 1.8498  | 0.9249  | 8.82        | —          |
+| OCEAN-MARL all-selfish     | 1.8420  | 0.9195  | 4.98        | −0.0078 (ns) |
 | OCEAN-MARL mixed           | 1.8432  | 0.9198  | 4.34        | −0.0066 (ns) |
 | Behrunani GNE              | 1.8386  | 0.9171  | 0.00        | −0.0112 (ns) |
-| May & Huang PPO            | 1.8143  | 0.9058  | 4.66        | −0.0355, p=0.001 (worse) |
-| OCEAN-MARL innovator       | 1.8088  | 0.9018  | 4.70        | −0.0410, p=0.002 (worse) |
+| OCEAN-MARL all-prosocial   | 1.8315  | 0.9139  | 4.41        | −0.0183 (ns) |
+| OCEAN-MARL varied-altruism | 1.8325  | 0.9140  | 4.96        | −0.0173 (ns) |
+| May & Huang PPO            | 1.8143  | 0.9058  | 4.66        | −0.0355, p=0.0008 (worse) |
+| OCEAN-MARL innovator       | 1.8088  | 0.9018  | 4.70        | −0.0410, p=0.0017 (worse) |
 
 Take-aways:
 - **No learned method beats doing-nothing on comfort/fairness except the two working baselines** (Charbonnier, Kusatake).
 - **Every learning method cuts waste ~45–50% vs the 8.82 kWh control** (Behrunani 0.00 by design) — ANOVA on waste F=119, p<0.0001. This waste-reduction framing is the thesis's core efficiency contribution.
+
+### Gini inequality re-analysis
+
+- Re-run with validation (max error < 1e-9 vs saved runs) gives Gini (comfort inequality, last 1000 eps): mixed 0.0790 vs innovator 0.0962 — the innovator composition adds ~21.8% inequality (paired t = −2.84, p = 0.047, `results/gini_reanalysis.csv`).
+- Gini across `all_selfish` / `all_prosocial` / `varied_altruism` is tightly clustered (~0.07–0.10, `results/gini_more_scenarios.csv`).
+- Cloud-scarcity re-run: prosocial–selfish comfort gap 2.95 pp (cloud 0.15) → 3.05 pp (cloud 0.35) (`results/cloud_sensitivity_reanalysis.csv`).
 
 ### Mechanism isolation: 2×2 (objective × reward horizon), seed 42, greedy F vs default 1.8850
 
@@ -101,7 +110,11 @@ Take-aways:
 - **`run_experiments.py.py`** — Batch runner: five scenarios × five seeds → `results/<scenario>/seed_<N>/`.
 - **`analyze_results.py`** — Loads `final_metrics.csv`, means/stds, `community_metrics.png`, `agent_type_comfort.png`.
 - **`advanced_analysis.py`** — Q-table heatmaps, t-tests, one-way ANOVA → `statistical_tests.txt`.
-- **`final_analysis.py`** — Gini coefficient, sharing frequency, scarcity sensitivity.
+- **`final_analysis.py`** — Gini coefficient, sharing frequency, cloud-scarcity sensitivity (→ `gini_comparison.png`, `sharing_frequency.png`, `sensitivity_cloud.png`).
+
+### Re-analysis / reproduction
+- **`gini_cloud_reanalysis.py`** — Re-runs `mixed` and `innovator_effect` (all 5 seeds), validates each run against the saved `final_metrics.csv` (max |re-run − saved| < 1e-9), writes `results/gini_reanalysis.csv`, and runs a paired t-test on Gini (`--task gini`). Also re-runs the cloud-scarcity scan (cloud 0.15/0.25/0.35) with Welch/Student t-tests → `results/cloud_sensitivity_reanalysis.csv` (`--task cloud`).
+- **`gini_more_scenarios.py`** — Same validated re-run for `all_selfish`, `all_prosocial`, `varied_altruism` → `results/gini_more_scenarios.csv`.
 
 ### Baselines & controls
 - **`charbonnier_marginal_iql.py`** — Baseline #1: role-free end-of-day counterfactual reward, hysteretic low-alpha IQL (`results/baseline_charbonnier/`, validation report in `results/baseline_charbonnier_validation/`).
@@ -114,8 +127,8 @@ Take-aways:
 - **`battery_sensitivity.py`** — Battery-capacity scan (control + mixed) → `results/battery_sensitivity/`.
 - **`baseline_comparison.py`** — The Chapter-4 comparison pipeline: aggregates main scenarios + 4 baselines + control into `results/baseline_comparison.{csv,txt,png}`, runs ANOVA and seed-matched t-tests, and appends the isolation 2×2 table.
 
-### Control runner
-- **`control_always_default/`** — pre-computed always-share-0% control for all five seeds, mirroring `run_simulation` exactly (results in `results/control_always_default/seed_<N>/`).
+### Control
+- **`results/control_always_default/`** — pre-computed always-share-0% control for all five seeds, mirroring `run_simulation` exactly (`seed_<N>/`).
 
 ## Key Parameters
 
@@ -151,7 +164,6 @@ Use Python 3.8 or newer. A local venv at the project root is recommended (`venv/
 pip install -r requirements.txt
 python offgrid_marl.py                     # single test run (mixed, saves to results/mixed/seed_42/)
 python run_experiments.py.py               # full batch (5 scenarios × 5 seeds, ~25-35 min)
-python control_always_default/...           # control computed via run_simulation (see notes)
 python charbonnier_marginal_iql.py         # baseline #1 (faithful run)
 python kusatake_evolutionary_moo.py        # baseline #2
 python behrunani_gne_fairness.py           # baseline #3
@@ -162,7 +174,12 @@ python baseline_comparison.py              # Chapter-4 comparison pipeline (CSV/
 python analyze_results.py                  # community-level plots from saved CSVs
 python advanced_analysis.py                # Q-table heatmaps + statistical tests (~15-20 min)
 python final_analysis.py                   # Gini + sharing freq + sensitivity (~10-15 min)
+python gini_cloud_reanalysis.py --task gini    # validated Gini re-run (mixed vs innovator)
+python gini_cloud_reanalysis.py --task cloud   # cloud-scarcity re-run (0.15/0.25/0.35)
+python gini_more_scenarios.py              # validated Gini for 3 more scenarios
 ```
+
+The always-default control is pre-computed under `results/control_always_default/seed_<N>/` (computed via `run_simulation` with sharing forced to 0%).
 
 ## Project Structure
 
@@ -170,9 +187,11 @@ python final_analysis.py                   # Gini + sharing freq + sensitivity (
 offgrid-energy-marl/
 ├── offgrid_marl.py               # Core simulation environment, agents, and learning loop
 ├── run_experiments.py.py         # Batch runner for main scenarios and seeds
-├── analyze_results.py            # Statistical analysis and main comparison plots
+├── analyze_results.py            # Community-level plots and stats from saved CSVs
 ├── advanced_analysis.py          # Q-table heatmaps and t-tests / ANOVA
-├── final_analysis.py             # Gini coefficient, sharing frequency, sensitivity analysis
+├── final_analysis.py             # Gini coefficient, sharing frequency, scarcity sensitivity
+├── gini_cloud_reanalysis.py      # Validated re-run: Gini (mixed vs innovator) + cloud scan
+├── gini_more_scenarios.py        # Validated Gini: all_selfish / all_prosocial / varied_altruism
 ├── charbonnier_marginal_iql.py   # Baseline #1: role-free end-of-day marginal IQL
 ├── kusatake_evolutionary_moo.py  # Baseline #2: evolutionary multi-objective optimisation
 ├── behrunani_gne_fairness.py     # Baseline #3: GNE fairness price mechanism
@@ -182,33 +201,28 @@ offgrid-energy-marl/
 ├── baseline_comparison.py        # Chapter-4 comparison pipeline (main + baselines + control)
 ├── agent.py, environment.py, simulation.py, t.py   # legacy/alternate code (unused)
 ├── requirements.txt              # Python dependencies
-├── results/                      # Output directory (generated)
-│   ├── all_selfish/  all_prosocial/  mixed/
-│   ├── varied_altruism/  innovator_effect/
-│   ├── control_always_default/        # always-share-0% control (5 seeds)
-│   ├── baseline_charbonnier/          # + baseline_charbonnier_validation/
-│   ├── baseline_kusatake/             # + baseline_kusatake_timing/
-│   ├── baseline_behrunani/            # + ..._lambda5_sensitivity/ + ..._sanity/
-│   ├── baseline_may_huang/            # + ..._waste_sensitivity/ + ..._sanity/
-│   ├── ocean_marl_endofday_sanity/    # + ..._community/ + ..._community_homogeneous/
-│   ├── battery_sensitivity/
-│   ├── baseline_comparison.{csv,txt,png}
-│   ├── community_metrics.png  agent_type_comfort.png
-│   ├── qtable_heatmaps.png  gini_comparison.png
-│   ├── sharing_frequency.png  sensitivity_cloud.png
-│   ├── statistical_tests.txt
-│   └── figures/
-├── README.md                   # Project overview, technical reference, and usage (this file)
-├── ACADEMIC.md                 # Academic write-up (thesis-style paper with results)
-├── HamidOutput/                # Thesis drafts (fa/En): thesis_full.md, ACADEMIC_v3_En.md
-└── instructions-nuri-2.md      # Baseline specs + wiring instructions
+├── README.md                     # Project overview, technical reference, and usage (this file)
+├── 0-Active Doc/                 # Main thesis documents (see below)
+└── results/                      # Output directory (generated)
+    ├── all_selfish/  all_prosocial/  mixed/
+    ├── varied_altruism/  innovator_effect/     # 5 seeds each: seed_<N>/{final_metrics.csv, config.json, results_plot.png}
+    ├── control_always_default/                 # always-share-0% control (5 seeds)
+    ├── baseline_charbonnier/ + baseline_charbonnier_validation/
+    ├── baseline_kusatake/ + baseline_kusatake_timing/
+    ├── baseline_behrunani/ + ..._lambda5_sensitivity/ + ..._sanity/
+    ├── baseline_may_huang/ + ..._waste_sensitivity/ + ..._sanity/
+    ├── ocean_marl_endofday_sanity/ + ..._community/ + ..._community_homogeneous/
+    ├── battery_sensitivity/                    # batt3.5/  batt5/  batt7/  batt9/  summary.csv
+    ├── baseline_comparison.{csv,txt,png}       # Chapter-4 comparison + stats + isolation 2×2
+    ├── gini_reanalysis.csv  gini_more_scenarios.csv  cloud_sensitivity_reanalysis.csv
+    ├── community_metrics.png  agent_type_comfort.png
+    ├── qtable_heatmaps.png  gini_comparison.png
+    ├── sharing_frequency.png  sensitivity_cloud.png
+    ├── statistical_tests.txt
+    └── figures/                                # thesis figures (v01–v18, e.g. ring topology, solar curve, Lorenz curve)
 ```
 
 ## Related Documents
 
-- **`ACADEMIC.md`** — Full academic write-up formatted as a thesis chapter, including OCEAN mapping table, ethics framing, and detailed results discussion.
-- **`HamidOutput/thesis_full.md`** — Full Persian thesis draft (front matter, ch. 1–5, references).
-- **`HamidOutput/ACADEMIC_v3_En.md`** — English thesis draft (academic v3, structured TOC, tables/figures lists).
-- **`REVIEW.md`** — Advisor review feedback and action items.
-- **`Final_state.md`** — Working audit log tracking professor feedback items and revision status (thesis-writing process only).
-- **`instructions-nuri-2.md`** — Baseline specifications and wiring instructions for the ANOVA/post-hoc pipeline.
+- **`0-Active Doc/`** — The **main documents for the Thesis**: `thesis_v8.md` (full active thesis draft) and `check list.md` (tracking/revision checklist).
+
