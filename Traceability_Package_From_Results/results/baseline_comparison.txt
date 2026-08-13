@@ -1,0 +1,81 @@
+====================================================================================================
+BASELINE + CONTROL COMPARISON  (identical env: 10 houses, PV 1.3 kW, battery 7 kWh, cloud 0.15; 5 seeds)
+====================================================================================================
+                      method |     comfort |    fairness |           F | blackout% |     waste
+----------------------------------------------------------------------------------------------
+      OCEAN-MARL all-selfish | 0.9195±0.0098 | 0.9225±0.0097 | 1.8420±0.0195 |  14.5±1.4 |  4.98±0.50
+    OCEAN-MARL all-prosocial | 0.9139±0.0112 | 0.9176±0.0107 | 1.8315±0.0219 |  14.5±1.4 |  4.41±0.74
+            OCEAN-MARL mixed | 0.9198±0.0075 | 0.9234±0.0077 | 1.8432±0.0150 |  14.5±1.4 |  4.34±0.55
+  OCEAN-MARL varied-altruism | 0.9140±0.0068 | 0.9185±0.0061 | 1.8325±0.0128 |  14.5±1.4 |  4.96±0.54
+ OCEAN-MARL innovator-effect | 0.9018±0.0085 | 0.9069±0.0094 | 1.8088±0.0178 |  15.7±1.1 |  4.70±0.27
+    Charbonnier marginal-IQL | 0.9401±0.0066 | 0.9433±0.0076 | 1.8834±0.0141 |  14.5±0.7 |  4.02±0.41
+            Kusatake NSGA-II | 0.9387±0.0064 | 0.9433±0.0062 | 1.8820±0.0125 |  15.6±1.6 |  4.22±0.10
+               Behrunani GNE | 0.9171±0.0084 | 0.9215±0.0080 | 1.8386±0.0164 |  15.6±1.6 |  0.00±0.00
+             May & Huang PPO | 0.9058±0.0089 | 0.9085±0.0084 | 1.8143±0.0173 |  17.3±3.3 |  4.66±0.43
+    always_default (control) | 0.9249±0.0051 | 0.9249±0.0051 | 1.8498±0.0103 |  15.0±1.0 |  8.82±0.11
+----------------------------------------------------------------------------------------------
+
+GAIN OVER always_default control (method - control, per seed, mean±std):
+                      method |        dF |   dcomfort |  dwaste (kWh)
+---------------------------------------------------------------------
+      OCEAN-MARL all-selfish | -0.0078±0.0290 | -0.0054±0.0147 |    -3.84±0.57
+    OCEAN-MARL all-prosocial | -0.0183±0.0304 | -0.0110±0.0155 |    -4.41±0.80
+            OCEAN-MARL mixed | -0.0066±0.0233 | -0.0051±0.0115 |    -4.48±0.54
+  OCEAN-MARL varied-altruism | -0.0173±0.0197 | -0.0109±0.0104 |    -3.86±0.49
+ OCEAN-MARL innovator-effect | -0.0410±0.0123 | -0.0231±0.0057 |    -4.12±0.35
+    Charbonnier marginal-IQL | +0.0336±0.0099 | +0.0152±0.0049 |    -4.80±0.42
+            Kusatake NSGA-II | +0.0322±0.0168 | +0.0138±0.0084 |    -4.60±0.15
+               Behrunani GNE | -0.0112±0.0195 | -0.0078±0.0099 |    -8.82±0.11
+             May & Huang PPO | -0.0355±0.0088 | -0.0191±0.0046 |    -4.16±0.35
+
+====================================================================================================
+STATISTICAL TESTS (5 seeds per group; seed-matched pairs for baselines/control vs main)
+====================================================================================================
+
+One-way ANOVA on F across 10 groups: F=11.706, p=0.0000 -> significant
+
+One-way ANOVA on comfort across 10 groups: F=11.785, p=0.0000 -> significant
+
+One-way ANOVA on waste across 10 groups: F=119.133, p=0.0000 -> significant
+
+Paired t-tests vs always_default control (seed-matched):
+        OCEAN-MARL all-selfish vs control (      F): t=-0.601 p=0.5805 [ns]
+        OCEAN-MARL all-selfish vs control (comfort): t=-0.815 p=0.4611 [ns]
+      OCEAN-MARL all-prosocial vs control (      F): t=-1.346 p=0.2496 [ns]
+      OCEAN-MARL all-prosocial vs control (comfort): t=-1.589 p=0.1873 [ns]
+              OCEAN-MARL mixed vs control (      F): t=-0.635 p=0.5601 [ns]
+              OCEAN-MARL mixed vs control (comfort): t=-0.988 p=0.3790 [ns]
+    OCEAN-MARL varied-altruism vs control (      F): t=-1.964 p=0.1209 [ns]
+    OCEAN-MARL varied-altruism vs control (comfort): t=-2.345 p=0.0789 [ns]
+   OCEAN-MARL innovator-effect vs control (      F): t=-7.445 p=0.0017 [SIG]
+   OCEAN-MARL innovator-effect vs control (comfort): t=-9.099 p=0.0008 [SIG]
+      Charbonnier marginal-IQL vs control (      F): t=+7.560 p=0.0016 [SIG]
+      Charbonnier marginal-IQL vs control (comfort): t=+6.938 p=0.0023 [SIG]
+              Kusatake NSGA-II vs control (      F): t=+4.302 p=0.0126 [SIG]
+              Kusatake NSGA-II vs control (comfort): t=+3.681 p=0.0212 [SIG]
+                 Behrunani GNE vs control (      F): t=-1.289 p=0.2668 [ns]
+                 Behrunani GNE vs control (comfort): t=-1.758 p=0.1535 [ns]
+               May & Huang PPO vs control (      F): t=-9.006 p=0.0008 [SIG]
+               May & Huang PPO vs control (comfort): t=-9.210 p=0.0008 [SIG]
+
+Headline comparisons (seed-matched, F):
+        OCEAN-MARL all-selfish vs OCEAN-MARL mixed: t=-0.194 p=0.8559
+      OCEAN-MARL all-prosocial vs OCEAN-MARL mixed: t=-1.961 p=0.1215
+    OCEAN-MARL varied-altruism vs OCEAN-MARL mixed: t=-1.873 p=0.1343
+   OCEAN-MARL innovator-effect vs OCEAN-MARL mixed: t=-2.825 p=0.0476
+      Charbonnier marginal-IQL vs OCEAN-MARL mixed: t=+4.357 p=0.0121
+              Kusatake NSGA-II vs OCEAN-MARL mixed: t=+7.107 p=0.0021
+                 Behrunani GNE vs OCEAN-MARL mixed: t=-0.692 p=0.5270
+               May & Huang PPO vs OCEAN-MARL mixed: t=-2.194 p=0.0933
+
+====================================================================================================
+ISOLATION 2x2: objective x reward horizon  (seed 42, matched eval; greedy F vs always_default F=1.8850)
+====================================================================================================
+                                                cell |  train F | greedy F |    gain | comfort |  waste
+-------------------------------------------------------------------------------------------------------
+             A  personality x per-step (main, mixed) |   1.8453 |      nan |    +nan |  0.9208 |   3.84
+                B  personality x end-of-day (sanity) |   1.8361 |   1.8850 | +0.0000 |  0.9180 |   8.21
+      C  community x end-of-day, Charbonnier learner |   1.8714 |   1.9057 | +0.0207 |  0.9348 |   3.84
+D  community x end-of-day, OCEAN-MARL learner (mixed env) |   1.8359 |   1.8850 | +0.0000 |  0.9178 |   6.83
+D2 community x end-of-day, OCEAN-MARL learner (HOMOGENEOUS env) |   1.8359 |   1.8850 | +0.0000 |  0.9178 |   6.83
+Greedy gains read from saved sanity reports: B=+0.0000, D=+0.0000, D2=+0.0000; C=+0.0207 (76.4% sharing).
