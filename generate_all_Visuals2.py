@@ -460,20 +460,15 @@ plt.close(fig)
 
 # ═══════════════════════════════════════════════
 fig, ax = plt.subplots(figsize=(7, 7))
-rng = np.random.RandomState(42)
-def lorenz(gini, n=10, seed=42):
-    rng = np.random.RandomState(seed)
-    sigma = np.sqrt(2) * gini / (1 - gini)
-    vals = np.sort(np.exp(rng.randn(n) * sigma))
-    cum = np.cumsum(vals) / np.sum(vals)
-    return np.insert(cum, 0, 0)
+lc = np.load(f'{BASE}/analysis_support/house_comfort/lorenz_curves.npy',
+             allow_pickle=True).item()
 houses = np.linspace(0, 1, 11)
 ax.plot([0, 1], [0, 1], '--', color='gray', lw=1.5, label='Perfect Equality', alpha=0.7)
-ax.fill_between(houses, houses, lorenz(0.079, seed=42), alpha=0.1, color=C['blue'])
-ax.fill_between(houses, houses, lorenz(0.096, seed=101), alpha=0.1, color=C['red'])
-ax.plot(houses, lorenz(0.079, seed=42), '-', color=C['blue'], lw=2.5,
+ax.fill_between(houses, houses, lc['mixed'], alpha=0.1, color=C['blue'])
+ax.fill_between(houses, houses, lc['innovator_effect'], alpha=0.1, color=C['red'])
+ax.plot(houses, lc['mixed'], '-', color=C['blue'], lw=2.5,
         label='Mixed Scenario (Gini = 0.079)', marker='o', markersize=4)
-ax.plot(houses, lorenz(0.096, seed=101), '-', color=C['red'], lw=2.5,
+ax.plot(houses, lc['innovator_effect'], '-', color=C['red'], lw=2.5,
         label='Innovator Effect (Gini = 0.096)', marker='s', markersize=4)
 ax.annotate('Gini = 0.079', xy=(0.55, 0.52), fontsize=9,
             color=C['blue'], fontweight='bold')
@@ -481,7 +476,8 @@ ax.annotate('Gini = 0.096', xy=(0.55, 0.44), fontsize=9,
             color=C['red'], fontweight='bold')
 ax.set_xlabel('Cumulative Share of Houses (poorest $\\to$ richest)')
 ax.set_ylabel('Cumulative Share of Comfort')
-ax.set_title('Lorenz Curves — Mixed vs. Innovator Effect',
+ax.set_title('Lorenz Curves — Mixed vs. Innovator Effect\n'
+             '(mean of per-episode cross-sectional distributions, last 1,000 episodes)',
              fontweight='bold', fontsize=11)
 ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.set_aspect('equal')
 ax.legend(fontsize=9, loc='upper left', framealpha=0.9); ax.grid(alpha=0.3)
@@ -626,21 +622,22 @@ if all_data:
     fig.tight_layout(); fig.savefig(f'{OUT}/v14_agent_comfort_split.png', dpi=150, bbox_inches='tight')
     plt.close(fig)
 
-    # Fig 4-3: Gini Coefficient (computed from comfort distributions)
+    # Fig 4-3: Gini Coefficient (from verified gini_reanalysis.csv / gini_more_scenarios.csv)
     fig, ax = plt.subplots(figsize=(8, 5))
     x = np.arange(5)
     gini_labels = ['Mixed', 'All Selfish', 'Varied\nAltruism', 'All\nProsocial', 'Innovator\nEffect']
     gini_order = ['mixed', 'all_selfish', 'varied_altruism', 'all_prosocial', 'innovator_effect']
-    gini_vals = []
-    gini_stds = []
+    gini_vals, gini_stds = [], []
     for s in gini_order:
-        comfort_vals = all_data[s]['comfort'].values
-        sorted_c = np.sort(comfort_vals)
-        n = len(sorted_c)
-        lorenz = np.cumsum(sorted_c) / np.sum(sorted_c)
-        gini = 1 - 2 * np.mean(lorenz[:-1])
-        gini_vals.append(gini)
-        gini_stds.append(gini * 0.12)
+        if s in ('mixed', 'innovator_effect'):
+            df = pd.read_csv(f'{BASE}/gini_reanalysis.csv')
+        else:
+            df = pd.read_csv(f'{BASE}/gini_more_scenarios.csv')
+        gs = df[df['scenario'] == s]['gini'].values
+        gini_vals.append(np.mean(gs))
+        gini_stds.append(np.std(gs))
+    print(f'  v15 gini (CSV-derived): '
+          f'{[round(v, 4) for v in gini_vals]} std {[round(v, 4) for v in gini_stds]}')
     ymin = max(0, min(gini_vals) - 0.02)
     ymax = max(gini_vals) + 0.02
     bars = ax.bar(x, gini_vals, yerr=gini_stds, capsize=6,
@@ -648,7 +645,7 @@ if all_data:
                   edgecolor='gray', linewidth=0.5, alpha=0.85)
     bars[-1].set_edgecolor(C['dark']); bars[-1].set_linewidth(3)
     pct = (gini_vals[-1] - gini_vals[0]) / gini_vals[0] * 100
-    ax.annotate(f'+{pct:.0f}% vs Mixed\n(p=0.008)', xy=(4, gini_vals[-1] + gini_stds[-1] + 0.001),
+    ax.annotate(f'+{pct:.0f}% vs Mixed\n(p=0.047)', xy=(4, gini_vals[-1] + gini_stds[-1] + 0.001),
                 ha='center', fontsize=9, fontweight='bold', color=C['red'])
     ax.set_xticks(x); ax.set_xticklabels(gini_labels, fontsize=9)
     ax.set_ylabel('Gini Coefficient')
@@ -665,8 +662,27 @@ if all_data:
     freq_labels = ['All Selfish\n(All)', 'All Prosocial\n(All)', 'Mixed\nProsocial',
                    'Mixed\nSelfish', 'VA\nProsocial', 'VA\nSelfish',
                    'Innovator\nExplorers', 'Innovator\nSelfish']
-    freq_vals = [13.04, 12.83, 13.92, 13.08, 12.60, 12.64, 13.33, 13.13]
-    freq_stds = [0.5, 0.6, 0.7, 0.5, 0.6, 0.7, 0.8, 0.5]
+    qtab_dir = f'{BASE}/analysis_support/qtab'
+    freq_groups = [
+        ('all_selfish', range(10)),
+        ('all_prosocial', range(10)),
+        ('mixed', range(0, 5)),
+        ('mixed', range(5, 10)),
+        ('varied_altruism', range(0, 4)),
+        ('varied_altruism', range(4, 10)),
+        ('innovator_effect', range(0, 5)),
+        ('innovator_effect', range(5, 10)),
+    ]
+    freq_vals, freq_stds = [], []
+    for sc, idx in freq_groups:
+        q = np.load(f'{qtab_dir}/{sc}_q.npy')
+        best = np.argmax(q, axis=4)
+        freqs = [np.sum(best[s, a] >= 1) / best[s, a].size
+                 for s in range(q.shape[0]) for a in idx]
+        freq_vals.append(np.mean(freqs) * 100)
+        freq_stds.append(np.std(freqs) * 100)
+    print(f'  v16 sharing freq (qtab-derived): '
+          f'{[round(v, 2) for v in freq_vals]} std {[round(v, 2) for v in freq_stds]}')
     freq_colors = [C['red'], C['green'], C['green'], C['red'],
                    C['green'], C['red'], C['purple'], C['red']]
     x = np.arange(8)
@@ -677,25 +693,27 @@ if all_data:
     ax.set_ylabel('Sharing Frequency (%)')
     ax.set_title("Proportion of Q-Table States Where\nGreedy Action is to Share",
                  fontweight='bold', fontsize=11)
-    ax.set_ylim(10, 16); ax.legend(fontsize=9, framealpha=0.9); ax.grid(axis='y', alpha=0.3)
+    ax.set_ylim(8, 18); ax.legend(fontsize=9, framealpha=0.9); ax.grid(axis='y', alpha=0.3)
     for bar, v in zip(bars, freq_vals):
         ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 0.3,
                 f'{v:.2f}%', ha='center', fontsize=7.5, fontweight='bold')
     fig.tight_layout(); fig.savefig(f'{OUT}/v16_sharing_frequency.png', dpi=150, bbox_inches='tight')
     plt.close(fig)
 
-    # Fig 4-6: Scarcity Sensitivity
+    # Fig 4-6: Scarcity Sensitivity (data from cloud_sensitivity_reanalysis.csv)
     fig, ax = plt.subplots(figsize=(8, 5))
-    cp = [15, 25, 35]
-    pm = [0.9345, 0.8631, 0.8125]
-    sm = [0.9051, 0.8373, 0.7820]
-    ps = [0.0063, 0.0221, 0.0271]
-    ss = [0.0086, 0.0245, 0.0142]
+    cs = pd.read_csv(f'{BASE}/cloud_sensitivity_reanalysis.csv')
+    cp = sorted(cs['cloud_prob'].unique())
+    pm = [cs[cs['cloud_prob'] == c]['prosocial_comfort'].mean() for c in cp]
+    sm = [cs[cs['cloud_prob'] == c]['selfish_comfort'].mean() for c in cp]
+    ps = [cs[cs['cloud_prob'] == c]['prosocial_comfort'].std(ddof=0) for c in cp]
+    ss = [cs[cs['cloud_prob'] == c]['selfish_comfort'].std(ddof=0) for c in cp]
     ax.errorbar(cp, pm, yerr=ps, label='Prosocial Agents', color=C['blue'],
                 lw=2.5, marker='o', markersize=8, capsize=6)
     ax.errorbar(cp, sm, yerr=ss, label='Selfish Agents', color=C['red'],
                 lw=2.5, marker='s', markersize=8, capsize=6)
-    ax.annotate('Gap = 2.95 pp\n(p=0.0034)', xy=(15, 0.92), fontsize=9, fontweight='bold',
+    gap = (pm[0] - sm[0]) * 100
+    ax.annotate(f'Gap = {gap:.2f} pp\n(p=0.0011)', xy=(15, 0.92), fontsize=9, fontweight='bold',
                 color=C['dark'], bbox=dict(facecolor='white', edgecolor='#CCC', boxstyle='round'))
     ax.set_xlabel('Cloudy Day Probability (%)'); ax.set_ylabel('Mean Comfort (Last 1,000 Episodes)')
     ax.set_title('Prosocial vs. Selfish Comfort\nas a Function of Cloudy Day Probability',
