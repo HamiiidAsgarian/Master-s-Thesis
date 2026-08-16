@@ -3,6 +3,7 @@
   "method": "each day solved independently by NSGA-II (no learning across days); decision vector x in {0,1,2}^(24h x 10 houses) -> share fraction [0%, 50%, 100%]",
   "objectives": "F1 = mean comfort (max), F2 = std of comfort (min)",
   "selection": "argmax(F1 - F2)",
+  "caveat": "on sunny days (wf=1.0, ~85%) comfort objectives saturate (comfort=1.0, std=0.0 for every action vector) -> NSGA-II has no selective pressure and argmax(F1-F2) returns an arbitrary but reproducible policy; on cloudy days (wf=0.5) NSGA-II genuinely optimizes. See weather_split_metrics.csv.",
   "pymoo_algorithm": "NSGA2",
   "pop_size": 60,
   "generations": 40,

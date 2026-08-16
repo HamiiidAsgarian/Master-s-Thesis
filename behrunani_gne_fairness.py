@@ -218,30 +218,34 @@ def run_behrunani_seed(seed, days=500, lam=LAMBDA, verbose=True):
 
 # ========== PLOTTING ==========
 def plot_seed(history, title, save_path):
-    days = history['days']
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+    from thesis_plot_style import C, save_fig, style_data_axes, style_legend
+
+    fig, axes = plt.subplots(1, 3, figsize=(15, 4.2))
 
     ax = axes[0]
-    ax.plot(history['comfort'], label='Mean Comfort', alpha=0.8)
-    ax.plot(history['fairness'], label="Jain's Fairness", alpha=0.8)
-    ax.set_xlabel('Day'); ax.set_ylabel('Score'); ax.set_ylim([0, 1.05])
-    ax.set_title('Community Performance'); ax.legend(fontsize=8); ax.grid(alpha=0.3)
+    ax.plot(history['comfort'], label='Mean Comfort', color=C['blue'], lw=2, alpha=0.9)
+    ax.plot(history['fairness'], label="Jain's Fairness", color=C['green'], lw=2, alpha=0.9)
+    ax.set_xlabel('Day'); ax.set_ylabel('Score'); ax.set_ylim(0, 1.05)
+    ax.set_title('Community Performance', fontweight='bold', fontsize=10)
+    leg = ax.legend(loc='lower right'); style_legend(leg); style_data_axes(ax)
 
     ax = axes[1]
-    ax.plot(history['waste'], color='tab:blue', alpha=0.7, label='Waste (kWh)')
-    ax.plot(history['share'], color='tab:green', alpha=0.7, label='Mean share frac')
+    ax.plot(history['waste'], color=C['blue'], lw=2, alpha=0.85, label='Waste (kWh)')
+    ax.plot(history['share'], color=C['green'], lw=2, alpha=0.85, label='Mean share frac')
     ax.set_xlabel('Day')
-    ax.set_title('Daily Waste & Chosen Sharing'); ax.legend(fontsize=8); ax.grid(alpha=0.3)
+    ax.set_title('Daily Waste & Chosen Sharing', fontweight='bold', fontsize=10)
+    leg = ax.legend(loc='upper right'); style_legend(leg); style_data_axes(ax)
 
     ax = axes[2]
-    ax.plot(history['iters'], color='tab:red', alpha=0.7, label='Mean iterations')
-    ax.plot(history['teeth'], color='tab:purple', alpha=0.7, label='Donor-hours w/ signal')
+    ax.plot(history['iters'], color=C['red'], lw=2, alpha=0.85, label='Mean iterations')
+    ax.plot(history['teeth'], color=C['purple'], lw=2, alpha=0.85, label='Donor-hours w/ signal')
     ax.set_xlabel('Day')
-    ax.set_title('Game Convergence & Signal'); ax.legend(fontsize=8); ax.grid(alpha=0.3)
+    ax.set_title('Game Convergence & Signal', fontweight='bold', fontsize=10)
+    leg = ax.legend(loc='upper right'); style_legend(leg); style_data_axes(ax)
 
     fig.suptitle(title, fontsize=13, fontweight='bold')
     fig.tight_layout()
-    fig.savefig(save_path, dpi=150, bbox_inches='tight')
+    save_fig(fig, save_path)
     plt.close(fig)
 
 

@@ -187,35 +187,40 @@ class QLAgent:
 
 # ========== PLOTTING ==========
 def plot_results(history, title="Simulation Results"):
+    from thesis_plot_style import C, style_data_axes, style_legend
     fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 
     ax = axes[0, 0]
-    ax.plot(history['comfort_mean'], label='Mean Comfort', alpha=0.8)
-    ax.plot(history['fairness'], label="Jain's Fairness", alpha=0.8)
+    ax.plot(history['comfort_mean'], label='Mean Comfort', color=C['blue'], lw=2, alpha=0.9)
+    ax.plot(history['fairness'], label="Jain's Fairness", color=C['green'], lw=2, alpha=0.9)
     ax.set_xlabel('Episode'); ax.set_ylabel('Score')
-    ax.set_title('Community Performance'); ax.legend(); ax.set_ylim([0,1.05]); ax.grid(alpha=0.3)
+    ax.set_title('Community Performance', fontweight='bold', fontsize=11)
+    leg = ax.legend(loc='lower right'); style_legend(leg); ax.set_ylim([0, 1.05]); style_data_axes(ax)
 
     ax = axes[0, 1]
     blackout = np.array(history['blackout_days'])
     window = 500
     if len(blackout) > window:
         rolling = np.convolve(blackout, np.ones(window)/window, mode='valid')
-        ax.plot(range(window-1, len(blackout)), rolling, color='red')
+        ax.plot(range(window-1, len(blackout)), rolling, color=C['red'], lw=2)
     else:
-        ax.plot(blackout, color='red')
+        ax.plot(blackout, color=C['red'], lw=2)
     ax.set_xlabel('Episode'); ax.set_ylabel('Frequency')
-    ax.set_title(f'Blackout Rate ({window}-ep moving avg)'); ax.set_ylim([0,1.05]); ax.grid(alpha=0.3)
+    ax.set_title(f'Blackout Rate ({window}-ep moving avg)', fontweight='bold', fontsize=11)
+    ax.set_ylim([0, 1.05]); style_data_axes(ax)
 
     ax = axes[1, 0]
     n_agents = len(history['agent_comforts'])
     final_comf = [np.mean(history['agent_comforts'][i][-1000:]) for i in range(n_agents)]
-    colors = ['coral' if i >= n_agents//2 else 'skyblue' for i in range(n_agents)]
-    ax.bar(range(n_agents), final_comf, color=colors)
+    colors = [C['red'] if i >= n_agents//2 else C['blue'] for i in range(n_agents)]
+    ax.bar(range(n_agents), final_comf, color=colors, alpha=0.85, edgecolor=C['grey'], linewidth=0.5)
     ax.set_xlabel('Agent ID'); ax.set_ylabel('Mean Comfort (last 1000 ep)')
-    ax.set_title('Final Comfort per Agent'); ax.set_ylim([0,1]); ax.grid(axis='y', alpha=0.3)
+    ax.set_title('Final Comfort per Agent', fontweight='bold', fontsize=11)
+    ax.set_ylim([0, 1]); style_data_axes(ax)
     from matplotlib.patches import Patch
-    ax.legend(handles=[Patch(facecolor='skyblue', label='Prosocial'),
-                       Patch(facecolor='coral', label='Selfish')])
+    leg = ax.legend(handles=[Patch(facecolor=C['blue'], label='Prosocial'),
+                             Patch(facecolor=C['red'], label='Selfish')], loc='lower right')
+    style_legend(leg)
 
     ax = axes[1, 1]
     for i in range(n_agents):
@@ -223,9 +228,11 @@ def plot_results(history, title="Simulation Results"):
         if len(rewards) > 200:
             smoothed = np.convolve(rewards, np.ones(200)/200, mode='valid')
             label = f"Agent {i} ({'Prosocial' if i<n_agents//2 else 'Selfish'})"
-            ax.plot(smoothed, label=label, alpha=0.7)
+            color = C['blue'] if i < n_agents//2 else C['red']
+            ax.plot(smoothed, label=label, color=color, alpha=0.7)
     ax.set_xlabel('Episode'); ax.set_ylabel('Smoothed Reward')
-    ax.set_title('Agent Rewards (200‑ep smoothing)'); ax.legend(fontsize=8); ax.grid(alpha=0.3)
+    ax.set_title('Agent Rewards (200‑ep smoothing)', fontweight='bold', fontsize=11)
+    leg = ax.legend(fontsize=8); style_legend(leg); style_data_axes(ax)
 
     fig.suptitle(title, fontsize=14, fontweight='bold')
     plt.tight_layout()

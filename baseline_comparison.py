@@ -217,6 +217,7 @@ def main():
     print("\n".join(lines))
 
     # ========== PLOT ==========
+    from thesis_plot_style import C, save_fig, style_data_axes, style_bars, label_bars
     order = [MAIN_LABELS['mixed'], CONTROL[1]] + \
             [lab for _, lab in BASELINES] + \
             [MAIN_LABELS[s] for s in ['all_selfish', 'all_prosocial',
@@ -231,24 +232,22 @@ def main():
                                     'Energy waste')]:
         means = [df[df['method'] == m][metric].mean() for m in order]
         stds = [df[df['method'] == m][metric].std() for m in order]
-        colors = ['#2ecc71' if 'baseline' in m or m == CONTROL[1] else '#3498db'
+        colors = [C['green'] if 'baseline' in m or m == CONTROL[1] else C['blue']
                   for m in order]
         bars = ax.bar(range(len(order)), means, yerr=stds, capsize=5,
-                      color=colors, alpha=0.85, edgecolor='gray', linewidth=0.5)
+                      color=colors, alpha=0.85)
+        style_bars(bars, linewidth=0.5)
         ax.set_xticks(range(len(order)))
         ax.set_xticklabels([m.split(' ')[-1] for m in order], rotation=30,
                            ha='right', fontsize=8)
         ax.set_ylabel(ylab)
         ax.set_title(titl, fontweight='bold')
-        ax.grid(axis='y', alpha=0.3)
-        for bar, val in zip(bars, means):
-            ax.text(bar.get_x() + bar.get_width() / 2, val + (bar.get_height() or 0) + 0.01,
-                    f'{val:.3f}', ha='center', fontsize=7)
+        style_data_axes(ax)
+        label_bars(ax, bars, means, fmt='{:.3f}', offset=0.01, fontsize=7, errs=stds)
     fig.suptitle('Baselines + control vs main OCEAN-MARL scenarios (mean±std, 5 seeds)',
                  fontweight='bold')
     fig.tight_layout()
-    fig.savefig(os.path.join(BASE, 'baseline_comparison.png'), dpi=150,
-                bbox_inches='tight')
+    save_fig(fig, os.path.join(BASE, 'baseline_comparison.png'))
     plt.close(fig)
 
     print(f"\nSaved: results/baseline_comparison.csv / .txt / .png")

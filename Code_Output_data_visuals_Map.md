@@ -1,4 +1,4 @@
-# Code → Output → Data → Visuals Map (OCEAN-MARL Thesis Project)
+uch# Code → Output → Data → Visuals Map (OCEAN-MARL Thesis Project)
 
 > **Purpose of this file:** a structural map of every Python script in this repository.
 > For each script it documents: (1) what it does for the research, (2) what data files
@@ -170,12 +170,12 @@ All four share an **identical `final_metrics.csv` schema** for drop-in ANOVA com
 (prosocial/selfish both = overall mean — agents are role-free/neutral). All write
 `config.json` + a per-seed `results_plot.png`. None read any CSV.
 
-| File | Baseline (paper) | Method | Output dirs | Extra files | results_plot.png |
-|---|---|---|---|---|---|
-| `charbonnier_marginal_iql.py` | Charbonnier 2022 | role-free **marginal Independent Q-Learning**, end-of-day counterfactual reward `F_end − F_end^default`, hysteretic update | `results/baseline_charbonnier/seed_{s}/` + `results/baseline_charbonnier_validation/` (--validation) | `validation_report.txt` | figsize (15,4) 1×3: Community Performance / Blackout Rate (500-ep) / Mean Agent Reward (200-ep); suptitle `Baseline Charbonnier Marginal IQL (seed {s})` |
-| `may_huang_ppo.py` | May & Huang 2023 | **independent PPO** per house (2×32 MLP, GAE-λ, clip ε=0.2, 4 epochs, entropy 0.01); rewards `cf` or `cf_waste`; `--sanity` mode | `results/baseline_may_huang/seed_{s}/` (+`_sanity`, `_waste_sensitivity`) | `sanity_report.txt` | (13,9) 2×2: Community Performance / Blackout Rate / PPO Losses / Entropy & KL (dashed ln(3) ref) |
-| `kusatake_evolutionary_moo.py` | Kusatake 2023 | **NSGA-II (pymoo)** per day, 240-var action plan, obj F1=mean comfort, F2=std comfort; sunny-day saturation caveat | `results/baseline_kusatake/seed_{s}/` + `_timing` | `weather_split_metrics.csv` (cols `weather, days, comfort, fairness, F, blackout_rate, waste, share_frac`), `timing_report.txt` | (15,4) 1×3: Community Performance / Daily Waste & Blackout / Chosen Sharing & Front Size |
-| `behrunani_gne_fairness.py` | Behrunani 2023 | **GNE** per-hour best-response game (projected gradient, central finite-diff), `L_i=unmet+wasted`, penalty `λ(ΔL_i−meanΔL)²`; `--sanity` λ=1 vs λ=0 | `results/baseline_behrunani/seed_{s}/` (+`_sanity`, `_lambda5_sensitivity`) | `sanity_report.txt` | (15,4) 1×3: Community Performance / Daily Waste & Chosen Sharing / Game Convergence & Signal |
+| File                           | Baseline (paper) | Method                                                                                                                                              | Output dirs                                                                                          | Extra files                                                                                                                     | results_plot.png                                                                                                                                         |
+| ------------------------------ | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `charbonnier_marginal_iql.py`  | Charbonnier 2022 | role-free **marginal Independent Q-Learning**, end-of-day counterfactual reward `F_end − F_end^default`, hysteretic update                          | `results/baseline_charbonnier/seed_{s}/` + `results/baseline_charbonnier_validation/` (--validation) | `validation_report.txt`                                                                                                         | figsize (15,4) 1×3: Community Performance / Blackout Rate (500-ep) / Mean Agent Reward (200-ep); suptitle `Baseline Charbonnier Marginal IQL (seed {s})` |
+| `may_huang_ppo.py`             | May & Huang 2023 | **independent PPO** per house (2×32 MLP, GAE-λ, clip ε=0.2, 4 epochs, entropy 0.01); rewards `cf` or `cf_waste`; `--sanity` mode                    | `results/baseline_may_huang/seed_{s}/` (+`_sanity`, `_waste_sensitivity`)                            | `sanity_report.txt`                                                                                                             | (13,9) 2×2: Community Performance / Blackout Rate / PPO Losses / Entropy & KL (dashed ln(3) ref)                                                         |
+| `kusatake_evolutionary_moo.py` | Kusatake 2023    | **NSGA-II (pymoo)** per day, 240-var action plan, obj F1=mean comfort, F2=std comfort; sunny-day saturation caveat                                  | `results/baseline_kusatake/seed_{s}/` + `_timing`                                                    | `weather_split_metrics.csv` (cols `weather, days, comfort, fairness, F, blackout_rate, waste, share_frac`), `timing_report.txt` | (15,4) 1×3: Community Performance / Daily Waste & Blackout / Chosen Sharing & Front Size                                                                 |
+| `behrunani_gne_fairness.py`    | Behrunani 2023   | **GNE** per-hour best-response game (projected gradient, central finite-diff), `L_i=unmet+wasted`, penalty `λ(ΔL_i−meanΔL)²`; `--sanity` λ=1 vs λ=0 | `results/baseline_behrunani/seed_{s}/` (+`_sanity`, `_lambda5_sensitivity`)                          | `sanity_report.txt`                                                                                                             | (15,4) 1×3: Community Performance / Daily Waste & Chosen Sharing / Game Convergence & Signal                                                             |
 
 ---
 
@@ -252,26 +252,26 @@ The single most important file for visuals. It re-renders **every** thesis figur
 
 ### 6.2 Per-figure table (vNN → thesis figure → style family → data source)
 
-| File | Thesis fig | Type | Content / title | Data source |
-|---|---|---|---|---|
-| `v01_ocean_to_rl_mapping.png` | شکل ۳-۵ | schematic (Persian) | OCEAN traits → RL params (Openness→ε_min, Agreeableness→w_fair; others held at mean) | none |
-| `v02_ring_topology.png` | شکل ۳-۲ | schematic (Persian) | 10-house ring, 2 neighbors each | none |
-| `v03_two_phase_sharing.png` | شکل ۳-۶ | schematic (Persian) | Phase-1 local / Phase-2 sharing flow | none |
-| `v04_demand_profiles.png` | شکل ۳-۴ | data (line) | "The Four Hourly Demand Profile Types" (Morning/Evening/Flat/Night Owl) | in-code profile lists |
-| `v05_solar_curve.png` | شکل ۳-۳ | data (line/fill) | "Half-Sine Solar Irradiance Model", Eq. 3-1, clear vs cloudy | analytic half-sine |
-| `v06_community_compositions.png` | شکل ۳-۷ | schematic (Persian) | 5 scenario compositions (color dots) | scenario lists |
-| `v07_reciprocity_cycle.png` | شکل ۴-۳ | schematic (Persian) | 4-node reciprocity cycle + virtuous/vicious labels | none |
-| `v08_innovator_effect.png` | شکل ۴-۹ | schematic (Persian) | Innovator mechanism = **unpredictability** (not reduced sharing); no numbers | none |
-| `v09_tragedy_commons.png` | شکل ۱-۱ | schematic (Persian) | Tragedy-of-commons ↔ energy-sharing analogy (Hardin 1968) | none |
-| `v10_sota_comparison.png` | شکل ۴-۱۴ | data (grouped bars) | "Comparison with State-of-the-Art Energy MARL Studies" (Comfort + Jain) | `baseline_comparison.csv` (real 5-seed data; rebuilt 2026-08-16) |
-| `v11_lorenz_curve.png` | شکل ۴-۴ | data (lines+fill) | "Lorenz Curves — Mixed vs. Innovator Effect" | `analysis_support/house_comfort/lorenz_curves.npy` |
-| `v12_system_architecture.png` | شکل ۳-۱ | schematic (Persian) | 10-block simulation loop (env + learning columns, h<23 loop, next-episode loop) | none |
-| `v13_community_metrics.png` | شکل ۴-۱ | data (2×2 bars) | Community-Level Metrics (Comfort, Jain, Blackout %, Waste) across 5 scenarios | seed `final_metrics.csv` |
-| `v14_agent_comfort_split.png` | شکل ۴-۲ | data (paired bars) | Prosocial vs Selfish comfort in mixed-type communities | seed `final_metrics.csv` |
-| `v15_gini_comparison.png` | شکل ۴-۵ | data (bars) | "Gini Coefficient by Scenario" (+p annotation) | `gini_reanalysis.csv` + `gini_more_scenarios.csv` |
-| `v16_sharing_frequency.png` | شکل ۴-۶ | data (bars) | Proportion of Q-table states where greedy=share (8 groups, mean ~13.1%) | `analysis_support/qtab/*_q.npy` |
-| `v18_scarcity_sensitivity.png` | شکل ۴-۸ | data (errorbar) | Prosocial vs Selfish comfort vs cloudy-day probability | `cloud_sensitivity_reanalysis.csv` |
-| `v2_1_conceptual_framework.png` | **شکل ۲-۱ (NEW)** | schematic (Persian) | 3-level personality-adjusted coordination model | none |
+| File                             | Thesis fig        | Type                | Content / title                                                                      | Data source                                                      |
+| -------------------------------- | ----------------- | ------------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| `v01_ocean_to_rl_mapping.png`    | شکل ۳-۵           | schematic (Persian) | OCEAN traits → RL params (Openness→ε_min, Agreeableness→w_fair; others held at mean) | none                                                             |
+| `v02_ring_topology.png`          | شکل ۳-۲           | schematic (Persian) | 10-house ring, 2 neighbors each                                                      | none                                                             |
+| `v03_two_phase_sharing.png`      | شکل ۳-۶           | schematic (Persian) | Phase-1 local / Phase-2 sharing flow                                                 | none                                                             |
+| `v04_demand_profiles.png`        | شکل ۳-۴           | data (line)         | "The Four Hourly Demand Profile Types" (Morning/Evening/Flat/Night Owl)              | in-code profile lists                                            |
+| `v05_solar_curve.png`            | شکل ۳-۳           | data (line/fill)    | "Half-Sine Solar Irradiance Model", Eq. 3-1, clear vs cloudy                         | analytic half-sine                                               |
+| `v06_community_compositions.png` | شکل ۳-۷           | schematic (Persian) | 5 scenario compositions (color dots)                                                 | scenario lists                                                   |
+| `v07_reciprocity_cycle.png`      | شکل ۴-۳           | schematic (Persian) | 4-node reciprocity cycle + virtuous/vicious labels                                   | none                                                             |
+| `v08_innovator_effect.png`       | شکل ۴-۹           | schematic (Persian) | Innovator mechanism = **unpredictability** (not reduced sharing); no numbers         | none                                                             |
+| `v09_tragedy_commons.png`        | شکل ۱-۱           | schematic (Persian) | Tragedy-of-commons ↔ energy-sharing analogy (Hardin 1968)                            | none                                                             |
+| `v10_sota_comparison.png`        | شکل ۴-۱۴          | data (grouped bars) | "Comparison with State-of-the-Art Energy MARL Studies" (Comfort + Jain)              | `baseline_comparison.csv` (real 5-seed data; rebuilt 2026-08-16) |
+| `v11_lorenz_curve.png`           | شکل ۴-۴           | data (lines+fill)   | "Lorenz Curves — Mixed vs. Innovator Effect"                                         | `analysis_support/house_comfort/lorenz_curves.npy`               |
+| `v12_system_architecture.png`    | شکل ۳-۱           | schematic (Persian) | 10-block simulation loop (env + learning columns, h<23 loop, next-episode loop)      | none                                                             |
+| `v13_community_metrics.png`      | شکل ۴-۱           | data (2×2 bars)     | Community-Level Metrics (Comfort, Jain, Blackout %, Waste) across 5 scenarios        | seed `final_metrics.csv`                                         |
+| `v14_agent_comfort_split.png`    | شکل ۴-۲           | data (paired bars)  | Prosocial vs Selfish comfort in mixed-type communities                               | seed `final_metrics.csv`                                         |
+| `v15_gini_comparison.png`        | شکل ۴-۵           | data (bars)         | "Gini Coefficient by Scenario" (+p annotation)                                       | `gini_reanalysis.csv` + `gini_more_scenarios.csv`                |
+| `v16_sharing_frequency.png`      | شکل ۴-۶           | data (bars)         | Proportion of Q-table states where greedy=share (8 groups, mean ~13.1%)              | `analysis_support/qtab/*_q.npy`                                  |
+| `v18_scarcity_sensitivity.png`   | شکل ۴-۸           | data (errorbar)     | Prosocial vs Selfish comfort vs cloudy-day probability                               | `cloud_sensitivity_reanalysis.csv`                               |
+| `v2_1_conceptual_framework.png`  | **شکل ۲-۱ (NEW)** | schematic (Persian) | 3-level personality-adjusted coordination model                                      | none                                                             |
 
 > Figure numbering above is taken verbatim from the CURRENT `فهرست اشکال` in
 > `0-Active Doc/Thesis_v9-3.md` (lines ~305–327). The Q-table heatmap maps to **شکل ۴-۷**
@@ -296,14 +296,14 @@ Main: `personality_mix, num_houses, episodes, battery_cap, solar_max, seed`.
 Endofday: `scenario, algorithm, objective, personality_mix, reward, update, num_houses, episodes, battery_cap, solar_max, weather_cloud_prob, seed`.
 
 ### 7.3 Aggregated CSVs (inputs to `generate_all_Visuals2.py`)
-| File | Columns | Produced by |
-|---|---|---|
-| `results/gini_reanalysis.csv` | scenario, seed, gini | gini_cloud_reanalysis.py |
-| `results/gini_more_scenarios.csv` | scenario, seed, gini | gini_more_scenarios.py |
-| `results/cloud_sensitivity_reanalysis.csv` | cloud_prob, seed, prosocial_comfort, selfish_comfort | gini_cloud_reanalysis.py |
-| `results/baseline_comparison.csv` | method, seed, comfort, fairness, F, blackout_rate, waste | baseline_comparison.py |
-| `results/analysis_support/wfair_waste_scatter.csv` | scenario, seed, wbar_fair, waste_reduction_kwh | support_analysis.py |
-| `results/battery_sensitivity/summary.csv` | battery_cap, run, comfort, fairness, F, blackout_rate, waste | battery_sensitivity.py |
+| File                                                         | Columns                                                               | Produced by                  |
+| ------------------------------------------------------------ | --------------------------------------------------------------------- | ---------------------------- |
+| `results/gini_reanalysis.csv`                                | scenario, seed, gini                                                  | gini_cloud_reanalysis.py     |
+| `results/gini_more_scenarios.csv`                            | scenario, seed, gini                                                  | gini_more_scenarios.py       |
+| `results/cloud_sensitivity_reanalysis.csv`                   | cloud_prob, seed, prosocial_comfort, selfish_comfort                  | gini_cloud_reanalysis.py     |
+| `results/baseline_comparison.csv`                            | method, seed, comfort, fairness, F, blackout_rate, waste              | baseline_comparison.py       |
+| `results/analysis_support/wfair_waste_scatter.csv`           | scenario, seed, wbar_fair, waste_reduction_kwh                        | support_analysis.py          |
+| `results/battery_sensitivity/summary.csv`                    | battery_cap, run, comfort, fairness, F, blackout_rate, waste          | battery_sensitivity.py       |
 | `results/baseline_kusatake/seed_*/weather_split_metrics.csv` | weather, days, comfort, fairness, F, blackout_rate, waste, share_frac | kusatake_evolutionary_moo.py |
 
 ### 7.4 .npy support arrays
@@ -367,24 +367,24 @@ There are effectively **three visual generations**, with inconsistent styling:
 
 ## 9. Quick reference — script → thesis figure / output
 
-| Script | Writes (data) | Writes (visuals) | Thesis fig(s) | Inputs |
-|---|---|---|---|---|
-| offgrid_marl.py | final_metrics.csv, config.json | results_plot.png (diag) | (feeds all) | — |
-| run_experiments.py.py | (via offgrid_marl) | — | — | — |
-| analyze_results.py | — | community_metrics.png, agent_type_comfort.png | ۴-۱, ۴-۲ (legacy) | seed CSVs |
-| final_analysis.py | — | gini_comparison.png, sharing_frequency.png, sensitivity_cloud.png | ۴-۵, ۴-۶, ۴-۸ (legacy) | re-runs sims |
-| advanced_analysis.py | statistical_tests.txt | qtable_heatmaps.png | ۴-۷ (v17_* variant is a non-thesis working artifact) | seed CSVs |
-| support_analysis.py | batt05 CSVs, qtab/*.npy, wfair_waste_scatter.csv | — | (Discussion) | seed CSVs |
-| charbonnier_marginal_iql.py | baseline_charbonnier seed CSVs | results_plot.png | (Ch.4 validation) | — |
-| may_huang_ppo.py | baseline_may_huang seed CSVs | results_plot.png | (Ch.4 validation) | — |
-| kusatake_evolutionary_moo.py | baseline_kusatake seed CSVs + weather_split | results_plot.png | (Ch.4 validation) | — |
-| behrunani_gne_fairness.py | baseline_behrunani seed CSVs | results_plot.png | (Ch.4 validation) | — |
-| ocean_marl_endofday.py | *_endofday CSVs, sanity reports | results_plot.png | (2×2 isolation) | main/control/Charb CSVs |
-| battery_sensitivity.py | battery_sensitivity/*.csv | — | (robustness) | batt mixed CSVs |
-| baseline_comparison.py | baseline_comparison.csv/.txt | baseline_comparison.png | (Ch.4 summary) | all seed CSVs + sanity reports |
-| gini_cloud_reanalysis.py | gini_reanalysis.csv, cloud_sensitivity_reanalysis.csv | — | feeds v15/v18 | seed CSVs (validate) |
-| gini_more_scenarios.py | gini_more_scenarios.csv | — | feeds v15 | seed CSVs (validate) |
-| **generate_all_Visuals2.py** | — | **figures/v01…v18, v2_1** | **ALL thesis figures** | gini/cloud CSVs, qtab/*.npy, lorenz_curves.npy, seed CSVs |
+| Script                       | Writes (data)                                         | Writes (visuals)                                                  | Thesis fig(s)                                        | Inputs                                                    |
+| ---------------------------- | ----------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------------------- |
+| offgrid_marl.py              | final_metrics.csv, config.json                        | results_plot.png (diag)                                           | (feeds all)                                          | —                                                         |
+| run_experiments.py.py        | (via offgrid_marl)                                    | —                                                                 | —                                                    | —                                                         |
+| analyze_results.py           | —                                                     | community_metrics.png, agent_type_comfort.png                     | ۴-۱, ۴-۲ (legacy)                                    | seed CSVs                                                 |
+| final_analysis.py            | —                                                     | gini_comparison.png, sharing_frequency.png, sensitivity_cloud.png | ۴-۵, ۴-۶, ۴-۸ (legacy)                               | re-runs sims                                              |
+| advanced_analysis.py         | statistical_tests.txt                                 | qtable_heatmaps.png                                               | ۴-۷ (v17_* variant is a non-thesis working artifact) | seed CSVs                                                 |
+| support_analysis.py          | batt05 CSVs, qtab/*.npy, wfair_waste_scatter.csv      | —                                                                 | (Discussion)                                         | seed CSVs                                                 |
+| charbonnier_marginal_iql.py  | baseline_charbonnier seed CSVs                        | results_plot.png                                                  | (Ch.4 validation)                                    | —                                                         |
+| may_huang_ppo.py             | baseline_may_huang seed CSVs                          | results_plot.png                                                  | (Ch.4 validation)                                    | —                                                         |
+| kusatake_evolutionary_moo.py | baseline_kusatake seed CSVs + weather_split           | results_plot.png                                                  | (Ch.4 validation)                                    | —                                                         |
+| behrunani_gne_fairness.py    | baseline_behrunani seed CSVs                          | results_plot.png                                                  | (Ch.4 validation)                                    | —                                                         |
+| ocean_marl_endofday.py       | *_endofday CSVs, sanity reports                       | results_plot.png                                                  | (2×2 isolation)                                      | main/control/Charb CSVs                                   |
+| battery_sensitivity.py       | battery_sensitivity/*.csv                             | —                                                                 | (robustness)                                         | batt mixed CSVs                                           |
+| baseline_comparison.py       | baseline_comparison.csv/.txt                          | baseline_comparison.png                                           | (Ch.4 summary)                                       | all seed CSVs + sanity reports                            |
+| gini_cloud_reanalysis.py     | gini_reanalysis.csv, cloud_sensitivity_reanalysis.csv | —                                                                 | feeds v15/v18                                        | seed CSVs (validate)                                      |
+| gini_more_scenarios.py       | gini_more_scenarios.csv                               | —                                                                 | feeds v15                                            | seed CSVs (validate)                                      |
+| **generate_all_Visuals2.py** | —                                                     | **figures/v01…v18, v2_1**                                         | **ALL thesis figures**                               | gini/cloud CSVs, qtab/*.npy, lorenz_curves.npy, seed CSVs |
 
 ---
 

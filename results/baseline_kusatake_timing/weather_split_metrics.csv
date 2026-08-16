@@ -1,0 +1,3 @@
+weather,days,comfort,fairness,F,blackout_rate,waste,share_frac
+sunny,9,1.0,1.0,2.0,0.0,4.778015303815157,0.5099537037037036
+cloudy,1,0.6,0.6,1.2,1.0,0.0,0.51875

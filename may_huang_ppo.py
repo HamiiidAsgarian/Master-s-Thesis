@@ -285,41 +285,47 @@ def run_ppo_simulation(num_houses=10, episodes=8000, battery_cap=7.0,
 
 # ========== PLOTTING ==========
 def plot_learning(history, title, save_path):
+    from thesis_plot_style import C, save_fig, style_data_axes, style_legend
+
     fig, axes = plt.subplots(2, 2, figsize=(13, 9))
 
     ax = axes[0, 0]
-    ax.plot(history['comfort_mean'], label='Mean Comfort', alpha=0.8)
-    ax.plot(history['fairness'], label="Jain's Fairness", alpha=0.8)
-    ax.set_xlabel('Episode'); ax.set_ylabel('Score'); ax.set_ylim([0, 1.05])
-    ax.set_title('Community Performance'); ax.legend(fontsize=8); ax.grid(alpha=0.3)
+    ax.plot(history['comfort_mean'], label='Mean Comfort', color=C['blue'], lw=2, alpha=0.9)
+    ax.plot(history['fairness'], label="Jain's Fairness", color=C['green'], lw=2, alpha=0.9)
+    ax.set_xlabel('Episode'); ax.set_ylabel('Score'); ax.set_ylim(0, 1.05)
+    ax.set_title('Community Performance', fontweight='bold', fontsize=10)
+    leg = ax.legend(loc='lower right'); style_legend(leg); style_data_axes(ax)
 
     ax = axes[0, 1]
     blackout = np.array(history['blackout_days'])
     window = 500
     if len(blackout) > window:
         rolling = np.convolve(blackout, np.ones(window) / window, mode='valid')
-        ax.plot(range(window - 1, len(blackout)), rolling, color='red')
+        ax.plot(range(window - 1, len(blackout)), rolling, color=C['red'], lw=2)
     else:
-        ax.plot(blackout, color='red')
+        ax.plot(blackout, color=C['red'], lw=2)
     ax.set_xlabel('Episode'); ax.set_ylabel('Frequency')
-    ax.set_title(f'Blackout Rate ({window}-ep mov avg)'); ax.grid(alpha=0.3)
+    ax.set_title(f'Blackout Rate ({window}-ep moving avg)', fontweight='bold', fontsize=10)
+    style_data_axes(ax)
 
     ax = axes[1, 0]
-    ax.plot(history['policy_loss'], label='Policy loss', alpha=0.8)
-    ax.plot(history['value_loss'], label='Value loss', alpha=0.8)
+    ax.plot(history['policy_loss'], label='Policy loss', color=C['blue'], lw=2, alpha=0.9)
+    ax.plot(history['value_loss'], label='Value loss', color=C['orange'], lw=2, alpha=0.9)
     ax.set_xlabel('PPO update'); ax.set_ylabel('Loss')
-    ax.set_title('PPO Losses'); ax.legend(fontsize=8); ax.grid(alpha=0.3)
+    ax.set_title('PPO Losses', fontweight='bold', fontsize=10)
+    leg = ax.legend(loc='upper right'); style_legend(leg); style_data_axes(ax)
 
     ax = axes[1, 1]
-    ax.plot(history['entropy'], label='Entropy', alpha=0.8)
-    ax.plot(history['kl'], label='KL', alpha=0.8)
-    ax.axhline(np.log(3), color='gray', ls='--', lw=1, label='max ln(3)')
+    ax.plot(history['entropy'], label='Entropy', color=C['green'], lw=2, alpha=0.9)
+    ax.plot(history['kl'], label='KL', color=C['purple'], lw=2, alpha=0.9)
+    ax.axhline(np.log(3), color=C['grey'], ls='--', lw=1, label='max ln(3)')
     ax.set_xlabel('PPO update'); ax.set_ylabel('nats')
-    ax.set_title('Entropy & KL'); ax.legend(fontsize=8); ax.grid(alpha=0.3)
+    ax.set_title('Entropy & KL', fontweight='bold', fontsize=10)
+    leg = ax.legend(loc='upper right'); style_legend(leg); style_data_axes(ax)
 
     fig.suptitle(title, fontsize=13, fontweight='bold')
     fig.tight_layout()
-    fig.savefig(save_path, dpi=150, bbox_inches='tight')
+    save_fig(fig, save_path)
     plt.close(fig)
 
 

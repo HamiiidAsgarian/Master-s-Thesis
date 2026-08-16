@@ -1,78 +1,69 @@
 import numpy as np
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import os, json, csv
 from scipy import stats
+
+from thesis_plot_style import apply_rc, save_fig
+
+apply_rc()
 
 # ========== CONFIGURATION ==========
 scenarios = ['all_selfish', 'all_prosocial', 'mixed', 'varied_altruism', 'innovator_effect']
 base_dir = 'results'
 
-# Re‑run a single simulation with verbose=False to get the final agents
-# We'll load one seed per scenario and plot the first agent's Q‑table.
+# ========== 1. Q-TABLE HEATMAPS (from saved .npy — same source as generate_all_Visuals2.py) ==========
+# Thesis figure 4-7 consumes results/qtable_heatmaps.png. Regenerate via:
+#   python generate_all_Visuals2.py
+# This block remains for backward compatibility when advanced_analysis.py is run alone.
 
-from offgrid_marl import run_simulation
+def plot_qtable_heatmaps_from_npy(save_path='results/qtable_heatmaps.png'):
+    h_scenarios = ['all_selfish', 'all_prosocial', 'mixed', 'varied_altruism', 'innovator_effect']
+    h_mixes = {
+        'all_selfish': ['pure_selfish'] * 10,
+        'all_prosocial': ['prosocial'] * 10,
+        'mixed': ['prosocial'] * 5 + ['pure_selfish'] * 5,
+        'varied_altruism': ['altruistic', 'prosocial', 'prosocial', 'prosocial',
+                            'individualist', 'individualist', 'individualist',
+                            'pure_selfish', 'pure_selfish', 'pure_selfish'],
+        'innovator_effect': ['high_openness_innovator'] + ['prosocial'] * 4 +
+                            ['individualist'] * 3 + ['pure_selfish'] * 2,
+    }
+    en_labels = {
+        'all_selfish': 'All Selfish', 'all_prosocial': 'All Prosocial',
+        'mixed': 'Mixed', 'varied_altruism': 'Varied Altruism',
+        'innovator_effect': 'Innovator Effect',
+    }
+    fig, axes = plt.subplots(2, 5, figsize=(24, 10))
+    for i, sc in enumerate(h_scenarios):
+        q = np.load(os.path.join(base_dir, 'analysis_support/qtab', f'{sc}_q.npy'))
+        counterpart = 8 if sc == 'innovator_effect' else 3
+        for row, house in enumerate([0, counterpart]):
+            q_avg = q[0, house].mean(axis=1)
+            ax = axes[row, i]
+            im = ax.imshow(q_avg.T, aspect='auto', cmap='YlOrRd', origin='lower',
+                           extent=[0, 23, 0, 2], interpolation='nearest')
+            ax.set_xticks([0, 6, 12, 18, 23])
+            ax.set_yticks([0, 1, 2])
+            ax.set_yticklabels(['Share 0%', 'Share 50%', 'Share 100%'], fontsize=8)
+            ax.set_xlabel('Hour of Day', fontsize=9)
+            ax.set_title(f"{en_labels[sc]}\nAgent {house} ({h_mixes[sc][house]})",
+                         fontweight='bold', fontsize=10)
+            cbar = plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+            cbar.set_label('Mean Q-value', fontsize=8)
+            cbar.ax.tick_params(labelsize=7)
+    fig.suptitle('Q-table Heatmaps: Average Action Values by Hour\n'
+                 '(mean over battery levels; seed 42)',
+                 fontsize=13, fontweight='bold')
+    fig.tight_layout(rect=[0, 0, 1, 0.96])
+    save_fig(fig, save_path)
+    plt.close(fig)
+    print(f"Saved {save_path}")
 
-def get_agents_for_scenario(scenario_name, mix, seed=42):
-    """Run a short simulation and return the trained agents."""
-    agents, community, history = run_simulation(
-        num_houses=10, episodes=8000, battery_cap=7.0, solar_max=1.3,
-        personality_mix=mix, seed=seed, verbose=False
-    )
-    return agents
-
-# ========== 1. Q‑TABLE HEATMAPS ==========
-mixes = {
-    'all_selfish': ['pure_selfish']*10,
-    'all_prosocial': ['prosocial']*10,
-    'mixed': ['prosocial']*5 + ['pure_selfish']*5,
-    'varied_altruism': ['altruistic', 'prosocial', 'prosocial', 'prosocial', 'individualist', 'individualist', 'individualist', 'pure_selfish', 'pure_selfish', 'pure_selfish'],
-    'innovator_effect': ['high_openness_innovator'] + ['prosocial']*4 + ['individualist']*3 + ['pure_selfish']*2
-}
-
-fig, axes = plt.subplots(2, 5, figsize=(24, 10))
-plot_idx = 0
-
-for scenario_name in ['all_selfish', 'all_prosocial', 'mixed', 'varied_altruism', 'innovator_effect']:
-    print(f"Training agents for {scenario_name} heatmap...")
-    agents = get_agents_for_scenario(scenario_name, mixes[scenario_name], seed=42)
-    
-    # Plot agent 0 (prosocial/selfish depending on scenario)
-    agent0 = agents[0]
-    # Average Q-values across battery levels for each action
-    q_avg = np.mean(agent0.q, axis=1)  # shape (24, 3)
-    
-    ax = axes[0, plot_idx]
-    im = ax.imshow(q_avg.T, aspect='auto', cmap='YlOrRd', origin='lower',
-                   extent=[0, 23, 0, 2])
-    ax.set_xticks([0, 6, 12, 18, 23])
-    ax.set_yticks([0, 1, 2])
-    ax.set_yticklabels(['Share 0%', 'Share 50%', 'Share 100%'])
-    ax.set_xlabel('Hour of Day')
-    ax.set_title(f'{scenario_name}\nAgent 0 ({mixes[scenario_name][0]})')
-    plt.colorbar(im, ax=ax, label='Avg Q-value')
-    
-    # Plot agent 3 (other type in mixed scenarios)
-    if len(agents) > 3:
-        agent3 = agents[3]
-        q_avg3 = np.mean(agent3.q, axis=1)
-        
-        ax2 = axes[1, plot_idx]
-        im2 = ax2.imshow(q_avg3.T, aspect='auto', cmap='YlOrRd', origin='lower',
-                        extent=[0, 23, 0, 2])
-        ax2.set_xticks([0, 6, 12, 18, 23])
-        ax2.set_yticks([0, 1, 2])
-        ax2.set_yticklabels(['Share 0%', 'Share 50%', 'Share 100%'])
-        ax2.set_xlabel('Hour of Day')
-        ax2.set_title(f'{scenario_name}\nAgent 3 ({mixes[scenario_name][3]})')
-        plt.colorbar(im2, ax=ax2, label='Avg Q-value')
-    
-    plot_idx += 1
-
-plt.suptitle('Q‑table Heatmaps: Average Action Values by Hour', fontsize=16, fontweight='bold')
-plt.tight_layout()
-plt.savefig('results/qtable_heatmaps.png', dpi=150, bbox_inches='tight')
-plt.show()
+print("Plotting Q-table heatmaps from saved analysis_support/qtab/*.npy ...")
+plot_qtable_heatmaps_from_npy()
 
 # ========== 2. STATISTICAL TESTS ==========
 print("\n" + "="*80)

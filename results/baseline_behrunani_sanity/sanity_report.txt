@@ -12,8 +12,8 @@ BEHRUNANI GNE (energy-cost adaptation) — TIMING & SANITY CHECK
   -> fairness term changes chosen sharing: +0.002
 
 (c) Runtime:
-  0.3s for 10 days (0.029s/day)
-  extrapolated: 15s/seed, x5 seeds = 1.2 min
+  0.3s for 10 days (0.028s/day)
+  extrapolated: 14s/seed, x5 seeds = 1.2 min
 
 Chosen-policy summary (lambda=1.0, 10 days):
   mean comfort: 0.947  fairness: 0.950

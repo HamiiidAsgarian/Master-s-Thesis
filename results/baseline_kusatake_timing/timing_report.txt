@@ -3,8 +3,8 @@ KUSATAKE NSGA-II — TIMING & SANITY CHECK
 ========================================================================
 
 Runtime:
-  2.2s for 10 days  (0.220s/day)
-  extrapolated: 110s/seed, x5 seeds = 9.1 min
+  2.1s for 10 days  (0.211s/day)
+  extrapolated: 105s/seed, x5 seeds = 8.8 min
 
 Pareto front (per day):
   front size: min=60, max=60, mean=60.0, nontrivial(front>1) days=10/10

@@ -7,34 +7,16 @@ import matplotlib.patches as mpatches
 from matplotlib.patches import FancyBboxPatch
 import os
 
-# Persian (Farsi) text shaping. matplotlib cannot shape Arabic script natively,
-# so strings are pre-shaped into presentation forms and RTL-reordered.
-import arabic_reshaper
-import bidi.algorithm
-
-FA_FONTS = ['Geeza Pro', 'DejaVu Sans', 'Arial Unicode MS']
-
-
-def fa(s):
-    """Shape a Persian string for matplotlib (joining + RTL)."""
-    return bidi.algorithm.get_display(arabic_reshaper.reshape(s))
+from thesis_plot_style import (
+    C, FA_FONTS, SCENARIO_COLORS, SCENARIO_LABELS, apply_rc, fa,
+    label_bars, save_fig, style_bars, style_data_axes, style_legend,
+)
 
 OUT = 'results/figures'
 BASE = 'results'
+QTABLE_OUT = f'{BASE}/qtable_heatmaps.png'
 os.makedirs(OUT, exist_ok=True)
-
-# Match project convention — same as analyze_results.py / final_analysis.py
-C = {
-    'red': '#e74c3c', 'green': '#2ecc71', 'blue': '#3498db',
-    'purple': '#9b59b6', 'orange': '#f39c12', 'yellow': '#f1c40f',
-    'dark': '#2c3e50', 'grey': '#7f8c8d', 'teal': '#1abc9c',
-}
-
-plt.rcParams.update({
-    'font.family': 'sans-serif',
-    'font.sans-serif': ['Helvetica', 'Arial', 'DejaVu Sans'],
-    'font.size': 10, 'axes.titlesize': 12, 'figure.dpi': 150,
-})
+apply_rc()
 
 # Shared helpers for schematic visuals
 def _box(cx, cy, w, h, text, color, fs=8, fc='white', alpha=0.9):
@@ -103,7 +85,7 @@ with plt.rc_context({'font.family': 'sans-serif'}):
         if active:
             sym = (r'$\varepsilon_{\min}$', 'exploration floor') if name == 'Openness' \
                 else (r'$w_{\mathrm{fair}}$', 'fairness weight in reward')
-            ax.annotate('', xy=(6.2, y), xytext=(3.9, y),
+            ax.annotate('', xy=(6.0, y), xytext=(3.9, y),
                         arrowprops=dict(arrowstyle='->', color=col, lw=2.2))
             _box(7.8, y, 3.0, 0.9, sym[0], col, fs=12, fc='tint')
             ax.text(7.8, y - 0.6, sym[1], ha='center', va='center',
@@ -111,7 +93,7 @@ with plt.rc_context({'font.family': 'sans-serif'}):
         else:
             ax.text(5.6, y, 'fixed at population mean', ha='center', va='center',
                     fontsize=8.5, fontstyle='italic', color=C['grey'])
-    fig.savefig(f'{OUT}/v01_ocean_to_rl_mapping.png', dpi=150, bbox_inches='tight')
+    save_fig(fig, f'{OUT}/v01_ocean_to_rl_mapping.png')
     plt.close(fig)
 
 # ═══════════════════════════════════════════════
@@ -153,7 +135,7 @@ with plt.rc_context({'font.family': 'sans-serif'}):
         house_icon(x, y)
         ax.text(x, y - 0.8, str(i + 1), ha='center', va='top', fontsize=9,
                 fontweight='bold', color=C['dark'])
-    fig.savefig(f'{OUT}/v02_ring_topology.png', dpi=150, bbox_inches='tight')
+    save_fig(fig, f'{OUT}/v02_ring_topology.png')
     plt.close(fig)
 
 # ═══════════════════════════════════════════════
@@ -221,7 +203,7 @@ with plt.rc_context({'font.family': 'sans-serif'}):
                                 lw=2, linestyle='dashed'))
     ax.text(11.15, 3.5, 'Surplus\ncarried to Phase 2', ha='center',
             va='center', fontsize=7.5, color=C['dark'])
-    fig.savefig(f'{OUT}/v03_two_phase_sharing.png', dpi=150, bbox_inches='tight')
+    save_fig(fig, f'{OUT}/v03_two_phase_sharing.png')
     plt.close(fig)
 
 # ═══════════════════════════════════════════════
@@ -236,13 +218,12 @@ profiles = {
 for name, (vals, color, ls) in profiles.items():
     ax.plot(hours, vals, label=name, color=color, ls=ls, lw=2)
 ax.set_xlabel('Hour of Day'); ax.set_ylabel('Demand (kWh)')
-ax.set_title('The Four Hourly Demand Profile Types',
-             fontweight='bold', fontsize=11)
+ax.set_title('The Four Hourly Demand Profile Types', fontweight='bold', fontsize=11)
 ax.set_xticks([0, 6, 12, 18, 23]); ax.set_xlim(0, 23); ax.set_ylim(0, 1.4)
-ax.legend(fontsize=9, loc='upper right', framealpha=0.9); ax.grid(alpha=0.3)
+leg = ax.legend(loc='upper right'); style_legend(leg); style_data_axes(ax, grid_axis='both')
 ax.text(23, 0.05, 'Daily Total Range: 8.4–9.6 kWh',
         ha='right', va='bottom', fontsize=8, fontstyle='italic', color=C['grey'])
-fig.tight_layout(); fig.savefig(f'{OUT}/v04_demand_profiles.png', dpi=150, bbox_inches='tight')
+fig.tight_layout(); save_fig(fig, f'{OUT}/v04_demand_profiles.png')
 plt.close(fig)
 
 # ═══════════════════════════════════════════════
@@ -257,17 +238,17 @@ ax.plot(h, clear, label='Clear Day (W=1.0)', color=C['orange'], lw=2.5)
 ax.plot(h, cloudy, label='Cloudy Day (W=0.5)', color=C['grey'], lw=2, ls='--')
 ax.annotate('Peak: 1.3 kW (clear)\n0.65 kW (cloudy)', xy=(12, 1.3), xytext=(14, 1.1),
             arrowprops=dict(arrowstyle='->', color=C['dark']),
-            fontsize=8, color=C['dark'])
+            fontsize=8, color=C['dark'],
+            bbox=dict(facecolor='white', edgecolor='none', alpha=0.7, pad=1))
 ax.text(12, 0.2, 'Eq. 3-1: G(h) = G$_\\max$ sin($\\pi$(h-6)/12) W',
         ha='center', fontsize=8, fontstyle='italic', color=C['grey'])
 ax.text(12, 0.05, 'Cloudy days with 15% probability (Bernoulli draw)',
         ha='center', fontsize=8, fontstyle='italic', color=C['grey'])
 ax.set_xlabel('Hour of Day'); ax.set_ylabel('Solar Generation (kW)')
-ax.set_title('Half-Sine Solar Irradiance Model',
-             fontweight='bold', fontsize=11)
+ax.set_title('Half-Sine Solar Irradiance Model', fontweight='bold', fontsize=11)
 ax.set_xticks([0, 6, 12, 18, 23]); ax.set_xlim(0, 23); ax.set_ylim(0, 1.5)
-ax.legend(fontsize=9, loc='upper left', framealpha=0.9); ax.grid(alpha=0.3)
-fig.tight_layout(); fig.savefig(f'{OUT}/v05_solar_curve.png', dpi=150, bbox_inches='tight')
+leg = ax.legend(loc='upper left'); style_legend(leg); style_data_axes(ax, grid_axis='both')
+fig.tight_layout(); save_fig(fig, f'{OUT}/v05_solar_curve.png')
 plt.close(fig)
 
 # ═══════════════════════════════════════════════
@@ -282,43 +263,41 @@ with plt.rc_context({'font.family': 'sans-serif'}):
     ax.set_title('Community Compositions in Experimental Scenarios',
                  fontweight='bold', fontsize=12, pad=10)
     scenarios_grid = [
-        ('All Selfish', ['red'] * 10),
-        ('All Prosocial', ['green'] * 10),
-        ('Mixed', ['green'] * 5 + ['red'] * 5),
+        ('All Selfish', [C['red']] * 10),
+        ('All Prosocial', [C['green']] * 10),
+        ('Mixed', [C['green']] * 5 + [C['red']] * 5),
         ('Varied Altruism',
-         ['#1B4F72'] + ['green'] * 3 + ['yellow'] * 3 + ['red'] * 3),
+         [C['teal']] + [C['green']] * 3 + [C['yellow']] * 3 + [C['red']] * 3),
         ('Innovator Effect',
-         ['purple'] + ['green'] * 4 + ['yellow'] * 3 + ['red'] * 2),
+         [C['purple']] + [C['green']] * 4 + [C['yellow']] * 3 + [C['red']] * 2),
     ]
-    cmap = {'#1B4F72': '#1B4F72', 'green': C['green'], 'yellow': '#f1c40f',
-            'red': C['red'], 'purple': C['purple']}
     for row, (label, colors) in enumerate(scenarios_grid):
         y = 5.6 - row * 1.15
         ax.text(-1.2, y, label, ha='right', va='center', fontsize=9,
                 fontweight='bold', color=C['dark'])
         for col, c in enumerate(colors):
             ax.add_patch(plt.Circle((col + 0.5, y), 0.35,
-                                    facecolor=cmap[c], edgecolor='white', lw=1.5,
-                                    alpha=0.85 if c != 'yellow' else 0.9))
+                                    facecolor=c, edgecolor='white', lw=1.5,
+                                    alpha=0.85))
         if row == 0:
             for col in range(10):
                 ax.text(col + 0.5, y + 0.55, str(col), ha='center', va='center',
                         fontsize=7, color=C['grey'])
     leg_y = -0.55
     for i, (c, lbl) in enumerate([
-        ('#1B4F72', 'Altruistic, wf=0.8'),
-        ('green', 'Prosocial, wf=0.5'),
-        ('yellow', 'Individualist, wf=0.2'),
-        ('red', 'Purely selfish, wf=0.0'),
-        ('purple', 'Innovator, εmin=0.05'),
+        (C['teal'], 'Altruistic, wf=0.8'),
+        (C['green'], 'Prosocial, wf=0.5'),
+        (C['yellow'], 'Individualist, wf=0.2'),
+        (C['red'], 'Purely selfish, wf=0.0'),
+        (C['purple'], 'Innovator, εmin=0.05'),
     ]):
         row = i // 3
         col = i % 3
         cx = 0.6 + col * 3.9
         cy = leg_y - row * 0.6
-        ax.add_patch(plt.Circle((cx, cy), 0.2, facecolor=cmap[c], edgecolor='#999'))
+        ax.add_patch(plt.Circle((cx, cy), 0.2, facecolor=c, edgecolor=C['grey']))
         ax.text(cx + 0.32, cy, lbl, ha='left', va='center', fontsize=7.5, color=C['dark'])
-    fig.savefig(f'{OUT}/v06_community_compositions.png', dpi=150, bbox_inches='tight')
+    save_fig(fig, f'{OUT}/v06_community_compositions.png')
     plt.close(fig)
 
 # ═══════════════════════════════════════════════
@@ -335,11 +314,12 @@ with plt.rc_context({'font.family': 'sans-serif'}):
     ax.set_title('Emergent Reciprocity Mechanism',
                  fontweight='bold', fontsize=12, pad=12)
     def draw_cycle(positions, edge_color, fill_color):
+        half_w, half_h = 0.95, 0.4
         for (x, y), text, _ in positions:
-            ax.add_patch(FancyBboxPatch((x - 0.95, y - 0.4), 1.9, 0.8,
+            ax.add_patch(FancyBboxPatch((x - half_w, y - half_h), half_w * 2, half_h * 2,
                                         boxstyle="round,pad=0.08",
                                         facecolor=fill_color, edgecolor=edge_color,
-                                        lw=2.5, alpha=0.85))
+                                        lw=2.5, alpha=0.15))
             ax.text(x, y, text, ha='center', va='center', fontsize=8.5,
                     fontweight='bold', color=C['dark'])
         n = len(positions)
@@ -348,9 +328,11 @@ with plt.rc_context({'font.family': 'sans-serif'}):
             x2, y2 = positions[(i + 1) % n][0]
             dx, dy = x2 - x1, y2 - y1
             d = np.sqrt(dx**2 + dy**2)
-            dx, dy = dx / d, dy / d
-            x1a, y1a = x1 + dx * 0.95, y1 + dy * 0.95
-            x2a, y2a = x2 - dx * 0.95, y2 - dy * 0.95
+            ux, uy = dx / d, dy / d
+            off1 = half_w if abs(ux) > abs(uy) else half_h
+            off2 = half_w if abs(ux) > abs(uy) else half_h
+            x1a, y1a = x1 + ux * off1, y1 + uy * off1
+            x2a, y2a = x2 - ux * off2, y2 - uy * off2
             ax.annotate('', xy=(x2a, y2a), xytext=(x1a, y1a),
                         arrowprops=dict(arrowstyle='->', color=edge_color,
                                         lw=2.5, alpha=0.9))
@@ -359,7 +341,7 @@ with plt.rc_context({'font.family': 'sans-serif'}):
         ((1.0, -0.65), 'Neighbour battery\nstays stable', C['teal']),
         ((1.0, 0.65), 'Neighbour returns\nenergy at night', C['blue']),
         ((-1.0, 0.65), 'Prosocial receives\nwhen in deficit', C['purple']),
-    ], C['green'], '#E8F8E8')
+    ], C['green'], C['green'])
     ax.text(0, 0.45, '+', ha='center', va='center', fontsize=20,
             fontweight='bold', color=C['green'])
     ax.text(0, 0.02, 'Reinforcing feedback', ha='center', va='center',
@@ -370,7 +352,7 @@ with plt.rc_context({'font.family': 'sans-serif'}):
     ax.plot([-2.5, -2.1], [-2.65, -2.65], color=C['red'], lw=2.5)
     ax.text(-1.8, -2.65, 'Vicious cycles (selfish)', ha='left', va='center',
             fontsize=9, color=C['red'], fontweight='bold')
-    fig.savefig(f'{OUT}/v07_reciprocity_cycle.png', dpi=150, bbox_inches='tight')
+    save_fig(fig, f'{OUT}/v07_reciprocity_cycle.png')
     plt.close(fig)
 
 # ═══════════════════════════════════════════════
@@ -398,20 +380,20 @@ with plt.rc_context({'font.family': 'sans-serif'}):
     ]:
         _box(cx, cy, 2.2, 0.8, text, color, fs=8.5, fc='tint')
     for cx, cy, text, color in [
-        (6.8, 1.6, 'Higher inequality', C['red']),
-        (9.0, 1.6, 'Lower comfort', C['red']),
-        (11.0, 1.6, 'More blackouts', C['red']),
+        (5.6, 1.6, 'Higher inequality', C['red']),
+        (7.8, 1.6, 'Lower comfort', C['red']),
+        (10.0, 1.6, 'More blackouts', C['red']),
     ]:
         _box(cx, cy, 1.8, 0.7, text, color, fs=8, fc='tint')
     ax.text(0.8, 3.6, 'Higher openness (OCEAN)', ha='center', va='center',
-            fontsize=7, fontstyle='italic', color=C['purple'])
+            fontsize=7, fontstyle='italic', color=C['grey'])
     ax.text(3.8, 3.4, 'The alter-exploration problem', ha='center', va='center',
-            fontsize=7, fontstyle='italic', color=C['orange'])
+            fontsize=7, fontstyle='italic', color=C['grey'])
     ax.text(6.4, 3.4, 'Unpredictable energy supply', ha='center', va='center',
-            fontsize=7, fontstyle='italic', color=C['red'])
+            fontsize=7, fontstyle='italic', color=C['grey'])
     ax.text(9.0, 3.4, 'Self-protective strategy', ha='center', va='center',
-            fontsize=7, fontstyle='italic', color=C['dark'])
-    fig.savefig(f'{OUT}/v08_innovator_effect.png', dpi=150, bbox_inches='tight')
+            fontsize=7, fontstyle='italic', color=C['grey'])
+    save_fig(fig, f'{OUT}/v08_innovator_effect.png')
     plt.close(fig)
 
 # ═══════════════════════════════════════════════
@@ -456,7 +438,7 @@ with plt.rc_context({'font.family': FA_FONTS}):
     ax.text(5.0, 2.4, fa('عقلانیت فردی\n↓\nناعقلانیتی جمعی'),
             ha='center', va='center', fontsize=10, fontweight='bold', color=C['dark'],
             bbox=dict(facecolor='white', edgecolor=C['grey'], boxstyle='round,pad=0.4'))
-    fig.savefig(f'{OUT}/v09_tragedy_commons.png', dpi=150, bbox_inches='tight')
+    save_fig(fig, f'{OUT}/v09_tragedy_commons.png')
     plt.close(fig)
 
 # ═══════════════════════════════════════════════
@@ -478,28 +460,29 @@ fairness = [bdf[bdf['method'] == m]['fairness'].mean() for m in order]
 f_std = [bdf[bdf['method'] == m]['fairness'].std(ddof=1) for m in order]
 x = np.arange(len(order)); w = 0.38
 ours = [True] * 5 + [False] * 5
-ax.bar(x - w/2, comfort, w, yerr=c_std, color=C['blue'], capsize=4,
-       edgecolor=[C['dark'] if o else '#999' for o in ours],
-       linewidth=[1.2 if o else 0.5 for o in ours],
-       label='Community Comfort', alpha=0.85)
-ax.bar(x + w/2, fairness, w, yerr=f_std, color=C['green'], capsize=4,
-       edgecolor=[C['dark'] if o else '#999' for o in ours],
-       linewidth=[1.2 if o else 0.5 for o in ours],
-       label="Jain's Fairness Index", alpha=0.85)
+ax.bar(x - w/2, comfort, w, yerr=c_std, color=C['blue'], capsize=6,
+       edgecolor=[C['dark'] if o else C['grey'] for o in ours],
+       linewidth=[1.2 if o else 0.6 for o in ours],
+       label='Community Comfort', alpha=0.85, zorder=3)
+ax.bar(x + w/2, fairness, w, yerr=f_std, color=C['green'], capsize=6,
+       edgecolor=[C['dark'] if o else C['grey'] for o in ours],
+       linewidth=[1.2 if o else 0.6 for o in ours],
+       label="Jain's Fairness Index", alpha=0.85, zorder=3)
 for i, (c, fs) in enumerate(zip(comfort, fairness)):
-    ax.text(i - w/2, c + c_std[i] + 0.004, f'{c:.3f}', ha='center', fontsize=7.5, fontweight='bold')
-    ax.text(i + w/2, fs + f_std[i] + 0.004, f'{fs:.3f}', ha='center', fontsize=7.5, fontweight='bold')
-ax.axvline(4.5, color='#bbb', lw=0.8, ls='--', zorder=0)
+    ax.text(i - w/2, c + c_std[i] + 0.004, f'{c:.3f}', ha='center', fontsize=7.5, fontweight='bold',
+            bbox=dict(facecolor='white', edgecolor='none', alpha=0.7, pad=1))
+    ax.text(i + w/2, fs + f_std[i] + 0.004, f'{fs:.3f}', ha='center', fontsize=7.5, fontweight='bold',
+            bbox=dict(facecolor='white', edgecolor='none', alpha=0.7, pad=1))
+ax.axvline(4.5, color=C['grey'], lw=0.8, ls='--', zorder=0)
 ax.set_xticks(x); ax.set_xticklabels(labels, fontsize=8.5)
 ax.set_ylabel('Score')
-ax.set_title('Comparison with State-of-the-Art Energy MARL Studies',
-             fontweight='bold', fontsize=11)
-ax.set_ylim(0.86, 0.97); ax.legend(fontsize=9, loc='lower right', framealpha=0.9)
-ax.grid(axis='y', alpha=0.3)
-ax.text(0.03, -0.08, '\u2020 Reproduced baselines + always_default control; bars = mean \u00b1 SD over 5 seeds',
+ax.set_title('Comparison with State-of-the-Art Energy MARL Studies', fontweight='bold', fontsize=11)
+ax.set_ylim(0.86, 0.97)
+leg = ax.legend(loc='lower right'); style_legend(leg); style_data_axes(ax)
+ax.text(0.03, -0.12, '\u2020 Reproduced baselines + always_default control; bars = mean \u00b1 SD over 5 seeds',
         transform=ax.transAxes, fontsize=7, fontstyle='italic', color=C['grey'])
-fig.subplots_adjust(bottom=0.2)
-fig.savefig(f'{OUT}/v10_sota_comparison.png', dpi=150, bbox_inches='tight')
+fig.subplots_adjust(bottom=0.25)
+save_fig(fig, f'{OUT}/v10_sota_comparison.png')
 plt.close(fig)
 
 # ═══════════════════════════════════════════════
@@ -507,25 +490,27 @@ fig, ax = plt.subplots(figsize=(7, 7))
 lc = np.load(f'{BASE}/analysis_support/house_comfort/lorenz_curves.npy',
              allow_pickle=True).item()
 houses = np.linspace(0, 1, 11)
-ax.plot([0, 1], [0, 1], '--', color='gray', lw=1.5, label='Perfect Equality', alpha=0.7)
-ax.fill_between(houses, houses, lc['mixed'], alpha=0.1, color=C['blue'])
-ax.fill_between(houses, houses, lc['innovator_effect'], alpha=0.1, color=C['red'])
+ax.plot([0, 1], [0, 1], '--', color=C['grey'], lw=1.5, label='Perfect Equality', alpha=0.7)
+ax.fill_between(houses, houses, lc['mixed'], alpha=0.12, color=C['blue'])
+ax.fill_between(houses, houses, lc['innovator_effect'], alpha=0.12, color=C['red'])
 ax.plot(houses, lc['mixed'], '-', color=C['blue'], lw=2.5,
-        label='Mixed Scenario (Gini = 0.079)', marker='o', markersize=4)
+        label='Mixed Scenario (Gini = 0.079)', marker='o', markersize=4, markevery=2)
 ax.plot(houses, lc['innovator_effect'], '-', color=C['red'], lw=2.5,
-        label='Innovator Effect (Gini = 0.096)', marker='s', markersize=4)
+        label='Innovator Effect (Gini = 0.096)', marker='s', markersize=4, markevery=2)
 ax.annotate('Gini = 0.079', xy=(0.55, 0.52), fontsize=9,
-            color=C['blue'], fontweight='bold')
+            color=C['blue'], fontweight='bold',
+            bbox=dict(facecolor='white', edgecolor='none', alpha=0.7, pad=1))
 ax.annotate('Gini = 0.096', xy=(0.55, 0.44), fontsize=9,
-            color=C['red'], fontweight='bold')
+            color=C['red'], fontweight='bold',
+            bbox=dict(facecolor='white', edgecolor='none', alpha=0.7, pad=1))
 ax.set_xlabel('Cumulative Share of Houses (poorest $\\to$ richest)')
 ax.set_ylabel('Cumulative Share of Comfort')
 ax.set_title('Lorenz Curves — Mixed vs. Innovator Effect\n'
              '(mean of per-episode cross-sectional distributions, last 1,000 episodes)',
              fontweight='bold', fontsize=11)
 ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.set_aspect('equal')
-ax.legend(fontsize=9, loc='upper left', framealpha=0.9); ax.grid(alpha=0.3)
-fig.tight_layout(); fig.savefig(f'{OUT}/v11_lorenz_curve.png', dpi=150, bbox_inches='tight')
+leg = ax.legend(loc='upper left'); style_legend(leg); style_data_axes(ax, grid_axis='both')
+fig.tight_layout(); save_fig(fig, f'{OUT}/v11_lorenz_curve.png')
 plt.close(fig)
 
 # ═══════════════════════════════════════════════
@@ -580,7 +565,7 @@ with plt.rc_context({'font.family': 'sans-serif'}):
 
     for i in range(4):
         y_center = 8.0 - i * 1.6
-        arch_arrow(1.5, y_center - 0.425, 1.5, y_center - 0.85 + 0.425, C['blue'])
+        arch_arrow(1.5, y_center - 0.425, 1.5, y_center - 1.6 + 0.425, C['blue'])
 
     arch_arrow(1.5, 1.6 - 0.425, 4.5, 0.5, C['teal'])
     arch_arrow(4.5, 0.5, 8.5, 0.5, C['teal'], lw=1.2)
@@ -588,7 +573,7 @@ with plt.rc_context({'font.family': 'sans-serif'}):
 
     for i in range(4):
         y_center = 8.0 - i * 1.6
-        arch_arrow(8.5, y_center - 0.425, 8.5, y_center - 0.85 + 0.425, C['green'])
+        arch_arrow(8.5, y_center - 0.425, 8.5, y_center - 1.6 + 0.425, C['green'])
 
     ax.annotate('', xy=(0.7, 3.2), xytext=(0.7, 4.8),
                 arrowprops=dict(arrowstyle='->', color=C['teal'], lw=1.5,
@@ -605,7 +590,7 @@ with plt.rc_context({'font.family': 'sans-serif'}):
     ax.text(mid_x, mid_y, 'Next episode', ha='center', va='center', fontsize=7.5,
             fontstyle='italic', color=C['purple'],
             bbox=dict(facecolor='white', edgecolor='none', alpha=0.7))
-    fig.savefig(f'{OUT}/v12_system_architecture.png', dpi=150, bbox_inches='tight')
+    save_fig(fig, f'{OUT}/v12_system_architecture.png')
     plt.close(fig)
 
 # ═══════════════════════════════════════════════
@@ -631,21 +616,17 @@ if all_data:
             vals = [v * 100 for v in vals]
             stds = [s * 100 for s in stds]
         x = np.arange(5)
-        bars = ax.bar(x, vals, yerr=stds, color=C_5, capsize=6,
-                      edgecolor='gray', linewidth=0.5, alpha=0.85)
-        bars[-1].set_edgecolor(C['dark']); bars[-1].set_linewidth(2)
+        bars = ax.bar(x, vals, yerr=stds, color=SCENARIO_COLORS, capsize=6, alpha=0.85)
+        style_bars(bars, highlight_indices=[4])
         ax.set_xticks(x)
-        ax.set_xticklabels([s.replace(' ', '\n') for s in scenario_names], fontsize=8)
+        ax.set_xticklabels([s.replace(' ', '\n') for s in SCENARIO_LABELS], fontsize=8)
         ax.set_title(title, fontweight='bold', fontsize=10)
-        ax.set_ylim(ymin, ymax); ax.grid(axis='y', alpha=0.3)
-        for bar, v in zip(bars, vals):
-            ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 0.01,
-                    f'{v:.3f}' if '3f' in fmt else f'{v:.2f}',
-                    ha='center', fontsize=7, fontweight='bold')
-    fig.suptitle('Community-Level Metrics Across Five Scenarios',
-                 fontweight='bold', fontsize=12)
+        ax.set_ylim(ymin, ymax)
+        style_data_axes(ax)
+        label_bars(ax, bars, vals, fmt=fmt, offset=0.01 if '3f' in fmt else 0.05, fontsize=7, errs=stds)
+    fig.suptitle('Community-Level Metrics Across Five Scenarios', fontweight='bold', fontsize=12)
     fig.tight_layout(rect=[0, 0, 1, 0.97])
-    fig.savefig(f'{OUT}/v13_community_metrics.png', dpi=150, bbox_inches='tight')
+    save_fig(fig, f'{OUT}/v13_community_metrics.png')
     plt.close(fig)
 
     # Fig 4-2: Agent-Type Comfort Split
@@ -658,17 +639,22 @@ if all_data:
     s_std = [all_data[s]['selfish_comfort'].std() for s in type_scenarios]
     gaps = ['+2.9 pp**\n(p=0.0011)', '+2.0 pp*\n(p=0.0472)', '+1.9 pp']
     x = np.arange(3); w = 0.35
-    ax.bar(x - w/2, pro, w, yerr=p_std, label='Prosocial', color=C['blue'], capsize=6, alpha=0.85)
-    ax.bar(x + w/2, sel, w, yerr=s_std, label='Selfish', color=C['red'], capsize=6, alpha=0.85)
+    b1 = ax.bar(x - w/2, pro, w, yerr=p_std, label='Prosocial Agents', color=C['blue'],
+                capsize=6, alpha=0.85, edgecolor=C['grey'], linewidth=0.6)
+    b2 = ax.bar(x + w/2, sel, w, yerr=s_std, label='Selfish Agents', color=C['red'],
+                capsize=6, alpha=0.85, edgecolor=C['grey'], linewidth=0.6)
     for i, g in enumerate(gaps):
         y_max = max(pro[i] + p_std[i], sel[i] + s_std[i])
-        ax.annotate(g, xy=(i, y_max + 0.02), ha='center', fontsize=8, fontweight='bold', color=C['dark'])
+        ax.annotate(g, xy=(i, y_max + 0.015), ha='center', fontsize=8,
+                    fontweight='bold', color=C['dark'],
+                    bbox=dict(facecolor='white', edgecolor='none', alpha=0.7, pad=1))
     ax.set_xticks(x); ax.set_xticklabels(labels, fontsize=10)
     ax.set_ylabel('Mean Comfort (Last 1,000 Episodes)')
     ax.set_title('Prosocial vs. Selfish Agent Comfort\nin Mixed-Type Communities',
                  fontweight='bold', fontsize=11)
-    ax.set_ylim(0.87, 0.97); ax.legend(fontsize=9, framealpha=0.9); ax.grid(axis='y', alpha=0.3)
-    fig.tight_layout(); fig.savefig(f'{OUT}/v14_agent_comfort_split.png', dpi=150, bbox_inches='tight')
+    ax.set_ylim(0.87, 0.98)
+    leg = ax.legend(loc='upper right'); style_legend(leg); style_data_axes(ax)
+    fig.tight_layout(); save_fig(fig, f'{OUT}/v14_agent_comfort_split.png')
     plt.close(fig)
 
     # Fig 4-3: Gini Coefficient (from verified gini_reanalysis.csv / gini_more_scenarios.csv)
@@ -689,27 +675,25 @@ if all_data:
           f'{[round(v, 4) for v in gini_vals]} std {[round(v, 4) for v in gini_stds]}')
     ymin = max(0, min(gini_vals) - 0.02)
     ymax = max(gini_vals) + 0.02
-    bars = ax.bar(x, gini_vals, yerr=gini_stds, capsize=6,
-                  color=[C['green'], C['blue'], C['yellow'], C['green'], C['red']],
-                  edgecolor='gray', linewidth=0.5, alpha=0.85)
-    bars[-1].set_edgecolor(C['dark']); bars[-1].set_linewidth(3)
+    gini_bar_colors = [C['blue'], C['red'], C['yellow'], C['green'], C['purple']]
+    bars = ax.bar(x, gini_vals, yerr=gini_stds, capsize=6, color=gini_bar_colors, alpha=0.85)
+    style_bars(bars, highlight_indices=[4], linewidth=0.6)
+    bars[-1].set_linewidth(2.5)
     pct = (gini_vals[-1] - gini_vals[0]) / gini_vals[0] * 100
     ax.annotate(f'+{pct:.0f}% vs Mixed\n(p=0.047)', xy=(4, gini_vals[-1] + gini_stds[-1] + 0.001),
                 ha='center', fontsize=9, fontweight='bold', color=C['red'])
     ax.set_xticks(x); ax.set_xticklabels(gini_labels, fontsize=9)
     ax.set_ylabel('Gini Coefficient')
     ax.set_title('Gini Coefficient by Scenario', fontweight='bold', fontsize=11)
-    ax.set_ylim(ymin, ymax); ax.grid(axis='y', alpha=0.3)
-    for bar, v in zip(bars, gini_vals):
-        ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 0.0005,
-                f'{v:.4f}', ha='center', fontsize=8, fontweight='bold')
-    fig.savefig(f'{OUT}/v15_gini_comparison.png', dpi=150, bbox_inches='tight')
+    ax.set_ylim(ymin, ymax); style_data_axes(ax)
+    label_bars(ax, bars, gini_vals, fmt='{:.4f}', offset=0.0005, fontsize=8, errs=gini_stds)
+    save_fig(fig, f'{OUT}/v15_gini_comparison.png')
     plt.close(fig)
 
     # Fig 4-4: Sharing Frequency
     fig, ax = plt.subplots(figsize=(10, 5))
-    freq_labels = ['All Selfish\n(All)', 'All Prosocial\n(All)', 'Mixed\nProsocial',
-                   'Mixed\nSelfish', 'VA\nProsocial', 'VA\nSelfish',
+    freq_labels = ['All Selfish', 'All Prosocial', 'Mixed\nProsocial',
+                   'Mixed\nSelfish', 'Varied Altruism\nProsocial', 'Varied Altruism\nSelfish',
                    'Innovator\nExplorers', 'Innovator\nSelfish']
     qtab_dir = f'{BASE}/analysis_support/qtab'
     freq_groups = [
@@ -735,22 +719,22 @@ if all_data:
     freq_colors = [C['red'], C['green'], C['green'], C['red'],
                    C['green'], C['red'], C['purple'], C['red']]
     x = np.arange(8)
-    bars = ax.bar(x, freq_vals, yerr=freq_stds, capsize=6, color=freq_colors,
-           edgecolor='gray', linewidth=0.5, alpha=0.85)
-    ax.axhline(y=13.1, color='gray', linestyle='--', lw=1.5, alpha=0.7, label='Overall mean (~13.1%)')
+    bars = ax.bar(x, freq_vals, yerr=freq_stds, capsize=6, color=freq_colors, alpha=0.85)
+    style_bars(bars, linewidth=0.6)
+    ax.axhline(y=13.1, color=C['grey'], linestyle='--', lw=1.5, alpha=0.8,
+               label='Overall mean (~13.1%)', zorder=0)
     ax.set_xticks(x); ax.set_xticklabels(freq_labels, fontsize=8.5)
     ax.set_ylabel('Sharing Frequency (%)')
     ax.set_title("Proportion of Q-Table States Where\nGreedy Action is to Share",
                  fontweight='bold', fontsize=11)
-    ax.set_ylim(8, 18); ax.legend(fontsize=9, framealpha=0.9); ax.grid(axis='y', alpha=0.3)
-    for bar, v in zip(bars, freq_vals):
-        ax.text(bar.get_x() + bar.get_width()/2., bar.get_height() + 0.3,
-                f'{v:.2f}%', ha='center', fontsize=7.5, fontweight='bold')
-    fig.tight_layout(); fig.savefig(f'{OUT}/v16_sharing_frequency.png', dpi=150, bbox_inches='tight')
+    ax.set_ylim(8, 18)
+    leg = ax.legend(loc='upper right'); style_legend(leg); style_data_axes(ax)
+    label_bars(ax, bars, freq_vals, fmt='{:.2f}%', offset=0.35, fontsize=7.5, errs=freq_stds)
+    fig.tight_layout(); save_fig(fig, f'{OUT}/v16_sharing_frequency.png')
     plt.close(fig)
 
-    # Fig 4-7: Q-table Heatmaps (data from analysis_support/qtab/*.npy, seed index 0 = seed 42)
-    with plt.rc_context({'font.family': FA_FONTS}):
+    # Fig 4-7: Q-table heatmaps (v17 Persian + thesis English from saved .npy)
+    def _render_qtable_heatmaps(save_path, persian=False):
         h_scenarios = ['all_selfish', 'all_prosocial', 'mixed', 'varied_altruism', 'innovator_effect']
         h_mixes = {
             'all_selfish': ['pure_selfish'] * 10,
@@ -759,40 +743,71 @@ if all_data:
             'varied_altruism': ['altruistic', 'prosocial', 'prosocial', 'prosocial',
                                 'individualist', 'individualist', 'individualist',
                                 'pure_selfish', 'pure_selfish', 'pure_selfish'],
-            'innovator_effect': ['high_openness_innovator'] + ['prosocial'] * 4 + \
+            'innovator_effect': ['high_openness_innovator'] + ['prosocial'] * 4 +
                                 ['individualist'] * 3 + ['pure_selfish'] * 2,
         }
-        h_names = {
+        en_names = {
+            'pure_selfish': 'pure_selfish', 'individualist': 'individualist',
+            'prosocial': 'prosocial', 'altruistic': 'altruistic',
+            'high_openness_innovator': 'high_openness_innovator',
+        }
+        fa_names = {
             'pure_selfish': 'خودخواه محض', 'individualist': 'فردگرا',
             'prosocial': 'نوع‌گرا', 'altruistic': 'نوع‌دوست',
             'high_openness_innovator': 'مبتکر',
         }
-        h_labels = {
+        en_labels = {
+            'all_selfish': 'All Selfish', 'all_prosocial': 'All Prosocial',
+            'mixed': 'Mixed', 'varied_altruism': 'Varied Altruism',
+            'innovator_effect': 'Innovator Effect',
+        }
+        fa_labels = {
             'all_selfish': 'همگی خودخواه', 'all_prosocial': 'همگی نوع‌گرا',
             'mixed': 'مختلط', 'varied_altruism': 'نوع‌گرایی متنوع',
             'innovator_effect': 'اثر نوآور',
         }
-        fig, axes = plt.subplots(2, 5, figsize=(24, 10))
-        for i, sc in enumerate(h_scenarios):
-            q = np.load(f'{BASE}/analysis_support/qtab/{sc}_q.npy')   # (seeds, houses, 24, 4, 3)
-            for row, house in enumerate([0, 3 if sc != 'innovator_effect' else 8]):
-                q_avg = q[0, house].mean(axis=1)                      # mean over battery -> (24, 3)
-                ax = axes[row, i]
-                im = ax.imshow(q_avg.T, aspect='auto', cmap='YlOrRd', origin='lower',
-                               extent=[0, 23, 0, 2])
-                ax.set_xticks([0, 6, 12, 18, 23])
-                ax.set_yticks([0, 1, 2])
-                ax.set_yticklabels([fa('سهم ۰٪'), fa('سهم ۵۰٪'), fa('سهم ۱۰۰٪')], fontsize=8)
-                ax.set_xlabel(fa('ساعت روز'), fontsize=9)
-                agent_t = h_names[h_mixes[sc][house]]
-                ax.set_title(fa(f'{h_labels[sc]} — عامل {house} ({agent_t})'),
-                             fontweight='bold', fontsize=10)
-                plt.colorbar(im, ax=ax, label=fa('میانگین مقدار Q'))
-        fig.suptitle(fa('نقشه‌های حرارتی مقادیر Q میانگین‌شده در هر ساعت برای عامل‌های نماینده'),
-                     fontweight='bold', fontsize=14)
-        fig.tight_layout(rect=[0, 0, 1, 0.96])
-        fig.savefig(f'{OUT}/v17_qtable_heatmaps.png', dpi=150, bbox_inches='tight')
-        plt.close(fig)
+        share_labels = ([fa('سهم ۰٪'), fa('سهم ۵۰٪'), fa('سهم ۱۰۰٪')] if persian
+                        else ['Share 0%', 'Share 50%', 'Share 100%'])
+        xlabel = fa('ساعت روز') if persian else 'Hour of Day'
+        cbar_label = fa('میانگین مقدار Q') if persian else 'Mean Q-value'
+        suptitle = (fa('نقشه‌های حرارتی مقادیر Q میانگین‌شده در هر ساعت برای عامل‌های نماینده')
+                    if persian else
+                    'Q-table Heatmaps: Average Action Values by Hour\n'
+                    '(mean over battery levels; seed 42)')
+        font_ctx = {'font.family': FA_FONTS} if persian else {'font.family': 'sans-serif'}
+
+        with plt.rc_context(font_ctx):
+            fig, axes = plt.subplots(2, 5, figsize=(24, 10))
+            for i, sc in enumerate(h_scenarios):
+                q = np.load(f'{BASE}/analysis_support/qtab/{sc}_q.npy')
+                counterpart = 8 if sc == 'innovator_effect' else 3
+                for row, house in enumerate([0, counterpart]):
+                    q_avg = q[0, house].mean(axis=1)
+                    ax = axes[row, i]
+                    im = ax.imshow(q_avg.T, aspect='auto', cmap='YlOrRd', origin='lower',
+                                   extent=[0, 23, 0, 2], interpolation='nearest')
+                    ax.set_xticks([0, 6, 12, 18, 23])
+                    ax.set_yticks([0, 1, 2])
+                    ax.set_yticklabels(share_labels, fontsize=8)
+                    ax.set_xlabel(xlabel, fontsize=9)
+                    agent_t = (fa_names if persian else en_names)[h_mixes[sc][house]]
+                    scen_l = (fa_labels if persian else en_labels)[sc]
+                    if persian:
+                        ax.set_title(fa(f'{scen_l} — عامل {house} ({agent_t})'),
+                                     fontweight='bold', fontsize=10)
+                    else:
+                        ax.set_title(f'{scen_l}\nAgent {house} ({agent_t})',
+                                     fontweight='bold', fontsize=10)
+                    cbar = plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+                    cbar.set_label(cbar_label, fontsize=8)
+                    cbar.ax.tick_params(labelsize=7)
+            fig.suptitle(suptitle, fontweight='bold', fontsize=14 if persian else 13)
+            fig.tight_layout(rect=[0, 0, 1, 0.96])
+            save_fig(fig, save_path)
+            plt.close(fig)
+
+    _render_qtable_heatmaps(f'{OUT}/v17_qtable_heatmaps.png', persian=True)
+    _render_qtable_heatmaps(QTABLE_OUT, persian=False)
 
     # Fig 4-8: Scarcity Sensitivity (data from cloud_sensitivity_reanalysis.csv)
     fig, ax = plt.subplots(figsize=(8, 5))
@@ -803,21 +818,23 @@ if all_data:
     ps = [cs[cs['cloud_prob'] == c]['prosocial_comfort'].std(ddof=0) for c in cp]
     ss = [cs[cs['cloud_prob'] == c]['selfish_comfort'].std(ddof=0) for c in cp]
     ax.errorbar(cp, pm, yerr=ps, label='Prosocial Agents', color=C['blue'],
-                lw=2.5, marker='o', markersize=8, capsize=6)
+                lw=2.5, marker='o', markersize=8, capsize=6, markeredgecolor='white',
+                markeredgewidth=0.8)
     ax.errorbar(cp, sm, yerr=ss, label='Selfish Agents', color=C['red'],
-                lw=2.5, marker='s', markersize=8, capsize=6)
+                lw=2.5, marker='s', markersize=8, capsize=6, markeredgecolor='white',
+                markeredgewidth=0.8)
     gap = (pm[0] - sm[0]) * 100
-    ax.annotate(f'Gap = {gap:.2f} pp\n(p=0.0011)', xy=(15, 0.92), fontsize=9, fontweight='bold',
-                color=C['dark'], bbox=dict(facecolor='white', edgecolor='#CCC', boxstyle='round'))
+    ax.annotate(f'Gap = {gap:.2f} pp\n(p=0.0011)', xy=(25, 0.90), fontsize=9, fontweight='bold',
+                color=C['dark'], bbox=dict(facecolor='white', edgecolor=C['grey'], boxstyle='round'))
     ax.set_xlabel('Cloudy Day Probability (%)'); ax.set_ylabel('Mean Comfort (Last 1,000 Episodes)')
     ax.set_title('Prosocial vs. Selfish Comfort\nas a Function of Cloudy Day Probability',
                  fontweight='bold', fontsize=11)
     ax.set_xticks(cp); ax.set_xlim(10, 40); ax.set_ylim(0.75, 0.96)
-    ax.legend(fontsize=9, framealpha=0.9); ax.grid(alpha=0.3)
+    leg = ax.legend(loc='lower left'); style_legend(leg); style_data_axes(ax, grid_axis='both')
     ax.text(0.5, 0.02, 'Cloudy days halve solar generation (W=0.5)',
             transform=ax.transAxes, fontsize=8, fontstyle='italic',
             ha='center', color=C['grey'])
-    fig.tight_layout(); fig.savefig(f'{OUT}/v18_scarcity_sensitivity.png', dpi=150, bbox_inches='tight')
+    fig.tight_layout(); save_fig(fig, f'{OUT}/v18_scarcity_sensitivity.png')
     plt.close(fig)
 
 # Figure 2-1 (NEW): Conceptual Framework — Personality-Adjusted Coordination Model
@@ -903,14 +920,14 @@ with plt.rc_context({'font.family': 'sans-serif'}):
             'Resilience:\ncloudy day / innovator agent', C['orange'], fs=8)
 
     # Feedback: dashed arrow from community level back up to individual level
-    ax.annotate('', xy=(11.55, 6.35), xytext=(11.55, 2.9),
+    ax.annotate('', xy=(11.2, 6.35), xytext=(11.2, 2.9),
                 arrowprops=dict(arrowstyle='->', color=C['grey'], lw=1.8,
                                 linestyle='dashed'))
-    ax.text(11.15, 4.6, 'Coordination\nfeedback', ha='center', va='center',
+    ax.text(10.85, 4.6, 'Coordination\nfeedback', ha='center', va='center',
             fontsize=7.5, fontstyle='italic', color=C['grey'],
             bbox=dict(facecolor='white', edgecolor='none', alpha=0.8))
 
-    fig.savefig(f'{OUT}/v2_1_conceptual_framework.png', dpi=150, bbox_inches='tight')
+    save_fig(fig, f'{OUT}/v2_1_conceptual_framework.png')
     plt.close(fig)
 
-print(f'All visuals saved to {OUT}/')
+print(f'All visuals saved to {OUT}/ and {QTABLE_OUT}')

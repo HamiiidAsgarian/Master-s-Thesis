@@ -198,31 +198,35 @@ def run_kusatake_seed(seed, days=500, verbose=True):
 
 # ========== PLOTTING ==========
 def plot_seed(history, title, save_path):
-    days = history['days']
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+    from thesis_plot_style import C, save_fig, style_data_axes, style_legend
+
+    fig, axes = plt.subplots(1, 3, figsize=(15, 4.2))
 
     ax = axes[0]
-    ax.plot(history['comfort_mean'], label='Mean Comfort', alpha=0.8)
-    ax.plot(history['fairness'], label="Jain's Fairness", alpha=0.8)
-    ax.set_xlabel('Day'); ax.set_ylabel('Score'); ax.set_ylim([0, 1.05])
-    ax.set_title('Community Performance'); ax.legend(fontsize=8); ax.grid(alpha=0.3)
+    ax.plot(history['comfort_mean'], label='Mean Comfort', color=C['blue'], lw=2, alpha=0.9)
+    ax.plot(history['fairness'], label="Jain's Fairness", color=C['green'], lw=2, alpha=0.9)
+    ax.set_xlabel('Day'); ax.set_ylabel('Score'); ax.set_ylim(0, 1.05)
+    ax.set_title('Community Performance', fontweight='bold', fontsize=10)
+    leg = ax.legend(loc='lower right'); style_legend(leg); style_data_axes(ax)
 
     ax = axes[1]
-    ax.plot(history['waste'], color='tab:blue', alpha=0.7, label='Waste (kWh)')
-    ax.plot(np.convolve(history['blackout'], np.ones(50) / 50, mode='valid'), color='red',
-            label='Blackout rate (50-day avg)')
+    ax.plot(history['waste'], color=C['blue'], lw=2, alpha=0.85, label='Waste (kWh)')
+    ax.plot(np.convolve(history['blackout'], np.ones(50) / 50, mode='valid'), color=C['red'],
+            lw=2, label='Blackout rate (50-day avg)')
     ax.set_xlabel('Day'); ax.set_ylabel('kWh / rate')
-    ax.set_title('Daily Waste & Blackout'); ax.legend(fontsize=8); ax.grid(alpha=0.3)
+    ax.set_title('Daily Waste & Blackout', fontweight='bold', fontsize=10)
+    leg = ax.legend(loc='upper right'); style_legend(leg); style_data_axes(ax)
 
     ax = axes[2]
-    ax.plot(history['share_frac'], color='tab:green', alpha=0.7, label='Chosen share frac')
-    ax.plot(history['front_sizes'], color='tab:purple', alpha=0.7, label='Pareto front size')
+    ax.plot(history['share_frac'], color=C['green'], lw=2, alpha=0.85, label='Chosen share frac')
+    ax.plot(history['front_sizes'], color=C['purple'], lw=2, alpha=0.85, label='Pareto front size')
     ax.set_xlabel('Day')
-    ax.set_title('Chosen Sharing & Front Size'); ax.legend(fontsize=8); ax.grid(alpha=0.3)
+    ax.set_title('Chosen Sharing & Front Size', fontweight='bold', fontsize=10)
+    leg = ax.legend(loc='upper right'); style_legend(leg); style_data_axes(ax)
 
     fig.suptitle(title, fontsize=13, fontweight='bold')
     fig.tight_layout()
-    fig.savefig(save_path, dpi=150, bbox_inches='tight')
+    save_fig(fig, save_path)
     plt.close(fig)
 
 
