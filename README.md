@@ -112,6 +112,15 @@ Take-aways:
 - **`advanced_analysis.py`** — Q-table heatmaps, t-tests, one-way ANOVA → `statistical_tests.txt`.
 - **`final_analysis.py`** — Gini coefficient, sharing frequency, cloud-scarcity sensitivity (→ `gini_comparison.png`, `sharing_frequency.png`, `sensitivity_cloud.png`).
 
+### Thesis figures
+- **`generate_all_Visuals2.py`** — The thesis figure generator. Re-renders **every** figure the
+  thesis consumes into `results/figures/vNN_*.png` (150 dpi, white background), including the
+  Persian (Farsi) schematic/conceptual figures via the `fa()` shaping pipeline
+  (`arabic_reshaper` + `bidi` + `Geeza Pro`/`DejaVu Sans`). Files: `v01`–`v18` (v17 intentionally
+  absent) plus `v2_1_conceptual_framework.png` (شکل ۲-۱). The thesis document (`0-Active Doc/Thesis_v9-3.md`)
+  references **only** these files — always update the `vNN_*` twin here, not the legacy `results/*.png`.
+  See `Code_Output_data_visuals_Map.md` for the full per-figure map.
+
 ### Re-analysis / reproduction
 - **`gini_cloud_reanalysis.py`** — Re-runs `mixed` and `innovator_effect` (all 5 seeds), validates each run against the saved `final_metrics.csv` (max |re-run − saved| < 1e-9), writes `results/gini_reanalysis.csv`, and runs a paired t-test on Gini (`--task gini`). Also re-runs the cloud-scarcity scan (cloud 0.15/0.25/0.35) with Welch/Student t-tests → `results/cloud_sensitivity_reanalysis.csv` (`--task cloud`).
 - **`gini_more_scenarios.py`** — Same validated re-run for `all_selfish`, `all_prosocial`, `varied_altruism` → `results/gini_more_scenarios.csv`.
@@ -177,6 +186,7 @@ python final_analysis.py                   # Gini + sharing freq + sensitivity (
 python gini_cloud_reanalysis.py --task gini    # validated Gini re-run (mixed vs innovator)
 python gini_cloud_reanalysis.py --task cloud   # cloud-scarcity re-run (0.15/0.25/0.35)
 python gini_more_scenarios.py              # validated Gini for 3 more scenarios
+python generate_all_Visuals2.py            # regenerate ALL thesis figures (results/figures/vNN_*.png)
 ```
 
 The always-default control is pre-computed under `results/control_always_default/seed_<N>/` (computed via `run_simulation` with sharing forced to 0%).
@@ -219,10 +229,15 @@ offgrid-energy-marl/
     ├── qtable_heatmaps.png  gini_comparison.png
     ├── sharing_frequency.png  sensitivity_cloud.png
     ├── statistical_tests.txt
-    └── figures/                                # thesis figures (v01–v18, e.g. ring topology, solar curve, Lorenz curve)
+    └── figures/                                # thesis figures (v01–v18 + v2_1, produced by generate_all_Visuals2.py)
 ```
 
 ## Related Documents
 
-- **`0-Active Doc/`** — The **main documents for the Thesis**: `thesis_v8.md` (full active thesis draft) and `check list.md` (tracking/revision checklist).
+- **`Code_Output_data_visuals_Map.md`** — Script-by-script map of every `.py` file: what it does,
+  what data/visuals it generates, its styling system, and the thesis figure numbers. Read this
+  before optimizing/styling any script.
+- **`0-Active Doc/`** — The **main thesis documents**: `Thesis_v9-3.md` (the ONLY live thesis),
+  `Important_considerations.md` (handoff guide for future agents — read before editing claims or
+  figures), and `check list.md` (tracking/revision checklist).
 

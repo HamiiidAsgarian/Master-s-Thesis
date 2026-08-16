@@ -7,6 +7,18 @@ import matplotlib.patches as mpatches
 from matplotlib.patches import FancyBboxPatch
 import os
 
+# Persian (Farsi) text shaping. matplotlib cannot shape Arabic script natively,
+# so strings are pre-shaped into presentation forms and RTL-reordered.
+import arabic_reshaper
+import bidi.algorithm
+
+FA_FONTS = ['Geeza Pro', 'DejaVu Sans', 'Arial Unicode MS']
+
+
+def fa(s):
+    """Shape a Persian string for matplotlib (joining + RTL)."""
+    return bidi.algorithm.get_display(arabic_reshaper.reshape(s))
+
 OUT = 'results/figures'
 BASE = 'results'
 os.makedirs(OUT, exist_ok=True)
@@ -65,148 +77,152 @@ def _load_data():
     return all_data
 
 # ═══════════════════════════════════════════════
-# Figure: OCEAN-to-RL Parameter Mapping
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.set_xlim(0, 10); ax.set_ylim(0, 8); ax.axis('off')
-ax.set_title('OCEAN-to-RL Parameter Mapping',
-             fontweight='bold', fontsize=11, pad=10)
-traits = [
-    ('Openness', 7.0, C['purple'],
-     r'$\varepsilon_{\min}$ (exploration floor, 0.01 vs 0.05)'),
-    ('Conscientiousness', 5.8, C['blue'],
-     r'$\varepsilon$-decay variance'),
-    ('Extraversion', 4.6, C['orange'],
-     'Held at population average'),
-    ('Agreeableness', 3.4, C['green'],
-     r'$w_{\mathrm{fair}}$ (fairness weight, 0.0–0.8)'),
-    ('Neuroticism', 2.2, C['red'],
-     'Blackout penalty multiplier'),
-]
-for name, y, color, param in traits:
-    FancyBboxPatch((0.5, y - 0.4), 2.8, 0.8,
-                    boxstyle="round,pad=0.1",
-                    facecolor=color, alpha=0.15, edgecolor=color, lw=1.5)
-    ax.add_patch(FancyBboxPatch((0.5, y - 0.4), 2.8, 0.8,
-                                 boxstyle="round,pad=0.1",
-                                 facecolor=color, alpha=0.15,
-                                 edgecolor=color, lw=1.5))
-    ax.text(1.9, y, name, ha='center', va='center',
-            fontsize=10, fontweight='bold', color=color)
-    ax.annotate('', xy=(7.2, y), xytext=(3.6, y),
-                arrowprops=dict(arrowstyle='->', color=color, lw=2, alpha=0.8))
-    ax.add_patch(FancyBboxPatch((7.2, y - 0.4), 2.6, 0.8,
-                                 boxstyle="round,pad=0.1",
-                                 facecolor=color, alpha=0.08,
-                                 edgecolor=color, lw=1.2))
-    ax.text(8.5, y, param, ha='center', va='center', fontsize=8.5, color=color)
-leg = FancyBboxPatch((2.5, 0.3), 5.0, 0.7,
-                      boxstyle="round,pad=0.1",
-                      facecolor='#F5F5F5', edgecolor='#999', lw=1)
-ax.add_patch(leg)
-ax.text(5.0, 0.65, 'Thesis Contribution — Psychologically Grounded Agent Heterogeneity',
-        ha='center', va='center', fontsize=9, fontstyle='italic', color=C['dark'])
-fig.savefig(f'{OUT}/v01_ocean_to_rl_mapping.png', dpi=150, bbox_inches='tight')
-plt.close(fig)
+# Figure 3-5: OCEAN-to-RL Parameter Mapping (conceptual schematic)
+# EN conversion 2026-08-16 — Persian originals (also in git HEAD 1731705):
+#   title 'نگاشت ویژگی‌های شخصیت OCEAN به پارامترهای یادگیری تقویتی';
+#   traits 'گشودگی/وظیفه‌شناسی/برون‌گرایی/توافق‌پذیری/روان‌رنجوری';
+#   'کف اکتشاف' · 'وزن عدالت در پاداش' · 'ثابت در میانگین جمعیتی'
+with plt.rc_context({'font.family': 'sans-serif'}):
+    fig, ax = plt.subplots(figsize=(11, 6.5))
+    ax.set_xlim(0, 11); ax.set_ylim(0, 8); ax.axis('off')
+    ax.set_title('Mapping OCEAN Personality Traits to RL Parameters',
+                 fontweight='bold', fontsize=12, pad=12)
+    traits = [
+        ('Openness', C['purple'], True),
+        ('Conscientiousness', C['blue'], False),
+        ('Extraversion', C['orange'], False),
+        ('Agreeableness', C['green'], True),
+        ('Neuroticism', C['red'], False),
+    ]
+    ys = [7.0, 5.6, 4.2, 2.8, 1.4]
+    for (name, col, active), y in zip(traits, ys):
+        if active:
+            _box(2.0, y, 3.4, 0.9, name, col, fs=10, fc='tint')
+        else:
+            _box(2.0, y, 3.4, 0.9, name, C['grey'], fs=10, fc='tint')
+        if active:
+            sym = (r'$\varepsilon_{\min}$', 'exploration floor') if name == 'Openness' \
+                else (r'$w_{\mathrm{fair}}$', 'fairness weight in reward')
+            ax.annotate('', xy=(6.2, y), xytext=(3.9, y),
+                        arrowprops=dict(arrowstyle='->', color=col, lw=2.2))
+            _box(7.8, y, 3.0, 0.9, sym[0], col, fs=12, fc='tint')
+            ax.text(7.8, y - 0.6, sym[1], ha='center', va='center',
+                    fontsize=7.5, color=col)
+        else:
+            ax.text(5.6, y, 'fixed at population mean', ha='center', va='center',
+                    fontsize=8.5, fontstyle='italic', color=C['grey'])
+    fig.savefig(f'{OUT}/v01_ocean_to_rl_mapping.png', dpi=150, bbox_inches='tight')
+    plt.close(fig)
 
 # ═══════════════════════════════════════════════
-fig, ax = plt.subplots(figsize=(8, 8))
-ax.set_xlim(-2.5, 2.5); ax.set_ylim(-2.5, 2.5)
-ax.axis('off'); ax.set_aspect('equal')
-ax.set_title('Ring Topology Smart Neighborhood Microgrid',
-             fontweight='bold', fontsize=11, pad=10)
-n = 10
-angles = np.linspace(0, 2 * np.pi, n, endpoint=False)
-R = 1.8
-for i, angle in enumerate(angles):
-    typ = 'prosocial' if i % 2 == 0 else 'selfish'
-    col = C['green'] if typ == 'prosocial' else C['red']
-    x, y = R * np.cos(angle), R * np.sin(angle)
-    ax.add_patch(mpatches.Rectangle((x - 0.25, y - 0.25), 0.5, 0.4,
-                                     facecolor='white', edgecolor=col, lw=2))
-    ax.add_patch(mpatches.Polygon([(x - 0.3, y + 0.15), (x + 0.3, y + 0.15),
-                                    (x, y + 0.35)], facecolor=col, alpha=0.3))
-    ax.add_patch(mpatches.Rectangle((x - 0.15, y + 0.17), 0.3, 0.12,
-                                     facecolor=C['blue'], alpha=0.6))
-    ax.text(x, y - 0.4, str(i), ha='center', va='top', fontsize=8, fontweight='bold')
-    na = angles[(i + 1) % n]
-    nx, ny = R * np.cos(na), R * np.sin(na)
-    mx, my = (x + nx) / 2, (y + ny) / 2
-    dx, dy = nx - x, ny - y
-    norm = np.sqrt(dx**2 + dy**2)
-    dx, dy = dx / norm, dy / norm
-    px, py = -dy * 0.12, dx * 0.12
-    for sign, c in [(1, C['blue']), (-1, C['teal'])]:
-        ax.annotate('',
-                    xy=(mx + px + sign * dx * 0.3, my + py + sign * dy * 0.3),
-                    xytext=(mx + px - sign * dx * 0.3, my + py - sign * dy * 0.3),
-                    arrowprops=dict(arrowstyle='->', color=c, lw=1.2, alpha=0.6))
-ax.legend(handles=[
-    mpatches.Patch(facecolor=C['green'], alpha=0.3, label='Prosocial'),
-    mpatches.Patch(facecolor=C['red'], alpha=0.3, label='Selfish'),
-], loc='upper right', fontsize=9, framealpha=0.9)
-ax.annotate('', xy=(R + 0.6, 0), xytext=(2.2, 0),
-            arrowprops=dict(arrowstyle='->', color=C['grey'], lw=1.5, linestyle='dashed'))
-ax.text(R + 0.8, 0.15, 'Utility Grid\n(import/export)',
-        ha='center', va='bottom', fontsize=8, color=C['grey'])
-fig.savefig(f'{OUT}/v02_ring_topology.png', dpi=150, bbox_inches='tight')
-plt.close(fig)
+# Figure 3-2: Ring Topology (conceptual schematic)
+# EN conversion 2026-08-16 — Persian original title (also in git HEAD 1731705):
+#   'توپولوژی حلقه‌ای ریزشبکه محله‌ای با ۱۰ خانه'
+with plt.rc_context({'font.family': 'sans-serif'}):
+    fig, ax = plt.subplots(figsize=(9, 9))
+    ax.set_xlim(-3.4, 3.4); ax.set_ylim(-3.6, 3.4)
+    ax.axis('off'); ax.set_aspect('equal')
+    ax.set_title('Ring-Topology Neighbourhood Microgrid with 10 Houses',
+                 fontweight='bold', fontsize=12, pad=12)
+    n = 10
+    angles = np.linspace(0, 2 * np.pi, n, endpoint=False)
+    R = 2.35
+
+    def house_icon(cx, cy, s=0.34):
+        ax.add_patch(mpatches.Polygon(
+            [(cx - 1.15 * s, cy + 0.5 * s), (cx + 1.15 * s, cy + 0.5 * s),
+             (cx, cy + 1.25 * s)], facecolor=C['blue'], alpha=0.25,
+            edgecolor=C['blue'], lw=1.4, zorder=4))
+        ax.add_patch(mpatches.Rectangle(
+            (cx - s, cy - 0.55 * s), 2 * s, 1.05 * s,
+            facecolor='white', edgecolor=C['blue'], lw=1.6, zorder=4))
+        ax.add_patch(mpatches.Rectangle(
+            (cx - 0.7 * s, cy + 0.6 * s), 1.4 * s, 0.3 * s,
+            facecolor=C['blue'], alpha=0.55, zorder=5))
+        ax.add_patch(mpatches.Rectangle(
+            (cx - 0.35 * s, cy - 0.4 * s), 0.7 * s, 0.28 * s,
+            facecolor=C['teal'], alpha=0.6, edgecolor=C['teal'], lw=0.8, zorder=5))
+
+    for i in range(n):
+        a1, a2 = angles[i], angles[(i + 1) % n]
+        ax.plot([R * np.cos(a1), R * np.cos(a2)],
+                [R * np.sin(a1), R * np.sin(a2)],
+                color=C['grey'], lw=2.5, zorder=1)
+    for i, a in enumerate(angles):
+        x, y = R * np.cos(a), R * np.sin(a)
+        house_icon(x, y)
+        ax.text(x, y - 0.8, str(i + 1), ha='center', va='top', fontsize=9,
+                fontweight='bold', color=C['dark'])
+    fig.savefig(f'{OUT}/v02_ring_topology.png', dpi=150, bbox_inches='tight')
+    plt.close(fig)
 
 # ═══════════════════════════════════════════════
-fig, ax = plt.subplots(figsize=(12, 6))
-ax.set_xlim(0, 12); ax.set_ylim(0, 6); ax.axis('off')
-ax.set_title('Two-Phase Energy Sharing Mechanism',
-              fontweight='bold', fontsize=11, pad=10)
-ax.text(0.3, 5.2, 'PHASE 1 — LOCAL', fontsize=10, fontweight='bold',
-        color=C['blue'], va='center')
-ax.text(0.3, 2.2, 'PHASE 2 — SHARING', fontsize=10, fontweight='bold',
-        color=C['purple'], va='center')
-boxes_p1 = [
-    (1.0, 4.5, 1.6, 0.6, 'Solar\nGeneration', C['blue']),
-    (3.0, 4.5, 1.4, 0.6, 'Hourly\nDemand', C['dark']),
-    (7.5, 5.2, 1.6, 0.6, 'Charge Battery\n(7 kWh cap)', C['green']),
-    (7.5, 3.8, 1.6, 0.6, 'Discharge\nBattery', C['red']),
-    (9.8, 5.2, 1.6, 0.6, 'Exportable\nSurplus', C['green']),
-    (9.8, 3.8, 1.6, 0.6, 'Unmet Demand', C['red']),
-]
-for args in boxes_p1:
-    _box(*args, fc='tint')
-diamond = mpatches.Polygon([(5.2, 4.9), (6.0, 4.5), (5.2, 4.1), (4.4, 4.5)],
-                            facecolor=C['orange'], alpha=0.15,
-                            edgecolor=C['orange'], lw=1.5)
-ax.add_patch(diamond)
-ax.text(5.2, 4.5, 'Gen >\nDemand?', ha='center', va='center', fontsize=8,
-        fontweight='bold', color=C['orange'])
-ax.text(5.7, 4.9, 'Yes', fontsize=7, color=C['green'], fontweight='bold')
-ax.text(5.7, 4.1, 'No', fontsize=7, color=C['red'], fontweight='bold')
-_arrow(3.7, 4.5, 4.4, 4.5, C['blue'])
-_arrow(1.8, 4.5, 2.3, 4.5, C['dark'])
-_arrow(5.7, 4.9, 6.7, 5.2, C['green'])
-_arrow(5.7, 4.1, 6.7, 3.8, C['red'])
-_arrow(8.3, 5.2, 9.0, 5.2, C['green'])
-_arrow(8.3, 3.8, 9.0, 3.8, C['red'])
-boxes_p2 = [
-    (1.5, 1.5, 1.6, 0.6, 'Exportable\nSurplus', C['green']),
-    (3.5, 1.5, 1.6, 0.6, 'Agent Action:\n0%/50%/100%', C['purple']),
-    (5.5, 1.5, 1.4, 0.6, 'Send to\nNeighbour', C['blue']),
-    (7.5, 1.9, 1.8, 0.6, 'Reduce Unmet\nDemand First', C['green']),
-    (7.5, 1.1, 1.8, 0.6, 'Store Remainder\nin Battery', C['teal']),
-    (10.0, 1.5, 1.6, 0.6, 'Energy\nWaste', C['red']),
-]
-for args in boxes_p2:
-    _box(*args, fc='tint')
-_arrow(2.3, 1.5, 2.7, 1.5, C['green'])
-_arrow(4.3, 1.5, 4.8, 1.5, C['purple'])
-_arrow(6.2, 1.5, 6.6, 1.9, C['blue'])
-_arrow(6.2, 1.5, 6.6, 1.1, C['blue'])
-_arrow(8.4, 1.9, 8.4, 1.4, C['teal'])
-_arrow(8.4, 1.5, 9.2, 1.5, C['red'])
-ax.annotate('', xy=(10.6, 4.9), xytext=(10.6, 2.1),
-            arrowprops=dict(arrowstyle='->', color=C['dark'],
-                            lw=2, linestyle='dashed'))
-ax.text(11.0, 3.5, 'Surplus\nflows to\nPhase 2', ha='center', va='center',
-        fontsize=7, color=C['dark'], fontstyle='italic')
-fig.savefig(f'{OUT}/v03_two_phase_sharing.png', dpi=150, bbox_inches='tight')
-plt.close(fig)
+# Figure 3-6: Two-Phase Energy Sharing (conceptual schematic)
+# EN conversion 2026-08-16 — Persian originals (also in git HEAD 1731705):
+#   'فاز ۱ — محلی' · 'فاز ۲ — اشتراک' · 'خروجی مصرف‌شده در همان خانه' ·
+#   'تولید خورشیدی' · 'نیاز ساعتی' · 'شارژ باتری' · 'تخلیه باتری' ·
+#   'مازاد قابل صادرات' · 'نیاز تأمین‌نشده' · 'تولید > نیاز؟' · 'بله/خیر' ·
+#   '(ظرفیت ۷ کیلووات‌ساعت)' · 'مازاد صادرشدنی' · 'اقدام عامل: ۰٪/۵۰٪/۱۰۰٪' ·
+#   'ارسال به همسایه' · 'کاهش نیاز تأمین‌نشده' · 'ذخیره مازاد در باتری' ·
+#   'هدررفت انرژی' · 'مازاد به فاز ۲ منتقل می‌شود'
+with plt.rc_context({'font.family': 'sans-serif'}):
+    fig, ax = plt.subplots(figsize=(12, 6.5))
+    ax.set_xlim(0, 12); ax.set_ylim(0, 6.5); ax.axis('off')
+    ax.text(0.3, 5.6, 'Phase 1 — Local', fontsize=10, fontweight='bold',
+            color=C['blue'], va='center')
+    ax.text(0.3, 2.4, 'Phase 2 — Sharing', fontsize=10, fontweight='bold',
+            color=C['purple'], va='center')
+    ax.text(8.6, 5.9, 'output consumed in the same house',
+            fontsize=7.5, fontstyle='italic', color=C['grey'])
+    boxes_p1 = [
+        (1.0, 4.5, 1.6, 0.6, 'Solar generation', C['blue']),
+        (3.0, 4.5, 1.4, 0.6, 'Hourly demand', C['dark']),
+        (7.5, 5.2, 1.6, 0.6, 'Battery charge', C['green']),
+        (7.5, 3.8, 1.6, 0.6, 'Battery discharge', C['red']),
+        (9.8, 5.2, 1.6, 0.6, 'Exportable surplus', C['green']),
+        (9.8, 3.8, 1.6, 0.6, 'Unmet demand', C['red']),
+    ]
+    for args in boxes_p1:
+        _box(*args, fc='tint')
+    diamond = mpatches.Polygon([(5.2, 4.9), (6.0, 4.5), (5.2, 4.1), (4.4, 4.5)],
+                               facecolor=C['orange'], alpha=0.15,
+                               edgecolor=C['orange'], lw=1.5)
+    ax.add_patch(diamond)
+    ax.text(5.2, 4.5, 'Generation > demand?', ha='center', va='center', fontsize=8,
+            fontweight='bold', color=C['orange'])
+    ax.text(5.9, 4.9, 'Yes', fontsize=7, color=C['green'], fontweight='bold')
+    ax.text(5.9, 4.1, 'No', fontsize=7, color=C['red'], fontweight='bold')
+    _arrow(3.7, 4.5, 4.4, 4.5, C['blue'])
+    _arrow(1.8, 4.5, 2.3, 4.5, C['dark'])
+    _arrow(5.7, 4.9, 6.7, 5.2, C['green'])
+    _arrow(5.7, 4.1, 6.7, 3.8, C['red'])
+    _arrow(8.3, 5.2, 9.0, 5.2, C['green'])
+    _arrow(8.3, 3.8, 9.0, 3.8, C['red'])
+    ax.text(6.0, 5.55, '(7 kWh capacity)', ha='center', va='center',
+            fontsize=7, color=C['green'])
+    boxes_p2 = [
+        (1.5, 1.5, 1.6, 0.6, 'Exportable surplus', C['green']),
+        (3.5, 1.5, 1.6, 0.6, 'Agent action:\n0% / 50% / 100%', C['purple']),
+        (5.5, 1.5, 1.4, 0.6, 'Send to neighbour', C['blue']),
+        (7.5, 1.9, 1.8, 0.6, 'Reduces unmet demand', C['green']),
+        (7.5, 1.1, 1.8, 0.6, 'Store surplus in battery', C['teal']),
+        (10.0, 1.5, 1.6, 0.6, 'Energy waste', C['red']),
+    ]
+    for args in boxes_p2:
+        _box(*args, fc='tint')
+    _arrow(2.3, 1.5, 2.7, 1.5, C['green'])
+    _arrow(4.3, 1.5, 4.8, 1.5, C['purple'])
+    _arrow(6.2, 1.5, 6.6, 1.9, C['blue'])
+    _arrow(6.2, 1.5, 6.6, 1.1, C['blue'])
+    _arrow(8.4, 1.9, 8.4, 1.4, C['teal'])
+    _arrow(8.4, 1.5, 9.2, 1.5, C['red'])
+    ax.annotate('', xy=(10.6, 4.9), xytext=(10.6, 2.1),
+                arrowprops=dict(arrowstyle='->', color=C['dark'],
+                                lw=2, linestyle='dashed'))
+    ax.text(11.15, 3.5, 'Surplus\ncarried to Phase 2', ha='center',
+            va='center', fontsize=7.5, color=C['dark'])
+    fig.savefig(f'{OUT}/v03_two_phase_sharing.png', dpi=150, bbox_inches='tight')
+    plt.close(fig)
 
 # ═══════════════════════════════════════════════
 fig, ax = plt.subplots(figsize=(8, 4.5))
@@ -255,204 +271,232 @@ fig.tight_layout(); fig.savefig(f'{OUT}/v05_solar_curve.png', dpi=150, bbox_inch
 plt.close(fig)
 
 # ═══════════════════════════════════════════════
-fig, ax = plt.subplots(figsize=(9, 5))
-ax.set_xlim(-0.5, 12); ax.set_ylim(-1.3, 6.8); ax.axis('off')
-ax.set_title('Experimental Community Compositions',
-             fontweight='bold', fontsize=11, pad=10)
-scenarios_grid = [
-    ('All Selfish', ['red'] * 10),
-    ('All Prosocial', ['green'] * 10),
-    ('Mixed', ['green'] * 5 + ['red'] * 5),
-    ('Varied\nAltruism', ['#1B4F72', 'green', 'green', 'green',
-                          'yellow', 'yellow', 'yellow', 'red', 'red', 'red']),
-    ('Innovator\nEffect', ['purple'] + ['green'] * 4 + ['yellow'] * 3 + ['red'] * 2),
-]
-cmap = {'#1B4F72': '#1B4F72', 'green': C['green'], 'yellow': '#f1c40f',
-        'red': C['red'], 'purple': C['purple']}
-for row, (label, colors) in enumerate(scenarios_grid):
-    y = 5.6 - row * 1.15
-    ax.text(-0.3, y, label, ha='right', va='center', fontsize=8.5,
-            fontweight='bold', color=C['dark'])
-    for col, c in enumerate(colors):
-        ax.add_patch(plt.Circle((col + 0.5, y), 0.35,
-                                 facecolor=cmap[c], edgecolor='white', lw=1.5,
-                                 alpha=0.85 if c != 'yellow' else 0.9))
-    if row == 0:
-        for col in range(10):
-            ax.text(col + 0.5, y + 0.55, str(col), ha='center', va='center',
-                    fontsize=7, color=C['grey'])
-leg_y = -0.45
-for i, (c, lbl) in enumerate([
-    ('#1B4F72', 'Altruistic\n(w_f=0.8)'),
-    ('green', 'Prosocial\n(w_f=0.5)'),
-    ('yellow', 'Individualist\n(w_f=0.2)'),
-    ('red', 'Pure Selfish\n(w_f=0.0)'),
-    ('purple', 'Innovator\n($\\varepsilon_m$=0.05)'),
-]):
-    row = i // 3
-    col = i % 3
-    cx = 1.0 + col * 3.8
-    cy = leg_y - row * 0.55
-    ax.add_patch(plt.Circle((cx, cy), 0.2, facecolor=cmap[c], edgecolor='#999'))
-    ax.text(cx + 0.3, cy, lbl, ha='left', va='center', fontsize=6.5, color=C['dark'])
-fig.savefig(f'{OUT}/v06_community_compositions.png', dpi=150, bbox_inches='tight')
-plt.close(fig)
-
-# ═══════════════════════════════════════════════
-fig, ax = plt.subplots(figsize=(8, 8))
-ax.set_xlim(-2.5, 2.5); ax.set_ylim(-2.5, 2.5)
-ax.axis('off'); ax.set_aspect('equal')
-ax.set_title('The Emergent Reciprocity Mechanism',
-             fontweight='bold', fontsize=11, pad=10)
-def draw_cycle(positions, edge_color, fill_color):
-    for (x, y), text, _ in positions:
-        ax.add_patch(FancyBboxPatch((x - 0.8, y - 0.4), 1.6, 0.8,
-                                     boxstyle="round,pad=0.08",
-                                     facecolor=fill_color, edgecolor=edge_color, lw=2.5, alpha=0.85))
-        ax.text(x, y, text, ha='center', va='center', fontsize=8.5,
+# Figure 3-7: Experimental Community Compositions (conceptual schematic)
+# EN conversion 2026-08-16 — Persian originals (also in git HEAD 1731705):
+#   'ترکیب‌های جامعه در سناریوهای آزمایش' · 'همه خودخواه' · 'همه نوع‌دوست' · 'آمیخته' ·
+#   'نوع‌دوستی متغیر' · 'اثر نوآور' · 'نوع‌دوست، wf=0.8' · 'نوع‌دوست، wf=0.5' ·
+#   'فردگرا، wf=0.2' · 'کاملاً خودخواه، wf=0.0' · 'نوآور، εmin=0.05'
+with plt.rc_context({'font.family': 'sans-serif'}):
+    fig, ax = plt.subplots(figsize=(9, 5.2))
+    ax.set_xlim(-1.6, 12); ax.set_ylim(-1.5, 6.8); ax.axis('off')
+    ax.set_title('Community Compositions in Experimental Scenarios',
+                 fontweight='bold', fontsize=12, pad=10)
+    scenarios_grid = [
+        ('All Selfish', ['red'] * 10),
+        ('All Prosocial', ['green'] * 10),
+        ('Mixed', ['green'] * 5 + ['red'] * 5),
+        ('Varied Altruism',
+         ['#1B4F72'] + ['green'] * 3 + ['yellow'] * 3 + ['red'] * 3),
+        ('Innovator Effect',
+         ['purple'] + ['green'] * 4 + ['yellow'] * 3 + ['red'] * 2),
+    ]
+    cmap = {'#1B4F72': '#1B4F72', 'green': C['green'], 'yellow': '#f1c40f',
+            'red': C['red'], 'purple': C['purple']}
+    for row, (label, colors) in enumerate(scenarios_grid):
+        y = 5.6 - row * 1.15
+        ax.text(-1.2, y, label, ha='right', va='center', fontsize=9,
                 fontweight='bold', color=C['dark'])
-    n = len(positions)
-    for i in range(n):
-        x1, y1 = positions[i][0]
-        x2, y2 = positions[(i + 1) % n][0]
-        dx, dy = x2 - x1, y2 - y1
-        d = np.sqrt(dx**2 + dy**2)
-        dx, dy = dx / d, dy / d
-        x1a, y1a = x1 + dx * 0.82, y1 + dy * 0.82
-        x2a, y2a = x2 - dx * 0.82, y2 - dy * 0.82
-        ax.annotate('', xy=(x2a, y2a), xytext=(x1a, y1a),
-                    arrowprops=dict(arrowstyle='->', color=edge_color, lw=2.5, alpha=0.9))
-draw_cycle([
-    ((-1.0, -0.65), 'Prosocial Shares\nSurplus (10AM–4PM)', C['green']),
-    ((1.0, -0.65), "Neighbour's\nBattery Stabilized", C['teal']),
-    ((1.0, 0.65), 'Neighbour Returns\nEnergy (Evening)', C['blue']),
-    ((-1.0, 0.65), 'Prosocial Receives\nDuring Deficit', C['purple']),
-], C['green'], '#E8F8E8')
-ax.text(0, 0.35, '+', ha='center', va='center', fontsize=20,
-        fontweight='bold', color=C['green'])
-ax.text(0, 0.0, 'Reinforcing\nFeedback', ha='center', va='center',
-        fontsize=9, fontstyle='italic', color=C['green'])
-ax.plot([-2.3, -1.9], [-2.15, -2.15], color=C['green'], lw=2.5)
-ax.text(-1.6, -2.15, 'Virtuous Cycle (Prosocial)',
-        ha='left', va='center', fontsize=9, color=C['green'], fontweight='bold')
-ax.plot([-2.3, -1.9], [-2.45, -2.45], color=C['red'], lw=2.5)
-ax.text(-1.6, -2.45, 'Vicious Cycle (Selfish)',
-        ha='left', va='center', fontsize=9, color=C['red'], fontweight='bold')
-fig.savefig(f'{OUT}/v07_reciprocity_cycle.png', dpi=150, bbox_inches='tight')
-plt.close(fig)
+        for col, c in enumerate(colors):
+            ax.add_patch(plt.Circle((col + 0.5, y), 0.35,
+                                    facecolor=cmap[c], edgecolor='white', lw=1.5,
+                                    alpha=0.85 if c != 'yellow' else 0.9))
+        if row == 0:
+            for col in range(10):
+                ax.text(col + 0.5, y + 0.55, str(col), ha='center', va='center',
+                        fontsize=7, color=C['grey'])
+    leg_y = -0.55
+    for i, (c, lbl) in enumerate([
+        ('#1B4F72', 'Altruistic, wf=0.8'),
+        ('green', 'Prosocial, wf=0.5'),
+        ('yellow', 'Individualist, wf=0.2'),
+        ('red', 'Purely selfish, wf=0.0'),
+        ('purple', 'Innovator, εmin=0.05'),
+    ]):
+        row = i // 3
+        col = i % 3
+        cx = 0.6 + col * 3.9
+        cy = leg_y - row * 0.6
+        ax.add_patch(plt.Circle((cx, cy), 0.2, facecolor=cmap[c], edgecolor='#999'))
+        ax.text(cx + 0.32, cy, lbl, ha='left', va='center', fontsize=7.5, color=C['dark'])
+    fig.savefig(f'{OUT}/v06_community_compositions.png', dpi=150, bbox_inches='tight')
+    plt.close(fig)
 
 # ═══════════════════════════════════════════════
-fig, ax = plt.subplots(figsize=(11, 5.5))
-ax.set_xlim(0, 12); ax.set_ylim(-0.3, 5.5); ax.axis('off')
-ax.set_title('The Innovator Effect Mechanism',
-             fontweight='bold', fontsize=11, pad=10)
-_arrow(2.3, 4.2, 2.7, 4.2, C['purple'])
-_arrow(4.9, 4.2, 5.4, 4.2, C['orange'])
-_arrow(7.4, 4.2, 8.1, 4.2, C['red'])
-_arrow(9.0, 3.4, 9.0, 2.4, C['red'])
-for cx, cy, text, color in [
-    (1.2, 4.2, 'Innovator Agent\n$\\varepsilon_{\\min}$=0.05 (vs 0.01)', C['purple']),
-    (3.8, 4.2, 'Continues Random\nExploration After\nOthers Converged', C['orange']),
-    (6.4, 4.2, 'Neighbours Cannot\nForm Stable\nExpectations', C['red']),
-    (9.0, 4.2, 'Neighbours Shift\nto Defensive\nHoarding', C['dark']),
-]:
-    _box(cx, cy, 2.2, 0.8, text, color, fs=8.5, fc='tint')
-for cx, cy, text, color in [
-    (6.8, 1.6, '$\\uparrow$ Gini +22%\n0.079 $\\to$ 0.096', C['red']),
-    (9.0, 1.6, '$\\downarrow$ Comfort $-2.0\\%$\n0.920 $\\to$ 0.902', C['red']),
-    (11.0, 1.6, '$\\uparrow$ Blackouts +8.3%\n14.5% $\\to$ 15.7%', C['red']),
-]:
-    _box(cx, cy, 1.8, 0.7, text, color, fs=7.5, fc='tint')
-ax.text(0.8, 3.6, 'Higher Openness (OCEAN)', ha='center', va='center',
-        fontsize=7, fontstyle='italic', color=C['purple'])
-ax.text(3.8, 3.4, 'Alter-Exploration Problem', ha='center', va='center',
-        fontsize=7, fontstyle='italic', color=C['orange'])
-ax.text(6.4, 3.4, 'Unpredictable Energy\nAvailability', ha='center', va='center',
-        fontsize=7, fontstyle='italic', color=C['red'])
-ax.text(9.0, 3.4, 'Self-Protective\nStrategy', ha='center', va='center',
-        fontsize=7, fontstyle='italic', color=C['dark'])
-ax.add_patch(FancyBboxPatch((0.3, 0.05), 6.0, 0.6,
-                             boxstyle="round,pad=0.08",
-                             facecolor='#F5F5F5', edgecolor='#CCC', lw=1))
-ax.text(0.5, 0.35,
-        'Mixed: Gini=0.079, Comfort=0.920, Blackouts=14.5%\n'
-        'Innovator: Gini=0.096, Comfort=0.902, Blackouts=15.7%',
-        ha='left', va='center', fontsize=7, color=C['dark'])
-fig.savefig(f'{OUT}/v08_innovator_effect.png', dpi=150, bbox_inches='tight')
-plt.close(fig)
+# Figure 4-3: Emergent Reciprocity Mechanism (conceptual schematic)
+# EN conversion 2026-08-16 — Persian originals (also in git HEAD 1731705):
+#   'مکانیزمِ برخاستهٔ مقابله‌به‌مثل (متقابلیت)' · 'نوع‌دوست مازاد را هم‌ساعت ۱۰ تا ۱۶
+#   می‌فرستد' · 'باتری همسایه پایدار می‌ماند' · 'همسایه شب‌هنگام انرژی برمی‌گرداند' ·
+#   'نوع‌دوست هنگام کسری دریافت می‌کند' · 'بازخورد تقویتی' ·
+#   'چرخه فضیلت (نوع‌دوست)' · 'چرخه‌های شرورانه (خودخواه)'
+with plt.rc_context({'font.family': 'sans-serif'}):
+    fig, ax = plt.subplots(figsize=(8.5, 8.5))
+    ax.set_xlim(-2.7, 2.7); ax.set_ylim(-2.7, 2.7)
+    ax.axis('off'); ax.set_aspect('equal')
+    ax.set_title('Emergent Reciprocity Mechanism',
+                 fontweight='bold', fontsize=12, pad=12)
+    def draw_cycle(positions, edge_color, fill_color):
+        for (x, y), text, _ in positions:
+            ax.add_patch(FancyBboxPatch((x - 0.95, y - 0.4), 1.9, 0.8,
+                                        boxstyle="round,pad=0.08",
+                                        facecolor=fill_color, edgecolor=edge_color,
+                                        lw=2.5, alpha=0.85))
+            ax.text(x, y, text, ha='center', va='center', fontsize=8.5,
+                    fontweight='bold', color=C['dark'])
+        n = len(positions)
+        for i in range(n):
+            x1, y1 = positions[i][0]
+            x2, y2 = positions[(i + 1) % n][0]
+            dx, dy = x2 - x1, y2 - y1
+            d = np.sqrt(dx**2 + dy**2)
+            dx, dy = dx / d, dy / d
+            x1a, y1a = x1 + dx * 0.95, y1 + dy * 0.95
+            x2a, y2a = x2 - dx * 0.95, y2 - dy * 0.95
+            ax.annotate('', xy=(x2a, y2a), xytext=(x1a, y1a),
+                        arrowprops=dict(arrowstyle='->', color=edge_color,
+                                        lw=2.5, alpha=0.9))
+    draw_cycle([
+        ((-1.0, -0.65), 'Prosocial sends surplus\n10:00–16:00', C['green']),
+        ((1.0, -0.65), 'Neighbour battery\nstays stable', C['teal']),
+        ((1.0, 0.65), 'Neighbour returns\nenergy at night', C['blue']),
+        ((-1.0, 0.65), 'Prosocial receives\nwhen in deficit', C['purple']),
+    ], C['green'], '#E8F8E8')
+    ax.text(0, 0.45, '+', ha='center', va='center', fontsize=20,
+            fontweight='bold', color=C['green'])
+    ax.text(0, 0.02, 'Reinforcing feedback', ha='center', va='center',
+            fontsize=9, fontstyle='italic', color=C['green'])
+    ax.plot([-2.5, -2.1], [-2.35, -2.35], color=C['green'], lw=2.5)
+    ax.text(-1.8, -2.35, 'Virtuous cycle (prosocial)', ha='left', va='center',
+            fontsize=9, color=C['green'], fontweight='bold')
+    ax.plot([-2.5, -2.1], [-2.65, -2.65], color=C['red'], lw=2.5)
+    ax.text(-1.8, -2.65, 'Vicious cycles (selfish)', ha='left', va='center',
+            fontsize=9, color=C['red'], fontweight='bold')
+    fig.savefig(f'{OUT}/v07_reciprocity_cycle.png', dpi=150, bbox_inches='tight')
+    plt.close(fig)
 
 # ═══════════════════════════════════════════════
-fig, ax = plt.subplots(figsize=(10, 5))
-ax.set_xlim(0, 10); ax.set_ylim(0, 5); ax.axis('off')
-ax.set_title('The Tragedy of the Commons in Energy Sharing',
-             fontweight='bold', fontsize=11, pad=10)
-ax.add_patch(FancyBboxPatch((0.3, 0.3), 4.2, 4.2,
-                             boxstyle="round,pad=0.08",
-                             facecolor='#E8F5E9', edgecolor='#999', lw=1.5))
-ax.text(2.4, 4.6, 'Tragedy of the Commons\n(Hardin, 1968)',
-        ha='center', va='center', fontsize=9, fontweight='bold', color=C['green'])
-for x, y in [(1.0, 3.2), (2.5, 3.7), (1.8, 2.5), (3.2, 2.9)]:
-    ax.plot(x, y, 'o', color='#8B4513', markersize=16, zorder=5)
-ax.add_patch(mpatches.FancyBboxPatch((1.2, 0.6), 1.5, 0.8,
-                                      boxstyle="round,pad=0.05",
-                                      facecolor='#D4A574', alpha=0.5))
-ax.text(1.95, 1.0, 'Overgrazed\nPasture', ha='center', va='center',
-        fontsize=7, color='#8B4513', fontweight='bold')
-ax.text(2.4, 0.35, 'Each herder maximises own benefit\n$\\downarrow$\nResource destroyed for all',
-        ha='center', va='center', fontsize=6.5, color=C['grey'], fontstyle='italic')
-ax.add_patch(FancyBboxPatch((5.5, 0.3), 4.2, 4.2,
-                             boxstyle="round,pad=0.08",
-                             facecolor='#E3F2FD', edgecolor='#999', lw=1.5))
-ax.text(7.6, 4.6, 'Energy Sharing Analogy\n(This Study)',
-        ha='center', va='center', fontsize=9, fontweight='bold', color=C['blue'])
-for i, angle in enumerate(np.linspace(0, 2 * np.pi, 6, endpoint=False)):
-    col = C['green'] if i < 3 else C['red']
-    x = 7.6 + 1.5 * np.cos(angle)
-    y = 2.8 + 1.5 * np.sin(angle)
-    ax.add_patch(mpatches.Rectangle((x - 0.3, y - 0.25), 0.6, 0.4,
-                                     facecolor='white', edgecolor=col, lw=2))
-    ax.add_patch(mpatches.Polygon([(x - 0.35, y + 0.15), (x + 0.35, y + 0.15),
-                                    (x, y + 0.35)], facecolor=col, alpha=0.3))
-    label = 'FULL' if i < 3 else 'BLACKOUT'
-    ax.text(x, y - 0.45, label, ha='center', va='top', fontsize=6.5,
-            fontweight='bold', color=col)
-ax.text(7.6, 0.35, 'Each household hoards surplus\n$\\downarrow$\nWasted energy, neighbours blackout',
-        ha='center', va='center', fontsize=6.5, color=C['grey'], fontstyle='italic')
-ax.text(5.0, 2.4, 'Individual Rationality\n$\\downarrow$\nCollective Irrationality',
-        ha='center', va='center', fontsize=10, fontweight='bold', color=C['dark'],
-        bbox=dict(facecolor='white', edgecolor='#AAA', boxstyle='round,pad=0.4'))
-fig.savefig(f'{OUT}/v09_tragedy_commons.png', dpi=150, bbox_inches='tight')
-plt.close(fig)
+# Figure 4-9: Innovator Effect Mechanism (conceptual schematic)
+# EN conversion 2026-08-16 — Persian originals (also in git HEAD 1731705):
+#   'مکانیزم اثر نوآور: غیرقابل‌پیش‌بینی بودن، نه کاهش اشتراک' ·
+#   'عامل نوآور εmin = 0.05 (در برابر 0.01)' · 'ادامه اکتشاف تصادفی پس از همگرایی
+#   بقیه' · 'همسایه‌ها نمی‌توانند انتظار پایدار شکل دهند' · 'تغییر به احتکار دفاعی' ·
+#   'نابرابری بیشتر' · 'آسایش کمتر' · 'خاموشی بیشتر' · 'گشودگی بالاتر (OCEAN)' ·
+#   'مسئله اکتشافِ دیگری' · 'عرضه انرژی غیرقابل‌پیش‌بینی' · 'استراتژی خودحفاظتی'
+with plt.rc_context({'font.family': 'sans-serif'}):
+    fig, ax = plt.subplots(figsize=(11, 5.5))
+    ax.set_xlim(0, 12); ax.set_ylim(-0.3, 5.5); ax.axis('off')
+    ax.set_title('Innovator Effect Mechanism: Unpredictability, Not Reduced Sharing',
+                 fontweight='bold', fontsize=12, pad=10)
+    _arrow(2.3, 4.2, 2.7, 4.2, C['purple'])
+    _arrow(4.9, 4.2, 5.4, 4.2, C['orange'])
+    _arrow(7.4, 4.2, 8.1, 4.2, C['red'])
+    _arrow(9.0, 3.4, 9.0, 2.4, C['red'])
+    for cx, cy, text, color in [
+        (1.2, 4.2, 'Innovator agent\nεmin = 0.05 (vs 0.01)', C['purple']),
+        (3.8, 4.2, 'Continues random exploration\nafter others converge', C['orange']),
+        (6.4, 4.2, 'Neighbours cannot form\nstable expectations', C['red']),
+        (9.0, 4.2, 'Shift to defensive hoarding', C['dark']),
+    ]:
+        _box(cx, cy, 2.2, 0.8, text, color, fs=8.5, fc='tint')
+    for cx, cy, text, color in [
+        (6.8, 1.6, 'Higher inequality', C['red']),
+        (9.0, 1.6, 'Lower comfort', C['red']),
+        (11.0, 1.6, 'More blackouts', C['red']),
+    ]:
+        _box(cx, cy, 1.8, 0.7, text, color, fs=8, fc='tint')
+    ax.text(0.8, 3.6, 'Higher openness (OCEAN)', ha='center', va='center',
+            fontsize=7, fontstyle='italic', color=C['purple'])
+    ax.text(3.8, 3.4, 'The alter-exploration problem', ha='center', va='center',
+            fontsize=7, fontstyle='italic', color=C['orange'])
+    ax.text(6.4, 3.4, 'Unpredictable energy supply', ha='center', va='center',
+            fontsize=7, fontstyle='italic', color=C['red'])
+    ax.text(9.0, 3.4, 'Self-protective strategy', ha='center', va='center',
+            fontsize=7, fontstyle='italic', color=C['dark'])
+    fig.savefig(f'{OUT}/v08_innovator_effect.png', dpi=150, bbox_inches='tight')
+    plt.close(fig)
 
 # ═══════════════════════════════════════════════
-fig, ax = plt.subplots(figsize=(10, 4))
-studies = ['Charbonnier\net al. (2022)', 'May & Huang\n(2023)',
-           'Kusatake\net al. (2023)', 'Behrunani\net al. (2023)',
-           'Aloor\net al. (2024)', 'This Study\n— Mixed']
-comfort = [0.91, 0.89, 0.89, 0.88, 0.90, 0.920]
-fairness = [None, None, 0.90, 0.88, 0.89, 0.923]
-x = np.arange(len(studies))
-w = 0.35
-ax.bar(x - w/2, comfort, w, color=[C['blue']]*5 + ['#2980B9'],
-       edgecolor=['#999']*5 + [C['dark']], linewidth=[0.5]*5 + [2],
+# Figure 1-1: Tragedy of the Commons (conceptual schematic, Persian)
+with plt.rc_context({'font.family': FA_FONTS}):
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.set_xlim(0, 10); ax.set_ylim(0, 5); ax.axis('off')
+    ax.set_title(fa('تراژدی منابع مشترک در اشتراک انرژی: دوراهی احتکار در برابر اشتراک'),
+                 fontweight='bold', fontsize=12, pad=10)
+    ax.add_patch(FancyBboxPatch((0.3, 0.3), 4.2, 4.2,
+                                 boxstyle="round,pad=0.08",
+                                 facecolor=C['green'], edgecolor=C['grey'], lw=1.5, alpha=0.12))
+    ax.text(2.4, 4.6, fa('تراژدی منابع مشترک\n(هاردین، ۱۹۶۸)'),
+            ha='center', va='center', fontsize=9, fontweight='bold', color=C['green'])
+    for x, y in [(1.0, 3.2), (2.5, 3.7), (1.8, 2.5), (3.2, 2.9)]:
+        ax.plot(x, y, 'o', color=C['orange'], markersize=16, zorder=5)
+    ax.add_patch(mpatches.FancyBboxPatch((1.2, 0.6), 1.5, 0.8,
+                                          boxstyle="round,pad=0.05",
+                                          facecolor=C['orange'], alpha=0.5))
+    ax.text(1.95, 1.0, fa('چراگاه فرسوده'), ha='center', va='center',
+            fontsize=7, color=C['orange'], fontweight='bold')
+    ax.text(2.4, 0.35, fa('هر چوپان سود خود را بیشینه می‌کند\n↓\nمنبع برای همه نابود می‌شود'),
+            ha='center', va='center', fontsize=6.5, color=C['grey'], fontstyle='italic')
+    ax.add_patch(FancyBboxPatch((5.5, 0.3), 4.2, 4.2,
+                                 boxstyle="round,pad=0.08",
+                                 facecolor=C['blue'], edgecolor=C['grey'], lw=1.5, alpha=0.12))
+    ax.text(7.6, 4.6, fa('قیاس اشتراک انرژی\n(این پژوهش)'),
+            ha='center', va='center', fontsize=9, fontweight='bold', color=C['blue'])
+    for i, angle in enumerate(np.linspace(0, 2 * np.pi, 6, endpoint=False)):
+        col = C['green'] if i < 3 else C['red']
+        x = 7.6 + 1.5 * np.cos(angle)
+        y = 2.8 + 1.5 * np.sin(angle)
+        ax.add_patch(mpatches.Rectangle((x - 0.3, y - 0.25), 0.6, 0.4,
+                                         facecolor='white', edgecolor=col, lw=2))
+        ax.add_patch(mpatches.Polygon([(x - 0.35, y + 0.15), (x + 0.35, y + 0.15),
+                                        (x, y + 0.35)], facecolor=col, alpha=0.3))
+        label = fa('کامل') if i < 3 else fa('خاموشی')
+        ax.text(x, y - 0.45, label, ha='center', va='top', fontsize=6.5,
+                fontweight='bold', color=col)
+    ax.text(7.6, 0.35, fa('هر خانوار مازاد خود را احتکار می‌کند\n↓\nهدررفت انرژی و خاموشی همسایه'),
+            ha='center', va='center', fontsize=6.5, color=C['grey'], fontstyle='italic')
+    ax.text(5.0, 2.4, fa('عقلانیت فردی\n↓\nناعقلانیتی جمعی'),
+            ha='center', va='center', fontsize=10, fontweight='bold', color=C['dark'],
+            bbox=dict(facecolor='white', edgecolor=C['grey'], boxstyle='round,pad=0.4'))
+    fig.savefig(f'{OUT}/v09_tragedy_commons.png', dpi=150, bbox_inches='tight')
+    plt.close(fig)
+
+# ═══════════════════════════════════════════════
+# Fig 4-10 / SOTA comparison rebuilt from real baseline_comparison.csv
+# (thesis Table 4-10: 5 OCEAN-MARL scenarios + 4 reproduced baselines + control)
+fig, ax = plt.subplots(figsize=(13, 5))
+bdf = pd.read_csv(f'{BASE}/baseline_comparison.csv')
+order = ['OCEAN-MARL all-selfish', 'OCEAN-MARL all-prosocial', 'OCEAN-MARL mixed',
+         'OCEAN-MARL varied-altruism', 'OCEAN-MARL innovator-effect',
+         'Charbonnier marginal-IQL', 'Kusatake NSGA-II', 'Behrunani GNE',
+         'May & Huang PPO', 'always_default (control)']
+labels = ['OCEAN-MARL\nAll Selfish', 'OCEAN-MARL\nAll Prosocial', 'OCEAN-MARL\nMixed',
+          'OCEAN-MARL\nVaried Altruism', 'OCEAN-MARL\nInnovator Effect',
+          'Charbonnier\net al. (2022)', 'Kusatake\net al. (2023)', 'Behrunani\net al. (2023)',
+          'May & Huang\n(2023)', 'always_default\n(control)']
+comfort = [bdf[bdf['method'] == m]['comfort'].mean() for m in order]
+c_std = [bdf[bdf['method'] == m]['comfort'].std(ddof=1) for m in order]
+fairness = [bdf[bdf['method'] == m]['fairness'].mean() for m in order]
+f_std = [bdf[bdf['method'] == m]['fairness'].std(ddof=1) for m in order]
+x = np.arange(len(order)); w = 0.38
+ours = [True] * 5 + [False] * 5
+ax.bar(x - w/2, comfort, w, yerr=c_std, color=C['blue'], capsize=4,
+       edgecolor=[C['dark'] if o else '#999' for o in ours],
+       linewidth=[1.2 if o else 0.5 for o in ours],
        label='Community Comfort', alpha=0.85)
-fair_plot = [f if f is not None else 0 for f in fairness]
-ax.bar(x + w/2, fair_plot, w, color=[C['green']]*5 + ['#1E8449'],
-       edgecolor=['#999']*5 + [C['dark']], linewidth=[0.5]*5 + [2],
+ax.bar(x + w/2, fairness, w, yerr=f_std, color=C['green'], capsize=4,
+       edgecolor=[C['dark'] if o else '#999' for o in ours],
+       linewidth=[1.2 if o else 0.5 for o in ours],
        label="Jain's Fairness Index", alpha=0.85)
-for i, (c, f) in enumerate(zip(comfort, fairness)):
-    ax.text(i - w/2, c + 0.005, f'{c:.3f}', ha='center', fontsize=7.5, fontweight='bold')
-    if f is not None:
-        ax.text(i + w/2, f + 0.005, f'{f:.3f}', ha='center', fontsize=7.5, fontweight='bold')
-    else:
-        ax.text(i + w/2, 0.01, 'N/R', ha='center', fontsize=7, color=C['grey'], fontstyle='italic')
-ax.set_xticks(x); ax.set_xticklabels(studies, fontsize=9)
+for i, (c, fs) in enumerate(zip(comfort, fairness)):
+    ax.text(i - w/2, c + c_std[i] + 0.004, f'{c:.3f}', ha='center', fontsize=7.5, fontweight='bold')
+    ax.text(i + w/2, fs + f_std[i] + 0.004, f'{fs:.3f}', ha='center', fontsize=7.5, fontweight='bold')
+ax.axvline(4.5, color='#bbb', lw=0.8, ls='--', zorder=0)
+ax.set_xticks(x); ax.set_xticklabels(labels, fontsize=8.5)
 ax.set_ylabel('Score')
 ax.set_title('Comparison with State-of-the-Art Energy MARL Studies',
              fontweight='bold', fontsize=11)
-ax.set_ylim(0.78, 0.97); ax.legend(fontsize=9, loc='lower right', framealpha=0.9)
+ax.set_ylim(0.86, 0.97); ax.legend(fontsize=9, loc='lower right', framealpha=0.9)
 ax.grid(axis='y', alpha=0.3)
-ax.text(0.02, -0.06, '\u2020 Values estimated from published figures',
+ax.text(0.03, -0.08, '\u2020 Reproduced baselines + always_default control; bars = mean \u00b1 SD over 5 seeds',
         transform=ax.transAxes, fontsize=7, fontstyle='italic', color=C['grey'])
 fig.subplots_adjust(bottom=0.2)
 fig.savefig(f'{OUT}/v10_sota_comparison.png', dpi=150, bbox_inches='tight')
@@ -485,79 +529,84 @@ fig.tight_layout(); fig.savefig(f'{OUT}/v11_lorenz_curve.png', dpi=150, bbox_inc
 plt.close(fig)
 
 # ═══════════════════════════════════════════════
-fig, ax = plt.subplots(figsize=(10, 9))
-ax.set_xlim(0, 10); ax.set_ylim(0, 9.5); ax.axis('off')
-ax.set_title('System Architecture Flowchart',
-             fontweight='bold', fontsize=12, pad=15)
-def arch_box(cx, cy, w, h, text, color, fs=8.5):
-    ax.add_patch(FancyBboxPatch((cx - w/2, cy - h/2), w, h,
-                                 boxstyle="round,pad=0.08",
-                                 facecolor=color, edgecolor=color, lw=1.8, alpha=0.12))
-    ax.text(cx, cy, text, ha='center', va='center', fontsize=fs,
-            fontweight='bold', color=C['dark'])
-def arch_arrow(x1, y1, x2, y2, color=C['dark'], lw=1.8):
-    ax.annotate('', xy=(x2, y2), xytext=(x1, y1),
-                arrowprops=dict(arrowstyle='->', color=color, lw=lw))
+# Figure 3-1: System Architecture Flowchart (conceptual schematic)
+# EN conversion 2026-08-16 — Persian originals (also in git HEAD 1731705):
+#   'معماری سیستم: حلقه شبیه‌سازی ده‌بلوکی' · 'حلقه محیط' · 'به‌روزرسانی یادگیری' ·
+#   '1: بازنشانی محیط (باتری 50٪، آب‌وهوای تصادفی)' · '2: تولید خورشیدی (نیم‌سینوسی،
+#   Eq. 3-1)' · '3: تحقق تقاضا (4 الگوی مصرف)' · '4: مشاهده وضعیت (ساعت، سطح باتری)' ·
+#   '5: اشتراک انرژی (ε-حریصانه از Q)' · '6: محاسبه پاداش (Eq. 3-2 تا 3-4)' ·
+#   '7: به‌روزرسانی Q(s,a) (Eq. 3-5)' · '9: ساعت بعدی (h+1) یا پایان قسمت (h=23)' ·
+#   '10: ثبت معیارها (هر 100 قسمت)' · 'قسمت بعد'
+with plt.rc_context({'font.family': 'sans-serif'}):
+    fig, ax = plt.subplots(figsize=(10, 9.5))
+    ax.set_xlim(0, 10); ax.set_ylim(0, 9.5); ax.axis('off')
+    ax.set_title('System Architecture: Ten-Block Simulation Loop',
+                 fontweight='bold', fontsize=13, pad=15)
+    def arch_box(cx, cy, w, h, text, color, fs=8.5):
+        ax.add_patch(FancyBboxPatch((cx - w/2, cy - h/2), w, h,
+                                     boxstyle="round,pad=0.08",
+                                     facecolor=color, edgecolor=color,
+                                     lw=1.8, alpha=0.12))
+        ax.text(cx, cy, text, ha='center', va='center', fontsize=fs,
+                fontweight='bold', color=C['dark'])
+    def arch_arrow(x1, y1, x2, y2, color=C['dark'], lw=1.8):
+        ax.annotate('', xy=(x2, y2), xytext=(x1, y1),
+                    arrowprops=dict(arrowstyle='->', color=color, lw=lw))
 
-# Column group labels
-ax.text(1.5, 9.2, 'ENVIRONMENT LOOP', ha='center', va='bottom',
-        fontsize=7, fontweight='bold', color=C['blue'])
-ax.text(8.5, 9.2, 'LEARNING UPDATE', ha='center', va='bottom',
-        fontsize=7, fontweight='bold', color=C['green'])
+    ax.text(1.5, 9.2, 'Environment loop', ha='center', va='bottom',
+            fontsize=7.5, fontweight='bold', color=C['blue'])
+    ax.text(8.5, 9.2, 'Learning updates', ha='center', va='bottom',
+            fontsize=7.5, fontweight='bold', color=C['green'])
 
-# Box definitions (cx, cy, text, color)
-left_boxes = [
-    (1.5, 8.0, '1: Reset Environment\n(battery 50%, weather draw)', C['blue']),
-    (1.5, 6.4, '2: Solar Generation\n(half-sine, Eq. 3-1)', C['blue']),
-    (1.5, 4.8, '3: Demand Realisation\n(4 profile types)', C['blue']),
-    (1.5, 3.2, '4: State Observation\n(hour, battery level)', C['blue']),
-    (1.5, 1.6, '5: Energy Sharing\n($\\varepsilon$-greedy from Q)', C['teal']),
-]
-right_boxes = [
-    (8.5, 8.0, '6: Reward Computation\n(Eq. 3-2 to 3-4)', C['green']),
-    (8.5, 6.4, '7: Q(s,a) Update\n(Eq. 3-5)', C['green']),
-    (8.5, 4.8, '8: $\\varepsilon$-decay\n($\\varepsilon$ = max($\\varepsilon_{\\min}$, $\\varepsilon\\times 0.999$))', C['orange']),
-    (8.5, 3.2, '9: Next Hour (h+1)\nor End Episode (h=23)', C['orange']),
-    (8.5, 1.6, '10: Record Metrics\n(every 100 episodes)', C['purple']),
-]
+    left_boxes = [
+        (1.5, 8.0, '1: Reset environment\n(battery 50%, random weather)', C['blue']),
+        (1.5, 6.4, '2: Solar generation\n(half-sine, Eq. 3-1)', C['blue']),
+        (1.5, 4.8, '3: Demand realisation\n(4 consumption patterns)', C['blue']),
+        (1.5, 3.2, '4: Observe state\n(hour, battery level)', C['blue']),
+        (1.5, 1.6, '5: Energy sharing\n(ε-greedy on Q)', C['teal']),
+    ]
+    right_boxes = [
+        (8.5, 8.0, '6: Compute reward\n(Eqs. 3-2 to 3-4)', C['green']),
+        (8.5, 6.4, '7: Update Q(s,a)\n(Eq. 3-5)', C['green']),
+        (8.5, 4.8, '8: Reduce exploration\n(ε = max(ε_min, ε × 0.999))', C['orange']),
+        (8.5, 3.2, '9: Next hour (h+1)\nor episode end (h=23)', C['orange']),
+        (8.5, 1.6, '10: Log metrics\n(every 100 episodes)', C['purple']),
+    ]
 
-for cx, cy, text, color in left_boxes:
-    arch_box(cx, cy, 2.6, 0.85, text, color)
-for cx, cy, text, color in right_boxes:
-    arch_box(cx, cy, 2.6, 0.85, text, color)
+    for cx, cy, text, color in left_boxes:
+        arch_box(cx, cy, 2.6, 0.85, text, color)
+    for cx, cy, text, color in right_boxes:
+        arch_box(cx, cy, 2.6, 0.85, text, color)
 
-# Downward arrows in left column
-for i in range(4):
-    y_center = 8.0 - i * 1.6
-    arch_arrow(1.5, y_center - 0.425, 1.5, y_center - 0.85 + 0.425, C['blue'])
+    for i in range(4):
+        y_center = 8.0 - i * 1.6
+        arch_arrow(1.5, y_center - 0.425, 1.5, y_center - 0.85 + 0.425, C['blue'])
 
-# Connection from step 5 to step 6: go right from step 5, then up right edge
-arch_arrow(1.5, 1.6 - 0.425, 4.5, 0.5, C['teal'])
-arch_arrow(4.5, 0.5, 8.5, 0.5, C['teal'], lw=1.2)
-arch_arrow(8.5, 0.5, 8.5, 8.0 - 0.425, C['green'])
+    arch_arrow(1.5, 1.6 - 0.425, 4.5, 0.5, C['teal'])
+    arch_arrow(4.5, 0.5, 8.5, 0.5, C['teal'], lw=1.2)
+    arch_arrow(8.5, 0.5, 8.5, 8.0 - 0.425, C['green'])
 
-# Downward arrows in right column
-for i in range(4):
-    y_center = 8.0 - i * 1.6
-    arch_arrow(8.5, y_center - 0.425, 8.5, y_center - 0.85 + 0.425, C['green'])
+    for i in range(4):
+        y_center = 8.0 - i * 1.6
+        arch_arrow(8.5, y_center - 0.425, 8.5, y_center - 0.85 + 0.425, C['green'])
 
-# h < 23 loop back on left side
-ax.annotate('', xy=(0.7, 3.2), xytext=(0.7, 4.8),
-            arrowprops=dict(arrowstyle='->', color=C['teal'], lw=1.5, connectionstyle='arc3,rad=0.5'))
-ax.text(0.35, 4.0, 'h < 23', ha='center', va='center', fontsize=7,
-        fontstyle='italic', color=C['teal'],
-        bbox=dict(facecolor='white', edgecolor='none', alpha=0.7))
+    ax.annotate('', xy=(0.7, 3.2), xytext=(0.7, 4.8),
+                arrowprops=dict(arrowstyle='->', color=C['teal'], lw=1.5,
+                                connectionstyle='arc3,rad=0.5'))
+    ax.text(0.35, 4.0, 'h < 23', ha='center', va='center', fontsize=7,
+            fontstyle='italic', color=C['teal'],
+            bbox=dict(facecolor='white', edgecolor='none', alpha=0.7))
 
-# Episode loop: dashed arrow from step 10 back to step 1 (curved around left)
-ax.annotate('', xy=(1.5, 8.0 + 0.425), xytext=(8.5, 1.6),
-            arrowprops=dict(arrowstyle='->', color=C['purple'], lw=1.5,
-                            connectionstyle='arc3,rad=-0.45', linestyle='dashed'))
-mid_x, mid_y = 5.8, 5.5
-ax.text(mid_x, mid_y, 'next episode', ha='center', va='center', fontsize=7.5,
-        fontstyle='italic', color=C['purple'],
-        bbox=dict(facecolor='white', edgecolor='none', alpha=0.7))
-fig.savefig(f'{OUT}/v12_system_architecture.png', dpi=150, bbox_inches='tight')
-plt.close(fig)
+    ax.annotate('', xy=(1.5, 8.0 + 0.425), xytext=(8.5, 1.6),
+                arrowprops=dict(arrowstyle='->', color=C['purple'], lw=1.5,
+                                connectionstyle='arc3,rad=-0.45',
+                                linestyle='dashed'))
+    mid_x, mid_y = 5.8, 5.5
+    ax.text(mid_x, mid_y, 'Next episode', ha='center', va='center', fontsize=7.5,
+            fontstyle='italic', color=C['purple'],
+            bbox=dict(facecolor='white', edgecolor='none', alpha=0.7))
+    fig.savefig(f'{OUT}/v12_system_architecture.png', dpi=150, bbox_inches='tight')
+    plt.close(fig)
 
 # ═══════════════════════════════════════════════
 # Data-driven charts from actual experiment CSVs
@@ -607,7 +656,7 @@ if all_data:
     sel = [all_data[s]['selfish_comfort'].mean() for s in type_scenarios]
     p_std = [all_data[s]['prosocial_comfort'].std() for s in type_scenarios]
     s_std = [all_data[s]['selfish_comfort'].std() for s in type_scenarios]
-    gaps = ['+2.9 pp**\n(p=0.0011)', '+2.0 pp*\n(p=0.0472)', '+1.9 pp\n(p=0.089)']
+    gaps = ['+2.9 pp**\n(p=0.0011)', '+2.0 pp*\n(p=0.0472)', '+1.9 pp']
     x = np.arange(3); w = 0.35
     ax.bar(x - w/2, pro, w, yerr=p_std, label='Prosocial', color=C['blue'], capsize=6, alpha=0.85)
     ax.bar(x + w/2, sel, w, yerr=s_std, label='Selfish', color=C['red'], capsize=6, alpha=0.85)
@@ -700,7 +749,52 @@ if all_data:
     fig.tight_layout(); fig.savefig(f'{OUT}/v16_sharing_frequency.png', dpi=150, bbox_inches='tight')
     plt.close(fig)
 
-    # Fig 4-6: Scarcity Sensitivity (data from cloud_sensitivity_reanalysis.csv)
+    # Fig 4-7: Q-table Heatmaps (data from analysis_support/qtab/*.npy, seed index 0 = seed 42)
+    with plt.rc_context({'font.family': FA_FONTS}):
+        h_scenarios = ['all_selfish', 'all_prosocial', 'mixed', 'varied_altruism', 'innovator_effect']
+        h_mixes = {
+            'all_selfish': ['pure_selfish'] * 10,
+            'all_prosocial': ['prosocial'] * 10,
+            'mixed': ['prosocial'] * 5 + ['pure_selfish'] * 5,
+            'varied_altruism': ['altruistic', 'prosocial', 'prosocial', 'prosocial',
+                                'individualist', 'individualist', 'individualist',
+                                'pure_selfish', 'pure_selfish', 'pure_selfish'],
+            'innovator_effect': ['high_openness_innovator'] + ['prosocial'] * 4 + \
+                                ['individualist'] * 3 + ['pure_selfish'] * 2,
+        }
+        h_names = {
+            'pure_selfish': 'خودخواه محض', 'individualist': 'فردگرا',
+            'prosocial': 'نوع‌گرا', 'altruistic': 'نوع‌دوست',
+            'high_openness_innovator': 'مبتکر',
+        }
+        h_labels = {
+            'all_selfish': 'همگی خودخواه', 'all_prosocial': 'همگی نوع‌گرا',
+            'mixed': 'مختلط', 'varied_altruism': 'نوع‌گرایی متنوع',
+            'innovator_effect': 'اثر نوآور',
+        }
+        fig, axes = plt.subplots(2, 5, figsize=(24, 10))
+        for i, sc in enumerate(h_scenarios):
+            q = np.load(f'{BASE}/analysis_support/qtab/{sc}_q.npy')   # (seeds, houses, 24, 4, 3)
+            for row, house in enumerate([0, 3 if sc != 'innovator_effect' else 8]):
+                q_avg = q[0, house].mean(axis=1)                      # mean over battery -> (24, 3)
+                ax = axes[row, i]
+                im = ax.imshow(q_avg.T, aspect='auto', cmap='YlOrRd', origin='lower',
+                               extent=[0, 23, 0, 2])
+                ax.set_xticks([0, 6, 12, 18, 23])
+                ax.set_yticks([0, 1, 2])
+                ax.set_yticklabels([fa('سهم ۰٪'), fa('سهم ۵۰٪'), fa('سهم ۱۰۰٪')], fontsize=8)
+                ax.set_xlabel(fa('ساعت روز'), fontsize=9)
+                agent_t = h_names[h_mixes[sc][house]]
+                ax.set_title(fa(f'{h_labels[sc]} — عامل {house} ({agent_t})'),
+                             fontweight='bold', fontsize=10)
+                plt.colorbar(im, ax=ax, label=fa('میانگین مقدار Q'))
+        fig.suptitle(fa('نقشه‌های حرارتی مقادیر Q میانگین‌شده در هر ساعت برای عامل‌های نماینده'),
+                     fontweight='bold', fontsize=14)
+        fig.tight_layout(rect=[0, 0, 1, 0.96])
+        fig.savefig(f'{OUT}/v17_qtable_heatmaps.png', dpi=150, bbox_inches='tight')
+        plt.close(fig)
+
+    # Fig 4-8: Scarcity Sensitivity (data from cloud_sensitivity_reanalysis.csv)
     fig, ax = plt.subplots(figsize=(8, 5))
     cs = pd.read_csv(f'{BASE}/cloud_sensitivity_reanalysis.csv')
     cp = sorted(cs['cloud_prob'].unique())
@@ -724,6 +818,99 @@ if all_data:
             transform=ax.transAxes, fontsize=8, fontstyle='italic',
             ha='center', color=C['grey'])
     fig.tight_layout(); fig.savefig(f'{OUT}/v18_scarcity_sensitivity.png', dpi=150, bbox_inches='tight')
+    plt.close(fig)
+
+# Figure 2-1 (NEW): Conceptual Framework — Personality-Adjusted Coordination Model
+# EN conversion 2026-08-16 — Persian originals (also in git HEAD 1731705):
+#   'چارچوب مفهومی: مدل هماهنگی تعدیل‌شده با شخصیت' · 'سطح فردی: موقعیت در فضای شخصیت
+#   OCEAN' · 'توافق‌پذیری ← وزن عدالت اجتماعی w_fair' · 'گشودگی ← کف اکتشاف ε_min' ·
+#   'سه بُعد دیگر ثابت در میانگین جمعیتی' · 'تعیین پارامترهای عامل' ·
+#   'سطح عامل: عامل یادگیری کیو مستقل' · 'فضای وضعیت: ساعت، سطح باتری' ·
+#   'سه اقدام اشتراک گسسته' · 'پاداش = ترکیب محدب (آسایش شخصی، عدالت اجتماعی)' ·
+#   'سیاست ε-حریصانه (ε_min از گشودگی)' · 'برهم‌کنش عامل‌ها' ·
+#   'سطح جامعه: پیامدهای نوظهور' · 'توزیع آسایش سطح جامعه' · 'الگوهای اشتراک انرژی' ·
+#   'تاب‌آوری: روز ابری / عامل نوآور' · 'بازخورد هماهنگی'
+with plt.rc_context({'font.family': 'sans-serif'}):
+    fig, ax = plt.subplots(figsize=(11, 8.5))
+    ax.set_xlim(0, 12); ax.set_ylim(0, 8.8); ax.axis('off')
+    ax.set_title('Conceptual Framework: Personality-Adjusted Coordination Model',
+                 fontweight='bold', fontsize=13, pad=14)
+
+    def panel(x, y, w, h, color, title, fs=10):
+        ax.add_patch(FancyBboxPatch((x, y), w, h,
+                                    boxstyle="round,pad=0.12",
+                                    facecolor=color, edgecolor=color,
+                                    lw=2, alpha=0.08))
+        ax.add_patch(FancyBboxPatch((x, y + h - 0.55), w, 0.55,
+                                    boxstyle="round,pad=0.12",
+                                    facecolor=color, edgecolor=color,
+                                    lw=2, alpha=0.25))
+        ax.text(x + w / 2, y + h - 0.275, title, ha='center', va='center',
+                fontsize=fs, fontweight='bold', color=color)
+        return ax
+
+    def sub_box(cx, cy, w, h, text, color, fs=8.5):
+        ax.add_patch(FancyBboxPatch((cx - w / 2, cy - h / 2), w, h,
+                                    boxstyle="round,pad=0.08",
+                                    facecolor='white', edgecolor=color,
+                                    lw=1.6, alpha=0.95))
+        ax.text(cx, cy, text, ha='center', va='center', fontsize=fs,
+                fontweight='bold', color=C['dark'])
+
+    def v_arrow(x, y1, y2, color, lw=2.2):
+        ax.annotate('', xy=(x, y2), xytext=(x, y1),
+                    arrowprops=dict(arrowstyle='->', color=color, lw=lw))
+
+    # ── Level 1: Individual (OCEAN personality space) ──
+    panel(0.6, 6.3, 10.8, 1.9, C['blue'],
+          'Individual level: position in OCEAN personality space')
+    sub_box(2.6, 6.95, 3.4, 0.95,
+            'Agreeableness\n» social fairness weight w_fair', C['green'], fs=8.5)
+    sub_box(6.0, 6.95, 3.4, 0.95,
+            'Openness\n» exploration floor ε_min', C['purple'], fs=8.5)
+    sub_box(9.6, 6.95, 3.0, 0.95,
+            'Other three dimensions\nfixed at population mean', C['grey'], fs=8)
+
+    v_arrow(6.0, 6.1, 5.45, C['blue'])
+    ax.text(6.9, 5.78, 'Determines agent parameters', ha='center', va='center',
+            fontsize=8, fontstyle='italic', color=C['blue'])
+
+    # ── Level 2: Agent (Q-learning) ──
+    panel(0.6, 3.7, 10.8, 1.9, C['purple'],
+          'Agent level: independent Q-learning agent')
+    sub_box(1.9, 4.35, 3.2, 0.95,
+            'State space:\nhour, battery level', C['blue'], fs=8.5)
+    sub_box(4.9, 4.35, 2.6, 0.95,
+            'Three discrete\nsharing actions', C['dark'], fs=8.5)
+    sub_box(7.9, 4.35, 4.0, 0.95,
+            'Reward = convex combination\n(personal comfort, social fairness)',
+            C['green'], fs=8)
+    ax.text(6.0, 3.92, 'ε-greedy policy (ε_min from openness)',
+            ha='center', va='center', fontsize=7.5, fontstyle='italic', color=C['purple'])
+
+    v_arrow(6.0, 3.5, 2.85, C['purple'])
+    ax.text(6.9, 3.18, 'Agent interactions', ha='center', va='center',
+            fontsize=8, fontstyle='italic', color=C['purple'])
+
+    # ── Level 3: Community (emergent outcomes) ──
+    panel(0.6, 1.0, 10.8, 1.9, C['green'],
+          'Community level: emergent outcomes')
+    sub_box(2.6, 1.65, 3.4, 0.95,
+            'Community-level\ncomfort distribution', C['blue'], fs=8.5)
+    sub_box(6.0, 1.65, 3.4, 0.95,
+            'Energy sharing\npatterns', C['purple'], fs=8.5)
+    sub_box(9.6, 1.65, 3.0, 0.95,
+            'Resilience:\ncloudy day / innovator agent', C['orange'], fs=8)
+
+    # Feedback: dashed arrow from community level back up to individual level
+    ax.annotate('', xy=(11.55, 6.35), xytext=(11.55, 2.9),
+                arrowprops=dict(arrowstyle='->', color=C['grey'], lw=1.8,
+                                linestyle='dashed'))
+    ax.text(11.15, 4.6, 'Coordination\nfeedback', ha='center', va='center',
+            fontsize=7.5, fontstyle='italic', color=C['grey'],
+            bbox=dict(facecolor='white', edgecolor='none', alpha=0.8))
+
+    fig.savefig(f'{OUT}/v2_1_conceptual_framework.png', dpi=150, bbox_inches='tight')
     plt.close(fig)
 
 print(f'All visuals saved to {OUT}/')

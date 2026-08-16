@@ -4,8 +4,10 @@
 > the `results/` tree — what it is, which script generated it, whether the thesis uses it, and what
 > to do with it. Read this before deleting, moving, or regenerating anything here.
 >
-> **Related thesis:** `0-Active Doc/thesis_v8.md` · **Registry of all 22 thesis figures:** Section C.
-> **Snapshot date:** Aug 2026 (post figure-integration audit).
+> **Related thesis:** `0-Active Doc/Thesis_v9-3.md` · **Registry of all 23 thesis figures:** Section C.
+> **Snapshot date:** Aug 2026 (post figure-integration audit; 2026-08-16 sync: شکل ۲-۱ added,
+> v10 rebuilt from real `baseline_comparison.csv` data with Aloor dropped, v14 innovator p-value
+> removed to match Table 4-2).
 
 ---
 
@@ -13,10 +15,10 @@
 
 | Group | Count | In thesis? |
 |---|---|---|
-| Main figures (`results/figures/`, v01–v16, v18) | 17 | ✅ All 17 |
+| Main figures (`results/figures/`, v01–v16, v18 + v2_1) | 18 | ✅ All 18 |
 | Q-table heatmaps (`results/qtable_heatmaps.png`) | 1 | ✅ |
 | Baseline validation plots (4 sanity/timing runs) | 4 | ✅ All 4 |
-| **Thesis figure total** | **22** | **All referenced** |
+| **Thesis figure total** | **23** | **All referenced** |
 | Superseded top-level images (→ replaced by v-figures) | 6 | ❌ None |
 | Per-seed runtime plots (`*/seed_*/results_plot.png`) | ~67 | ❌ Working artifacts |
 | **All image files under results/** | **~95** | — |
@@ -27,16 +29,18 @@
 
 ```
 results/
-├── figures/                          # MAIN thesis figures — 17, ALL used (do not delete)
-│   ├── v01_ocean_to_rl_mapping.png   ├── v10_sota_comparison.png   ⚠️ STALE (Aloor) — see §E
+├── figures/                          # MAIN thesis figures — 18, ALL used (do not delete)
+│   ├── v01_ocean_to_rl_mapping.png   ├── v10_sota_comparison.png
 │   ├── v02_ring_topology.png         ├── v11_lorenz_curve.png
 │   ├── v03_two_phase_sharing.png     ├── v12_system_architecture.png
 │   ├── v04_demand_profiles.png       ├── v13_community_metrics.png
 │   ├── v05_solar_curve.png           ├── v14_agent_comfort_split.png
 │   ├── v06_community_compositions.png├── v15_gini_comparison.png
 │   ├── v07_reciprocity_cycle.png     ├── v16_sharing_frequency.png
-│   ├── v08_innovator_effect.png      └── v18_scarcity_sensitivity.png
-│   └── v09_tragedy_commons.png        (v17 does NOT exist — naming gap only, nothing uses it)
+│   ├── v08_innovator_effect.png      ├── v18_scarcity_sensitivity.png
+│   ├── v09_tragedy_commons.png       └── v2_1_conceptual_framework.png   # NEW — شکل ۲-۱
+│   └── v17_qtable_heatmaps.png        # Persian heatmap variant — NOT a thesis figure
+│                                      # (شکل ۴-۷ = top-level results/qtable_heatmaps.png)
 ├── qtable_heatmaps.png               # USE — شکل ۴-۷ (advanced_analysis.py)
 ├── agent_type_comfort.png            # DISCARD → superseded by v14
 ├── community_metrics.png             # DISCARD → superseded by v13
@@ -70,13 +74,14 @@ results/
 
 ---
 
-## C. Thesis figure registry (all 22, authoritative شکل numbering)
+## C. Thesis figure registry (all 23, authoritative شکل numbering)
 
-Numbering = order of appearance per chapter, matches «فهرست اشکال» in `thesis_v8.md`.
+Numbering = order of appearance per chapter, matches «فهرست اشکال» in `0-Active Doc/Thesis_v9-3.md`.
 
 | شکل | File | Section | Caption (as in List of Figures) | Status |
 |---|---|---|---|---|
 | ۱-۱ | figures/v09_tragedy_commons.png | §1-2 | تراژدی منابع مشترک در اشتراک انرژی | ✅ placed |
+| ۲-۱ | figures/v2_1_conceptual_framework.png | §2-5-1 | چارچوب مفهومی: مدل هماهنگی تعدیل‌شده با شخصیت | ✅ placed (added 2026-08-16) |
 | ۳-۱ | figures/v12_system_architecture.png | §3-2 | نمودار جریان معماری سیستم (حلقه ۱۰ بلوکی) | ✅ placed |
 | ۳-۲ | figures/v02_ring_topology.png | §3-6 | توپولوژی حلقوی ریزشبکه محله‌ای | ✅ placed |
 | ۳-۳ | figures/v05_solar_curve.png | §3-6 | مدل نیم‌سینوسی تابش خورشیدی | ✅ placed |
@@ -97,7 +102,7 @@ Numbering = order of appearance per chapter, matches «فهرست اشکال» i
 | ۴-۱۱ | baseline_kusatake_timing/results_plot.png | §4-10-1 | زمان‌بندی/همگرایی بازتولید کوساتاکه | ✅ placed |
 | ۴-۱۲ | baseline_behrunani_sanity/results_plot.png | §4-10-1 | صحت‌سنجی بازتولید به‌رونانی | ✅ placed |
 | ۴-۱۳ | baseline_may_huang_sanity/results_plot.png | §4-10-1 | صحت‌سنجی بازتولید می و هوانگ | ✅ placed |
-| ۴-۱۴ | figures/v10_sota_comparison.png | §4-10-1 | مقایسه با آخرین دستاوردهای علمی | ⚠️ **STALE — Aloor** (§E) |
+| ۴-۱۴ | figures/v10_sota_comparison.png | §4-10-1 | مقایسه با آخرین دستاوردهای علمی | ✅ regenerated 2026-08-16 (real data, Aloor dropped) |
 
 ---
 
@@ -105,7 +110,7 @@ Numbering = order of appearance per chapter, matches «فهرست اشکال» i
 
 | Script | Produces | In thesis? |
 |---|---|---|
-| `generate_all_Visuals2.py` | `figures/v01…v16, v18` | ✅ 17/17 |
+| `generate_all_Visuals2.py` | `figures/v01…v18, v2_1` (v17 = non-thesis Persian heatmap variant) | ✅ 18/18 thesis figures |
 | `advanced_analysis.py` | `results/qtable_heatmaps.png` | ✅ |
 | `baseline_comparison.py` | `results/baseline_comparison.png/.csv/.txt` | png superseded by v10; csv/txt are the SOTA data |
 | `final_analysis.py` | `gini_comparison.png`, `sharing_frequency.png`, `sensitivity_cloud.png` | ❌ superseded (→v15, v16, v18) |
@@ -124,14 +129,16 @@ Numbering = order of appearance per chapter, matches «فهرست اشکال» i
 
 ## E. Known discrepancies / action items
 
-1. **`v10_sota_comparison.png` is STALE — must be regenerated.**
-   The thesis (§4-10, Table 4-11 note, line 1452) **removed Aloor et al. (2024)** from the
-   quantitative SOTA comparison (its domain is robot navigation, not energy sharing; its values
-   were not citable). But `generate_all_Visuals2.py` still plots Aloor as one of the six compared
-   studies (comfort 0.90 / fairness 0.89). → Regenerate v10 without Aloor, or relabel it clearly as
-   context-only literature values. Until then شکل ۴-۱۴ contradicts the thesis text.
-2. **v17 does not exist** (v01–v16, then v18). Internal naming gap only; nothing references v17.
-   Do not create it for continuity — thesis numbering is already gap-free.
+1. ✅ **RESOLVED 2026-08-16** — `v10_sota_comparison.png` was stale (it plotted Aloor et al. (2024),
+   which the thesis removed from the quantitative SOTA comparison — robot-navigation domain, values
+   not citable). Rebuilt in `generate_all_Visuals2.py` from `results/baseline_comparison.csv` (real
+   5-seed data): 5 OCEAN-MARL scenarios + 4 reproduced baselines + always_default control, mean ± SD
+   bars for community comfort and Jain's fairness. All 10 rows verified against thesis Table 4-10
+   (ddof=1 SD convention). No Aloor, no estimated-from-figure values.
+2. **v17 exists but is NOT a thesis figure.** `v17_qtable_heatmaps.png` is a Persian-labelled heatmap
+   variant generated by `generate_all_Visuals2.py` from `analysis_support/qtab/*.npy`. Thesis شکل ۴-۷
+   uses top-level `results/qtable_heatmaps.png` from `advanced_analysis.py` (different agent selection
+   and non-Persian labels). Keep v17 as a working artifact only.
 3. **Superseded top-level images (6)** can be archived/deleted without touching the thesis:
    `agent_type_comfort`, `community_metrics`, `gini_comparison`, `sensitivity_cloud`,
    `sharing_frequency`, `baseline_comparison` (keep the `.csv`/`.txt` alongside the last one).
@@ -142,15 +149,16 @@ Numbering = order of appearance per chapter, matches «فهرست اشکال» i
 
 ## F. Thesis placement issues (text, not files)
 
-From the figure-integration audit — all 22 files resolve and sit in the correct sections, but:
+From the figure-integration audit — all 23 files resolve and sit in the correct sections, but:
 
 - **No visible captions:** every figure's only caption is markdown alt-text (invisible in the
-  rendered Word thesis). Add visible «شکل (X-Y): …» caption lines under all 22 figures.
+  rendered Word thesis). Add visible «شکل (X-Y): …» caption lines under all figures — only
+  شکل ۲-۱ has one so far (added 2026-08-16).
 - **Orphan figures (zero explanatory prose):** شکل ۳-۵ (v01, after §3-7 heading), شکل ۴-۳
   (v07, sits between two images), شکل ۴-۵ (v15, sits between two images). Add a lead-in paragraph.
 - **Weak explanatory text:** شکل ۳-۶ (v03), ۳-۴ (v04), ۳-۷ (v06).
-- **In-text numeric references:** only 2 of 22 figures are cited in prose (شکل ۳-۱, شکل ۴-۷);
-  the other 20 are placed without a «شکل X-Y» call-out.
+- **In-text numeric references:** only 2 of 23 figures are cited in prose (شکل ۳-۱, شکل ۴-۷);
+  the other 21 are placed without a «شکل X-Y» call-out (incl. the new شکل ۲-۱).
 
 ---
 
@@ -166,8 +174,8 @@ From the figure-integration audit — all 22 files resolve and sit in the correc
 
 ## H. One-line file index (quick reference)
 
-**Keep (thesis):** `figures/v01…v16,v18`, `qtable_heatmaps.png`,
+**Keep (thesis):** `figures/v01…v18,v2_1`, `qtable_heatmaps.png`,
 `baseline_{charbonnier_validation,kusatake_timing,behrunani_sanity,may_huang_sanity}/results_plot.png`
-→ **re-generate:** `figures/v10_sota_comparison.png` (drop Aloor)
+→ v10 already regenerated 2026-08-16 — **no stale figures remain**
 **Archive/discard:** 6 top-level superseded `.png`; all `*/seed_*/results_plot.png`
 **Never delete (data):** every `*.csv`, `*.txt`, `*.npy`, `config.json`, `*_summary.csv`
