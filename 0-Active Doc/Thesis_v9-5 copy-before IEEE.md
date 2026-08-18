@@ -1,0 +1,1762 @@
+---
+university: "دانشگاه آزاد اسلامی"
+branch: "واحد اردبیل"
+faculty: "دانشکده فنی و مهندسی"
+degree: "پایان‌نامه کارشناسی ارشد (M.Sc.)"
+field: "مهندسی کامپیوتر - نرم‌افزار"
+title_fa: "روشی نوین برای اشتراک منصفانه و کارآمد انرژی در محله‌های هوشمند با استفاده از یادگیری تقویتی چندعاملی"
+title_en: "A New Method of Fair and Efficient Energy Sharing in Smart Neighborhoods Using Agent-Based Reinforcement Learning"
+supervisor: "دکتر بابک نوری‌مقدم"
+advisor: ""
+author: "حمید اصغریان"
+defense_date: "۱۴۰۵"
+university_en: "Islamic Azad University"
+branch_en: "Ardabil Branch"
+faculty_en: "Faculty of Technical and Engineering"
+degree_en: "A Thesis Submitted in Partial Fulfillment of the Requirements for the Degree of Master of Science (M.Sc.) in Computer Engineering"
+field_en: "Computer Engineering - Software"
+supervisor_en: "Dr. Babak Nouri-Moghaddam"
+advisor_en: ""
+author_en: "Hamid Asgharian"
+defense_date_en: "2025"
+
+acknowledgements: |
+  سپاس بی‌کران پروردگار متعال را که توفیق علم‌آموزی و تحقیق را به این بنده ناچیز عطا فرمود.
+  بدین وسیله از استاد راهنمای گرانقدر، جناب آقای دکتر بابک نوری‌مقدم، که با راهنمایی‌های ارزشمند خود مرا در این مسیر یاری نمودند، صمیمانه سپاسگزاری می‌نمایم.
+  همچنین از تمامی اساتید محترم گروه کامپیوتر دانشگاه آزاد اسلامی واحد اردبیل که در طول دوران تحصیل از دانش و تجربیات خود بهره‌مند شدم، کمال تشکر را دارم.
+  در پایان، از خانواده عزیزم که همواره پشتیبان و مشوق من در تمام مراحل تحصیل بوده‌اند، قدردانی می‌نمایم.
+
+dedication: |
+  تقدیم به خانواده عزیزم که همواره پشتیبان و مشوق من در تمام مراحل تحصیل بوده‌اند.
+
+abstract_fa: |
+  ریزشبکه‌های هوشمند محله‌ای، به‌عنوان مرز محلی‌شده‌ی تمرکززدایی انرژی، امکان اشتراک انرژی مازاد بین خانوارهای مجهز به پنل‌های خورشیدی و ذخیره‌ساز باتری را فراهم می‌آورند. بااین‌حال، رویکردهای استاندارد یادگیری تقویتی چندعاملی (MARL) در مدیریت انرژی، معمولاً بهینه‌سازی کارایی جمعی را هدف قرار می‌دهند که می‌تواند پیامدهای ناعادلانه‌ای ایجاد کند. این پژوهش با معرفی چارچوب پاداش تعدیل‌شده با شخصیت، به بررسی تأثیر ترجیحات عدالت ناهمگن و زمین‌گذاری‌شده‌ی روان‌شناختی بر پویایی‌های اشتراک انرژی در یک محله‌ی هوشمند می‌پردازد. یک شبیه‌سازی مبتنی بر عامل با ۱۰ خانه در توپولوژی حلقوی طراحی شد که هر خانه توسط یک عامل یادگیری Q مستقل با فضای حالت گسسته‌ی ۹۶ وضعیتی کنترل می‌شود. پنج نوع شخصیتی (خودخواه محض، فردگرا، نوع‌گرا، نوع‌دوست و مبتکر با گشودگی بالا) بر اساس مدل پنج‌عاملی شخصیت (OCEAN) تعریف شدند. پنج سناریوی ترکیب جامعه با ۵ تصادف‌سازی (۲۵ اجرای مستقل، هر یک ۸۰۰۰ قسمت) آزمایش شدند. یافته‌ها نشان داد که عامل‌های نوع‌گرا در جوامع مختلط به ۹/۲ واحد درصد آسایش بالاتر نسبت به همسایگان خودخواه دست می‌یابند (۰۰۱۱/۰ = p) و این مزیت در تمام سطوح کمبود منابع پایدار است. شگفت‌انگیزترین یافته، اثر مبتکر بود: یک عامل منفرد با گشودگی بالا (اکتشاف ادامه‌دار) باعث کاهش ۲ درصدی آسایش جامعه، افزایش ۲۲ درصدی نابرابری (ضریب جینی) و افزایش ۳/۸ درصدی نرخ خاموشی شد. در سطح جامعه، تفاوت معنی‌داری بین سناریوهای خودخواه و نوع‌گرای همگن مشاهده نشد. در مقایسه با یک خط پایه‌ی کنترلِ بدون اشتراک‌گذاری (سناریوی «همیشه عدم اشتراک»)، هیچ‌یک از سناریوهای اصلی این پژوهش از نظر آسایش مطلق جامعه یا شاخص عدالت جین برتری معنی‌داری نداشتند؛ بااین‌حال، تمامی سناریوهای مبتنی بر اشتراک‌گذاری، هدررفت انرژی جامعه را نسبت به خط پایهٔ عدم اشتراک کاهش دادند (در سناریوی مختلط از ۸۲/۸ به ۳۴/۴ کیلووات‌ساعت در روز، کاهشی معادل ≈۵۱ درصد)، هرچند کاهش ۹/۱۲ درصدی هدررفت در سناریوی مختلط نسبت به سناریوی همگی خودخواه از نظر آماری معنی‌دار نبود (۱۴/۰ = p). بنابراین، مشارکت اصلی این پژوهش نه در بهبود آسایش مطلق جامعه، بلکه در (الف) کاهش جهت‌دار هدررفت انرژی (که در سناریوی مختلط به ۹/۱۲ درصد رسید اما با ۵ تصادف‌سازی به معنی‌داری آماری نرسید، ۱۴/۰ = p) و (ب) آشکارسازی پویایی‌های توزیعی متمایز ناشی از ناهمگنی شخصیتی—از جمله مزیت آسایش عامل‌های نوع‌گرا و اثر نوآور—نهفته است. اثر مبتکر به‌عنوان یک هشدار مهم برای طراحی سیستم‌های هوش مصنوعی در مدیریت منابع اشتراکی مطرح است: عامل‌های غیرقابل‌پیش‌بینی، حتی با نیت خوب، می‌توانند هنجارهای همکاری را تضعیف کنند.
+
+abstract_fa_keywords:
+  - "یادگیری تقویتی چندعاملی"
+  - "ریزشبکه هوشمند"
+  - "عدالت"
+  - "مدل پنج‌عاملی شخصیت (OCEAN)"
+  - "اشتراک انرژی همتا-به-همتا"
+  - "اثر مبتکر"
+
+abstract_en: |
+  Smart neighbourhood microgrids represent the localised frontier of energy decentralisation, enabling households equipped with solar panels and battery storage to share surplus energy with neighbours. Standard multi-agent reinforcement learning (MARL) approaches to energy management typically optimise for collective efficiency, but efficiency-only optimisation can produce inequitable outcomes. This study introduces a personality-modulated reward framework to investigate how heterogeneous, psychologically-grounded fairness preferences shape energy-sharing dynamics in a smart neighbourhood. An agent-based simulation of 10 houses in a ring topology was designed, with each house controlled by an independent tabular Q-learning agent operating in a 96-state discrete state space. Five personality types (pure_selfish, individualist, prosocial, altruistic, and high_openness_innovator) were defined based on the Big Five (OCEAN) personality model. Five community compositions with 5 random seeds each (25 independent runs, 8,000 episodes per run) were tested. Results show that prosocial agents in mixed communities achieve 2.9 percentage points higher comfort than selfish neighbours (p = 0.0011), and this advantage remains stable across all scarcity levels. The most surprising finding was the Innovator Effect: a single high-Openness agent with sustained exploration reduced community comfort by 2%, increased inequality by 22% (Gini coefficient), and raised blackout rates by 8.3%. At the community level, no significant differences were observed between homogeneous selfish and prosocial scenarios. This study demonstrates that fairness-aware reward design does not sacrifice technical efficiency while producing measurable individual-level distributional gains (p = 0.0011); the directional 12.9% reduction in community-level energy waste did not reach statistical significance at this sample size (p = 0.14). The Innovator Effect carries a cautionary implication for AI safety in community resource-sharing systems: unpredictable agents, even with good intentions, can undermine cooperative norms.
+
+abstract_en_keywords:
+  - "Multi-Agent Reinforcement Learning"
+  - "Smart Microgrid"
+  - "Fairness"
+  - "Big Five (OCEAN) Personality Model"
+  - "Peer-to-Peer Energy Sharing"
+  - "Innovator Effect"
+
+abbreviations:
+  - term: "MARL"
+    definition: "یادگیری تقویتی چندعاملی (Multi-Agent Reinforcement Learning)"
+  - term: "Dec-POMDP"
+    definition: "فرایند تصمیم‌گیری مارکوف جزئی‌مشاهده‌پذیر و غیرمتمرکز (Decentralised Partially Observable Markov Decision Process)"
+  - term: "IQL"
+    definition: "یادگیری کیو مستقل (Independent Q-Learning)"
+  - term: "OCEAN"
+    definition: "مدل پنج‌عاملی شخصیت: گشودگی، وظیفه‌شناسی، برون‌گرایی، توافق‌پذیری، روان‌رنجوری (Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism)"
+  - term: "P2P"
+    definition: "همتا-به-همتا (Peer-to-Peer)"
+  - term: "CTDE"
+    definition: "آموزش متمرکز با اجرای غیرمتمرکز (Centralised Training with Decentralised Execution)"
+  - term: "VDN"
+    definition: "شبکه‌های تجزیه‌ی ارزش (Value Decomposition Networks)"
+  - term: "DQN"
+    definition: "شبکه‌ی کیو عمیق (Deep Q-Network)"
+  - term: "PPO"
+    definition: "بهینه‌سازی سیاست نزدیک‌شونده (Proximal Policy Optimisation)"
+  - term: "MAPPO"
+    definition: "PPO چندعاملی (Multi-Agent PPO)"
+  - term: "GNN"
+    definition: "شبکه‌ی عصبی گراف (Graph Neural Network)"
+  - term: "LLM"
+    definition: "مدل زبانی بزرگ (Large Language Model)"
+  - term: "MCS"
+    definition: "طرح گواهی‌نامه‌ی ریزشبکه (Microgeneration Certification Scheme)"
+  - term: "SoC"
+    definition: "وضعیت شارژ (State of Charge)"
+  - term: "PV"
+    definition: "فتوولتائیک (Photovoltaic)"
+  - term: "kWh"
+    definition: "کیلووات-ساعت (Kilowatt-hour)"
+  - term: "kW"
+    definition: "کیلووات (Kilowatt)"
+  - term: "ANN"
+    definition: "شبکه‌ی عصبی مصنوعی (Artificial Neural Network)"
+  - term: "IPCC"
+    definition: "هیئت بین‌الدول تغییرات اقلیم (Intergovernmental Panel on Climate Change)"
+  - term: "IEA"
+    definition: "آژانس بین‌المللی انرژی (International Energy Agency)"
+---
+
+![دانشگاه آزاد اسلامی](media/image1.jpeg)
+
+![AZAD Logo](media/image2.wmf)
+
+دانشگاه آزاد اسلامی  
+واحد اردبیل
+
+پایان‌نامه کارشناسی ارشد (M.Sc.)
+
+مهندسی کامپیوتر - نرم‌افزار
+
+موضوع:
+
+روشی نوین برای اشتراک منصفانه و کارآمد انرژی در محله‌های هوشمند با استفاده از یادگیری تقویتی چندعاملی
+
+استاد راهنما:
+دکتر بابک نوری‌مقدم
+
+استاد مشاور:
+
+نگارش:
+حمید اصغریان
+
+۱۴۰۵
+
+---
+
+Islamic Azad University  
+Ardabil Branch
+
+A Thesis Submitted in Partial Fulfillment of the Requirements for the Degree of Master of Science (M.Sc.) in Computer Engineering
+
+Computer Engineering - Software
+
+Topic:
+
+A New Method of Fair and Efficient Energy Sharing in Smart Neighborhoods Using Agent-Based Reinforcement Learning
+
+Supervisor:
+Dr. Babak Nouri-Moghaddam
+
+Advisor:
+
+Student:
+Hamid Asgharian
+
+2025
+
+---
+
+## سپاسگزاری
+
+سپاس بی‌کران پروردگار متعال را که توفیق علم‌آموزی و تحقیق را به این بنده ناچیز عطا فرمود.
+بدین وسیله از استاد راهنمای گرانقدر، جناب آقای دکتر بابک نوری‌مقدم، که با راهنمایی‌های ارزشمند خود مرا در این مسیر یاری نمودند، صمیمانه سپاسگزاری می‌نمایم.
+همچنین از تمامی اساتید محترم گروه کامپیوتر دانشگاه آزاد اسلامی واحد اردبیل که در طول دوران تحصیل از دانش و تجربیات خود بهره‌مند شدم، کمال تشکر را دارم.
+در پایان، از خانواده عزیزم که همواره پشتیبان و مشوق من در تمام مراحل تحصیل بوده‌اند، قدردانی می‌نمایم.
+
+---
+
+## تقدیم به
+
+تقدیم به خانواده عزیزم که همواره پشتیبان و مشوق من در تمام مراحل تحصیل بوده‌اند.
+
+---
+
+## چکیده
+
+ریزشب‌که‌های هوشمند محله‌ای، به‌عنوان مرز محلی‌شده‌ی تمرکززدایی انرژی، امکان اشتراک انرژی مازاد بین خانوارهای مجهز به پنل‌های خورشیدی و ذخیره‌ساز باتری را فراهم می‌آورند. بااین‌حال، رویکردهای استاندارد یادگیری تقویتی چندعاملی (MARL) در مدیریت انرژی، معمولاً بهینه‌سازی کارایی جمعی را هدف قرار می‌دهند که می‌تواند پیامدهای ناعادلانه‌ای ایجاد کند. این پژوهش با معرفی چارچوب پاداش تعدیل‌شده با شخصیت، به بررسی تأثیر ترجیحات عدالت ناهمگن و زمین‌گذاری‌شده‌ی روان‌شناختی بر پویایی‌های اشتراک انرژی در یک محله‌ی هوشمند می‌پردازد. یک شبیه‌سازی مبتنی بر عامل با ۱۰ خانه در توپولوژی حلقوی طراحی شد که هر خانه توسط یک عامل یادگیری Q مستقل با فضای حالت گسسته‌ی ۹۶ وضعیتی کنترل می‌شود. پنج نوع شخصیتی (خودخواه محض، فردگرا، نوع‌گرا، نوع‌دوست و مبتکر با گشودگی بالا) بر اساس مدل پنج‌عاملی شخصیت (OCEAN) تعریف شدند. پنج سناریوی ترکیب جامعه با ۵ تصادف‌سازی (۲۵ اجرای مستقل، هر یک ۸۰۰۰ قسمت) آزمایش شدند. یافته‌ها نشان داد که عامل‌های نوع‌گرا در جوامع مختلط به ۹/۲ واحد درصد آسایش بالاتر نسبت به همسایگان خودخواه دست می‌یابند (۰۰۱۱/۰ = p) و این مزیت در تمام سطوح کمبود منابع پایدار است. شگفت‌انگیزترین یافته، اثر مبتکر بود: یک عامل منفرد با گشودگی بالا (اکتشاف ادامه‌دار) باعث کاهش ۲ درصدی آسایش جامعه، افزایش ۲۲ درصدی نابرابری (ضریب جینی) و افزایش ۳/۸ درصدی نرخ خاموشی شد. در سطح جامعه، تفاوت معنی‌داری بین سناریوهای خودخواه و نوع‌گرای همگن مشاهده نشد. در مقایسه با یک خط پایه‌ی کنترلِ بدون اشتراک‌گذاری (سناریوی «همیشه عدم اشتراک»)، هیچ‌یک از سناریوهای اصلی این پژوهش از نظر آسایش مطلق جامعه یا شاخص عدالت جین برتری معنی‌داری نداشتند؛ بااین‌حال، تمامی سناریوهای مبتنی بر اشتراک‌گذاری، هدررفت انرژی جامعه را نسبت به خط پایهٔ عدم اشتراک کاهش دادند (در سناریوی مختلط از ۸۲/۸ به ۳۴/۴ کیلووات‌ساعت در روز، کاهشی معادل ≈۵۱ درصد)، هرچند کاهش ۹/۱۲ درصدی هدررفت در سناریوی مختلط نسبت به سناریوی همگی خودخواه از نظر آماری معنی‌دار نبود (۱۴/۰ = p). بنابراین، مشارکت اصلی این پژوهش نه در بهبود آسایش مطلق جامعه، بل‌که در (الف) کاهش جهت‌دار هدررفت انرژی (که در سناریوی مختلط به ۹/۱۲ درصد رسید اما با ۵ تصادف‌سازی به معنی‌داری آماری نرسید، ۱۴/۰ = p) و (ب) آشکارسازی پویایی‌های توزیعی متمایز ناشی از ناهمگنی شخصیتی—از جمله مزیت آسایش عامل‌های نوع‌گرا و اثر نوآور—نهفته است. اثر مبتکر به‌عنوان یک هشدار مهم برای طراحی سیستم‌های هوش مصنوعی در مدیریت منابع اشتراکی مطرح است: عامل‌های غیرقابل‌پیش‌بینی، حتی با نیت خوب، می‌توانند هنجارهای همکاری را تضعیف کنند.
+
+**واژگان کلیدی:** یادگیری تقویتی چندعاملی، ریزشب‌که هوشمند، عدالت، مدل پنج‌عاملی شخصیت (OCEAN)، اشتراک انرژی همتا-به-همتا، اثر مبتکر
+
+---
+
+## Abstract
+
+Smart neighbourhood microgrids represent the localised frontier of energy decentralisation, enabling households equipped with solar panels and battery storage to share surplus energy with neighbours. Standard multi-agent reinforcement learning (MARL) approaches to energy management typically optimise for collective efficiency, but efficiency-only optimisation can produce inequitable outcomes. This study introduces a personality-modulated reward framework to investigate how heterogeneous, psychologically-grounded fairness preferences shape energy-sharing dynamics in a smart neighbourhood. An agent-based simulation of 10 houses in a ring topology was designed, with each house controlled by an independent tabular Q-learning agent operating in a 96-state discrete state space. Five personality types (pure_selfish, individualist, prosocial, altruistic, and high_openness_innovator) were defined based on the Big Five (OCEAN) personality model. Five community compositions with 5 random seeds each (25 independent runs, 8,000 episodes per run) were tested. Results show that prosocial agents in mixed communities achieve 2.9 percentage points higher comfort than selfish neighbours (p = 0.0011), and this advantage remains stable across all scarcity levels. The most surprising finding was the Innovator Effect: a single high-Openness agent with sustained exploration reduced community comfort by 2%, increased inequality by 22% (Gini coefficient), and raised blackout rates by 8.3%. At the community level, no significant differences were observed between homogeneous selfish and prosocial scenarios. This study demonstrates that fairness-aware reward design does not sacrifice technical efficiency while producing measurable individual-level distributional gains (p = 0.0011); the directional 12.9% reduction in community-level energy waste did not reach statistical significance at this sample size (p = 0.14). The Innovator Effect carries a cautionary implication for AI safety in community resource-sharing systems: unpredictable agents, even with good intentions, can undermine cooperative norms.
+
+**Keywords:** Multi-Agent Reinforcement Learning, Smart Microgrid, Fairness, Big Five (OCEAN) Personality Model, Peer-to-Peer Energy Sharing, Innovator Effect
+
+---
+
+## فهرست مطالب
+
+| **عنوان**                                                                                   | **صفحه** |
+| ------------------------------------------------------------------------------------------- | -------- |
+| فصل اول: کلیات                                                                              | —        |
+| ۱-۱- مقدمه                                                                                  | —        |
+| ۱-۲- بیان مسئله                                                                             | —        |
+| ۱-۳- اهمیت و ضرورت انجام تحقیق                                                              | —        |
+| ۱-۴- نوآوری پژوهش                                                                           | —        |
+| ۱-۵- اهداف برجسته تحقیق                                                                     | —        |
+| ۱-۶- سؤالات تحقیق                                                                           | —        |
+| ۱-۷- فرضیات تحقیق                                                                           | —        |
+| ۱-۸- تعاریف عملیاتی                                                                         | —        |
+| ۱-۹- ساختار پایان نامه                                                                      | —        |
+| ۱-۱۰- خلاصه فصل                                                                             | —        |
+| فصل دوم: مبانی نظری و پیشینه تحقیق                                                          | —        |
+| ۲-۱- مقدمه                                                                                  | —        |
+| ۲-۲- مبانی نظری                                                                             | —        |
+| &nbsp;&nbsp;۲-۲-۱- گذار به انرژی غیرمتمرکز و الگوی مصرف‌کننده-تولیدکننده (Prosumer)          | —        |
+| &nbsp;&nbsp;۲-۲-۲- مبادله‌ی انرژی همتا-به-همتا (P2P): ساختارهای بازار و سازوکارهای قیمت‌گذاری | —        |
+| &nbsp;&nbsp;۲-۲-۳- یادگیری تقویتی چندعاملی برای کنترل توزیع‌شده‌ی انرژی                       | —        |
+| &nbsp;&nbsp;۲-۲-۴- تصمیم‌گیری مبتنی بر شخصیت در عامل‌های محاسباتی                             | —        |
+| ۲-۳- مرور پژوهش‌های مرتبط                                                                    | —        |
+| &nbsp;&nbsp;۲-۳-۱- MARL کارآمد از نظر بهره‌وری در مدیریت انرژی مسکونی                        | —        |
+| &nbsp;&nbsp;۲-۳-۲- MARL عدالت‌آگاه: محدودیت‌های یکنواخت و کاستی‌های آن‌ها                       | —        |
+| &nbsp;&nbsp;۲-۳-۳- رویکردهای نظریه‌بازی و مبتنی بر بازار برای اشتراک منصفانه‌ی انرژی          | —        |
+| &nbsp;&nbsp;۲-۳-۴- مسئله‌ی اکتشاف جایگزین (Alter‑Exploration) و هزینه‌ی اکتشاف فردی           | —        |
+| ۲-۴- مقایسه‌ی کیفی پژوهش‌های مرتبط                                                            | —        |
+| ۲-۵- چارچوب مفهومی و شکاف‌های پژوهشی                                                         | —        |
+| &nbsp;&nbsp;۲-۵-۱- چارچوب مفهومی: مدل هماهنگی تعدیل‌شده با شخصیت                             | —        |
+| فصل سوم: روش پیشنهادی                                                                       | —        |
+| ۳-۱- مقدمه                                                                                  | —        |
+| ۳-۲- طرح و رویکرد پژوهش                                                                     | —        |
+| ۳-۳- روش‌های گردآوری داده‌ها                                                                  | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;روش‌شناسی انتخاب پارامتر                                             | —        |
+| ۳-۴- ابزارها و تجهیزات                                                                      | —        |
+| ۳-۵- جامعه، نمونه و روش نمونه‌گیری                                                           | —        |
+| ۳-۶- محیط فیزیکی                                                                            | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;تولید خورشیدی                                                       | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;الگوهای تقاضا                                                       | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;ذخیره‌سازی باتری                                                     | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;مدل روز ابری                                                        | —        |
+| ۳-۷- مدل شخصیت و نگاشت OCEAN                                                                | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;شخصیت مبتنی بر پاداش                                                | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;زمین‌گذاری در مدل پنج‌عاملی (OCEAN)                                   | —        |
+| ۳-۸- طراحی تابع پاداش                                                                       | —        |
+| ۳-۹- الگوریتم یادگیری                                                                       | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;فضای وضعیت                                                          | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;فضای اقدام                                                          | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;به‌روزرسانی یادگیری Q                                                | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;شبه‌کد: یادگیری Q تعدیل‌شده با شخصیت برای اشتراک انرژی                | —        |
+| ۳-۱۰- سازوکار اشتراک انرژی                                                                  | —        |
+| ۳-۱۱- ترکیب‌های جامعه (سناریوها)                                                             | —        |
+| ۳-۱۲- سنجه‌های عملکرد                                                                        | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;نگاشت سنجه‌ها به پرسش‌های پژوهش                                       | —        |
+| ۳-۱۳- روش‌های تحلیل داده                                                                     | —        |
+| ۳-۱۴- فراپارامترها و آموزش                                                                  | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;توجیه فراپارامترها                                                  | —        |
+| فصل چهارم: تجزیه و تحلیل نتایج                                                              | —        |
+| ۴-۱- مقدمه و مروری بر داده‌ها                                                                | —        |
+| ۴-۲- سنجه‌های سطح جامعه                                                                      | —        |
+| ۴-۳- تفاوت آسایش بر اساس نوع عامل                                                           | —        |
+| ۴-۴- تحلیل نابرابری (ضریب جینی)                                                             | —        |
+| ۴-۵- رفتار اشتراکی آموخته‌شده                                                                | —        |
+| ۴-۶- نقشه‌های حرارتی جدول Q — خط‌مشی‌های آموخته‌شده                                             | —        |
+| ۴-۷- حساسیت به کمبود منابع                                                                  | —        |
+| ۴-۸- آزمون معناداری آماری                                                                   | —        |
+| ۴-۹- اثر نوآور                                                                              | —        |
+| ۴-۱۰- اقتباس از اصول الگوریتمی پژوهش‌های مرتبط                                               | —        |
+| &nbsp;&nbsp;۴-۱۰-۱- روش‌شناسی بازتولید روش‌های مقایسه‌ای                                       | —        |
+| ۴-۱۱- تحلیل علّی تفاوت عملکرد روش‌های مقایسه‌شده                                               | —        |
+| ۴-۱۲- تحلیل کلی بی‌طرفانه                                                                    | —        |
+| فصل پنجم: نتیجه‌گیری                                                                         | —        |
+| ۵-۱- نتیجه‌گیری                                                                              | —        |
+| &nbsp;&nbsp;۵-۱-۱- خلاصه‌ی یافته‌ها                                                           | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;۵-۱-۱-۱- تبیین عملکرد پایه: چرا آسایش مطلق جامعه بهبود نیافت؟       | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;۵-۱-۱-۲- آزمون فرضیه‌های پژوهش                                       | —        |
+| &nbsp;&nbsp;۵-۱-۲- نتیجه‌گیری نهایی                                                          | —        |
+| &nbsp;&nbsp;۵-۱-۳- دستاوردهای پژوهش                                                         | —        |
+| &nbsp;&nbsp;۵-۱-۴- محدودیت‌های پژوهش                                                         | —        |
+| &nbsp;&nbsp;&nbsp;&nbsp;۵-۱-۴-۱- تهدیدات اعتبار (روایی)                                     | —        |
+| ۵-۲- پیشنهادات آتی                                                                          | —        |
+| &nbsp;&nbsp;۵-۲-۱- پیشنهادهایی برای پژوهش‌های آینده                                          | —        |
+| &nbsp;&nbsp;۵-۲-۲- پیشنهادهای عملی                                                          | —        |
+| منابع                                                                                       | —        |
+
+---
+
+## فهرست جداول
+
+| **عنوان**                                                                                                             | **صفحه** |
+| --------------------------------------------------------------------------------------------------------------------- | -------- |
+| جدول (۲-۱) مقایسه‌ی کیفی ادبیات MARL در مدیریت انرژی و شبیه‌سازی اجتماعی                                                | —        |
+| جدول (۳-۱) حساسیت شاخص F به ظرفیت باتری (تک‌تصادف‌سازی، seed=۴۲، ۸۰۰۰ قسمت)                                             | —        |
+| جدول (۳-۲) ابزارها و تجهیزات                                                                                          | —        |
+| جدول (۳-۳) پارامترهای تولید خورشیدی                                                                                   | —        |
+| جدول (۳-۴) انواع الگوی تقاضا                                                                                          | —        |
+| جدول (۳-۵) پارامترهای مرجع فیزیکی (Ground Truth)                                                                      | —        |
+| جدول (۳-۶) تعریف انواع شخصیت                                                                                          | —        |
+| جدول (۳-۷) نگاشت ویژگی‌های OCEAN به رفتار عامل                                                                         | —        |
+| جدول (۳-۸) انواع شخصیت به‌صورت مختصات OCEAN                                                                            | —        |
+| جدول (۳-۹) فضای اقدام                                                                                                 | —        |
+| جدول (۳-۱۰) سناریوهای آزمایشی                                                                                         | —        |
+| جدول (۳-۱۱) نگاشت سنجه‌ها به پرسش‌های پژوهش                                                                             | —        |
+| جدول (۳-۱۲) فراپارامترها                                                                                              | —        |
+| جدول (۴-۱) نتایج توصیفی کامل سطح جامعه (می‌انگین ± انحراف معیار در ۵ تصادف‌سازی)                                        | —        |
+| جدول (۴-۲) تفکیک آسایش بر اساس نوع عامل                                                                               | —        |
+| جدول (۴-۳) ضریب جینی بر اساس سناریو (می‌انگین ± انحراف معیار در ۵ تصادف‌سازی)                                           | —        |
+| جدول (۴-۴) فراوانی اشتراک بر اساس نوع عامل و سناریو (می‌انگین ± انحراف معیار در ۵ تصادف‌سازی)                           | —        |
+| جدول (۴-۵) الگوهای کیفی نقشه‌های حرارتی بر اساس نوع عامل                                                               | —        |
+| جدول (۴-۶) آسایش بر اساس احتمال ابری و نوع عامل (می‌انگین ± انحراف معیار، ۵ تصادف‌سازی)                                 | —        |
+| جدول (۴-۷) نتایج آزمون‌های آماری                                                                                       | —        |
+| جدول (۴-۸) سنجه‌های جامعه — مقایسه‌ی مختلط در برابر اثر نوآور                                                           | —        |
+| جدول (۴-۹) مشخصات بازتولید هر روش مقایسه‌ای                                                                            | —        |
+| جدول (۴-۱۰) نتایج بازتولیدِ کنترل‌شده‌ی روش‌های مقایسه‌ای در محیط یکسان این مطالعه (می‌انگین ± انحراف معیار در ۵ تصادف‌سازی) | —        |
+| جدول (۴-۱۱) مقادیر گزارش‌شده در نشریات اصلی (اطلاعات زمینه‌ای؛ شرایط آزمایشی با محیط این مطالعه متفاوت است)             | —        |
+| جدول (۴-۱۲) تحلیل دوعاملیِ کنترل‌شده (نوع تابع هدف × افق زمانی پاداش) روی شاخص F                                        | —        |
+
+---
+
+## فهرست اشکال
+
+| **عنوان**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | **صفحه** |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| شکل (۱-۱) تراژدی منابع مشترک در اشتراک انرژی: دوراهی احتکار در برابر اشتراک                                                                                                                                                                                                                                                                                                                                                                                                               | —        |
+| شکل (۲-۱) چارچوب مفهومی: مدل هماهنگی تعدیل‌شده با شخصیت                                                                                                                                                                                                                                                                                                                                                                                                                                    | —        |
+| شکل (۳-۱) نمودار جریان معماری سیستم شبیه‌سازی                                                                                                                                                                                                                                                                                                                                                                                                                                              | —        |
+| شکل (۳-۲) توپولوژی حلقوی ریزشب‌که محله‌ای با ۱۰ خانه                                                                                                                                                                                                                                                                                                                                                                                                                                        | —        |
+| شکل (۳-۳) مدل نیم‌سینوسی تابش خورشیدی در طول ساعات روز                                                                                                                                                                                                                                                                                                                                                                                                                                     | —        |
+| شکل (۳-۴) چهار الگوی تقاضای ساعتی در خانه‌های شبیه‌سازی‌شده                                                                                                                                                                                                                                                                                                                                                                                                                                  | —        |
+| شکل (۳-۵) نگاشت ویژگی‌های شخصیت OCEAN به پارامترهای یادگیری تقویتی                                                                                                                                                                                                                                                                                                                                                                                                                         | —        |
+| شکل (۳-۶) سازوکار اشتراک انرژی دو مرحله‌ای: مصرف محلی و اشتراک مازاد                                                                                                                                                                                                                                                                                                                                                                                                                       | —        |
+| شکل (۳-۷) ترکیب‌های جامعه آزمایشی در پنج سناریو                                                                                                                                                                                                                                                                                                                                                                                                                                            | —        |
+| شکل (۴-۱) سنجه‌های سطح جامعه در پنج سناریو: آسایش، عدالت و نرخ خاموشی                                                                                                                                                                                                                                                                                                                                                                                                                      | —        |
+| شکل (۴-۲) مقایسه آسایش عامل‌های نوع‌گرا و خودخواه در جوامع مختلط                                                                                                                                                                                                                                                                                                                                                                                                                            | —        |
+| شکل (۴-۳) چرخه متقابله‌گری: چرخه فضیلت‌مند نوع‌گرایانه و چرخه شرورانه خودخواهانه                                                                                                                                                                                                                                                                                                                                                                                                             | —        |
+| شکل (۴-۴) منحنی لورنز می‌انگین توزیع‌های مقطعی هر قسمت (۱۰۰۰ قسمت پایانی): مقایسه توزیع آسایش در سناریوی مختلط و اثر نوآور                                                                                                                                                                                                                                                                                                                                                                  | —        |
+| شکل (۴-۵) ضریب جینی آسایش در بین خانه‌ها برای هر سناریو                                                                                                                                                                                                                                                                                                                                                                                                                                    | —        |
+| شکل (۴-۶) نسبت وضعیت‌هایی که بهترین اقدام، اشتراک است بر اساس نوع عامل                                                                                                                                                                                                                                                                                                                                                                                                                     | —        |
+| شکل (۴-۷) نقشه‌های حرارتی مقادیر Q می‌انگین‌شده در هر ساعت برای عامل‌های نماینده                                                                                                                                                                                                                                                                                                                                                                                                              | —        |
+| شکل (۴-۸) آسایش عامل‌های نوع‌گرا در مقابل خودخواه بر حسب احتمال روز ابری                                                                                                                                                                                                                                                                                                                                                                                                                    | —        |
+| شکل (۴-۹) مکانیسم اثر نوآور: بی‌ثبات‌سازی تعادل همکاری‌گونه                                                                                                                                                                                                                                                                                                                                                                                                                                  | —        |
+| شکل (۴-۱۰) صحت‌سنجی بازتولید روش چاربونیه (پاداش حاشیه‌ای پایان‌روز)                                                                                                                                                                                                                                                                                                                                                                                                                         | —        |
+| شکل (۴-۱۱) بررسی زمان‌بندی و همگرایی بازتولید روش کوساتا‌که (بهینه‌سازی تکاملی)                                                                                                                                                                                                                                                                                                                                                                                                              | —        |
+| شکل (۴-۱۲) صحت‌سنجی بازتولید روش به‌رونانی (جست‌وجوی تعادل نش تعمیم‌یافته)                                                                                                                                                                                                                                                                                                                                                                                                                    | —        |
+| شکل (۴-۱۳) صحت‌سنجی بازتولید روش می و هوانگ (بهینه‌سازی سیاست نزدیک‌شونده)                                                                                                                                                                                                                                                                                                                                                                                                                   | —        |
+| شکل (۴-۱۴) مقایسه عملکرد روش‌های مختلف با آخرین دستاوردهای علمی: می‌انگین آسایش جامعه و شاخص عدالت جین برای پنج سناریوی OCEAN-MARL این پژوهش و روش‌های مقایسه‌ای (نوارها = می‌انگین ± انحراف معیار در ۵ تصادف‌سازی). چهار روش مقایسه‌ای (Charbonnier و همکاران، Kusatake و همکاران، Behrunani و همکاران، May و Huang) به‌همراه کنترل عدم اشتراک در محیط یکسان این پژوهش بازتولید شده‌اند؛ مقادیر نمایش‌داده‌شده نتایج واقعی بازتولید کنترل‌شده (جدول ۴-۱۰) است، نه مقادیر تخمین‌زده‌شده از نشریات اصلی. | —        |
+
+---
+
+# A New Method of Fair and Efficient Energy Sharing in Smart Neighborhoods Using Agent-Based Reinforcement Learning
+
+# فصل اول
+
+## کلیات
+
+## ۱-۱- مقدمه
+
+نظام انرژی جهانی دستخوش تحولی اساسی است که ناشی از شواهد فزاینده‌ای مبنی بر لزوم رسیدن انتشار گازهای گلخانه‌ای ناشی از فعالیت‌های انسانی به اوج خود پیش از سال ۲۰۲۵ و سپس کاهش چشمگیر آن برای جلوگیری از وخیم‌ترین پیامدهای تغییرات اقلیمی می‌باشد (Masson-Delmotte و همکاران، ۲۰۱۸). بخش انرژی مسئول تقریباً سه‌چهارم انتشار جهانی است و بنابراین، کربن‌زدایی مستلزم آن است که منابع تجدیدپذیر تا اواسط قرن جاری، تأمین‌کنندهٔ بخش اعظم برق باشند (IEA، ۲۰۲۲). فتوولتائیک‌های خورشیدی به عنوان سریع‌ترین فناوری تجدیدپذیر در حال رشد ظهور کرده‌اند، به‌گونه‌ای که ظرفیت نصب‌شدهٔ جهانی آن در سال ۲۰۲۲ از ۱ تراوات فراتر رفته و تأسیسات مسکونی پشت‌بامی، سهم قابل توجه و رو به رشدی از ظرفیت جدید را به خود اختصاص داده‌اند (IEA PVPS، ۲۰۲۳).
+
+این رشد در تولید خورشیدی مسکونی با کاهش موازی هزینه‌های ذخیره‌سازی باتری همراه بوده است که طی دههٔ گذشته بیش از هشتاد درصد کاهش یافته است (BloombergNEF، ۲۰۲۳). ترکیب پنل‌های خورشیدی پشت‌بامی مقرون‌به‌صرفه و باتری‌های خانگی، پیش‌شرط‌های فنی را برای نوع جدیدی از مصرف‌کنندهٔ برق فراهم کرده است: تولیدکننده-مصرف‌کننده (prosumer)، یعنی خانوارهایی که هم انرژی تولید و هم مصرف می‌کنند و می‌توانند مازاد تولید خود را برای استفادهٔ بعدی ذخیره کنند (Rathnayaka و همکاران، ۲۰۱۴؛ Morstyn و McCulloch، ۲۰۱۹). در یک ریزشبکهٔ هوشمند محله‌ای، چندین تولیدکننده-مصرف‌کننده از این قبیل به یکدیگر متصل می‌شوند و این امکان را برای آنها فراهم می‌آورد تا مستقیماً انرژی را با همسایگان خود به اشتراک بگذارند، نه این‌که آن را به شبکهٔ سراسری دور صادر کنند. این مدل همتا-به-همتا، تلفات انتقال را کاهش می‌دهد، از ازدحام شب‌که در ساعات اوج مصرف می‌کاهد و استقلال بیشتری در تأمین انرژی به خانوارها می‌دهد (Tushar و همکاران، ۲۰۲۰؛ Zhou و Lund، ۲۰۲۳).
+
+با این حال، ادغام منابع تجدیدپذیر مسکونی در مقیاس وسیع، مسئله‌ای را مطرح می‌کند که به همان اندازه که فنی است، اجتماعی نیز هست. تولید خورشیدی ذاتاً متناوب و وابسته به شرایط آب‌وهوایی است و الگوهای تقاضای خانوارها در بین خانواده‌ها، برنامه‌های کاری و فصول مختلف، تنوع قابل توجهی دارد (Skoplaki و Palyvos، ۲۰۰۹؛ Ali و همکاران، ۲۰۲۳). در محله‌ای که هر خانوار به طور مستقل خودکفایی خود را به حداکثر می‌رساند، ناگزیر موقعیت‌هایی پیش می‌آید که یک خانه، انرژی مازاد خود را به دلیل پر بودن باتری دور می‌ریزد، در حالی که همسایه‌ای در آن سوی خیابان به دلیل خالی بودن باتری با قطعی برق مواجه می‌شود. چالش فنی هماهنگی این منابع توزیع‌شده، توجه قابل توجهی در ادبیات پژوهشی به خود جلب کرده است، اما بعد اجتماعی مسئله — یعنی این واقعیت که تصمیمات اشتراک‌گذاری تحت تأثیر نگرش‌های فردی نسبت به انصاف، ریسک و متقابل‌گرایی قرار می‌گیرد — نسبتاً کمتر مورد بررسی قرار گرفته است (Fehr و Gächter، ۲۰۰۰؛ May و Huang، ۲۰۲۳).
+
+یادگیری تقویتی چندعاملی (MARL) به عنوان چارچوب محاسباتی مسلط برای پرداختن به این مسئلهٔ هماهنگی ظهور کرده است (Charbonnier و همکاران، ۲۰۲۲). در فرمول‌بندی MARL، هر خانوار به عنوان یک عامل خودگردان مدل‌سازی می‌شود که یک سیاست اشتراک‌گذاری را از طریق تعامل مکرر آزمون‌وخطا با محیط و همسایگان خود می‌آموزد. جذابیت این رویکرد در این است که به یک کنترل‌کنندهٔ مرکزی با اطلاعات کامل نیاز ندارد: عامل‌ها می‌توانند استراتژی‌های هماهنگی مؤثر را به صورت محلی و تنها با استفاده از مشاهدات و سیگنال‌های پاداش خود کشف کنند. با این وجود، پارادایم استاندارد MARL فرض می‌کند که هر عامل صرفاً برای به حداکثر رساندن پاداش تجمعی خود بهینه‌سازی می‌کند. تعادل حاصل ممکن است به طور جمعی، بهینه نباشد — مشابه محاسباتی تراژدی منابع مشترک (Hardin، ۱۹۶۸؛ Hughes و همکاران، ۲۰۱۸). ممکن است سیستم به وضعیتی همگرا شود که در آن رفاه کل جامعه نسبتاً بالا باشد، اما توزیع آن به شدت نابرابر است، به‌گونه‌ای که برخی از خانوارها از آسایش کامل برخوردارند در حالی که برخی دیگر با کمبودهای مزمن دست‌وپنجه نرم می‌کنند. این مشاهده، پرسش محوری این پژوهش را تداعی می‌کند: آیا می‌توان توابع پاداشی طراحی کرد که نه تنها منافع فردی، بل‌که دغدغه‌ای خاصِ هر عامل را برای انصاف اجتماعی در بر گیرد، و اگر چنین است، چه ویژگی‌هایی در سطح سیستم از تعامل عامل‌هایی با ترجیحات اجتماعی ناهمگون پدیدار می‌شود؟
+
+## ۱-۲- بیان مسئله
+
+ریزشب‌که‌های هوشمند محله‌ای، مرز محلی‌شدهٔ تمرکززدایی انرژی را نشان می‌دهند. در این سیستم‌ها، تولیدکنندگان-مصرف‌کنندگان می‌توانند انرژی مازاد خود را از طریق مبادلات همتا-به-همتا با همسایگان به اشتراک بگذارند که وابستگی به شبکهٔ سراسری را کاهش داده و تلفات انتقال را به حداقل می‌رساند (May و Huang، ۲۰۲۳؛ Moret و Pinson، ۲۰۱۹). با این حال، هر تصمیم اشتراک‌گذاری، خانوار را با یک دوراهی اجتماعی واقعی مواجه می‌کند: انرژی مازادی که به همسایه فرستاده می‌شود، انرژی‌ای است که نمی‌تواند در باتری خود اهداکننده برای استفادهٔ آینده ذخیره شود. در هر روز معین، انتخاب عقلانیِ فردی، احتکار است — ذخیرهٔ هر کیلووات‌ساعت موجود در برابر احتمال کمبود آینده. اما اگر هر خانوار از این منطق پیروی کند، کل جامعه شکننده می‌شود: مازادی که می‌توانست کمبود همسایه را جبران کند، وقتی باتری‌ها به ظرفیت کامل می‌رسند، هدر می‌رود و کمبودهایی که می‌توانست با مازاد همسایه پوشش داده شود، به قطعی برق تبدیل می‌شود (Kollock، ۱۹۹۸). همان‌طور که در شکل ۱-۱ دیده می‌شود، این دوراهی می‌ان احتکار و اشتراک، تنش اصلی مسئله را تشکیل می‌دهد.
+
+![تراژدی منابع مشترک در اشتراک انرژی](../results/figures/v09_tragedy_commons.png)
+
+**شکل (۱-۱):** تراژدی منابع مشترک در اشتراک انرژی: دوراهی احتکار در برابر اشتراک
+
+رویکردهای موجود یادگیری تقویتی چندعاملی برای این مسئله، معمولاً با فرض عقلانیت اقتصادی عمل می‌کنند و هر عامل را به عنوان یک بیشینه‌ساز مطلوبیت با هیچ دغدغهٔ ذاتی برای رفاه دیگران مدل‌سازی می‌کنند (May و Huang، ۲۰۲۳). این مدل‌ها برای بهینه‌سازی کارایی فنی جمعی — بیشینه‌سازی کل انرژی ذخیره‌شده، کمینه‌سازی هزینهٔ کل جامعه، یا افزایش خودمصرفی جمعی تولید خورشیدی — طراحی شده‌اند (Charbonnier و همکاران، ۲۰۲۲؛ Kusatake و همکاران، ۲۰۲۳). دشواری در این است که بهینه‌سازی صرفاً مبتنی بر کارایی، اغلب پیامدهای ناعادلانه‌ای ایجاد می‌کند. ممکن است برخی از خانوارها از آسایش کامل و ذخایر باتری بالا برخوردار باشند، در حالی که همسایگانشان قطعی‌های مکرر را تجربه می‌کنند، حتی زمانی که منابع کل جامعه برای تأمین نیازهای همه کافی است (Jain و همکاران، ۱۹۸۴؛ Zhou و Lund، ۲۰۲۳). این نابینایی توزیعی، نه تنها یک نگرانی اخلاقی است؛ بل‌که پایداری بلندمدت بازارهای انرژی همتا-به-همتا را تهدید می‌کند، زیرا خانوارهایی که به طور مداوم نتایج ضعیفی دریافت می‌کنند، انگیزهٔ کمی برای ماندن در جامعه دارند (Moret و Pinson، ۲۰۱۹).
+
+سه شکاف تحقیقاتی خاص از وضعیت فعلی ادبیات پژوهشی پدیدار می‌شود. اول، هیچ مطالعهٔ MARL انرژی موجود، ناهمگونی عامل‌ها را بر اساس یک مدل روان‌شناختی معتبر مانند چارچوب پنج‌عاملی بزرگ (OCEAN) بنا نمی‌نهد؛ در ادبیات موجود، ترجیحات ناهمگون عامل‌ها معمولاً به صورت دلخواه تخصیص می‌یابند، نه بر پایهٔ نظریهٔ شخصیت تثبیت‌شده. دوم، محدودیت‌های انصاف در ادبیات MARL انرژی، به طور یکسان برای همهٔ عامل‌ها اعمال می‌شوند که منعکس‌کنندهٔ دیدگاه نظارتی بالا-به-پایین است تا تنوع فردی در نگرانی نوع‌دوستانه (Jadhav و همکاران، ۲۰۲۵a). سوم، هزینهٔ اجتماعی رفتار اکتشافی در جوامع مشارکتی اشتراک‌گذاری انرژی، همچنان بررسی نشده است. در محیط‌های چندعاملی، اکتشاف ادامه‌دار یک عامل می‌تواند یادگیری دیگران را بی‌ثبات کند، پدیده‌ای که در MARL نظریه‌بازی‌ها مستند شده است اما هرگز در زمینهٔ مدیریت منابع فیزیکی مطالعه نشده است (Matignon و همکاران، ۲۰۱۲). این مطالعه با معرفی وزن‌های پاداش تعدیل‌شدهٔ شخصیتی برگرفته از مدل OCEAN و بررسی نظام‌مند چگونگی شکل‌دهی ترجیحات انصاف ناهمگون به پویایی‌های نوظهور جامعه، به این سه شکاف می‌پردازد.
+
+## ۱-۳- اهمیت و ضرورت انجام تحقیق
+
+این پژوهش در نقطهٔ تلاقی هوش مصنوعی، مهندسی قدرت و روان‌شناسی رفتاری قرار دارد و کمک‌های آن هر سه حوزه را در بر می‌گیرد. از منظر تحقیقات هوش مصنوعی، این مطالعه یک روش اصولی برای تزریق ناهمگونی روان‌شناختی مبتنی بر نظریه به سیستم‌های یادگیری تقویتی چندعاملی ارائه می‌دهد. به جای در نظر گرفتن تنوع عامل‌ها به عنوان یک پارامتر مزاحم یا اعمال برچسب‌های رفتاری دلبخواه، نگاشت OCEAN به یادگیری تقویتی، چارچوبی با انگیزهٔ نظری فراهم می‌کند که ابعاد خاص شخصیت را به پارامترهای یادگیری خاص پیوند می‌دهد — توافق‌پذیری به وزن انصاف، گشودگی به کف اکتشاف، و روان‌رنجوری به حساسیت به جریمه (Ren و Xu، ۲۰۲۵). این چارچوب عمومی است و می‌تواند در هر حوزهٔ MARL که تنوع عامل‌های انسان‌گونه مطلوب است، از هماهنگی وسایل نقلیهٔ خودران گرفته تا رباتیک مشارکتی و تیم‌سازی انسان-هوش مصنوعی، به کار رود (Park و همکاران، ۲۰۲۳).
+
+از منظر مهندسی انرژی، این مطالعه شواهد کمی ارائه می‌دهد که طراحی پاداش آگاه از انصاف، کارایی فنی را قربانی نمی‌کند و در عین حال برابری توزیعی معنی‌داری در سطح فردی ایجاد می‌کند. یافته‌ای که جوامع مختلط با عامل‌های نوع‌دوست، اتلاف انرژی را به‌طور می‌انگین ۹/۱۲ درصد نسبت به حالت‌های پایهٔ کاملاً خودخواه کاهش می‌دهند — روندی جهت‌داری اما در این اندازه‌ی نمونه (۵ تصادف‌سازی) به آستانه‌ی معنی‌داری آماری معمول نرسیده (p = ۰٫۱۴) — پیامدهای عملی بالقوه برای طراحی بازارهای انرژی همتا-به-همتا و تعرفه‌های ریزشبکهٔ اجتماعی دارد. مهمتر این‌که، این افزایش کارایی به بهای کاهش آسایش برای عامل‌های نوع‌دوست تمام نمی‌شود — مکانیسم متقابل‌گرایی نوظهور مستند در فصل ۴ نشان می‌دهد که عامل‌هایی که در اوایل روز سخاوتمندانه به اشتراک می‌گذارند، بعداً از همسایگان انرژی دریافت می‌کنند که منجر به آسایش فردی بالاتر در کنار انصاف اجتماعی بالاتر می‌شود. این نتیجه، با فرض شهودی که رفتار نوع‌دوستانه در یک محیط با منابع محدود باید از خودگذشتگی باشد، در تناقض است.
+
+از منظر اجتماعی، این مطالعه شواهد تجربی به بحث دیرینه دربارهٔ این که آیا هنجارهای همکاری می‌توانند به طور خودجوش در جمعیت‌های عامل‌های خودخواه پدیدار شوند، کمک می‌کند (Ostrom، ۱۹۹۰؛ Fehr و Gächter، ۲۰۰۰). نتایج شبیه‌سازی نشان می‌دهد که یک اقلیت از عامل‌های نوع‌دوست — به تعداد پنج عامل از ده عامل — می‌توانند تعادل کل جامعه را به سمت رفتار همکاری‌جویانه‌تر سوق دهند، حتی زمانی که عامل‌های باقی‌مانده کاملاً خودخواه هستند. این یافته نه تنها برای سیستم‌های انرژی، بل‌که برای هر حوزه‌ای که در آن سیاست‌گذاران به دنبال ترویج پیامدهای نوع‌دوستانه بدون توسل به مقررات اجباری هستند، مرتبط است. در نهایت، کشف «اثر نوآور» به عنوان یک نتیجهٔ هشداردهنده برای استقرار ایمن سیستم‌های یادگیری خودگردان عمل می‌کند: یک عامل منفرد که رفتار اکتشافی آن از هنجار جامعه منحرف می‌شود، می‌تواند نابرابری را بیست و دو درصد افزایش دهد، که نشان می‌دهد پایداری هماهنگی باید یک هدف طراحی درجه‌یک در مدیریت منابع چندعاملی باشد.
+
+## ۱-۴- نوآوری پژوهش
+
+نوآوری اصلی این پژوهش، چارچوب شکل‌دهی پاداشی است که ویژگی‌های شخصیتی پنج‌عاملی بزرگ (OCEAN) را به پارامترهای خاص یادگیری تقویتی چندعاملی نگاشت می‌کند. این رویکرد روان‌شناختی مبتنی بر نظریه، در تضاد با کارهای موجود است که یا محدودیت‌های انصاف یکسانی را اعمال می‌کنند یا ناهمگونی عامل‌ها را بدون ارجاع به نظریهٔ شخصیت تثبیت‌شده، به طور دلخواه تعریف می‌کنند. این چارچوب به ویژه دو بعد شخصیتی را رمزگذاری می‌کند. به طور مشخص، نسبت به Charbonnier و همکاران (۲۰۲۲) و مطالعات مشابه MARL انرژی صرفاً مبتنی بر کارایی، چارچوب حاضر، ترجیحات نوع‌دوستانهٔ ناهمگون مبتنی بر پنج‌عاملی بزرگ را به جای در نظر گرفتن همهٔ عامل‌ها به عنوان بیشینه‌سازهای مطلوبیت یکسان، اضافه می‌کند. نسبت به Hughes و همکاران (۲۰۱۸) و Jadhav و همکاران (۲۰۲۵a) که جریمهٔ نابرابری‌گریزی یا منتقد انصاف LLM را به طور یکسان به همهٔ عامل‌ها اعمال می‌کنند، چارچوب حاضر به هر عامل اجازه می‌دهد که دغدغهٔ انصاف آن به طور پیوسته در امتداد بعد توافق‌پذیری تغییر کند — جامعه‌ای را ایجاد می‌کند که در آن برخی از عامل‌ها به شدت به برابری اهمیت می‌دهند، برخی دیگر به طور متوسط اهمیت می‌دهند، و برخی اصلاً اهمیت نمی‌دهند، همان‌گونه که در جوامع انسانی واقعی مشاهده می‌شود (Fehr و Gächter، ۲۰۰۰). نسبت به May و Huang (۲۰۲۳)، که عامل قیمت‌گذاری سطح بیرونی آنها برابری درآمد را از طریق قوانین بازار به جای ترجیحات ذاتی اعمال می‌کند، چارچوب حاضر دغدغهٔ انصاف را در تابع پاداش هر عامل درونی می‌کند و امکان بررسی چگونگی شکل‌دهی ترجیحات ذاتی ناهمگون به پیامدهای نوظهور را مستقل از طراحی بازار فراهم می‌آورد.
+
+توافق‌پذیری، که در ادبیات روان‌شناسی جهت‌گیری نوع‌دوستانه، همکاری‌پذیری و دغدغه برای دیگران را در بر می‌گیرد، به وزن اختصاص‌یافته به انصاف اجتماعی در تابع پاداش هر عامل نگاشت می‌شود (Goldberg، ۱۹۹۰؛ John و Srivastava، ۱۹۹۹). یک عامل با توافق‌پذیری بالا (که در این مطالعه برچسب نوع‌دوست می‌خورد) هشتاد درصد از پاداش خود را از شاخص انصاف Jain جامعه و تنها بیست درصد را از آسایش شخصی خود دریافت می‌کند؛ یک عامل با توافق‌پذیری بسیار پایین (که برچسب کاملاً خودخواه می‌خورد) انصاف اجتماعی را کاملاً نادیده می‌گیرد. بین این دو حد، انواع فردگرا و نوع‌دوست، موقعیت‌های می‌انی را نشان می‌دهند و طیفی از دغدغهٔ انصاف را ایجاد می‌کنند که هم پیوسته و هم از نظر روان‌شناختی قابل تفسیر است.
+
+گشودگی به تجربه، که کنجکاوی، تازگی‌جویی و تحمل ابهام را در بر می‌گیرد، به کف اکتشافی سیاست اپسیلون-حریصانه نگاشت می‌شود (McCrae و Costa، ۲۰۰۳؛ Ren و Xu، ۲۰۲۵). عامل‌های استاندارد، احتمال اکتشاف خود را به حداقل یک درصد کاهش می‌دهند، به این معنی که پس از همگرایی، تنها به ندرت اقدامات تصادفی را انتخاب می‌کنند. عامل نوآور، نوعی که گشودگی بالا را رمزگذاری می‌کند، حداقل احتمال اکتشاف پنج درصد را حفظ می‌کند، به این معنی که حتی پس از تثبیت بقیهٔ جامعه در الگوهای اشتراک‌گذاری پایدار، به امتحان استراتژی‌های جایگزین ادامه می‌دهد. این نگاشت به مطالعه اجازه می‌دهد تا تأثیر اجتماعی رفتار اکتشافی را از تأثیر تفاوت‌های وزن پاداش جدا کند، زیرا نوآور وزن‌های انصاف یکسانی با نوع نوع‌دوست دارد و تنها در برنامهٔ اکتشافی خود متفاوت است.
+
+خود محیط شبیه‌سازی برای وضوح تحلیلی طراحی شده است تا وفاداری مهندسی. توپولوژی حلقوی از ده خانه، که هر کدام دقیقاً به یک همسایهٔ مشخص متصل هستند، سردرگمی‌های مسیریابی شب‌که را حذف کرده و پویایی‌های اجتماعی اشتراک‌گذاری را ایزوله می‌کند. وضعیت هر خانه، یک تاپل ساده از ساعت و سطح باتری گسسته‌سازی‌شده است که فضای وضعیتی نود و شش تایی تولید می‌کند و به طور قابل اعتمادی در عرض هشت هزار قسمت همگرا می‌شود. این طراحی می‌نیمال بدان معناست که هر گونه تفاوت مشاهده‌شده بین سناریوها را می‌توان به نگاشت شخصیت-پاداش نسبت داد تا پیچیدگی محیط، معماری مدل، یا ناپایداری آموزش.
+
+## ۱-۵- اهداف برجسته تحقیق
+
+هدف اصلی این مطالعه، ارزیابی این است که ترجیحات انصاف ناهمگون و متأثر از شخصیت، در یک سیستم اشتراک‌گذاری انرژی مبتنی بر یادگیری تقویتی چندعاملی، چگونه بر کارایی، انصاف و استحکام کلی جامعه، نسبت به یک جامعهٔ پایه از عامل‌های کاملاً خودخواه، تأثیر می‌گذارد. چهار هدف فرعی خاص از این هدف اصلی پشتیبانی می‌کنند.
+
+اولین هدف فرعی، توسعه و اعتبارسنجی یک چارچوب شکل‌دهی پاداش است که ویژگی‌های شخصیتی OCEAN را به وزن‌های تابع هدف و پارامترهای اکتشافی در یک محیط یادگیری کیو چندعاملی نگاشت می‌کند. این شامل تعریف قوانین نگاشت، پیاده‌سازی آنها در شبیه‌سازی، و تأیید این است که عامل‌ها با پارامترهای شخصیتی مختلف، به گونه‌ای رفتار می‌کنند که با نیمرخ‌های روان‌شناختی مورد نظرشان همخوانی دارد.
+
+دومین هدف فرعی، تحلیل الگوهای اشتراک‌گذاری زمانی و وابسته به وضعیت است که زمانی پدیدار می‌شوند که عامل‌ها انصاف اجتماعی را در کنار آسایش شخصی در اولویت قرار می‌دهند. این مطالعه نه تنها معیارهای تجمیعی مانند می‌انگین آسایش و شاخص انصاف، بل‌که وضعیت‌های خاصی را که عامل‌ها در آنها انتخاب می‌کنند به اشتراک بگذارند یا احتکار کنند، با استفاده از جداول کیو آموخته‌شده برای بازسازی سیاست ضمنی که هر نوع شخصیتی به آن همگرا می‌شود، بررسی می‌کند.
+
+سومین هدف فرعی، بررسی مزیت نوع‌دوستانه است — فرضیه‌ای که عامل‌هایی با وزن‌های انصاف متوسط تا بالا، از طریق مکانیسم متقابل‌گرایی نوظهور، به آسایش فردی بالاتری دست می‌یابند. اگر این فرضیه تأیید شود، یک استدلال مستقیم برای سازگاری انگیزه‌ای به نفع طراحی پاداش آگاه از انصاف ارائه می‌دهد: وزن‌های پاداش نوع‌دوستانه از نظر اخلاقی برتر و به بهای کارایی نیستند، بل‌که در واقع برای عامل منفرد، سودمند هستند.
+
+چهارمین هدف فرعی، کمّی‌سازی تأثیر بی‌ثبات‌کنندهٔ عامل‌های نوآور با گشودگی بالا بر هماهنگی و برابری جامعه است. با مقایسهٔ سناریوهایی که تنها از نظر وجود یک عامل با کف اکتشافی بالاتر متفاوت هستند، این مطالعه هزینهٔ اجتماعی اکتشاف ادامه‌دار را جدا کرده و اولین توصیف تجربی از این هزینه را در زمینهٔ مدیریت منابع فیزیکی ارائه می‌دهد.
+
+## ۱-۶- سؤالات تحقیق
+
+این مطالعه حول یک سؤال پژوهشی اصلی و چهار سؤال فرعی سازماندهی شده است.
+
+**سؤال پژوهشی اصلی.** ترجیحات انصاف ناهمگون و متأثر از شخصیت، در یک سیستم اشتراک‌گذاری انرژی مبتنی بر یادگیری تقویتی چندعاملی، چگونه بر کارایی، انصاف و استحکام کلی جامعه، در مقایسه با جامعه‌ای از عامل‌های کاملاً خودخواه، تأثیر می‌گذارد؟ این سؤال با مقایسهٔ سناریوی پایهٔ همه خودخواه با چهار سناریوی آزمایشی (همه نوع‌دوست، مختلط، نوع‌دوستی متغیر، و اثر نوآور) در هفت معیار کمّی ارزیابی می‌شود: می‌انگین آسایش اجتماعی، شاخص انصاف Jain، نرخ روزهای قطعی، اتلاف انرژی، شکاف آسایش نوع‌دوست در مقابل خودخواه، ضریب جینی، و فراوانی اشتراک‌گذاری.
+
+**سؤال فرعی ۱.** آیا تعبیهٔ هنجارهای انصاف در توابع پاداش، به الگوهای اشتراک‌گذاری نوظهوری منجر می‌شود که به طور قابل اندازه‌گیری متفاوت هستند؟ این سؤال بررسی می‌کند که آیا پاداش‌های تعدیل‌شدهٔ شخصیتی، سیاست‌هایی تولید می‌کنند که از نظر کیفی از سیاست‌های خودخواه متمایز هستند، در مقابل این‌که صرفاً همان سیاست را در امتداد یک پیوستار کمّی جابه‌جا کنند. پاسخ عمدتاً از معیار فراوانی اشتراک‌گذاری و تحلیل نقشهٔ حرارتی جدول کیو استخراج می‌شود.
+
+**سؤال فرعی ۲.** چه مصالحه‌هایی بین کارایی انرژی در سطح جامعه و انصاف توزیعی ظاهر می‌شود؟ این سؤال، فرض رایج مبنی بر وجود تنش بین برابری و کارایی را آزمون می‌کند. اگر جوامع نوع‌دوست به هر دو انصاف بالاتر و اتلاف کمتر نسبت به جوامع خودخواه دست یابند، آنگاه مصالحهٔ فرض‌شده در این حوزه برقرار نیست — نتیجه‌ای با پیامدهای سیاستی قابل توجه.
+
+**سؤال فرعی ۳.** آیا ترکیبی از چند عامل نوع‌دوست می‌توانند رفتار عامل‌های خودخواه را از طریق متقابل‌گرایی نوظهور تغییر دهند؟ این سؤال به این موضوع می‌پردازد که آیا هنجارهای نوع‌دوستانه می‌توانند بدون اجرای متمرکز در یک جمعیت منتشر شوند. سناریوی مختلط، شامل پنج عامل نوع‌دوست و پنج عامل خودخواه، مورد آزمون اصلی را فراهم می‌کند.
+
+**سؤال فرعی ۴.** چگونه یک عامل منفرد با گشودگی بالا و کنجکاوی‌محور بر پایداری یک جامعهٔ مختلط تأثیر می‌گذارد؟ این سؤال، پیامد خارجی اجتماعی اکتشاف فردی را جدا می‌کند. سناریوی اثر نوآور، یک عامل با کف اکتشافی بالاتر را به جامعه‌ای که در غیر این صورت تمایل به نوع‌دوستی دارد، معرفی کرده و تغییرات حاصل در برابری، نرخ قطعی، و پایداری همگرایی را اندازه‌گیری می‌کند.
+
+## ۱-۷- فرضیات تحقیق
+
+چهار فرضیه در این مطالعه آزمون می‌شوند که هر کدام از سؤالات پژوهشی فوق مشتق شده و در ادبیات مرور شده، ریشه دارند.
+
+**فرضیه ۱.** جوامع دارای وزن‌های پاداش نوع‌دوست، اتلاف انرژی به طور قابل توجهی کمتری نسبت به جوامع کاملاً خودخواه نشان خواهند داد، زیرا عامل‌هایی که برای انصاف ارزش قائل هستند، به جای دور ریختن مازاد وقتی باتری‌هایشان پر است، آن را به اشتراک می‌گذارند. این فرضیه از این بینش شهودی ناشی می‌شود که عامل‌های آگاه از انصاف، هزینهٔ اتلاف را در سطح جامعه درونی می‌کنند، در حالی که عامل‌های خودخواه نسبت به اتلاف هنگامی که ذخیرهٔ شخصی آنها اشباع شده است، بی‌تفاوت هستند (Zhou و Lund، ۲۰۲۳).
+
+**فرضیه ۲.** عامل‌های نوع‌دوست در جوامع مختلط، از طریق تثبیت زنجیرهٔ تأمین محلی، به می‌انگین آسایش بالاتری نسبت به همسایگان خودخواه خود دست خواهند یافت. این فرضیهٔ مزیت نوع‌دوستانه است. مکانیسم آن زمانی است: عامل‌های نوع‌دوست اوایل روز مازاد خود را به اشتراک می‌گذارند و اعتبار ضمنی ایجاد می‌کنند که بعداً زمانی که تولید خودشان کاهش می‌یابد و همسایگان لطف آنها را جبران می‌کنند، بازپرداخت می‌شود (May و Huang، ۲۰۲۳). عامل‌های خودخواه که اوایل روز احتکار می‌کنند، ممکن است باتری‌های پر داشته باشند، اما زمانی که ساعات کمبود آنها فرا می‌رسد، از متقابل‌گرایی بهره‌ای نمی‌برند.
+
+**فرضیه ۳.** مزیت نسبی طراحی پاداش نوع‌دوست، با افزایش کمبود محیطی، ثابت باقی خواهد ماند. اگر مزیت نوع‌دوستانه پایدار باشد، باید نه تنها در روزهای آفتابی، بل‌که در شرایط ابری که تولید خورشیدی را نصف می‌کند، نیز برقرار باشد. این فرضیه آزمایش می‌کند که آیا مزایای طراحی آگاه از انصاف به فراوانی منابع وابسته است یا به شرایط کمبود تعمیم می‌یابد (Kusatake و همکاران، ۲۰۲۳).
+
+**فرضیه ۴.** حضور یک عامل منفرد با کف اکتشافی بالا، تعادل‌های مشارکتی را بی‌ثبات کرده و منجر به ضرایب جینی بالاتر و نرخ‌های قطعی بالاتر می‌شود. این فرضیه پیش‌بینی را در بر می‌گیرد که اکتشاف تصادفی ادامه‌دار توسط نوآور، از شکل‌گیری انتظارات پایدار در مورد در دسترس بودن انرژی توسط همسایگان جلوگیری کرده و آنها را به سمت استراتژی‌های احتکار تدافعی‌تر سوق می‌دهد (Aloor و همکاران، ۲۰۲۴؛ Matignon و همکاران، ۲۰۱۲).
+
+## ۱-۸- تعاریف عملیاتی
+
+اصطلاحات زیر به همان گونه که در سراسر این پایان‌نامه به کار رفته‌اند، تعریف می‌شوند. این تعاریف مختص به زمینهٔ شبیه‌سازی توصیف‌شده در فصل ۳ هستند و ممکن است دقیقاً با کاربردهای گسترده‌تر یا جایگزین در ادبیات مطابقت نداشته باشند.
+
+**تولیدکننده-مصرف‌کننده (Prosumer).** خانوارهایی که هم از طریق پنل‌های فتوولتائیک خورشیدی پشت‌بامی، انرژی مصرف و هم تولید می‌کنند و قادر به ذخیرهٔ مازاد تولید در باتری و به اشتراک‌گذاری انرژی با همسایگان در ریزشب‌که هستند (Rathnayaka و همکاران، ۲۰۱۴؛ Morstyn و McCulloch، ۲۰۱۹). در این مطالعه، هر ده خانه، تولیدکننده-مصرف‌کننده با ظرفیت خورشیدی و اندازهٔ باتری یکسان هستند.
+
+**یادگیری تقویتی چندعاملی (Multi-Agent Reinforcement Learning).** یک چارچوب محاسباتی که در آن چندین عامل خودگردان، سیاست‌های تصمیم‌گیری را از طریق تعامل آزمون‌وخطا با یک محیط مشترک می‌آموزند (Sutton و Barto، ۲۰۱۸؛ Tan، ۱۹۹۳). مطالعهٔ حاضر از یادگیری کیو جدولی مستقل استفاده می‌کند، که در آن هر عامل جدول کیوی مخصوص خود را حفظ کرده و همهٔ عامل‌های دیگر را به عنوان بخشی از محیط ایستا در نظر می‌گیرد — تقریبی که مشخص است تضمین‌های همگرایی نظری را با مقیاس‌پذیری عملی مبادله می‌کند.
+
+**مدل OCEAN (پنج‌عاملی بزرگ).** مدل پنج عاملی شخصیت شامل گشودگی (Openness)، وظیفه‌شناسی (Conscientiousness)، برون‌گرایی (Extraversion)، توافق‌پذیری (Agreeableness) و روان‌رنجوری (Neuroticism) (Goldberg، ۱۹۹۰؛ McCrae و Costa، ۲۰۰۳). این مطالعه دو بعد از این ابعاد — توافق‌پذیری و گشودگی — را به پارامترهای خاص یادگیری تقویتی نگاشت می‌کند، در حالی که سه بعد دیگر را در سطوح متوسط جمعیتی در همهٔ عامل‌ها ثابت نگه می‌دارد.
+
+**اثر نوآور (Innovator Effect).** بی‌ثباتی مشاهده‌شدهٔ هماهنگی در سطح جامعه ناشی از یک عامل با گشودگی بالا که اکتشاف ادامه‌دار آن — که به صورت مقدار اپسیلون حداقلی بالاتر در سیاست اپسیلون-حریصانه پیاده‌سازی شده است — از شکل‌گیری انتظارات پایدار در مورد در دسترس بودن انرژی توسط همسایگان جلوگیری می‌کند (تحلیل کامل در بخش ۴-۸ را ببینید). این اصطلاح در این پایان‌نامه معرفی شده و برای وضوح در اینجا تعریف می‌شود.
+
+**شاخص انصاف Jain (Jain's Fairness Index).** یک معیار مقیاس-ناوردا و پیوسته برای کمّی‌سازی برابری توزیع منابع در یک جمعیت، که به صورت مجذور مجموع تخصیص‌ها تقسیم بر اندازهٔ جمعیت ضربدر مجموع مجذور تخصیص‌ها محاسبه می‌شود (Jain و همکاران، ۱۹۸۴). این شاخص از یک تقسیم بر اندازهٔ جمعیت (حداکثر نابرابری) تا یک (برابری کامل) متغیر است. در این مطالعه، بر روی توزیع آسایش در ده خانوار اعمال می‌شود.
+
+**آسایش شخصی (Personal Comfort).** کسری از کل تقاضای انرژی روزانهٔ یک خانوار که با موفقیت از طریق ترکیبی از تولید خورشیدی، تخلیهٔ باتری و انرژی اشتراک‌گذاری‌شدهٔ دریافتی تأمین می‌شود؛ این سنجه به صورت عملیاتی برای این پژوهش تعریف شده است. مقدار آسایش ۱.۰ نشان می‌دهد که همهٔ تقاضا تأمین شده است؛ مقادیر زیر ۰.۹۵ به عنوان روزهای قطعی طبقه‌بندی می‌شوند.
+
+**اتلاف انرژی (Energy Waste).** انرژی مازادی که نه می‌توان در باتری اهداکننده ذخیره کرد (زیرا باتری پر بود) و نه می‌توان با همسایه به اشتراک گذاشت (زیرا اقدام اشتراک‌گذاری برای انتقال مازاد کافی نبود). اتلاف بر حسب کیلووات‌ساعت در روز اندازه‌گیری می‌شود و نشان‌دهندهٔ یک اتلاف کارایی خالص برای جامعه است.
+
+## ۱-۹- ساختار پایان نامه
+
+بقیهٔ این پایان‌نامه به شرح زیر سازماندهی شده است. فصل ۲ به مرور جامعی از ادبیات مرتبط می‌پردازد و تکامل ریزشب‌که‌های هوشمند و پارادایم تولیدکننده-مصرف‌کننده را دنبال می‌کند، مکانیسم‌های معاملاتی و قیمت‌گذاری همتا-به-همتا را مرور می‌کند، رویکردهای یادگیری تقویتی چندعاملی برای کنترل توزیع‌شده را بررسی می‌کند، مدل‌سازی انصاف در دوراهی‌های اجتماعی را مورد مطالعه قرار می‌دهد، و دربارهٔ تصمیم‌گیری مبتنی بر شخصیت در هوش مصنوعی بحث می‌کند. این فصل با یک جدول مقایسهٔ کیفی که جایگاه این مطالعه را نسبت به آخرین دستاوردهای علمی مشخص می‌کند و خلاصه‌ای از سه شکاف تحقیقاتی که این پایان‌نامه به آنها می‌پردازد، به پایان می‌رسد.
+
+فصل ۳، روش‌شناسی پژوهش را به طور کامل شرح می‌دهد. این فصل با یک مقدمه آغاز می‌شود و سپس طرح و رویکرد پژوهش (بخش ۳-۲)، روش‌های جمع‌آوری داده‌ها (بخش ۳-۳)، ابزارها و وسایل مورد استفاده (بخش ۳-۴)، و جامعه، نمونه و روش نمونه‌گیری (بخش ۳-۵) را ارائه می‌دهد. سپس محیط فیزیکی، نگاشت OCEAN به پاداش، طراحی تابع پاداش، الگوریتم یادگیری کیو جدولی با ابرپارامترهای آن، مکانیسم اشتراک‌گذاری انرژی دو مرحله‌ای، پنج سناریوی آزمایشی، هفت معیار ارزیابی، روش‌های تحلیل داده‌ها، و پروتکل آموزش را مشخص می‌کند (بخش‌های ۳-۶ تا ۳-۱۴).
+
+فصل ۴، نتایج شبیه‌سازی را در همهٔ سناریوها و معیارها ارائه می‌دهد. تحلیل از می‌انگین‌های سطح جامعه از طریق تفاوت‌های نوع عامل و معیارهای نابرابری به سیاست‌های جدول کیوی آموخته‌شده و تحلیل حساسیت در شرایط کمبود پیش می‌رود. هر یافته به طور عینی توصیف می‌شود و تفسیر آن برای فصل ۵ نگهداشته می‌شود. این فصل همچنین شامل آزمون معناداری آماری، تحلیل اثر نوآور، و مقایسه با مبانی آخرین دستاوردهای علمی است.
+
+فصل ۵ به بحث دربارهٔ پیامدهای یافته‌ها می‌پردازد، رابطهٔ انصاف-کارایی را بررسی می‌کند، مکانیسم متقابل‌گرایی نوظهور را تحلیل می‌کند، پیامدهای سیاستی نتایج را مد نظر قرار می‌دهد، و محدودیت‌های مطالعه را تصدیق می‌کند. این فصل با خلاصه‌ای از کار، خلاصه‌ای از یافته‌های کلیدی، و جهت‌گیری‌هایی برای تحقیقات آینده به پایان می‌رسد.
+
+## ۱-۱۰- خلاصه فصل
+
+این فصل، مسئلهٔ پژوهش را در تلاقی اشتراک‌گذاری انرژی محله‌ای و یادگیری تقویتی چندعاملی تبیین کرد: بهینه‌سازی صرفاً مبتنی بر کارایی می‌تواند پیامدهای توزیعی ناعادلانه‌ای تولید کند که در ادبیات موجود کمتر بررسی شده‌اند. سه شکاف پژوهشی مشخص شدند — فقدان زمین‌گذاری روان‌شناختی معتبر برای ناهمگونی عامل‌ها، اعمال یکنواخت محدودیت‌های انصاف، و بررسی‌نشدن هزینهٔ اجتماعی رفتار اکتشافی در محیط‌های مدیریت منابع فیزیکی — و نوآوری پژوهش، یعنی نگاشت مدل پنج‌عاملی شخصیت (OCEAN) به پارامترهای پاداش و اکتشاف در یادگیری تقویتی، به‌عنوان پاسخی به این شکاف‌ها معرفی شد. اهداف، سؤالات و چهار فرضیهٔ پژوهش بر همین اساس صورت‌بندی شدند. فصل‌های آتی به ترتیب به مرور پیشینهٔ پژوهش (فصل ۲)، روش پیشنهادی و محیط شبیه‌سازی (فصل ۳)، تجزیه و تحلیل نتایج (فصل ۴)، و جمع‌بندی و پیشنهادهای آتی (فصل ۵) می‌پردازند.
+
+# فصل دوم
+
+## مبانی نظری و پیشینه تحقیق
+
+## ۲-۱- مقدمه
+
+این فصل به مرور پیشینهٔ پژوهش در چهار حوزهٔ مرتبط با موضوع این پایان‌نامه می‌پردازد. ابتدا مبانی نظری گذار به انرژی غیرمتمرکز، الگوی تولیدکننده-مصرف‌کننده، مبادلهٔ همتا-به-همتا و یادگیری تقویتی چندعاملی معرفی می‌شوند (بخش ۲-۲). سپس پژوهش‌های مرتبط در چهار محور — کارایی، عدالت، نظریه‌بازی و اکتشاف — به‌طور نظام‌مند مرور می‌شوند (بخش ۲-۳). در ادامه، یک جدول مقایسهٔ کیفی، جایگاه این پژوهش را نسبت به وضعیت موجود دانش مشخص می‌کند (بخش ۲-۴) و فصل با تبیین چارچوب مفهومی پیشنهادی و شکاف‌های پژوهشی که این پایان‌نامه به آن‌ها می‌پردازد، به پایان می‌رسد (بخش ۲-۵).
+
+## ۲-۲- مبانی نظری
+
+### ۲-۲-۱- گذار به انرژی غیرمتمرکز و الگوی مصرف‌کننده-تولیدکننده (Prosumer)
+
+معماری سیستم‌های قدرت الکتریکی برای نزدیک به یک قرن، اساساً بدون تغییر باقی مانده است: ژنراتورهای متمرکز بزرگ، خطوط انتقال فشارقوی را تغذیه می‌کنند که به شب‌که‌های توزیع ولتاژ پایین‌تر منشعب می‌شوند و برق را به مصرف‌کنندگان غیرفعال می‌رسانند. این مدل، اگرچه از لحاظ تاریخی موفق بوده است، دست‌خوش دگرگونی ساختاری شده است که ناشی از دو نیروی هم‌گرا می‌باشد.
+
+نخستین نیرو، فوریت کاهش تغییرات اقلیمی است. هیئت بین‌الدول تغییرات اقلیم (IPCC) مشخص کرده است که محدود کردن گرمایش جهانی به ۱/۵ درجه سلسیوس مستلزم دستیابی به انتشار خالص صفر دی‌اکسید کربن انسان‌ساخت تا اواسط قرن جاری است؛ به‌گونه‌ای که بخش انرژی ــ که مسئول تقریباً سه‌چهارم انتشار گازهای گلخانه‌ای جهانی است ــ بار اصلی این گذار را بر دوش می‌کشد (Masson‑Delmotte et al., 2018).
+
+دومین نیرو، کاهش چشمگیر هزینه‌ی فناوری‌های کلیدی تجدیدپذیر است. هزینه‌ی سطح‌شده‌ی برق خورشیدی فتوولتائیک از سال ۲۰۱۰ تقریباً ۹۰ درصد کاهش یافته است و قیمت بسته‌های باتری لیتیوم-یونی در همین دوره بیش از ۸۰ درصد افت داشته است؛ این امر، سیستم‌های خورشیدی-به‌همراه-ذخیره‌سازی را در تعداد فزاینده‌ای از بازارها از لحاظ اقتصادی مقرون‌به‌صرفه ساخته است (BloombergNEF, 2023; IEA, 2022).
+
+این دو نیرو، پدیده‌ی مصرف‌کننده-تولیدکننده (Prosumer) را پدید آورده‌اند: خانوار مسکونی که هم برق تولید می‌کند و هم مصرف می‌نماید؛ که معمولاً از طریق پنل‌های خورشیدی پشت‌بامی و سیستم باتری خانگی تحقق می‌یابد (Rathnayaka et al., 2014; Morstyn & McCulloch, 2019). مصرف‌کننده-تولیدکننده، گسستی بنیادین از مدل مصرف‌کننده‌ی سنتی محسوب می‌شود؛ زیرا جهت جریان انرژی دیگر یک‌سویه نیست. خانوار دارای مازاد تولید خورشیدی، می‌تواند انرژی را در باتری خود ذخیره کند، آن را به شب‌که‌ی توزیع صادر نماید یا از طریق مبادله‌ی همتا-به-همتا مستقیماً با همسایگان به اشتراک بگذارد. هر یک از این گزینه‌ها پیامدهای متفاوتی برای کارایی سیستم، اقتصاد خانوار و تاب‌آوری جامعه به همراه دارد (Tushar et al., 2020; Zhou & Lund, 2023). انتخاب می‌ان آن‌ها صرفاً فنی نیست و شامل ملاحظاتی همچون اعتماد، متقابله‌گری و پایداری بلندمدت جامعه می‌شود که مدل‌های اقتصادی استاندارد به‌طور کامل آن را دربر نمی‌گیرند.
+
+چالش هماهنگ‌سازی که در اتصال چندین مصرف‌کننده-تولیدکننده در یک ریزشب‌که‌ی محله‌ی هوشمند پدیدار می‌شود، اساساً با چالش هماهنگ‌سازی شب‌که‌ی متمرکز تفاوت دارد. در مدل سنتی، یک اپراتور سیستم واحد، اطلاعات کامل از تولید و تقاضا دارد و می‌تواند منابع را به‌طور بهینه توزیع کند. در مدل غیرمتمرکز، هیچ نهاد واحدی اطلاعات کامل ندارد. هر خانوار، تصمیمات خود را بر اساس مشاهدات محلی می‌گیرد ــ وضعیت باتری خود، الگوی تقاضای خود و تولید خورشیدی لحظه‌ای ــ بدون آگاهی مستقیم از شرایط همسایگان. بنابراین، سیستم باید راهی برای دستیابی به پیامدهای مطلوب جمعی از طریق تصمیم‌گیری صرفاً محلی بیابد؛ مسئله‌ای که به‌طور طبیعی بر پارادایم یادگیری تقویتی چندعاملی منطبق می‌شود (Charbonnier et al., 2022).
+
+ادبیات پژوهش، طبقه‌بندی غنی از سازوکارهای هماهنگ‌سازی مصرف‌کننده-تولیدکننده ارائه داده است. برخی رویکردها بر سیگنال‌های قیمتی تکیه دارند و محله را به‌عنوان یک بازار کوچک برق در نظر می‌گیرند که در آن خانوارها برای خرید و فروش انرژی پیشنهاد قیمت می‌دهند (Moret & Pinson, 2019). برخی دیگر از کنترل مستقیم استفاده می‌کنند و یک تجمیع‌کننده‌ی مرکزی، منابع را در سراسر جامعه توزیع می‌کند. دسته‌ی سوم از رویکردهای مبتنی بر یادگیری استفاده می‌کنند که در آن عامل‌ها، خط‌مشی‌های اشتراک را از طریق تعامل مکرر و بدون ارتباط صریح یا هماهنگی مرکزی توسعه می‌دهند (Charbonnier et al., 2022; Kusatake et al., 2023). هر رویکردی نقاط قوت و ضعف خود را دارد، اما همه‌ی آن‌ها در یک محدودیت مشترک هستند: مصرف‌کنندگان-تولیدکنندگان را به‌عنوان عامل‌های عقلانی اقتصادی مدل‌سازی می‌کنند که رفتار آن‌ها کاملاً توسط مشوق‌های بیرونی و کمینه‌سازی هزینه تعیین می‌شود. امکان این‌که مصرف‌کنندگان-تولیدکنندگان دارای ترجیحات اجتماعی ذاتی باشند ــ این‌که ممکن است برای عدالت، متقابله‌گری یا رفاه اجتماعی به‌عنوان اهداف فی‌نفسه ارزش قائل شوند ــ در نظر گرفته نمی‌شود.
+
+این کوتاهی اهمیت دارد؛ زیرا مجموعه‌ای رو به رشد از شواهد تجربی از اقتصاد رفتاری و روان‌شناسی اجتماعی نشان می‌دهد که تصمیم‌گیری انسانی در بافت‌های اشتراک منابع، تحت تأثیر ترجیحات اجتماعی قرار دارد که قابل تقلیل به منفعت‌طلبی نیستند (Fehr & Gächter, 2000; Ostrom, 1990). انسان‌ها حتی زمانی که از نظر فردی عقلانی نیست، منابع را به اشتراک می‌گذارند، سوءاستفاده‌کنندگان از منابع مشترک را با هزینه‌ی شخصی تنبیه می‌کنند و همکاری خود را مشروط به همکاری مشاهده‌شده در دیگران می‌کنند. اگر سیستم‌های انرژی همتا-به-همتا برای مشارکت‌کنندگان انسانی ــ یا برای عامل‌های خودمختاری که با انسان‌ها تعامل دارند ــ طراحی می‌شوند، این ابعاد اجتماعی باید در مدل‌های محاسباتی حاکم بر تصمیمات اشتراک گنجانده شوند. این پژوهش استدلال می‌کند که یکپارچه‌سازی ترجیحات اجتماعی زمین‌گذاری‌شده‌ی روان‌شناختی در یادگیری تقویتی چندعاملی، هم ممکن است و هم سودمند؛ و باقی‌مانده‌ی این فصل، ادبیاتی را مرور می‌کند که از این ادعا پشتیبانی می‌نماید.
+
+### ۲-۲-۲- مبادله‌ی انرژی همتا-به-همتا (P2P): ساختارهای بازار و سازوکارهای قیمت‌گذاری
+
+مبادله‌ی انرژی همتا-به-همتا به‌عنوان یک سازوکار مبتنی بر بازار برای هماهنگ‌سازی رفتار مصرف‌کنندگان-تولیدکنندگان، به‌طور گسترده‌ای مورد مطالعه قرار گرفته است. ایده‌ی مرکزی این است که خانوارهای دارای مازاد تولید باید بتوانند انرژی را مستقیماً به خانوارهای دارای کسری بفروشند، واسطه‌ی شب‌که‌ی توزیع را کنار بگذارند و سهم بیشتری از ارزش اقتصادی تولید توزیع‌شده را به خود اختصاص دهند (Tushar et al., 2020). ادبیات پژوهش بر روی یک طبقه‌بندی سه‌بخشی از ساختارهای بازار P2P همگرا شده است: P2P کامل، که در آن هر خانوار از طریق قراردادهای دوجانبه مستقیماً با هر خانوار دیگر معامله می‌کند؛ مبتنی بر جامعه، که در آن یک واسطه‌ی مرکزی یا تجمیع‌کننده، مبادلات را در یک گروه محلی تسهیل می‌کند؛ و مدل‌های ترکیبی که عناصر هر دو را دربر می‌گیرند (Zhou & Lund, 2023). در می‌ان این مدل‌ها، مدل مبتنی بر جامعه برای کاربردهای مسکونی بیشترین توجه را به خود جلب کرده است؛ زیرا تعادلی بین کارایی هماهنگی متمرکز و خودمختاری تصمیم‌گیری غیرمتمرکز برقرار می‌کند.
+
+سازوکارهای قیمت‌گذاری در بازارهای P2P معمولاً در یکی از سه دسته قرار می‌گیرند. قیمت‌گذاری نسبت عرضه-تقاضا (SDR) قیمت محلی را بر اساس تراز تجمعی تولید و تقاضا در جامعه در هر گام زمانی تعیین می‌کند؛ به‌گونه‌ای که قیمت‌ها در زمان کمبود افزایش و در زمان مازاد کاهش می‌یابند. قیمت‌گذاری نرخ می‌انه‌ی بازار (MMR) قیمت محلی را در نقطه‌ی می‌انی بین تعرفه‌ی تزریق به شب‌که و قیمت خرده‌فروشی برق قرار می‌دهد و تضمین می‌کند که هم خریداران و هم فروشندگان نسبت به معامله با شب‌که‌ی توزیع، سود می‌برند. تسهیم قبوض (BS) هزینه‌ی کل برق جامعه را به نسبت مصرف یا تولید خالص هر خانوار تقسیم می‌کند و فرایند تسویه‌حساب را با هزینه‌ی مشوق‌های نهایی ضعیف‌تر ساده‌تر می‌سازد. نشان داده شده است که هر یک از این سازوکارها، پیامدهای سطح جامعه را نسبت به حالت پایه‌ی بدون مبادله بهبود می‌بخشند؛ اما عملکرد نسبی آن‌ها به ویژگی‌های خاص جامعه، نیمرخ‌های تولید و تقاضای اعضای آن و بافت نظارتی بستگی دارد (Zhou & Lund, 2023).
+
+رویکردهای نظریه‌بازی به‌طور گسترده‌ای برای تحلیل برهم‌کنش‌های راهبردی در بازارهای P2P استفاده شده‌اند. صورتبندی‌های بازی اشتکلبرگ، یک رهبر مرکزی (اغلب تجمیع‌کننده‌ی جامعه) را مدل‌سازی می‌کنند که قیمت‌ها را تعیین می‌کند و عامل‌های مصرف‌کننده-تولیدکننده به‌عنوان پیروهایی عمل می‌کنند که تصمیمات مصرف و اشتراک خود را با توجه به آن قیمت‌ها بهینه‌سازی می‌کنند. راه‌حل‌های چانه‌زنی نش، مسئله‌ی مبادله را به‌عنوان یک بازی همکاری‌گونه مدل‌سازی می‌کنند که در آن خانوارها در مورد تخصیص سودمند متقابل مازاد، مذاکره می‌کنند و راه‌حل با بیشینه‌سازی حاصل‌ضرب منافع فردی مشخص می‌شود. این مدل‌های نظریه‌بازی مزیت ارائه‌ی تضمین‌های اثبات‌پذیر درباره‌ی همگرایی و بهینگی تحت مفروضات خاص را دارند. محدودیت اصلی آن‌ها، فرض دانش مشترک و عقلانیت راهبردی است: فرض می‌شود که همه‌ی عامل‌ها از ساختارهای بازدهی همه‌ی عامل‌های دیگر آگاه هستند و بازدهی خود را بر اساس آن بهینه‌سازی می‌کنند. در جوامع واقعی، خانوارها اطلاعات کامل درباره‌ی ترجیحات یا محدودیت‌های همسایگان خود ندارند و رفتار آن‌ها تحت تأثیر هنجارهای اجتماعی، اعتماد و دغدغه‌های عدالت قرار می‌گیرد که در توابع مطلوبیت استاندارد گنجانده نشده‌اند (Fehr & Gächter, 2000).
+
+محدودیت دیگر رویکردهای مبتنی بر بازار، اتکای آن‌ها به یک هماهنگ‌کننده یا تجمیع‌کننده‌ی مرکزی است. درحالی‌که مدل مبتنی بر جامعه، سربار ارتباطی مبادله‌ی کامل P2P را کاهش می‌دهد، یک نقطه‌ی شکست منفرد را دوباره معرفی می‌کند و نیاز به اعتماد به نهاد مرکزی را ایجاد می‌نماید. این مسئله به‌ویژه در بافت‌هایی که خانوارها نسبت به کنترل شخص ثالث بر منابع انرژی خود بدبین هستند، یا جایی که انگیزه‌های تجمیع‌کننده کاملاً با رفاه جامعه همسو نیست، مشکل‌ساز است (Moret & Pinson, 2019). رویکردهای مبتنی بر یادگیری، که با اجازه دادن به عامل‌ها برای توسعه‌ی خط‌مشی‌ها از طریق تجربه‌ی محلی، از نیاز به هماهنگ‌کننده‌ی مرکزی اجتناب می‌کنند، راه‌حلی بالقوه برای این تنش ارائه می‌دهند و اکنون مرور به این رویکردها معطوف می‌شود.
+
+### ۲-۲-۳- یادگیری تقویتی چندعاملی برای کنترل توزیع‌شده‌ی انرژی
+
+یادگیری تقویتی چندعاملی، صورتبندی طبیعی برای مسئله‌ی هماهنگ‌سازی مصرف‌کننده-تولیدکننده فراهم می‌آورد؛ زیرا نه به اپراتور مرکزی با اطلاعات کامل نیاز دارد و نه فرض می‌کند که عامل‌ها از راهبردها یا توابع بازدهی یکدیگر آگاه هستند. در عوض، هر عامل از طریق تعامل آزمون‌وخطای مکرر با محیط خود، یک خط‌مشی تصمیم‌گیری را می‌آموزد و سیگنال‌های پاداشی دریافت می‌کند که کیفیت تصمیمات آن را منعکس می‌سازد و خط‌مشی خود را بر اساس آن به‌روزرسانی می‌کند (Sutton & Barto, 2018). هنگامی که بر اشتراک انرژی اعمال می‌شود، هر خانوار به‌عنوان یک عامل یادگیری تقویتی خودمختار مدل‌سازی می‌شود که اقدام آن، کسری از انرژی مازاد برای اشتراک با همسایه‌ی تعیین‌شده است؛ وضعیت آن با ساعت جاری و سطح باتری خودش تعریف می‌شود؛ و پاداش آن به آسایش شخصی و عدالت توزیع کلی جامعه بستگی دارد.
+
+صورتبندی استاندارد برای محیط‌های چندعاملی، فرایند تصمیم‌گیری مارکوف جزئی‌مشاهده‌پذیر و غیرمتمرکز (Dec‑POMDP) است که MDP تک‌عاملی را به محیط‌هایی تعمیم می‌دهد که در آن چندین عامل به‌طور هم‌زمان عمل می‌کنند و هر یک فقط مشاهدات جزئی از وضعیت جهانی دریافت می‌کنند (Oliehoek & Amato, 2016). حل بهینه‌ی یک Dec‑POMDP کامل‌ترین (NEXP‑complete) است؛ به‌این معنا که راه‌حل‌های دقیق برای همه‌ی مسائل به‌جز کوچک‌ترین آن‌ها، شدنی نیستند. بنابراین، رویکردهای عملی MARL بر تقریب‌ها متکی هستند. یکی از خانواده‌های مهم روش‌ها، از آموزش متمرکز با اجرای غیرمتمرکز (CTDE) استفاده می‌کنند که در آن عامل‌ها در شبیه‌سازی با استفاده از اطلاعات وضعیت جهانی آموزش می‌بینند، اما خط‌مشی‌های آموخته‌شده را در زمان اجرا با استفاده صرفاً از مشاهدات محلی اجرا می‌کنند (Lowe et al., 2017). شب‌که‌های تجزیه‌ی ارزش (VDN) و QMIX این ایده را با یادگیری یک تابع ارزش متمرکز که به مؤلفه‌های هر عامل تجزیه می‌شود، گسترش می‌دهند و بدون نیاز به ارتباط در حین اجرا، رفتار هماهنگ را ممکن می‌سازند (Rashid et al., 2018).
+
+ساده‌ترین و پرکاربردترین رویکرد MARL در حوزه‌ی انرژی، یادگیری کیو مستقل (IQL) است که در آن هر عامل جدول Q یا شب‌که‌ی Q مخصوص خود را نگهداری می‌کند و سایر عامل‌ها را بخشی از محیط ایستا در نظر می‌گیرد (Tan, 1993). جذابیت IQL در سادگی و قابلیت‌توسعه‌ی آن است: نیازی به ارتباط بین عامل‌ها و نه زیرساخت آموزش متمرکز ندارد. بااین‌حال، IQL از مسئله‌ی ناایستایی (Non‑Stationarity) رنج می‌برد که چالش فنی تعیین‌کننده‌ی یادگیری تقویتی چندعاملی محسوب می‌شود. از آنجا که همه‌ی عامل‌ها به‌طور هم‌زمان در حال یادگیری هستند، محیطی که هر عامل فردی با آن مواجه می‌شود، با به‌روزرسانی خط‌مشی‌های همسایگانش تغییر می‌کند. این امر، فرض مارکوف را که اثبات همگرایی یادگیری Q بر آن استوار است، نقض می‌کند و می‌تواند به رفتار نوسانی یا زیربهینه منجر شود (Hernandez-Leal et al., 2019). در عمل، IQL اغلب در محیط‌های مساعد به خط‌مشی‌های معقولی همگرا می‌شود، اما تضمین‌های همگرایی نظری آن ضعیف است.
+
+مسئله‌ی اکتشاف جایگزین (Alter‑Exploration) نمایانگر تجلی خاصی از ناایستایی است که مستقیماً با این پژوهش مرتبط است. در محیط‌های چندعاملی، عاملی که پس از همگرایی دیگران به خط‌مشی‌های پایدار، به اکتشاف اقدامات تصادفی ادامه می‌دهد، از دیدگاه همسایگان خود، غیرقابل‌پیش‌بینی را وارد محیط می‌کند. این همسایگان که نمی‌توانند انتظارات پایداری درباره‌ی در دسترس‌بودن انرژی تشکیل دهند، ممکن است به‌سوی راهبردهای دفاعی‌تر یا احتکار بیشتر حرکت کنند و پیامدهای سطح جامعه را تنزل دهند (Matignon et al., 2012). پژوهش حاضر این تحلیل را به حوزه‌ی اشتراک انرژی گسترش می‌دهد و با معرفی یک عامل نوآور با اکتشاف بالا، هزینه‌های سطح جامعه‌ی اکتشاف ادامه‌دار آن را کمّی‌سازی می‌کند.
+
+شاربونیه و همکاران (Charbonnier et al., 2022) امکان‌پذیری IQL را برای مدیریت انعطاف‌پذیری انرژی مسکونی با استفاده از جمعیتی سی‌نفره از خانوارها در یک محیط بریتانیایی نشان دادند؛ هر خانوار به‌عنوان یک عامل یادگیری کیو جدولی با اندازه‌ی جدول Q ثابت مدل‌سازی شد که با هرگز به اشتراک نگذاشتن داده‌های شخصی، حریم خصوصی را حفظ می‌کند. رویکرد آن‌ها به بهبود قابل‌توجهی در مصرف خودِ محلی انرژی دست یافت، اما مطالعه، اهداف عدالت یا ترجیحات ناهمگن عامل‌ها را در نظر نگرفت. همه‌ی عامل‌ها توابع پاداش یکسانی داشتند که برای مصرف خودِ فردی بهینه‌سازی می‌کردند و منعکس‌کننده‌ی این فرض بودند که بیشینه‌سازی کارایی، تنها هدف مرتبط است. این موضوع نمایانگر الگویی گسترده‌تر در ادبیات MARL انرژی است: بیشتر مطالعات، کارایی فنی را اولویت می‌دهند ــ بیشینه‌سازی مصرف خود، کمینه‌سازی واردات از شب‌که یا کاهش هزینه‌های انرژی جامعه ــ و برابری توزیعی را یا نامربوط یا به‌عنوان یک محدودیت ثانویه که می‌توان به‌طور یکنواخت اعمال کرد، در نظر می‌گیرند.
+
+بوی و همکاران (Bui et al., 2019) یادگیری Q را برای مسئله‌ی زمان‌بندی باتری ریزشب‌که به‌کار بردند و نشان دادند که کنترل مبتنی بر یادگیری، در کاهش تقاضای پیک و هزینه‌های انرژی، از روش‌های ابتکاری مبتنی بر قاعده بهتر عمل می‌کند. علی و همکاران (Ali et al., 2023) این کار را به یک محیط چندعاملی با پاسخگویی تقاضا گسترش دادند و نشان دادند که عامل‌ها می‌توانند در پاسخ به سیگنال‌های قیمتی، بدون هماهنگی متمرکز، مصرف خود را جابه‌جا کنند. این مطالعات به‌طور جمعی، امکان‌پذیری فنی مدیریت انرژی مبتنی بر MARL را تأیید می‌کنند، اما همچنین شکافی را آشکار می‌سازند که پژوهش حاضر را برمی‌انگیزد: هیچ‌یک از آن‌ها ترجیحات اجتماعی یا ناهمگنی شخصیت را در چارچوب یادگیری نمی‌گنجانند.
+
+پیامد جمعی رفتار عقلانی فردی در محیط‌های دارای منابع مشترک، دغدغه‌ی مرکزی هر دو حوزه‌ی اقتصاد و بوم‌شناسی است. هاردین (Hardin, 1968) تراژدی منابع مشترک را به‌عنوان تمثیلی صورتبندی کرد که در آن چوپانان عقلانی، هر یک با افزودن دام به مرتع مشترک، منفعت خود را بیشینه می‌کنند و به‌طور جمعی، منبعی را که همگی به آن وابسته‌اند، نابود می‌سازند. مشابه انرژی این است: مصرف‌کننده-تولیدکننده‌ای که با خانوار دارای کسری مواجه می‌شود و مازاد تولید دارد، باید تصمیم بگیرد که به اشتراک بگذارد یا احتکار کند. انتخاب عقلانی فردی، احتکار است؛ زیرا انرژی ذخیره‌شده، بیمه‌ای در برابر کمبود آینده فراهم می‌آورد. بااین‌حال، اگر هر خانوار احتکار کند، مازادی که می‌توانست کسری همسایه را جبران کند، وقتی باتری‌ها به ظرفیت کامل می‌رسند، هدر می‌رود و جامعه به‌عنوان یک کل، شکننده‌تر می‌شود (Kollock, 1998).
+
+استروم (Ostrom, 1990) با مستندسازی نمونه‌های متعدد از جهان واقعی که در آن جوامع از طریق هنجارهای متقابله‌گری، ارتباطات و تحریم‌های پله‌ای، منابع مشترک را با موفقیت مدیریت می‌کنند، اجتناب‌ناپذیری تراژدی منابع مشترک را به چالش کشید. کار او نشان داد که تراژدی، یک قانون جهانی نیست، بل‌که پیامدی وابسته به بافت نهادی و ترجیحات اجتماعی مشارکت‌کنندگان است. این بینش، پیامدهای مستقیمی برای طراحی سیستم‌های انرژی همتا-به-همتا دارد: اگر جوامع بتوانند هنجارهای همکاری را برای مدیریت منابع انرژی مشترک توسعه دهند، آن‌گاه معماری فنی سازوکار اشتراک باید به‌جای تضعیف، از چنین هنجارهایی پشتیبانی کند.
+
+مدل‌سازی صوری عدالت در سیستم‌های چندعاملی، چندین سنجه‌ی پرکاربرد را تولید کرده است که هر کدام دارای ویژگی‌های ریاضی و پیامدهای عملی متمایزی هستند. شاخص عدالت جین (Jain's Fairness Index) که در اصل برای تخصیص منابع در شب‌که‌های رایانه‌ای توسعه یافته است، به‌صورت مجذور مجموع تخصیص‌ها تقسیم بر حاصل‌ضرب اندازه‌ی جمعیت در مجموع مجذور تخصیص‌ها تعریف می‌شود (Jain, Chiu & Hawe, 1984). این شاخص از یک‌برابر اندازه‌ی جمعیت (نمایانگر حداکثر نابرابری که در آن یک عامل همه‌ی منابع را دریافت می‌کند) تا یک (نمایانگر برابری کامل که در آن همه‌ی عامل‌ها تخصیص‌های یکسانی دریافت می‌کنند) متغیر است. ویژگی‌های کلیدی آن عبارتند از: تغییرناپذیری نسبت به مقیاس (یعنی ضرب کردن همه‌ی تخصیص‌ها در یک عدد ثابت، شاخص را تغییر نمی‌دهد)، پیوستگی (یعنی تغییرات کوچک در تخصیص‌ها، تغییرات کوچک در شاخص ایجاد می‌کند) و استقلال از جمعیت (یعنی شاخص به‌طور سیستماتیک به جمعیت‌های بزرگ‌تر یا کوچک‌تر گرایش ندارد).
+
+ضریب جینی (Gini Coefficient) که از منحنی لورنز ثروت یا مصرف تجمعی مشتق شده است، پرکاربردترین سنجه‌ی نابرابری در اقتصاد است (Gini, 1912). این ضریب از صفر (نمایانگر برابری کامل) تا یک (نمایانگر حداکثر نابرابری که در آن همه‌ی منابع در یک عامل متمرکز شده‌اند) متغیر است. ضریب جینی نسبت به تغییرات در می‌انه‌ی توزیع حساس‌تر از تغییرات در نقاط انتهایی است؛ که آن را مکمل شاخص عدالت جین می‌سازد، نه زائد. در بافت انرژی، ضریب جینی برای اندازه‌گیری نابرابری در مصرف، دسترسی و هزینه‌ی انرژی به‌کار رفته است، اما کاربرد آن در تصمیمات اشتراک بلادرنگ در سیستم‌های یادگیری چندعاملی نسبتاً جدید است (Kusatake et al., 2023).
+
+پژوهش‌های اخیر MARL شروع به گنجاندن مستقیم اهداف عدالت در توابع پاداش عامل‌ها کرده‌اند. هیوز و همکاران (Hughes et al., 2018) پاداش‌های نابرابری‌گریزی را در محیط‌های بازی Cleanup و Harvest معرفی کردند و نشان دادند که عامل‌هایی که برای کسب درآمد به‌مراتب بیشتر یا کمتر از همتایان خود جریمه می‌شوند، یاد می‌گیرند که منابع را عادلانه‌تر به اشتراک بگذارند و به رفاه جمعی بالاتری دست یابند. رویکرد آن‌ها از مدل نابرابری‌گریزی فِهر و اشمیت (Fehr & Schmidt, 1999) الهام گرفته شده بود که بر اساس آن، ترجیحات انسانی نه‌تنها به پیامدهای مطلق، بل‌که به پیامدهای نسبی در مقایسه با دیگران نیز بستگی دارد. نتایج Cleanup و Harvest نشان داد که نابرابری‌گریزی برای حل تراژدی منابع مشترک در این محیط‌های بازی انتزاعی کافی است، اما مطالعه بررسی نکرد که آیا همین سازوکار در محیط‌های اشتراک انرژی با زمین‌فیزیکی عمل می‌کند یا خیر.
+
+جادهاو و همکاران (Jadhav et al., 2025a) چارچوب FairMarket‑RL را پیشنهاد کردند که از یک مدل زبانی بزرگ (LLM) به‌عنوان منتقد عدالت برای ارزیابی برابری پیامدهای بازار در یک شبیه‌سازی مبادله‌ی انرژی P2P استفاده می‌کند. LLM ارزیابی می‌کند که آیا تخصیص انرژی هر عامل بر اساس معیارهای مشخص‌شده در زبان طبیعی، عادلانه است و سیگنال پاداش حاصل از این ارزیابی برای هدایت یادگیری عامل به‌کار می‌رود. این رویکرد در استفاده از ارزیابی‌های عدالت انسان‌محور نوآورانه است، اما وابستگی به پایداری و در دسترس‌بودن بلادرنگ فراخوانی‌های API مدل زبانی بزرگ را معرفی می‌کند که ممکن است در سیستم‌های مستقرشده قابل‌اعتماد نباشد. به‌طور بنیادی‌تر، ارزیابی عدالت بیرونی نسبت به عامل‌ها است: توسط یک منتقد خارجی اعمال می‌شود، نه به‌عنوان بخشی از سیستم ارزشی خودِ هر عامل درونی‌سازی می‌گردد.
+
+شکافی که از این مرور MARL عدالت‌آگاه پدیدار می‌شود، دووجهی است. نخست، رویکردهای موجود، محدودیت‌های عدالت را به‌طور یکنواخت بر همه‌ی عامل‌ها اعمال می‌کنند و عدالت را به‌عنوان یک مداخله‌ی نظارتی در نظر می‌گیرند، نه به‌عنوان بُعدی از تنوع فردی. دوم، هیچ مطالعه‌ای ترجیحات عدالت را در یک مدل روان‌شناختی معتبر از شخصیت زمین‌گذاری نمی‌کند. رویکرد ما با نگاشت بُعد توافق‌پذیری از مدل پنج‌عاملی شخصیت ــ که در ادبیات روان‌شناسی، جهت‌گیری نوع‌گرایانه و دغدغه‌ی نسبت به دیگران را پیش‌بینی می‌کند ــ مستقیماً به وزنی که هر عامل در تابع پاداش خود به عدالت اجتماعی اختصاص می‌دهد، به هر دو شکاف می‌پردازد. این امر جمعیتی از عامل‌ها با ترجیحات عدالت ناهمگن و زمین‌گذاری‌شده‌ی روان‌شناختی ایجاد می‌کند که مطالعه‌ی پویایی‌های نوظهور جامعه را امکان‌پذیر می‌سازد؛ پویایی‌هایی که نه محدودیت‌های عدالت یکنواخت و نه برچسب‌های ناهمگن دلبخواهانه نمی‌توانند آن‌ها را دربر گیرند.
+
+### ۲-۲-۴- تصمیم‌گیری مبتنی بر شخصیت در عامل‌های محاسباتی
+
+یکپارچه‌سازی روان‌شناسی شخصیت در طراحی عامل‌های محاسباتی، سابقه‌ای چند دهه دارد، اما کاربرد آن در یادگیری تقویتی نسبتاً جدید است. فرض مرکزی این است که تفاوت‌های فردی در رفتار ــ الگوهای پایدار تفکر، هیجان و عمل که یک فرد را از دیگری متمایز می‌کند ــ را می‌توان در امتداد تعداد کمی از ابعاد مشخص کرد و این ابعاد را می‌توان بر روی پارامترهای قابل‌محاسبه در معماری‌های عامل نگاشت (Goldberg, 1990; McCrae & Costa, 2003). اگر این نگاشت بتواند منسجم و معتبر باشد، مسیری به‌سوی عامل‌های انسان‌گونه‌تر در شبیه‌سازی‌های اجتماعی، سیستم‌های تعامل انسان-هوش‌مصنوعی و مسائل هماهنگی چندعاملی که شامل مشارکت‌کنندگان انسانی هستند، ارائه می‌دهد.
+
+مدل پنج‌عاملی (OCEAN) شخصیت، چارچوب مسلط برای ارزیابی شخصیت در روان‌شناسی معاصر است که دهه‌ها اعتبارسنجی بین‌فرهنگی از ساختار عاملی آن پشتیبانی می‌کند (John & Srivastava, 1999). پنج بُعد عبارتند از: گشودگی به تجربه (Openness) که کنجکاوی، تخیل و ترجیح برای تازگی را دربر می‌گیرد؛ وظیفه‌شناسی (Conscientiousness) که خودانضباطی، سازمان‌دهی و هدف‌گرایی را دربر می‌گیرد؛ برون‌گرایی (Extraversion) که جامعه‌پذیری، ابراز وجود و هیجان‌پذیری مثبت را منعکس می‌کند؛ توافق‌پذیری (Agreeableness) که جهت‌گیری نوع‌گرایانه، اعتماد و همکاری‌جویی را دربر می‌گیرد؛ و روان‌رنجوری (Neuroticism) که بی‌ثباتی هیجانی، اضطراب و حساسیت به تهدید را دربر می‌گیرد. هر بُعد نمایانگر یک پیوستار است، نه یک دسته‌بندی دودویی، و نیمرخ‌های شخصیتی فردی با پیکربندی نمرات در هر پنج بُعد مشخص می‌شوند.
+
+نگاشت از ویژگی‌های شخصیت به رفتار عامل، در چندین چارچوب محاسباتی بررسی شده است. پارک و همکاران (Park et al., 2023) نشان دادند که عامل‌های مولد (Generative Agents) دارای نیمرخ‌های شخصیتی پنج‌عاملی، برهم‌کنش‌های اجتماعی متنوع‌تر و باورپذیرتری را در یک محیط شهر شبیه‌سازی‌شده تولید می‌کنند. رویکرد آن‌ها از دستورهای زبان طبیعی برای نمونه‌سازی ویژگی‌های شخصیت در عامل‌های مبتنی بر مدل زبانی بزرگ استفاده کرد و نشان داد که رفتار سازگار با ویژگی، از برهم‌کنش دستورهای شخصیت با معماری حافظه و برنامه‌ریزی عامل پدیدار می‌شود. اگرچه این رویکرد قدرتمند است، اما به قابلیت‌ها و سوگیری‌های خاص مدل زبانی بزرگ زیربنایی وابسته است و به‌سادگی به محیط‌های یادگیری تقویتی که در آن عامل‌ها باید از طریق آزمون‌وخطا خط‌مشی بیاموزند، قابل‌انتقال نیست.
+
+رن و شو (Ren & Xu, 2025) در مطالعه‌ای با عنوان «تأثیر ویژگی‌های پنج‌عاملی شخصیت بر تصمیم‌گیری عامل‌های هوش مصنوعی در فضاهای عمومی» به بررسی نقش ویژگی‌های شخصیتی در رفتار عامل‌های مولد مبتنی بر مدل زبانی بزرگ (با استفاده از چارچوب AgentVerse و GPT-3.5-turbo) در یک شبیه‌سازی کلاس درس پرداختند که در آن عامل‌ها به گزاره‌های اطلاعات نادرست پاسخ می‌دادند. آن‌ها دریافتند که گشودگی به تجربه قوی‌ترین اثر را بر پذیرش اطلاعات دارد: عامل‌های با گشودگی بالا در ۹۲/۶ درصد موارد اطلاعات جدید را پذیرفتند، درحالی‌که عامل‌های با گشودگی پایین در ۹۷/۸ درصد موارد آن را رد کردند. توافق‌پذیری همبستگی محدودی با پذیرش اطلاعات نشان داد. مطالعه‌ی آن‌ها بر رفتار ارتباطی و شناختی عامل‌های مبتنی بر مدل زبانی بزرگ متمرکز است و شامل هیچ سازوکار تخصیص یا اشتراک منبع فیزیکی نیست.
+
+مطالعه‌ای توسط Ren و Xu (۲۰۲۵) با عنوان "The Impact of Big Five Personality Traits on AI Agent Decision-Making in Public Spaces: A Social Simulation Study" به مدل‌سازی ویژگی‌های شخصیتی پنج بزرگ (OCEAN) در عامل‌های هوشمند پرداخته است. نتایج نشان می‌دهد که ویژگی گشودگی (Openness) بیشترین تأثیر را بر پذیرش اطلاعات دارد (۹۲/۶ درصد پذیرش در عامل‌های با گشودگی بالا در برابر ۲/۲ درصد در عامل‌های با گشودگی پایین)، در حالی که ویژگی دلپذیر بودن (Agreeableness) همبستگی محدودی با پذیرش اطلاعات نشان می‌دهد. اگرچه این پژوهش نشان می‌دهد که نگاشت OCEAN به رفتار عامل‌های مبتنی بر مدل زبانی بزرگ امکان‌پذیر است، محیط آن صرفاً اجتماعی و مبتنی بر تعاملات زبانی است و شامل مدیریت منابع فیزیکی با محدودیت‌های تولید، ذخیره‌سازی و تقاضای انرژی نیست. بنابراین، پژوهش حاضر اولین مطالعه‌ای است که چنین نگاشتی را در یک محیط مدیریت منابع فیزیکی با زمین‌فیزیکی به‌کار می‌گیرد و پیامدهای آن را بر کارایی، عدالت و تاب‌آوری سطح جامعه اندازه‌گیری می‌کند.
+
+محدودیت اساسی ادبیات موجود شخصیت-به-یادگیری‌تقویتی، از منظر این پژوهش، این است که تمام مطالعات تا به امروز در محیط‌های صرفاً اجتماعی یا بازی‌های انتزاعی انجام شده‌اند. رن و شو (۲۰۲۵) از یک شبیه‌سازی اجتماعی کلاس درس استفاده کردند. پارک و همکاران (۲۰۲۳) از یک محیط تعامل اجتماعی شهر کوچک استفاده کردند. هیچ‌یک از این محیط‌ها شامل مدیریت یک منبع فیزیکی ــ برق ــ با محدودیت‌های جهان واقعی تولید خورشیدی، ذخیره‌سازی باتری، الگوهای تقاضا و عدم‌قطعیت آب‌وهوا که مسئله‌ی اشتراک انرژی را مشخص می‌کنند، نیست. این پرسش که آیا نگاشت‌های OCEAN‑به‑یادگیری‌تقویتی تفاوت‌های رفتاری معناداری در یک وظیفه‌ی مدیریت منابع با زمین‌فیزیکی تولید می‌کنند یا خیر، در ادبیات پاسخ داده نشده است. پژوهش حاضر با پیاده‌سازی یک چارچوب پاداش تعدیل‌شده با شخصیت در یک ریزشب‌که‌ی محله‌ی شبیه‌سازی‌شده و اندازه‌گیری نظام‌مند اثرات پارامترهای شخصیتی ناهمگن بر هر دو پیامد سطح فردی و جامعه، این شکاف را پر می‌کند.
+
+## ۲-۳- مرور پژوهش‌های مرتبط
+
+بدنه‌ی پژوهش‌هایی که مستقیماً این کار را تغذیه می‌کنند، سه خوشه‌ی موضوعی را دربر می‌گیرد: MARL کارآمد از نظر بهره‌وری برای مدیریت انرژی، MARL عدالت‌آگاه با محدودیت‌های یکنواخت، و مدل‌سازی عامل‌های مبتنی بر شخصیت در حوزه‌های غیرانرژی. این بخش، مرتبط‌ترین مطالعات را در هر خوشه به‌طور انتقادی مرور می‌کند، انتخاب‌های روش‌شناختی آن‌ها را مقایسه می‌نماید، تناقضات و پرسش‌های حل‌نشده را شناسایی می‌کند و شکاف‌های خاصی را که پژوهش حاضر به آن‌ها می‌پردازد، تثبیت می‌نماید.
+
+### ۲-۳-۱- MARL کارآمد از نظر بهره‌وری در مدیریت انرژی مسکونی
+
+نخستین کاربردهای یادگیری تقویتی در مدیریت انرژی مسکونی بر محیط‌های تک‌عاملی متمرکز بود که در آن یک سیستم مدیریت انرژی خانگی، تصمیمات شارژ و دشارژ باتری را برای کمینه‌سازی هزینه‌های برق یا بیشینه‌سازی مصرف خودِ تولید خورشیدی می‌آموزد (Bui et al., 2019). این مطالعات تک‌عاملی، امکان‌پذیری یادگیری تقویتی را برای کنترل انرژی تأیید کردند و نشان دادند که خط‌مشی‌های مبتنی بر یادگیری، در شرایط مختلف آب‌وهوا و قیمت، به عملکرد یک بهینه‌ساز متمرکز مبتنی بر برنامه‌ریزی خطی عدد صحیح مختلط (MILP) نزدیک می‌شوند، بدون نیاز به اطلاعات کامل و متمرکز که آن رویکرد ایجاب می‌کند. گسترش به محیط‌های چندعاملی، که در آن چندین خانوار از طریق یک ریزشب‌که یا بازار مشترک برهم‌کنش دارند، چالش هماهنگ‌سازی را معرفی کرد که وضعیتِ برترِ دانش را تعریف می‌کند.
+
+شاربونیه و همکاران (Charbonnier et al., 2022) یکی از جامع‌ترین نمایش‌های یادگیری کیوی چندعاملی را برای مدیریت انعطاف‌پذیری مسکونی ارائه دادند. مطالعه‌ی آن‌ها سی خانوار در بریتانیا را مدل‌سازی کرد که هر کدام علاوه بر خورشیدی فتوولتائیک، به خودروهای برقی و پمپ‌های حرارتی مجهز بودند و هر کدام توسط یک عامل یادگیری کیو جدولی مستقل با یک جدول وضعیت‑اقدام با اندازه‌ی ثابت کنترل می‌شدند. عامل‌ها یاد گرفتند که بارهای انعطاف‌پذیر خود را به زمان‌های تولید خورشیدی محلی بالا منتقل کنند و مصرف خودِ جامعه را تقریباً دوازده درصد نسبت به یک خط‌مشی پایه‌ی مبتنی بر قاعده افزایش دهند. نقطه‌ی قوت اصلی مطالعه، قابلیت‌توسعه‌ی آن است: از آنجا که هر عامل فقط جدول Q خود را نگهداری می‌کند و هرگز داده‌های شخصی را با یک هماهنگ‌کننده‌ی مرکزی به اشتراک نمی‌گذارد، رویکرد، حریم خصوصی را حفظ می‌کند و می‌تواند در جوامع با اندازه‌ی دلخواه مستقر شود. محدودیت اصلی آن، از منظر این پژوهش، این است که همه‌ی عامل‌ها توابع پاداش یکسانی دارند که فقط برای مصرف خودِ فردی بهینه‌سازی می‌کنند. مطالعه بررسی نکرد که آیا عامل‌ها با اهداف متفاوت، پیامدهای متفاوتی تولید می‌کنند یا خیر، و همچنین اثرات توزیعی خط‌مشی‌های آموخته‌شده را در بین خانوارها با الگوهای تقاضای مختلف در نظر نگرفت.
+
+جزئیات روش‌شناختی شاربونیه و همکاران (۲۰۲۲) که شایسته‌ی بررسی است، نحوه‌ی برخورد آن‌ها با مسئله‌ی اکتشاف است. نویسندگان از یک نرخ اکتشاف ثابت و یکسان (ε = ۰/۵) برای همه‌ی عامل‌ها در طول آموزش استفاده کردند. این انتخاب طراحی ساده است اما مفروض می‌دارد که همه‌ی عامل‌ها باید سطح اکتشاف یکسانی را در طول یادگیری حفظ کنند، بدون توجه به تفاوت‌های احتمالی در ترجیحات یا نقش‌های رفتاری آن‌ها. چارچوب ما نه‌تنها از نظر معرفی ناهمگنی شخصیت، بل‌که از نظر بررسی آنچه هنگامی رخ می‌دهد که نرخ‌های اکتشاف به‌طور نظام‌مند بین عامل‌ها متفاوت باشد — و به‌ویژه وقتی یک عامل عمداً کف اکتشاف بالاتری را حفظ می‌کند و ناایستایی دائمی برای همسایگان خود ایجاد می‌نماید — با شاربونیه و همکاران (۲۰۲۲) تفاوت دارد.
+
+بوی و همکاران (Bui et al., 2019) یادگیری Q را برای زمان‌بندی یک باتری ذخیره‌سازی مشترک در سطح ریزشب‌که به‌کار بردند و نشان دادند که عملکرد کنترل‌کننده‌ی مبتنی بر یادگیری Q، با افزایش تعداد قسمت‌های آموزش، به عملکرد یک بهینه‌ساز متمرکز مبتنی بر MILP (که به‌عنوان معیار عملکرد نزدیک‌به‌بهینه در نظر گرفته شده) همگرا می‌شود. مطالعه‌ی آن‌ها از یک صورت‌بندی تک‌عاملی استفاده کرد که در آن یک عامل یادگیرنده‌ی واحد، تصمیمات شارژ و دشارژ باتری مشترک را می‌آموزد و بدون چالش‌های یادگیری چندعاملی، به هدف هماهنگ‌سازی یکسانی دست می‌یابد. بااین‌حال، معماری آن‌ها ذاتاً متمرکز نیست: کنترل‌کننده‌ی مدیریت انرژی ریزشب‌که (MG-EMS) تنها سیگنال‌های محدودی (مازاد/کمبود توان و قیمت) با باتری مشترک مبادله می‌کند، بدون دسترسی به وضعیت داخلی یا داده‌های خام هر خانوار. تفاوت اصلی رویکرد غیرمتمرکز این پژوهش با آن‌ها، نه در حریم خصوصی، بل‌که در نبود یک عامل یادگیرنده‌ی واحد است: در این پژوهش، هر خانوار به‌طور مستقل تصمیمات اشتراک خود را می‌آموزد، که ناایستایی و چالش‌های هماهنگ‌سازی را معرفی می‌کند که یک صورت‌بندی تک‌عاملی مانند بوی و همکاران به‌طور طبیعی از آن‌ها اجتناب می‌کند.
+
+کوساتا‌که و همکاران (Kusatake et al., 2023) رویکرد متفاوتی را برای مسئله‌ی هماهنگ‌سازی با استفاده از بهینه‌سازی تکاملی چندهدفه به‌جای یادگیری تقویتی در پیش گرفتند. چارچوب آن‌ها به‌طور هم‌زمان، هم سود کل جامعه و هم حداقل سود فردی را بهینه‌سازی می‌کند و تضمین می‌کند که هیچ خانوار به‌طور قابل‌توجهی از دیگران بدتر نباشد. صورتبندی چندهدفه جذاب است زیرا به‌طور صریح مبادله‌ی بین کارایی و برابری را که رویکردهای تک‌هدفه نادیده می‌گیرند، دربر می‌گیرد. بااین‌حال، الگوریتم تکاملی در حالت دسته‌ای (Batch) عمل می‌کند و راه‌حل‌های نامزد را بر روی تاریخچه‌ی کامل برهم‌کنش‌های جامعه قبل از انتخاب نسل بعدی ارزیابی می‌کند. این رویکرد برون‌خط نمی‌تواند با تغییرات بلادرنگ در آب‌وهوا، تقاضا یا رفتار عامل سازگار شود و کاربردپذیری آن را در محیط‌های پویا محدود می‌سازد. روش ما به‌جای آن از یادگیری برون‌خط استفاده می‌کند و به عامل‌ها امکان می‌دهد تا با تغییر شرایط، به‌طور پیوسته سازگار شوند.
+
+ادبیات کارایی‌محور تأسیس می‌کند که MARL می‌تواند پیامدهای انرژی سطح جامعه را بهبود بخشد، اما توزیع آن پیامدها را بررسی‌نشده باقی می‌گذارد. مطالعاتی که سنجه‌های تجمعی مانند می‌انگین هزینه‌ی جامعه یا کل مصرف خود را گزارش می‌کنند، ممکن است نابرابری قابل‌توجهی را در نحوه‌ی توزیع این مزایا در بین خانوارها پنهان کنند. این پژوهش با در نظر گرفتن برابری توزیعی به‌عنوان یک متغیر پیامد اولیه، که از طریق شاخص عدالت جین، ضریب جینی و نرخ روزهای خاموشی اندازه‌گیری می‌شود، به‌جای یک ملاحظه‌ی ثانویه، به این شکاف می‌پردازد.
+
+### ۲-۳-۲- MARL عدالت‌آگاه: محدودیت‌های یکنواخت و کاستی‌های آن‌ها
+
+تشخیص این نکته که بهینه‌سازی صرفاً مبتنی بر کارایی می‌تواند پیامدهای ناعادلانه‌ای به بار آورد، بدنه‌ی رو به رشدی از پژوهش‌ها را در مورد MARL عدالت‌آگاه برانگیخته است. این مطالعات، توابع پاداش عامل‌ها یا اهداف آموزش را برای جریمه‌کردن توزیع‌های ناعادلانه اصلاح می‌کنند، اما معمولاً همان محدودیت عدالت را بر همه‌ی عامل‌ها اعمال می‌کنند که بیانگر دیدگاه نظارتی بالا-به-پایین است تا تنوع فردی در دغدغه‌ی عدالت.
+
+می و هوانگ (May & Huang, 2023) یک بازار مصرف‌کننده-تولیدکننده‌ی همتا-به-همتا را در یک جامعه‌ی ساختمانی سوئدی با استفاده از بهینه‌سازی سیاست نزدیک‌شونده (PPO) در یک معماری دو سطحی درونی-بیرونی مطالعه کردند. در صورتبندی آن‌ها، یک عامل یادگیری تقویتی درونی، هزینه‌های انرژی فردی هر خانوار را بهینه‌سازی می‌کند، درحالی‌که یک عامل یادگیری تقویتی بیرونی، سازوکار قیمت‌گذاری جامعه را برای دستیابی به برابری درآمد در بین خانوارها تنظیم می‌کند. طراحی دو سطحی نوآورانه است زیرا مسئله‌ی تصمیم‌گیری عملیاتی ــ چه مقدار انرژی با قیمت‌های داده‌شده به اشتراک گذاشته شود ــ را از مسئله‌ی طراحی بازار ــ چه قیمت‌هایی پیامدهای عادلانه تولید می‌کنند ــ جدا می‌کند. می و هوانگ دریافتند که عامل قیمت‌گذاری سطح بیرونی، نابرابری درآمد را با موفقیت کاهش می‌دهد، اما سازوکار عدالت از طریق تعدیل قیمت عمل می‌کند، نه از طریق ترجیحات درونی هر خانوار. خانوارهایی که مایل‌اند در صورت نیاز واقعی همسایه، سخاوتمندانه‌تر به اشتراک بگذارند، هیچ راهی برای بیان این ترجیح در مدل ندارند. همه‌ی خانوارها به‌طور یکسان به سیگنال‌های قیمتی یکسان پاسخ می‌دهند؛ فرضی که با شواهد تجربی در مورد ترجیحات اجتماعی ناهمگن تناقض دارد (Fehr & Gächter, 2000).
+
+مطالعه‌ی می و هوانگ (۲۰۲۳) همچنین فرض می‌کند که همه‌ی مصرف‌کنندگان-تولیدکنندگان به‌معنای محدود عقلانیت اقتصادی، یعنی کمینه‌سازی هزینه‌های فردی با توجه به قیمت‌های جاری، عمل می‌کنند. این فرض از نظر روش‌شناختی راحت است، اما اعتبار بیرونی نتایج را محدود می‌کند. اگر مصرف‌کنندگان-تولیدکنندگان واقعی انرژی را نه‌تنها به‌دلیل سودآوری مالی با قیمت جاری، بل‌که به‌دلیل دغدغه‌ی نسبت به رفاه همسایگان خود به اشتراک بگذارند، مدل‌هایی که عقلانیت اقتصادی محض را فرض می‌کنند، به‌طور سیستماتیک نرخ‌های اشتراک را دست‌کم می‌گیرند و مشوق‌های قیمتی موردنیاز برای دستیابی به پیامدهای عادلانه را بیش‌تخمین می‌زنند.
+
+هیوز و همکاران (Hughes et al., 2018) یکی از تأثیرگذارترین نمایش‌های پاداش‌های نابرابری‌گریزی را در سیستم‌های چندعاملی ارائه دادند. با استفاده از محیط‌های بازی Cleanup و Harvest، آن‌ها نشان دادند که عامل‌هایی که توابع پاداش آن‌ها شامل جریمه‌ای برای نابرابری است ــ که به‌عنوان تفاوت بین بازدهی خودِ عامل و می‌انگین بازدهی همه‌ی عامل‌ها اندازه‌گیری می‌شود ــ یاد می‌گیرند که منابع را عادلانه‌تر به اشتراک بگذارند و به رفاه جمعی بالاتری نسبت به عامل‌هایی که فقط برای بازدهی فردی بهینه‌سازی می‌کنند، دست یابند. محیط Cleanup یک بازی مدیریت منابع مکانی است که در آن عامل‌ها باید سیب جمع‌آوری کنند که تنها در صورتی بازتولید می‌شوند که عامل‌ها همچنین آلودگی را در منبع آب مشترک پاکسازی کنند؛ این امر، یک مسئله‌ی کالای عمومی ایجاد می‌کند که از نظر ساختاری مشابه اشتراک انرژی است. محیط Harvest شامل جمع‌آوری سیب توسط عامل‌ها از یک منبع مشترک است که با نرخی متناسب با موجودی باقی‌مانده بازتولید می‌شود و یک مسئله‌ی مدیریت منابع مشترک را ایجاد می‌کند.
+
+نتایج هیوز و همکاران (۲۰۱۸) مستقیماً با این پژوهش مرتبط است زیرا نشان می‌دهند که اصلاح‌های عدالت در سطح پاداش می‌توانند تراژدی منابع مشترک را در محیط‌های چندعاملی حل کنند. بااین‌حال، سه تفاوت مهم، کار آن‌ها را از مطالعه‌ی حاضر متمایز می‌کند. نخست، پاداش نابرابری‌گریزی در هیوز و همکاران از می‌انگین بازدهی به‌عنوان نقطه‌ی مرجع خود استفاده می‌کند؛ به‌این معنا که عامل‌ها برای انحراف از می‌انگین در هر دو جهت جریمه می‌شوند. این صورتبندی، همه‌ی انحرافات از برابری را به‌یک اندازه نامطلوب در نظر می‌گیرد، درحالی‌که شاخص عدالت جین که در این پژوهش استفاده شده است، تغییرناپذیر نسبت به مقیاس است و ویژگی‌های ریاضی متفاوتی دارد که آن را برای بافت‌های تخصیص منابع مناسب‌تر می‌سازد. دوم، جریمه‌ی عدالت در هیوز و همکاران به‌طور یکنواخت اعمال می‌شود؛ هر عامل دارای همان درجه‌ی نابرابری‌گریزی است. رویکرد پیشنهادی، شدت دغدغه‌ی عدالت را در سراسر جمعیت عامل‌ها تغییر می‌دهد و طیفی از خودخواهی محض تا نوع‌دوستی تقریباً کامل را ایجاد می‌کند. سوم، محیط‌های Cleanup و Harvest، بازی‌های انتزاعی با زمین‌فیزیکی در سیستم‌های انرژی هستند.
+
+جادهاو و همکاران (Jadhav et al., 2025a) چارچوب FairMarket-RL را معرفی کردند که در آن از یک مدل زبانی بزرگ (LLM) به عنوان منتقد زمان‌واقعی عدالت برای هدایت عامل‌های یادگیری تقویتی در بازارهای همتابه‌همتا استفاده می‌شود. این روش با تولید امتیازات "عدالت برای خریدار" (FTB) و "عدالت بین فروشندگان" (FBS)، این سیگنال‌ها را از طریق ضرایب تعادل برنامه‌ریزی شده در پاداش عامل‌ها ادغام کرده و پایداری و انصاف در شب‌که را بهبود می‌بخشد. نسخهٔ گسترش‌یافتهٔ این چارچوب توسط Jadhav و همکاران (۲۰۲۵b) با عنوان "Scalable Fairness Shaping with LLM-Guided Multi-Agent Reinforcement Learning for Peer-to-Peer Electricity Markets" در arXiv (arXiv:2508.18610) منتشر شده است که در آن FairMarket-RL در جوامع بزرگ‌تر با افق‌های معاملاتی طولانی‌تر آزمایش شده و نشان داده شده است که برابری معاملاتی، تنوع مشارکت در بازار و تاب‌آوری سیستم را بهبود می‌بخشد، درحالی‌که رفاه کل و حجم معاملات را حفظ می‌کند. این رویکرد از LLM‑به‌عنوان‑منتقد استفاده می‌کند که با رویکرد پژوهش حاضر تفاوت بنیادی دارد: در اینجا، دغدغهٔ عدالت در تابع پاداش هر عامل به‌عنوان بخشی از سیستم ارزشی درونی آن، بر اساس ویژگی شخصیتی (توافق‌پذیری) جاسازی می‌شود و نیازی به فراخوانی‌های API خارجی یا منتقد بیرونی ندارد.
+
+بااین‌حال، FairMarket‑RL دارای چندین محدودیت است که این پژوهش از آن‌ها اجتناب می‌کند. نخست، منتقد عدالت مبتنی بر مدل زبانی بزرگ، وابستگی به پایداری بلادرنگ، تأخیر و هزینه‌ی فراخوانی‌های API مدل زبانی بزرگ را معرفی می‌کند که ممکن است در یک سیستم انرژی مستقرشده غیرقابل‌قبول باشد. دوم، قضاوت‌های عدالت مدل زبانی بزرگ ممکن است در عبارات مختلف دستور، قالب‌های ورودی یا نسخه‌های مدل ناسازگار باشد و منبعی کنترل‌نشده از واریانس را به فرایند یادگیری وارد کند. سوم، ارزیابی عدالت نسبت به خودِ عامل‌ها بیرونی باقی می‌ماند؛ توسط یک منتقد خارجی اعمال می‌شود، نه به‌عنوان سیستم ارزشی خودِ هر عامل درونی‌سازی می‌گردد. چارچوب ما رویکرد جایگزین را در پیش می‌گیرد و دغدغه‌ی عدالت را مستقیماً در تابع پاداش هر عامل جاسازی می‌کند؛ جایی که ذاتی، سازگار و بدون نیاز به فراخوانی‌های API خارجی است.
+
+ادبیات MARL عدالت‌آگاه به‌طور جمعی نشان می‌دهد که گنجاندن ملاحظات برابری در آموزش عامل، پیامدهای توزیعی را بهبود می‌بخشد، اما همچنین یک الگوی روش‌شناختی ثابت را آشکار می‌کند: عدالت به‌عنوان یک محدودیت یکنواخت و تحمیل‌شده از بیرون در نظر گرفته می‌شود، نه به‌عنوان بُعدی از ناهمگنی فردی. رویکرد ما از این الگو فاصله می‌گیرد و به هر عامل اجازه می‌دهد تا درجه‌ی دغدغه‌ی عدالت آن با توجه به سطح ویژگی شخصیتی آن تغییر کند و جامعه‌ای ایجاد کند که در آن برخی عامل‌ها عمیقاً به برابری اهمیت می‌دهند، برخی به‌طور متوسط و برخی اصلاً اهمیتی نمی‌دهند.
+
+### ۲-۳-۳- رویکردهای نظریه‌بازی و مبتنی بر بازار برای اشتراک منصفانه‌ی انرژی
+
+یک رویکرد جایگزین برای رویکرد مبتنی بر یادگیری تقویتی به عدالت در اشتراک انرژی، استفاده از روش‌های نظریه‌بازی و طراحی بازار است که مشوق‌ها را به‌گونه‌ای ساختار می‌دهند تا پیامدهای عادلانه را به‌طور ذاتی تولید کنند. این رویکردها در هدف دستیابی به پیامدهای عادلانه مشترک هستند، اما در مفروضات خود درباره‌ی دانش عامل و نیازمندی‌های محاسباتی، تفاوت اساسی دارند.
+
+بهرونانی و همکاران (Behrunani et al., 2023) یک بازی تعادل نش تعمیم‌یافته (Generalized Nash Equilibrium – GNE) غیرمتمرکز برای مبادله‌ی انرژی در یک شب‌که‌ی هاب انرژی هوشمند پیشنهاد کردند. در صورت‌بندی آن‌ها، هر هاب به‌طور هم‌زمان و غیرمتمرکز، تصمیمات مصرف و مبادله‌ی انرژی خود را با هدف کمینه‌سازی واریانس نمونه‌ای کاهش هزینه‌ها در می‌ان هاب‌ها بهینه‌سازی می‌کند، بدون نیاز به یک واسطه‌ی مرکزی برای تعیین قیمت.
+
+بهرونانی و همکاران (۲۰۲۳) ثابت کردند که این بازی، تحت شرایط منظم‌بودن ملایم، به یک تعادل نش تعمیم‌یافته (v-GNE) همگرا می‌شود و نشان دادند که راه‌حل به‌دست‌آمده به‌طور اثبات‌پذیر در سطح شب‌که عادلانه است؛ برای نمونه، در یک شبیه‌سازی سه‌هابی، کاهش هزینه‌ی هر هاب به‌طور جداگانه گزارش شد (نظیر ۲۸ درصد برای هاب ۲). نقطه‌ضعف اصلی، نیاز به حل تکراری مسئله‌ی بهینه‌سازی توزیع‌شده در هر گام زمانی از طریق به‌ترین‌پاسخ گرادیانی تصویرشده است که مبادله‌ی اطلاعات می‌ان هاب‌ها را می‌طلبد و تضمین همگرایی سریع در محیط‌های بزرگ‌مقیاس را دشوار می‌سازد.
+
+مورت و پینسون (Moret & Pinson, 2019) ساختار بازار مبتنی بر جامعه با عنوان «انرژی جمعی» (Energy Collectives) را معرفی کردند که در آن یک مدیر جامعه، مبادلات می‌ان تولیدکنندگان-مصرف‌کنندگان را از طریق بهینه‌سازی توزیع‌شده (ADMM) هماهنگ می‌کند. آن‌ها نشان دادند که وقتی تولیدکنندگان-مصرف‌کنندگان اجازه‌ی اشتراک انرژی در سطح جامعه را دارند، کل تأمین انرژی جامعه، ترجیحات اعضا را بازتاب می‌دهد و مدیر جامعه به‌عنوان شخص ثالث نظارتی، توافقات جمعی را تضمین می‌کند. عدالت در سطح جمعی و سطح فردی از طریق شاخص‌های عدالت ارزیابی شد. این مدل به یک هماهنگ‌کننده‌ی مرکزی و تکرار بهینه‌سازی توزیع‌شده برای همگرایی نیاز دارد که بار ارتباطی و محاسباتی قابل‌توجهی را تحمیل می‌کند.
+
+در قیمت‌گذاری SDR، قیمت انرژی محلی در هر گام زمانی با نسبت تولید کل جامعه به تقاضای کل جامعه تعیین می‌شود؛ به‌گونه‌ای که قیمت‌ها زمانی که تقاضا از عرضه بیشتر می‌شود افزایش و زمانی که عرضه از تقاضا بیشتر می‌شود کاهش می‌یابد. سپس هر خانوار با تنظیم تصمیمات مصرف، ذخیره‌سازی و مبادله‌ی خود به قیمت جاری پاسخ می‌دهد. سازوکار SDR غیرمتمرکز، از نظر محاسباتی سبک است و در مطالعات شبیه‌سازی نشان داده شده است که مصرف خودِ جامعه را بهبود می‌بخشد. بااین‌حال، ویژگی‌های عدالت آن اتفاقی است، نه طراحی‌شده: سازوکار به‌طور صریح تفاوت‌های درآمد خانوار، نیازهای انرژی یا مشارکت‌های گذشته در جامعه را در نظر نمی‌گیرد.
+
+ادبیات نظریه‌بازی و مبتنی بر بازار، پایه‌های نظری مهمی را برای اشتراک عادلانه‌ی انرژی فراهم می‌کند، اما بر مفروضات دانش مشترک، هماهنگی متمرکز یا محاسبه‌ی تعادل متکی است که کاربردپذیری عملی آن‌ها را در محیط‌های دارای عامل‌های یادگیرنده‌ی خودمختار محدود می‌سازد. رویکرد مبتنی بر MARL این پژوهش با اجازه دادن به عامل‌ها برای کشف الگوهای اشتراک عادلانه از طریق یادگیری محلی، بدون نیاز به واسطه‌ی مرکزی، اطلاعات کامل یا محاسبه‌ی صریح تعادل‌های بازار، از این محدودیت‌ها اجتناب می‌کند.
+
+### ۲-۳-۴- مسئله‌ی اکتشاف جایگزین (Alter‑Exploration) و هزینه‌ی اکتشاف فردی
+
+یک مضمون که در چندین شاخه از ادبیات MARL ظاهر می‌شود این است که رفتار عامل فردی می‌تواند پیامدهای خارجی منفی بر پیامدهای یادگیری سطح جامعه داشته باشد، حتی زمانی که آن رفتار از دیدگاه عامل کاوشگر، عقلانی فردی باشد. این پدیده با نام‌های مختلفی مطالعه شده است ــ مسئله‌ی ناایستایی، مسئله‌ی اکتشاف جایگزین و اثر بی‌ثبات‌کننده‌ی برنامه‌های اکتشاف ناهمگن ــ اما سازوکار زیربنایی آن یکسان است: هنگامی که یک عامل رفتار خود را به‌گونه‌ای تغییر می‌دهد که برای همسایگانش غیرقابل‌پیش‌بینی باشد، آن همسایگان نمی‌توانند انتظارات پایداری درباره‌ی پاداش‌های مرتبط با اقدامات خود تشکیل دهند و یادگیری آن‌ها ممکن است به خط‌مشی‌های زیربهینه یا تدافعی همگرا شود.
+
+ماتینیون و همکاران (Matignon et al., 2012) یکی از نخستین تحلیل‌های نظام‌مند از تثبیت MARL همکاری‌گونه را ارائه دادند و مجموعه‌ای از ویژگی‌ها را شناسایی کردند که محیط‌ها را به‌طور خاص مستعد شکست هماهنگی می‌کنند. چارچوب آن‌ها عوامل کلیدی را درجه‌ی برهم‌کنش بین عامل‌ها، پراکندگی سیگنال‌های پاداش و شدت مبادله‌ی اکتشاف-بهره‌برداری تعیین می‌کند. محیط‌هایی که در آن اقدامات عامل‌ها تأثیرات قوی بر پاداش‌های یکدیگر دارند ــ همان‌گونه که در اشتراک انرژی وجود دارد، جایی که تصمیم یک خانوار برای اشتراک، مستقیماً بر آسایش همسایه‌اش تأثیر می‌گذارد ــ به‌طور خاص در برابر اثرات بی‌ثبات‌کننده‌ی اکتشاف آسیب‌پذیر هستند.
+
+در چارچوب متینیون و همکاران (Matignon et al., 2012)، این ناایستایی هنگامی که یک عامل نرخ اکتشاف بالاتری نسبت به همتایان خود حفظ می‌کند، تشدید می‌شود و می‌تواند به‌طور نامتناسبی بر عملکرد عامل‌هایی که خود در حال اکتشاف نیستند اثر بگذارد. این اثر نامتقارن حائز اهمیت است، زیرا به‌این معناست که هزینه‌ی اکتشاف توسط عامل کاوشگر به‌طور کامل درونی‌سازی نمی‌شود؛ بخشی از آن به‌صورت یک پیامد خارجی بر بقیه‌ی جامعه تحمیل می‌شود. در بافت اشتراک انرژی، مسئله‌ی اکتشاف جایگزین به‌این معناست که عاملی که پس از همگرایی دیگران به الگوهای پایدار، به آزمایش راهبردهای مختلف اشتراک ادامه می‌دهد، ممکن است آسایش همسایگان خود را کاهش دهد و نابرابری جامعه را افزایش دهد.
+
+در پژوهشی توسط ونگ و لی (۲۰۲۶)، تأثیر مخرب کاوش (Exploration) بر همکاری در یادگیری تقویتی چندعاملی با خط‌مشی مشترک بررسی شده است. آن‌ها نشان دادند که استراتژی‌های کاوش سنتی اغلب منجر به دست‌کم گرفتن مقادیر (Value Underestimation) و همگرایی به راه‌حل‌های غیربهینه می‌شوند. این مطالعه با معرفی شب‌که‌های ارزش-عمل خوش‌بینانه، فرکانس انتخاب اقدامات مشترک با بازده بالا را افزایش داده و از سقوط الگوریتم در بهینه‌های محلی جلوگیری می‌کند. بااین‌حال، مطالعهٔ آن‌ها این فروپاشی را به‌عنوان یک آسیب‌شناسی ناشی از به‌اشتراک‌گذاری پارامترها در یک سیاست مشترک قاب‌بندی می‌کند، درحالی‌که پژوهش حاضر، اثر بی‌ثبات‌کنندهٔ اکتشاف را در عامل‌های مستقل-پارامتر با تفاوت در ویژگی شخصیتی (گشودگی بالا) مطالعه می‌کند. بنابراین، اثر نوآور در این پژوهش، نوع متفاوتی از پدیده را نسبت به فروپاشی همکاری ناشی از به‌اشتراک‌گذاری پارامترها مستند می‌کند.
+
+آلور و همکاران (Aloor et al., 2024) عدالت را در ناوبری چندعاملی با استفاده از شب‌که‌های عصبی گراف مطالعه کردند و دریافتند که تراکم عامل و ساختار فیزیکی محیط (مانند موانع و گلوگاه‌ها) بر عدالت جمعی اثر می‌گذارد؛ افزایش تراکم عامل به برهم‌کنش و برخورد بیشتر و در نتیجه کاهش عدالت کلی منجر می‌شود. روش آن‌ها با رمزگذاری مستقیم گراف برهم‌کنش عامل در معماری شب‌که‌ی عصبی، به قابلیت‌توسعه به جمعیت‌های بزرگ عامل دست یافت و به شب‌که امکان داد تا بدون آموزش مجدد، به تعداد مختلف عامل تعمیم یابد. اگرچه محیط آن‌ها ــ ناوبری وسایل نقلیه ــ با اشتراک انرژی تفاوت قابل‌ملاحظه‌ای دارد و یافته‌ی آن‌ها به‌طور مستقیم به رفتار اکتشافی مربوط نمی‌شود، اما این یافته که ساختار فیزیکی/شب‌که‌ای محیط بر پیامدهای عدالت اثر می‌گذارد، این احتمال را مطرح می‌کند که محله‌هایی با توپولوژی‌های مختلف نیز ممکن است آسیب‌پذیری‌های متفاوتی نسبت به مسئله‌ی اکتشاف جایگزین داشته باشند ــ پرسشی که این پژوهش مستقیماً به آن نمی‌پردازد اما برای پژوهش‌های آینده مطرح می‌شود.
+
+ادبیات اکتشاف جایگزین، یک انتظار نظری روشن ایجاد می‌کند که یک عامل با اکتشاف بالا می‌تواند تعادل‌های همکاری‌گونه را بی‌ثبات کند، اما این پیش‌بینی در یک محیط مدیریت منابع فیزیکی آزمایش نشده است. این پژوهش با معرفی یک عامل نوآور که تنها در کف اکتشاف خود با نوع نوع‌گرا تفاوت دارد ــ پنج درصد در مقابل یک درصد ــ و اندازه‌گیری پیامدهای سطح جامعه‌ی این تغییر پارامتر واحد، این آزمون را ارائه می‌دهد.
+
+یک شاخه‌ی موازی و جدیدتر از پژوهش، استفاده از مدل‌های زبانی بزرگ را به‌عنوان منتقدان عدالت یا مولدهای سیگنال برابری در سیستم‌های چندعاملی بررسی کرده است. این رویکردها برای اعتبارسنجی گسترده بسیار جدید هستند، اما نشان‌دهنده‌ی جهت‌گیری مهمی برای کار آینده هستند و بافتی برای رویکرد محافظه‌کارانه‌تر اتخاذشده در اینجا فراهم می‌کنند.
+
+چارچوب FairMarket‑RL جادهاو و همکاران (۲۰۲۵a) که در بالا بحث شد، از مدل زبانی بزرگ به‌عنوان منتقد عدالت بیرونی استفاده می‌کند. این مطالعه نشان می‌دهد که یکپارچه‌سازی مدل زبانی بزرگ از نظر فنی امکان‌پذیر است و در محیط مربوطه، پیامدهای به‌مراتب عادلانه‌تری نسبت به حالت‌های پایه‌ی غیر‑LLM تولید می‌کند. بااین‌حال، این مطالعه همچنین شکنندگی رویکرد LLM‑در‑حلقه را تأیید می‌کند: کیفیت ارزیابی عدالت به‌شدت به مهندسی دستور وابسته است، خروجی مدل زبانی بزرگ ممکن است در فراخوانی‌های API حتی با ورودی‌های یکسان تغییر کند و تأخیر و هزینه‌ی استنتاج مدل زبانی بزرگ ممکن است برای کنترل بلادرنگ بازدارنده باشد.
+
+مطالعه‌ی حاضر عمداً رویکرد متفاوتی را در پیش می‌گیرد و از یک سنجه‌ی عدالت تحلیلی ثابت ــ شاخص عدالت جین ــ استفاده می‌کند که قطعی، ارزان برای محاسبه و مستقل از وابستگی‌های API خارجی است. این انتخاب طراحی، تمرکز پایان‌نامه را بر جداسازی اثر ناهمگنی شخصیت بر پیامدهای جامعه منعکس می‌کند که با واریانس معرفی‌شده توسط سیگنال عدالت مبتنی بر مدل زبانی بزرگ، مخدوش می‌شد. بنابراین، یافته‌های این پژوهش را می‌توان به‌عنوان ایجاد یک حد پایین‌تر از آنچه عدالت تعدیل‌شده با شخصیت در MARL می‌تواند به دست آورد، بدون پیچیدگی اضافی یکپارچه‌سازی مدل زبانی بزرگ، تفسیر کرد.
+
+## ۲-۴- مقایسه‌ی کیفی پژوهش‌های مرتبط
+
+مطالعات مرورشده در بخش‌های پیشین از نظر الگوریتم‌ها، محیط‌ها، سازوکارهای عدالت و نحوه‌ی برخورد با ناهمگنی شخصیت، تفاوت‌های قابل‌توجهی دارند. جدول ۲-۱ مقایسه‌ای نظام‌مند ارائه می‌دهد که جایگاه مطالعه‌ی حاضر را در برابر وضعیتِ برترِ دانش در این ابعاد مشخص می‌سازد. جدول با ترکیبی روایی دنبال می‌شود که تضادهای کلیدی را برجسته می‌سازد و شکاف‌هایی را که این پژوهش به آن‌ها می‌پردازد، شناسایی می‌کند.
+
+**جدول (۲-۱): مقایسه‌ی کیفی ادبیات MARL در مدیریت انرژی و شبیه‌سازی اجتماعی**
+
+| مطالعه                    | الگوریتم                        | محیط                                        | سازوکار عدالت                     | شخصیت؟                     | نقاط قوت                                               | نقاط ضعف                                            |
+| :------------------------ | :------------------------------ | :------------------------------------------ | :-------------------------------- | :------------------------- | :----------------------------------------------------- | :-------------------------------------------------- |
+| شاربونیه و همکاران (۲۰۲۲) | یادگیری Q (توزیع‌شده)            | انعطاف‌پذیری مسکونی بریتانیا                 | هیچ (تمرکز بر کارایی)             | خیر                        | جدول‌های Q با اندازه‌ی ثابت و قابل‌توسعه برای حریم خصوصی  | عدم توجه به عدالت توزیعی یا ترجیحات فردی            |
+| می و هوانگ (۲۰۲۳)         | PPO (دو سطحی درونی-بیرونی)      | بازار مصرف‌کننده-تولیدکننده در ساختمان سوئدی | برابری درآمد                      | خیر (فرض عقلانیت اقتصادی)  | کشش قیمتی نوظهور در P2P                                | فرض عامل‌های عقلانی همگن                             |
+| کوساتا‌که و همکاران (۲۰۲۳) | تکاملی / چندهدفه                | مبادله‌ی انرژی P2P                           | عدالت سود / حداقل‑حداکثر سود      | خیر                        | تعادل مؤثر عرضه-تقاضا                                  | محاسبات کند؛ غیرقابل‌انطباق بلادرنگ                  |
+| به‌رونانی و همکاران (۲۰۲۳) | بازی GNE غیرمتمرکز              | هاب‌های انرژی هوشمند                         | واریانس کاهش هزینه                | خیر                        | عدالت در سطح شب‌که با تضمین اثبات‌پذیر (GNE)             | نیاز به حل تکرارشونده و مبادله‌ی اطلاعات می‌ان هاب‌ها  |
+| آلور و همکاران (۲۰۲۴)     | MARL (شب‌که‌های عصبی گراف)        | ناوبری چندعاملی                             | ۱ / ضریب تغییرات                  | خیر                        | قابلیت‌توسعه به تعداد دلخواه عامل با GNN                | متمرکز بر ناوبری، نه اشتراک مسکونی                  |
+| جادهاو و همکاران (۲۰۲۵a)  | IPPO + منتقد عدالت مبتنی بر LLM | بازار P2P (FairMarket‑RL)                   | نمرات FTB و FBS هدایت‌شده توسط LLM | غیرمستقیم (استدلال اخلاقی) | ارزیابی‌های انسان‌محور                                   | وابسته به پایداری بلادرنگ API مدل زبانی بزرگ        |
+| هیوز و همکاران (۲۰۱۸)     | A3C (یادگیری تقویتی عمیق)       | بازی‌های Cleanup و Harvest                   | پاداش‌های نابرابری‌گریزی            | خیر                        | حل تراژدی منابع مشترک                                  | زمین‌گذاری‌شده در روان‌شناسی پنج‌عاملی نیست             |
+| رن و شو (۲۰۲۵)            | عامل‌های مولد (LLM)              | شبیه‌سازی اجتماعی کلاس درس                   | N/A                               | **بله (پنج‌عاملی)**         | تحلیل پایداری ویژگی قوی                                | مدیریت منابع فیزیکی ندارد                           |
+| **مطالعه‌ی حاضر**          | **OCEAN‑MARL (IQL)**            | **محله‌ی ۱۰‑خانه‌ای (حلقه‌ای)**                | **شاخص جین تعدیل‌شده با شخصیت**    | **بله (پنج‌عاملی)**         | **یکپارچه‌سازی روان‌شناسی OCEAN با اشتراک انرژی فیزیکی** | فضای وضعیت جدولی (۹۶ وضعیت) دانه‌بندی را محدود می‌کند |
+
+مقایسه، چندین الگو را آشکار می‌سازد که در مرور مطالعات منفرد مبهم بودند. نخست، هر مطالعه‌ی متمرکز بر انرژی در این مقایسه که یک سازوکار عدالت را دربر می‌گیرد، آن را به‌طور یکنواخت بر همه‌ی عامل‌ها اعمال می‌کند، یا از طریق یک قاعده‌ی قیمت‌گذاری متمرکز، یک جریمه‌ی نابرابری مشترک، یا یک مدل زبانی بزرگ که تخصیص کل جامعه را به‌طور هم‌زمان ارزیابی می‌کند. هیچ‌یک به عامل‌های منفرد اجازه نمی‌دهند که درجه‌های مختلفی از دغدغه‌ی عدالت داشته باشند. دوم، تنها مطالعاتی که ناهمگنی شخصیت را دربر می‌گیرند ــ رن و شو (۲۰۲۵) و به‌طور غیرمستقیم، مطالعات عامل‌های مبتنی بر مدل زبانی بزرگ ــ در محیط‌های صرفاً اجتماعی یا متنی بدون مدیریت منابع فیزیکی عمل می‌کنند. محل تلاقی دو بُعد ــ ناهمگنی شخصیت در یک محیط مدیریت انرژی با زمین‌فیزیکی ــ قلمرویی اشغال‌نشده است که دقیقاً این پژوهش خود را در آن موقعیت‌یابی می‌کند.
+
+سوم، مقایسه، یک شکاف روش‌شناختی بین مطالعات MARL انرژی و مطالعات شبیه‌سازی اجتماعی از نظر الگوریتم یادگیری را برجسته می‌کند. مطالعات انرژی عمدتاً از یادگیری کیو جدولی یا روش‌های تکاملی استفاده می‌کنند که منعکس‌کننده‌ی نیاز به کارایی نمونه و همگرایی پایدار در محیط‌های با محدودیت‌های جهان واقعی است. مطالعات شبیه‌سازی اجتماعی عمدتاً از عامل‌های مبتنی بر مدل زبانی بزرگ استفاده می‌کنند که منعکس‌کننده‌ی نیاز به تعامل زبان طبیعی و هزینه‌ی کمتر خطاها در شبیه‌سازی است. رویکرد ما با اتخاذ یادگیری کیو جدولی، همسو با قرارداد حوزه‌ی انرژی، و در عین حال معرفی نوآوری‌های وزن‌های پاداش تعدیل‌شده با شخصیت و تنوع سیستماتیک کف اکتشاف است.
+
+هر مدخل «نقاط ضعف» در جدول ۲-۱ مستقیماً با یکی از سه شکاف پژوهشی تعریف‌شده در بخش ۲-۵ مطابقت دارد. محدودیت یکنواخت عدالت که به‌عنوان انتخاب طراحی محدودکننده در می و هوانگ (۲۰۲۳)، هیوز و همکاران (۲۰۱۸) و جادهاو و همکاران (۲۰۲۵a) شناسایی شده است، دقیقاً شکاف ۲ است: عدم وجود ترجیحات عدالت درونی ناهمگن در MARL عدالت‌آگاه موجود. عدم وجود زمین‌گذاری روان‌شناختی که برای شاربونیه و همکاران (۲۰۲۲)، کوساتا‌که و همکاران (۲۰۲۳) و به‌رونانی و همکاران (۲۰۲۳) ذکر شده است، دقیقاً شکاف ۱ است: فقدان یک مدل شخصیت معتبر برای ساختاردهی ناهمگنی عامل. شکاف منابع فیزیکی که به‌عنوان محدودیت رن و شو (۲۰۲۵) و مطالعات شبیه‌سازی اجتماعی مبتنی بر مدل زبانی بزرگ شناسایی شده است، دقیقاً محل تلاقی گم‌شده‌ای است که این پایان‌نامه را برمی‌انگیزد: ناهمگنی شخصیت هرگز در یک محیط اشتراک انرژی با زمین‌فیزیکی آزمایش نشده است. بنابراین، این سه نقطه‌ضعف نه‌تنها کاستی‌های قبلی را فهرست می‌کنند، بل‌که الزامات طراحی را که چارچوب OCEAN‑MARL پیشنهادی برای برآورده‌سازی آن‌ها ساخته شده است، تعریف می‌کنند.
+
+## ۲-۵- چارچوب مفهومی و شکاف‌های پژوهشی
+
+سه شکاف پژوهشی خاص از ادبیات مرور شده در بخش‌های پیشین پدیدار می‌شود. هر شکاف به‌طور دقیق تعریف می‌شود، در محدودیت‌های خاص کارهای پیشین زمین‌گذاری می‌گردد و مستقیماً توسط طراحی مطالعه‌ی حاضر مورد بررسی قرار می‌گیرد.
+
+نخستین شکاف به عدم وجود ناهمگنی عامل زمین‌گذاری‌شده‌ی روان‌شناختی در MARL انرژی مربوط می‌شود. ادبیات MARL انرژی نشان داده است که ترجیحات ناهمگن عامل می‌توانند پیامدهای کیفی متفاوتی در سطح نظام تولید کنند (Charbonnier et al., 2022; May & Huang, 2023; Kusatake et al., 2023)، اما هیچ مطالعه‌ی موجود، این ناهمگنی را در یک مدل روان‌شناختی معتبر از شخصیت زمین‌گذاری نمی‌کند. هنگامی که اهداف یا وزن‌های پاداش متفاوتی به عامل‌ها اختصاص داده می‌شود، این انتساب از منظر روان‌شناختی دلبخواهانه است ــ مبنای نظری برای این‌که چرا یک عامل باید وزن عدالت متفاوتی با عامل دیگر داشته باشد وجود ندارد و راهی برای پیش‌بینی این‌که یک تفاوت معین در پارامترها چگونه بر رفتار خارج از بافت شبیه‌سازی خاص تأثیر می‌گذارد، وجود ندارد. مطالعات پیشین مبتنی بر عامل‌های مولدِ زبانی (Park et al., 2023; Ren & Xu, 2025) نشان داده‌اند که نمونه‌سازی ویژگی‌های OCEAN از طریق دستورهای زبان طبیعی می‌تواند رفتار قابل‌تمایز و باورپذیری در عامل‌های مبتنی بر مدل زبانی بزرگ ایجاد کند، اما این پژوهش‌ها به نگاشت مستقیم و سازوکاری ویژگی‌های شخصیتی به فراپارامترهای یک الگوریتم یادگیری تقویتی نمی‌پردازند و در محیط‌های صرفاً اجتماعی یا زبانی محدود می‌مانند. تا جایی که ادبیات موجود نشان می‌دهد، هیچ مطالعه‌ای پیش از این، ویژگی‌های OCEAN را به‌طور مستقیم و صریح به فراپارامترهای یک عامل یادگیری تقویتی (نظیر وزن‌های تابع پاداش یا نرخ اکتشاف) نگاشت نکرده است — چه رسد به به‌کارگیری چنین نگاشتی در یک محیط مدیریت منابع فیزیکی. این پژوهش با تعریف انواع عامل به‌عنوان نقاطی در فضای شخصیت OCEAN و نگاشت آن مختصات به وزن‌های تابع پاداش و پارامترهای اکتشاف خاص، این دو ادبیات را پل می‌زند و جمعیتی از عامل‌ها را ایجاد می‌کند که ناهمگنی آن‌ها هم از نظر نظری انگیخته شده و هم از نظر محاسباتی پیاده‌سازی شده است.
+
+دومین شکاف به تقابل بین محدودیت‌های عدالت یکنواخت و ترجیحات درونی ناهمگن مربوط می‌شود. ادبیات MARL عدالت‌آگاه (Hughes et al., 2018; Jadhav et al., 2025a) محدودیت‌های عدالت را به‌طور یکنواخت بر همه‌ی عامل‌های جامعه اعمال می‌کند. چه سازوکار عدالت یک جریمه‌ی نابرابری باشد یا یک منتقد مدل زبانی بزرگ، هر عامل در شبیه‌سازی تابع هدف عدالت یکسانی دارد. این یکنواختی در صورتی مناسب است که عدالت به‌عنوان یک مداخله‌ی نظارتی تحمیل‌شده توسط یک مرجع مرکزی مفهوم‌سازی شود، اما واقعیت جوامع انسانی را که در آن افراد مختلف درجات مختلفی از دغدغه‌ی نسبت به عدالت و انگیزه‌های نوع‌گرایانه متفاوتی دارند، دربر نمی‌گیرد (Fehr & Gächter, 2000). چارچوب ما با اجازه دادن به وزن اختصاص‌یافته به عدالت اجتماعی در تابع پاداش برای تغییر در بین عامل‌ها با توجه به سطح ویژگی توافق‌پذیری آن‌ها، به این شکاف می‌پردازد و جمعیتی با ترجیحات عدالت درونی و ناهمگن ایجاد می‌کند.
+
+سومین شکاف به هزینه‌ی اجتماعی بررسی‌نشده‌ی رفتار اکتشافی در اشتراک انرژی همکاری‌گونه مربوط می‌شود. مسئله‌ی اکتشاف جایگزین ــ پدیده‌ای که در آن رفتار اکتشافی یک عامل، یادگیری عامل‌های دیگر را بی‌ثبات می‌کند ــ در معیارهای MARL نظریه‌بازی مطالعه شده است (Matignon et al., 2012)، اما هرگز در بافت مدیریت منابع فیزیکی بررسی نشده است. این پژوهش با جداسازی اثر کف اکتشاف یک عامل منفرد ــ حداقل احتمال انتخاب یک اقدام تصادفی ــ درحالی‌که همه‌ی پارامترهای دیگر ثابت نگه داشته می‌شوند، این شکاف را پر می‌کند. با مقایسه‌ی سناریویی که در آن یک عامل دارای کف اکتشاف پنج درصد است با یک سناریوی کاملاً مشابه که در آن همه‌ی عامل‌ها دارای کف اکتشاف یک درصد هستند، مطالعه، نخستین توصیف تجربی هزینه‌ی اجتماعی اکتشاف فردی را در یک جامعه‌ی اشتراک انرژی ارائه می‌دهد.
+
+### ۲-۵-۱- چارچوب مفهومی: مدل هماهنگی تعدیل‌شده با شخصیت
+
+چارچوب مفهومی که این پژوهش را هدایت می‌کند، مبانی نظری مرورشده در بخش ۲-۲ را با شکاف‌های شناسایی‌شده در بخش قبلی یکپارچه می‌سازد. این چارچوب، یک مدل هماهنگی تعدیل‌شده با شخصیت است که سه سطح تحلیل را به هم پیوند می‌زند: ویژگی‌های شخصیت فردی، پارامترهای یادگیری سطح عامل و پیامدهای نوظهور سطح جامعه.
+
+همان‌طور که در شکل ۲-۱ دیده می‌شود، در سطح فردی، هر خانوار با موقعیتی در فضای شخصیت پنج‌عاملی (OCEAN) مشخص می‌شود. مطالعه‌ی حاضر دو بُعد از این فضا را رمزگذاری می‌کند: توافق‌پذیری، که وزنی را که به عدالت اجتماعی در تابع پاداش عامل اختصاص داده می‌شود، تعیین می‌کند؛ و گشودگی، که کف اکتشاف عامل را تعیین می‌کند. سه بُعد باقی‌مانده ــ وظیفه‌شناسی، برون‌گرایی و روان‌رنجوری ــ در سطوح می‌انگین جمعیتی در همه‌ی عامل‌ها ثابت نگه داشته می‌شوند و به پژوهش امکان می‌دهند تا اثرات دو بُعد دستکاری‌شده را جدا کند. این پیاده‌سازی انتخابی، یک انتخاب روش‌شناختی عمدی است: معرفی هم‌زمان هر پنج بُعد، فضای پارامتری با ابعاد بالا ایجاد می‌کند که تفسیر آن دشوار خواهد بود و برای جداسازی اثرات برهم‌کنش، به یک کارزار شبیه‌سازی با اندازه‌ی نمایی بزرگ‌تر نیاز دارد.
+
+در سطح عامل، هر خانوار به‌عنوان یک عامل یادگیری کیو جدولی مستقل با یک فضای وضعیت گسسته که توسط ساعت و سطح باتری گسسته‌شده تعریف می‌شود، سه اقدام اشتراک گسسته و یک تابع پاداش که ترکیبی محدب از آسایش شخصی و عدالت اجتماعی است، مدل‌سازی می‌شود. پارامترهای وزنی تابع پاداش توسط سطح توافق‌پذیری عامل تعیین می‌شوند و کف اکتشاف سیاست اپسیلون-حریصانه توسط سطح گشودگی عامل تعیین می‌شود. این نگاشت، سازوکاری اصیل این پژوهش برای عملیاتی‌سازی نظریه‌ی شخصیت در قالب فراپارامترهای یادگیری تقویتی است که از تداعی‌های ویژگی-رفتار مستندشده توسط رن و شو (۲۰۲۵) الهام گرفته، اما فراتر از آن‌ها به یک نگاشت مستقیم و مکانیستی می‌رود.
+
+در سطح جامعه، برهم‌کنش عامل‌ها با پارامترهای تعدیل‌شده با شخصیت متفاوت، پیامدهای نوظهوری تولید می‌کند که از پارامترهای هیچ عامل منفردی به‌طور مجزا قابل‌پیش‌بینی نیستند. این پیامدها شامل توزیع آسایش سطح جامعه، الگوهای اشتراک انرژی در ساعات و وضعیت‌های مختلف و تاب‌آوری سیستم در برابر آشفتگی‌های بیرونی مانند روزهای ابری و آشفتگی‌های درونی مانند اکتشاف ادامه‌دار یک عامل نوآور است.
+
+چارچوب، پیش‌بینی‌های خاص و قابل‌آزمونی را تولید می‌کند که در فصل ۱ به‌عنوان فرضیه بیان شده‌اند. پیش‌بینی مرکزی این است که جوامع با ترکیبی از عامل‌های نوع‌گرا و خودخواه، به سطوح بالاتری از هر دو عدالت و کارایی نسبت به جوامع کاملاً خودخواه دست خواهند یافت؛ زیرا عامل‌های نوع‌گرا، هنجاری از متقابله‌گری ایجاد می‌کنند که همه‌ی عامل‌ها از آن سود می‌برند. پیش‌بینی دوم این است که این مزیت نوع‌گرایانه در شرایط کمبود بیشتر نیز پایدار خواهد ماند و در شرایط ابری که تولید خورشیدی را نصف می‌کند، ثابت باقی خواهد ماند. پیش‌بینی سوم این است که کف اکتشاف بالاتر عامل نوآور، تعادل همکاری‌جویانه‌ی جامعه را بی‌ثبات خواهد کرد و نابرابری را افزایش داده و رفاه کلی را کاهش خواهد داد. این پیش‌بینی‌ها در آزمایش‌های شبیه‌سازی توصیف‌شده در فصل ۳ مورد آزمون قرار می‌گیرند و نتایج در فصل ۴ ارائه می‌شوند.
+
+![چارچوب مفهومی مدل هماهنگی تعدیل‌شده با شخصیت. این چارچوب سه سطح تحلیل را به هم پیوند می‌زند: در سطح فردی، موقعیت در فضای شخصیت OCEAN توافق‌پذیری را به وزن عدالت اجتماعی و گشودگی را به کف اکتشاف نگاشت می‌کند؛ در سطح عامل، هر خانوار عامل یادگیری کیو مستقل با فضای وضعیت (ساعت، سطح باتری)، سه اقدام اشتراک و تابع پاداشِ ترکیب محدب از آسایش شخصی و عدالت اجتماعی است؛ و در سطح جامعه، برهم‌کنش عامل‌ها پیامدهای نوظهوری چون توزیع آسایش، الگوهای اشتراک انرژی و تاب‌آوری تولید می‌کند.](../results/figures/v2_1_conceptual_framework.png)
+
+**شکل (۲-۱):** چارچوب مفهومی: مدل هماهنگی تعدیل‌شده با شخصیت
+
+# فصل سوم
+
+## روش پیشنهادی
+
+## ۳-۱- مقدمه
+
+این فصل، روش پیشنهادی این پژوهش را به‌طور کامل شرح می‌دهد. پس از بیان طرح و رویکرد پژوهش، روش‌های گردآوری داده‌ها، ابزارها و جامعهٔ نمونه (بخش‌های ۳-۲ تا ۳-۵)، محیط فیزیکی شبیه‌سازی، نگاشت مدل شخصیت OCEAN به پارامترهای یادگیری، طراحی تابع پاداش، الگوریتم یادگیری، سازوکار اشتراک انرژی، سناریوهای آزمایشی، سنجه‌های عملکرد، روش‌های تحلیل داده و فراپارامترهای آموزش به‌ترتیب معرفی می‌شوند (بخش‌های ۳-۶ تا ۳-۱۴). این فصل مستقیماً به دغدغهٔ استاد راهنما دربارهٔ ضرورت بازتولید مستقل روش‌های مقایسه‌ای مرتبط است و زمینهٔ روش‌شناختی لازم برای فصل ۴ را فراهم می‌آورد.
+
+## ۳-۲- طرح و رویکرد پژوهش
+
+پژوهش حاضر از طرح تحقیق کمی تجربی با رویکرد شبیه‌سازی محاسباتی مبتنی بر مدل‌سازی استفاده می‌کند. این تحقیق به‌عنوان پژوهشی کاربردی طبقه‌بندی می‌شود؛ زیرا هدف آن، پرداختن به یک چالش مهندسی عملی ــ اشتراک منصفانه و کارآمد انرژی در جوامع مسکونی خارج از شب‌که ــ از طریق پیاده‌سازی نظریه‌ی روان‌شناختی در چارچوب یادگیری تقویتی چندعاملی (MARL) است. طرح آزمایشی، دو متغیر مستقل را دستکاری می‌کند: ترکیب شخصیتی جامعه‌ی عامل‌ها (پنج سطح: همگی خودخواه، همگی نوع‌گرا، مختلط، نوع‌گرایی متنوع و اثر نوآور) و سطح کمبود منابع (دو سطح: حالت پایه‌ی روز صاف و احتمال ۱۵ درصد روز ابری). متغیرهای وابسته، هفت سنجه‌ی عملکردی تعریف‌شده در بخش ۳-۱۱ هستند: می‌انگین آسایش جامعه، شاخص عدالت جین، نرخ روزهای خاموشی، هدررفت انرژی، اختلاف آسایش نوع‌گرا در برابر خودخواه، ضریب جینی و فراوانی اشتراک.
+
+تصمیم به استفاده از شبیه‌سازی به‌جای آزمایش‌های می‌دانی یا مطالعات با مشارکت انسانی، ناشی از سه ملاحظه بود. نخست، پژوهش نیاز به آزمایش چندین ترکیب جامعه در شرایط فیزیکی یکسان (همان تابش خورشیدی، همان ظرفیت باتری، همان الگوهای تقاضا) و در عین حال کنترل همه‌ی متغیرهای مخدوش‌کننده دارد؛ سطحی از کنترل که در محیط‌های می‌دانی که در آن آب‌وهوا، الگوهای مصرف و مشخصات تجهیزات به‌طور غیرقابل‌پیش‌بینی تغییر می‌کنند، امکان‌پذیر نیست (Charbonnier et al., 2022). دوم، مطالعه به بررسی اثرات نوظهور ناهمگنی عامل در سطح جامعه می‌پردازد ــ اثراتی که در طی هزاران برهم‌کنش مکرر آشکار می‌شوند ــ که از طریق پیمایش‌های ایستا یا آزمایش‌های کوتاه‌مدت قابل مطالعه نیستند. سوم، استفاده از عامل‌های محاسباتی امکان جداسازی سازوکارهای علی خاص، مانند اثر کف اکتشاف یک عامل منفرد را فراهم می‌آورد؛ سازوکارهایی که در یک مطالعه‌ی جهان واقعی توسط متغیرهای روان‌شناختی انسانی اندازه‌گیری‌نشده مخدوش می‌شوند.
+
+چارچوب MARL به‌عنوان یک فرایند تصمیم‌گیری مارکوف جزئی‌مشاهده‌پذیر و غیرمتمرکز (Dec‑POMDP) و به‌دنبال اولی‌هوک و آماتو (Oliehoek & Amato, 2016) صورتبندی شده است. در این صورتبندی، هر یک از $N = 10$ عامل، فقط وضعیت محلی خود را مشاهده می‌کند ــ ساعت جاری و سطح باتری خودش ــ و یک اقدام اشتراک را بدون آگاهی از وضعیت‌ها یا اقدامات سایر عامل‌ها انتخاب می‌کند. ساختار پاداش مشترک، که در آن پاداش فردی هر عامل شامل یک مؤلفه‌ی عدالت در سطح جامعه است که توسط پارامتر توافق‌پذیری آن وزن‌دهی می‌شود، یک محیط نیمه‌همکاری‌گونه ایجاد می‌کند که بین MARL کاملاً همکاری‌گونه و کاملاً رقابتی قرار دارد. رویکرد یادگیری کیو مستقل (IQL) برای Dec‑POMDPها (Sutton & Barto, 2018) روش‌شناسی مسلط در ادبیات MARL انرژی است (Bui et al., 2019; Charbonnier et al., 2022) و مطالعه‌ی هماهنگی نوظهور را بدون کنترل متمرکز امکان‌پذیر می‌سازد.
+
+پارادایم پژوهش، اثبات‌گرا (Positivist) است: مطالعه فرض می‌کند که روابط عینی و قابل‌کمّی‌سازی بین ترکیب جامعه و پیامدهای سطح سیستم وجود دارد و این روابط را می‌توان از طریق دستکاری آزمایشی کنترل‌شده و استنباط آماری کشف کرد. پنج سناریوی آزمایشی (بخش ۳-۱۱) به‌عنوان تیمارها، ۵ تصادف‌سازی (Seed) به‌عنوان تکرارها و سنجه‌های ارزیابی به‌عنوان اندازه‌گیری‌های وابسته طراحی شده‌اند ــ ساختاری عاملی که روش‌شناسی آزمایشی کلاسیک را که با حوزه‌ی محاسباتی تطبیق یافته است، منعکس می‌کند.
+
+معماری محیط شبیه‌سازی، پاسخی مستقیم به سه شکاف پژوهشی شناسایی‌شده در بخش ۲-۵ است. شکاف ۱ ــ عدم وجود ناهمگنی عامل زمین‌گذاری‌شده‌ی روان‌شناختی در MARL انرژی ــ سازوکار شکل‌دهی پاداش مستندشده در بخش ۳-۷ و نگاشت پارامتری OCEAN‑به‑یادگیری‌تقویتی در بخش ۳-۸ را برمی‌انگیزد. با رمزگذاری توافق‌پذیری به‌عنوان وزن عدالت $w_{\text{fair}}$ و گشودگی به‌عنوان کف اکتشاف حداقلی $\varepsilon_{\min}$، شخصیت هر عامل به پارامتری درجه‌یک در فرایند یادگیری تبدیل می‌شود، نه یک برچسب دلبخواهانه. شکاف ۲ ــ اعمال یکنواخت محدودیت‌های عدالت در بین عامل‌های ناهمگن ــ ترکیب‌های طبقه‌بندی‌شده‌ی جامعه را که در بخش ۳-۱۱ توصیف شده‌اند، برمی‌انگیزد. سناریوهای همگی خودخواه، مختلط و نوع‌گرایی متنوع، به‌طور صریح نسبت عامل‌های نوع‌گرا به خودخواه را تغییر می‌دهند و به مطالعه امکان می‌دهند تا چگونگی تولید پیامدهای نوظهور متفاوت توسط توزیع‌های شخصیتی مختلف را بدون تحمیل یک وزن عدالت واحد بر همه‌ی مشارکت‌کنندگان، اندازه‌گیری کند. شکاف ۳ ــ هزینه‌ی اجتماعی بررسی‌نشده‌ی اکتشاف فردی در اشتراک انرژی همکاری‌گونه ــ سناریوی اثر نوآور و برنامه‌ی کاهش $\varepsilon$ دو مرحله‌ای مشخص‌شده در بخش ۳-۹ را برمی‌انگیزد. کف اکتشاف بالاتر عامل نوآور ($\varepsilon_{\min} = 0.05$ در مقابل $0.01$) مستقیماً اکتشاف کنجکاوی‌محوری را رمزگذاری می‌کند که پیش‌بینی می‌شود یادگیری همسایگان را بی‌ثبات کند، درحالی‌که کاهش سریع عامل‌های استاندارد به $0.01$ تضمین می‌کند که جامعه قبل از اندازه‌گیری اثر نوآور، به تعادل پایدار می‌رسد.
+
+برای عینیت‌بخشیدن به تناظر بین شکاف‌ها و پیاده‌سازی، حلقه‌ی شبیه‌سازی که در شکل ۳-۱ نشان داده شده است، می‌تواند به‌عنوان دنباله‌ای از انتخاب‌های طراحی آگاه از شکاف خوانده شود.
+
+![نمودار جریان معماری سیستم. حلقه‌ی شبیه‌سازی از ده بلوک در هر قسمت عبور می‌کند: بازنشانی محیط، تولید خورشیدی، تحقق تقاضا، مشاهده‌ی وضعیت، اشتراک انرژی از طریق یادگیری Q، محاسبه‌ی پاداش، به‌روزرسانی مقدار Q، کاهش اکتشاف، پیشروی ساعت و تکمیل قسمت.](../results/figures/v12_system_architecture.png)
+
+**شکل (۳-۱):** نمودار جریان معماری سیستم شبیه‌سازی
+
+بلوک ۱ (بازنشانی محیط) وضعیت باتری‌ها را به ۵۰ درصد مقداردهی اولیه می‌کند و آب‌وهوا را از یک توزیع برنولی نمونه‌گیری می‌کند ــ مرجع فیزیکی از جدول ۳-۵ که شبیه‌سازی را در مشخصات سخت‌افزاری واقعی لنگر می‌زند.
+
+بلوک ۲ (تولید خورشیدی) تابش ساعتی را با استفاده از مدل نیم‌سینوسی — یک انتخاب تحلیلی استاندارد برای مدل‌سازی تابش — محاسبه می‌کند که توسط ضریب آب‌وهوا مقیاس‌سازی می‌شود. این عنصر تصادفی، رویدادهای کمبود منابع را ایجاد می‌کند که برای آزمایش رفتار اشتراک در شرایط تنش ضروری است.
+
+بلوک ۳ (تحقق تقاضا) چهار الگوی تقاضای متمایز (صبحگاهی، عصرگاهی، مسطح و شب‌زنده‌دار) را به ده خانه اختصاص می‌دهد و تضمین می‌کند که ساعات اوج تقاضا هم‌راستا نیستند. فرصت‌های اشتراک به‌طور طبیعی از مکملیت زمانی پدیدار می‌شوند، نه از همزمانی مهندسی‌شده.
+
+بلوک ۴ (مشاهده‌ی وضعیت) مشاهده‌ی محلی هر عامل را به‌عنوان یک زوج‌تایی ۹۶ وضعیتی (ساعت، سطح باتری گسسته‌شده) می‌سازد. این فضا به اندازه‌ای کوچک است که همگرایی جدولی امکان‌پذیر باشد، اما به اندازه‌ای بزرگ است که بافت‌های تصمیم‌گیری وابسته به زمان و منابع را دربر گیرد.
+
+بلوک ۵ (انتخاب اقدام از طریق $\varepsilon$-greedy) جایی است که بُعد گشودگی به‌صورت رفتاری آشکار می‌شود. عامل‌های استاندارد، اقدامات حریصانه را با احتمال ۹۹/۰ در هنگام همگرایی انتخاب می‌کنند، درحالی‌که عامل نوآور، اقدامات تصادفی را با احتمال ۰۵/۰ انتخاب می‌کند و فشار اکتشافی را حفظ می‌کند که شکاف ۳ پیش‌بینی می‌کند تعادل‌های همکاری‌گونه را بی‌ثبات کند.
+
+بلوک ۶ (محاسبه‌ی پاداش) جایی است که بُعد توافق‌پذیری به‌صورت رفتاری آشکار می‌شود. ترکیب محدب $R_i = w_{\text{self}} \cdot C_i + w_{\text{fair}} \cdot F$ اولویت‌های متفاوتی را به عدالت اجتماعی بسته به نوع شخصیت هر عامل اختصاص می‌دهد و مستقیماً به یافته‌ی شکاف ۲ می‌پردازد که محدودیت‌های عدالت یکنواخت، ترجیحات اجتماعی انسانی را به‌درستی نمایش نمی‌دهند.
+
+بلوک‌های ۷ تا ۱۰ (به‌روزرسانی Q، کاهش، پیشروی ساعت، ثبت قسمت) حلقه‌ی آموزش استاندارد IQL را پیاده‌سازی می‌کنند و پنجره‌ی ارزیابی قسمت‌های ۷۰۰۱ تا ۸۰۰۰ تضمین می‌کند که سنجه‌های گزارش‌شده منعکس‌کننده‌ی خط‌مشی‌های همگرا هستند، نه رفتار اکتشافی موقت. این بلوک‌ها با هم، معماری شبیه‌سازی را نمونه‌سازی می‌کنند که در آن سه شکاف نه‌تنها در مرور پیشینه تصدیق می‌شوند، بل‌که در مشخصات الگوریتمی به‌طور فعال مورد بررسی قرار می‌گیرند.
+
+## ۳-۳- روش‌های گردآوری داده‌ها
+
+داده‌های این مطالعه از طریق شبیه‌سازی تولید شدند، نه از طریق ابزارهای می‌دانی یا مشارکت‌کنندگان انسانی. منبع داده‌ی اولیه، مجموعه‌ی گزارش‌های شبیه‌سازی تولیدشده توسط محیط شبیه‌سازی سفارشی مبتنی بر Python است که در بخش ۳-۴ توصیف شده است. هر اجرای شبیه‌سازی، یک رکورد ساختاریافته از انتقال‌های وضعیت ساعتی، اقدامات عامل و پیامدهای پاداش را در طول ۸۰۰۰ قسمت (روزهای شبیه‌سازی‌شده) تولید می‌کند که ۱۰۰۰ قسمت پایانی برای ارزیابی رزرو می‌شوند تا تضمین شود همه‌ی سنجه‌ها از خط‌مشی‌های همگرا محاسبه می‌شوند (بخش ۳-۱۴).
+
+پارامترهای فیزیکی تعبیه‌شده در محیط شبیه‌سازی، در استانداردهای مهندسی تثبیت‌شده و مشخصات تجهیزات موجود در بازار زمین‌گذاری شده‌اند. توضیح کامل روش‌شناسی انتخاب هر پارامتر — شامل پیک خورشیدی، ظرفیت باتری، احتمال ابری و الگوی تقاضا — در ادامه‌ی همین بخش (روش‌شناسی انتخاب پارامتر) ارائه شده است. این مقادیر پارامتری در جدول ۳-۵ خلاصه شده‌اند.
+
+#### روش‌شناسی انتخاب پارامتر
+
+تمام مقادیر پارامترهای فیزیکی و الگوریتمی از طریق ترکیبی از آمار و گزارش‌های رسمی صنعتی/اقلیمی، هم‌راستایی با استانداردهای سخت‌افزاری موجود در بازار و آزمایش‌های مقدماتی غیررسمی برای تأیید رفتار همگرایی تعیین شدند. پیک خورشیدی ۳/۱ کیلووات در محدوده‌ی یک تأسیسات کوچک مسکونی (۳ تا ۴ پنل با توان اسمی معمول ~۴۰۰ وات هر پنل) قرار دارد که کوچک‌تر از می‌انگین تأسیسات ثبت‌شده در طرح گواهی‌نامه‌ی ریزشب‌که (MCS) بریتانیا (می‌انگین ۵/۳ تا ۰/۴ کیلووات‌پیک) است؛ این انتخاب به‌عمد نماینده‌ی خانوارهای با ظرفیت تولید محدودتر است تا سناریوهای کمبود انرژی را در شبیه‌سازی معنادار سازد. ظرفیت باتری ۰/۷ کیلووات‌ساعت به عنوان یک مقدار نماینده‌ی ظرفیت باتری‌های مسکونی انتخاب شد؛ این مقدار با مشخصات محصول تجاری LG Chem RESU7H (ظرفیت کل ۰/۷ کیلووات‌ساعت، ظرفیت قابل‌استفاده ۶/۶ کیلووات‌ساعت) هم‌راستا است که به عنوان نمونه‌ای از سامانه‌های ذخیره‌سازی مسکونی موجود در بازار ذکر می‌شود، نه به‌عنوان مبنای انحصاری انتخاب پارامتر. استفاده از یادگیری کیو برای مدیریت بهره‌برداری از باتری در این پژوهش با سابقه‌ی موجود در ادبیات هم‌سو است؛ برای نمونه، بوی و همکاران (Bui et al., 2019) یک استراتژی یادگیری کیو برای بهره‌برداری از سامانه‌ی ذخیره‌سازی باتری اجتماعی در ریزشب‌که پیشنهاد داده‌اند، هرچند مدل ریاضی و تابع پاداش این پژوهش مستقل طراحی شده‌اند. الگوهای تقاضا به‌صورت مستقل برای این پژوهش طراحی شدند؛ می‌انگین تقاضای روزانه‌ی ۸/۸ کیلووات‌ساعت آن‌ها اندکی بالاتر از خط پایه‌ی مصرف استاندارد تک نرخ Ofgem (۲٬۷۰۰ کیلووات‌ساعت در سال، معادل حدود ۴/۷ کیلووات‌ساعت در روز) است و بازه‌ای معقول را برای خانوارهایی با مصرف بالاتر از می‌انگین (نظیر خانوارهای دارای بار الکتریکی اضافی) نشان می‌دهد (Ofgem, 2023). احتمال ۱۵ درصد روز ابری، یک انتخاب طراحی ساده‌شده برای نمایندگی روزهای با تابش پایین (کاهش شدید تولید خورشیدی) در یک اقلیم معتدل است و مستقیماً از یک منبع واحد استخراج نشده است.
+
+**حساسیت به ظرفیت باتری.** برای بررسی استحکام انتخاب ظرفیت باتری ۰/۷ کیلووات‌ساعت، یک بررسی اکتشافی تک‌تصادف‌سازی (seed=۴۲، ۸۰۰۰ قسمت) در چهار ظرفیت باتری (۵/۳، ۰/۵، ۰/۷ و ۰/۹ کیلووات‌ساعت) برای سناریوهای «همیشه عدم اشتراک» و «مختلط» انجام شد. نتایج در جدول ۳-۱ خلاصه شده‌اند.
+
+**جدول (۳-۱): حساسیت شاخص F به ظرفیت باتری (تک‌تصادف‌سازی، seed=۴۲، ۸۰۰۰ قسمت)**
+
+| ظرفیت باتری (kWh) | سناریو           | آسایش  | عدالت  | F      | نرخ قطعی | اتلاف (kWh) |
+| :---------------- | :--------------- | :----- | :----- | :----- | :------- | :---------- |
+| ۵/۳               | همیشه عدم اشتراک | ۴۲۰۵/۰ | ۴۲۰۵/۰ | ۸۴۱/۰  | ۱۰۰٪     | ۹۴/۲۵       |
+| ۵/۳               | مختلط            | ۴۳۱۳/۰ | ۴۳۳۶/۰ | ۸۶۴۹/۰ | ۱۰۰٪     | ۰۳/۱۵       |
+| ۰/۵               | همیشه عدم اشتراک | ۸۴۱۰/۰ | ۸۴۱۰/۰ | ۶۸۲/۱  | ۹/۱۵٪    | ۱۴/۱۷       |
+| ۰/۵               | مختلط            | ۸۵۲۰/۰ | ۸۵۲۳/۰ | ۷۰۴۳/۱ | ۸/۱۴٪    | ۶۹/۷        |
+| ۰/۷ (مقدار مبنا)  | همیشه عدم اشتراک | ۹۲۰۵/۰ | ۹۲۰۵/۰ | ۸۴۱۰/۱ | ۹/۱۵٪    | ۷۳/۸        |
+| ۰/۷ (مقدار مبنا)  | مختلط            | ۹۲۰۸/۰ | ۹۲۴۵/۰ | ۸۴۵۳/۱ | ۸/۱۴٪    | ۸۴/۳        |
+| ۰/۹               | همیشه عدم اشتراک | ۹۵۲۳/۰ | ۹۵۲۳/۰ | ۹۰۴۶/۱ | ۹/۱۵٪    | ۲۶/۲        |
+| ۰/۹               | مختلط            | ۹۷۹۷/۰ | ۹۸۱۶/۰ | ۹۶۱۳/۱ | ۵/۱۴٪    | ۹۳/۱        |
+
+این نتایج باید به‌عنوان یک بررسی اکتشافی جهت‌دهنده تفسیر شوند، نه یک تحلیل آماری معتبر؛ هر سلول یک اجرای منفرد است، نه می‌انگین چند تصادف‌سازی، و بنابراین فاقد انحراف معیار یا آزمون معناداری است. با این محدودیت، دو الگو قابل‌مشاهده است. نخست، شاخص F برای سناریوی مختلط به‌طور یکنواخت با افزایش ظرفیت باتری افزایش می‌یابد (بدون نقطه‌ی اوج مشاهده‌شده تا ۰/۹ کیلووات‌ساعت)، اما نرخ این بهبود به‌ازای هر کیلووات‌ساعت اضافه‌شده، پس از ۰/۵ کیلووات‌ساعت به‌شدت کاهش می‌یابد: از ۵۶/۰ واحد F به‌ازای هر کیلووات‌ساعت در بازه‌ی ۵/۳ تا ۰/۵ کیلووات‌ساعت، به حدود ۰۷/۰ در بازه‌ی ۰/۵ تا ۰/۷ و ۰۶/۰ در بازه‌ی ۰/۷ تا ۰/۹. ظرفیت مبنای این پژوهش (۰/۷ کیلووات‌ساعت) بنابراین در ناحیه‌ای با بازده نهایی کاهشی قرار دارد، نه در یک نقطه‌ی بهینه‌ی مشخص. دوم، در همین ظرفیت مبنا، تفاوت آسایش بین سناریوی مختلط و «همیشه عدم اشتراک» تقریباً صفر است (۹۲۰۸/۰ در برابر ۹۲۰۵/۰)—مشاهده‌ای که مستقیماً با یافته‌ی بخش ۴-۱۱ سازگار است که سیگنال پاداش لحظه‌ای در این ظرفیت باتری کم‌دامنه است. جالب توجه آن‌که در ظرفیت ۰/۹ کیلووات‌ساعت، این شکاف دوباره معنادار می‌شود (۹۷۹۷/۰ در برابر ۹۵۲۳/۰، ۷۴/۲+ واحد درصد)؛ علت این بازگشتِ شکاف در ظرفیت‌های بزرگ‌تر باتری در این مطالعه بررسی نشد و به‌عنوان یک پرسش باز برای پژوهش‌های آتی باقی می‌ماند.
+
+مقادیر فراپارامترها ــ نرخ یادگیری، ضریب تخفیف، برنامه‌ی اکتشاف و تعداد قسمتها ــ از رویه‌ی استاندارد یادگیری Q (Sutton & Barto, 2018) مقداردهی اولیه شدند و برنامه‌ی کاهش $\varepsilon$ با الهام از رویکردهای اکتشاف خوش‌بینانه در ادبیات اخیر MARL (از جمله ژانگ و همکاران، Zhang et al., 2025) طراحی شد؛ مقادیر نهایی سپس از طریق آزمایش‌های مقدماتی بر روی سناریوی همگی خودخواه تأیید شدند. پویش‌های مقدماتی در بین نرخ‌های یادگیری {۰۵/۰، ۱/۰، ۲/۰، ۵/۰} و کف‌های اکتشاف حداقلی {۰۱/۰، ۰۲/۰، ۰۵/۰، ۱۰/۰} برای شناسایی مقادیری که همگرایی پایدار را در یک بودجه‌ی شبیه‌سازی معقول تولید می‌کنند، انجام شدند. فراپارامترهای انتخاب‌شده، پیکربندی‌ای را نشان می‌دهند که نوسان مقدار Q را به حداقل رسانده و در عین حال عملکرد خط‌مشی نهایی را در وظیفه‌ی پایه بیشینه کرده است. هیچ بهینه‌سازی رسمی طراحی آزمایش‌ها (مانند تاگوچی، بهینه‌سازی بیزی) اعمال نشد؛ پویش مقدماتی، یک جستجوی اکتشافی غیررسمی بر روی یک شب‌که‌ی گسسته‌ی کوچک را تشکیل می‌دهد.
+
+هر سناریوی آزمایشی در ۵ تصادف‌سازی مستقل (۴۲، ۱۲۳، ۴۵۶، ۷۸۹، ۱۰۱۱) شبیه‌سازی شد. تصادف‌سازی، عناصر تصادفی شبیه‌سازی را کنترل می‌کند: انتساب تصادفی شرایط آب‌وهوا (صاف یا ابری)، نویز اکتشاف اپسیلون-حریصانه در حین انتخاب اقدام و اختلالات مقداردهی اولیه‌ی Q. اجرای چندین تصادف‌سازی تضمین می‌کند که تفاوت‌های مشاهده‌شده بین سناریوها به تیمار (ترکیب شخصیتی) نسبت داده می‌شوند، نه به نوسانات تصادفی ویژه‌گونه (Montgomery, 2017). انتخاب ۵ تصادف‌سازی یک انتخاب طراحی برای این پژوهش است و توان آماری کافی را برای تحلیل‌های برنامه‌ریزی‌شده فراهم می‌کند (بخش ۳-۱۳).
+
+پنج مقدار تصادف‌سازی برای پوشش دنباله‌های شبه‌تصادفی به‌اندازه‌ای متنوع انتخاب شدند که الگوهای ساختاری همپوشان نداشته باشند. تصادف‌سازی‌های ۴۲، ۱۲۳، ۴۵۶، ۷۸۹ و ۱۰۱۱ اعداد اول متوالی نیستند و روابط حسابی آشکاری ندارند و خطر همبستگی جریان‌های تصادفی در سراسر نمونه‌گیری‌های برنولی آب‌وهوا، نویز اپسیلون-حریصانه و اختلالات مقداردهی اولیه‌ی جدول Q را کاهش می‌دهند. اگرچه هیچ مجموعه‌ی ثابتی از تصادف‌سازی‌ها نمی‌تواند نمایندگی همه‌ی پیامدهای تصادفی ممکن را تضمین کند، مقادیر انتخاب‌شده محدوده‌ای از آنتروپی را پوشش می‌دهند که برای تولید دنباله‌های آب‌وهوایی، مسیرهای اکتشافی و مسیرهای همگرایی کیفی متفاوت در پنج تکرار کافی است. تصادف‌سازی‌های ثابت دقیقاً به‌دلیل امکان بازتولید دقیق نتایج منتشرشده، در پژوهش‌های تجربی مبتنی بر شبیه‌سازی استاندارد هستند (Montgomery, 2017; Law, 2015)؛ مقادیر خاص استفاده‌شده در اینجا به‌این معنا دلبخواهانه هستند که هیچ آزمایش مقدماتی برای بهینه‌سازی آن‌ها انجام نشد، اما ثابت و گزارش‌شده هستند تا هر پژوهشگر مستقلی بتواند دقیقاً محیط تصادفی توصیف‌شده در این پایان‌نامه را بازتولید کند.
+
+تمام داده‌های شبیه‌سازی در قالب مقادیر جدا شده با کاما (CSV) با یک ردیف به ازای هر گام شبیه‌سازی (ساعت در هر قسمت در هر تصادف‌سازی) ذخیره می‌شوند که شامل ستون‌هایی برای شماره‌ی قسمت، ساعت، تصادف‌سازی، سناریو، شناسه‌ی عامل، تولید خورشیدی، تقاضا، وضعیت شارژ باتری، اقدام انجام‌شده، آسایش حاصل و مؤلفه‌های پاداش است. این ثبت‌نام با دانه‌بندی بالا، هم محاسبه‌ی سنجه‌های تجمعی و هم تحلیل رفتاری دقیق را امکان‌پذیر می‌سازد.
+
+## ۳-۴- ابزارها و تجهیزات
+
+آزمایش‌های شبیه‌سازی با استفاده از یک کدبیس سفارشی Python 3.x پیاده‌سازی شدند که چندین کتابخانه‌ی تخصصی را برای محاسبات عددی، پردازش داده، آزمون آماری و تجسم یکپارچه می‌کند. جدول ۳-۲ ابزارهای اصلی، نقش آن‌ها و جایگاه آن‌ها در خط‌مشی پژوهش را فهرست می‌کند.
+
+**جدول (۳-۲): ابزارها و تجهیزات**
+
+| ابزار      | نسخه | نقش در خط‌مشی پژوهش                                           |
+| :--------- | :--- | :----------------------------------------------------------- |
+| Python     | ۳.x  | زبان برنامه‌نویسی اصلی: موتور شبیه‌سازی، پردازش داده، تحلیل    |
+| NumPy      | ۱.x  | محاسبات عددی: ردیابی وضعیت شارژ، محاسبات تراز انرژی          |
+| Pandas     | ۲.x  | تجمیع داده: خلاصه‌سازی سطح قسمت و سطح تصادف‌سازی در بین اجراها |
+| SciPy      | ۱.x  | آزمون آماری: ANOVA یک‌طرفه، آزمون‌های t مستقل و زوجی           |
+| Matplotlib | ۳.x  | تجسم: نمودارهای می‌له‌ای سنجه‌های جامعه، نمودارهای توزیع آسایش  |
+| Seaborn    | ۰.x  | تجسم آماری: نقشه‌های حرارتی جدول Q، نمودارهای توزیع           |
+
+از NumPy برای تمام محاسبات عددی در حلقه‌ی شبیه‌سازی استفاده شد، از جمله محاسبه‌ی تولید خورشیدی نیم‌سینوسی (معادله ۳-۱)، ردیابی شارژ و دشارژ باتری و محاسبه‌ی شاخص عدالت جین و ضریب جینی. Pandas خط‌مشی داده‌ی پس از شبیه‌سازی را مدیریت کرد: گزارش‌های سطح گام خام بر اساس قسمت و تصادف‌سازی گروه‌بندی شدند، به خلاصه‌های هر سنجه تجمیع شدند و برای تحلیل تطبیقی در بین سناریوها ادغام شدند. ماژول `stats` کتابخانه‌ی SciPy زیرساخت آزمون آماری را شامل ANOVA یک‌طرفه برای مقایسه‌های چندگروهی و هر دو آزمون t مستقل و زوجی برای تضادهای بین‌سناریویی و درون‌سناریویی فراهم کرد.
+
+از Matplotlib و Seaborn برای تولید شکل‌های ارائه‌شده در فصل ۴ استفاده شد. نمودارهای می‌له‌ای سنجه‌های سطح جامعه با استفاده از تابع `bar` Matplotlib با نوارهای خطا به‌نمایانگر یک انحراف معیار در بین تصادف‌سازی‌ها تولید شدند. نقشه‌های حرارتی جدول Q با استفاده از تابع `heatmap` Seaborn با یک پالت رنگی واگرا ارائه شدند. تمام شکل‌ها با وضوح ۳۰۰ dpi برای گنجاندن در سند پایان‌نامه ذخیره می‌شوند.
+
+محیط شبیه‌سازی به‌عنوان یک کلاس مستقل Python (`OffGridMARL`) پیاده‌سازی شده است که تمام پویایی‌های فیزیکی، منطق عامل و ثبت‌نام داده را دربر می‌گیرد. کلاس از قرارداد رابط Gymnasium (قبلاً OpenAI Gym) پیروی می‌کند (Towers et al., 2024) و متدهایی را برای بازنشانی محیط، اجرای گام و محاسبه‌ی سنجه در معرض دید قرار می‌دهد. این انتخاب طراحی، بازتولیدپذیری را تسهیل می‌کند: شبیه‌سازی را می‌توان با پیکربندی‌های پارامتری مختلف بدون تغییر کد هسته‌ی محیط، دوباره اجرا کرد.
+
+## ۳-۵- جامعه، نمونه و روش نمونه‌گیری
+
+جامعه‌ی هدف این مطالعه، شامل تمام پیکربندی‌های ممکن ریزشب‌که‌های مسکونی خارج از شب‌که است که در آن خانوارها از طریق یک چارچوب همکاری‌گونه، انرژی مازاد را به اشتراک می‌گذارند. این جامعه با مجموعه‌ای از شرایط مرزی تعریف می‌شود: مقیاس تک‌محله‌ای (۱۰–۲۰ خانوار)، توپولوژی حلقوی یا خطی، تولید و ذخیره‌سازی خورشیدی-به‌همراه-باتری، تصمیم‌گیری مستقل در سطح خانوار و شرایط اقلیم معتدل با تغییرپذیری خورشیدی متوسط. مطالعه ادعای نمایندگی برای محله‌های بزرگ‌تر، توپولوژی‌های جایگزین (ستاره‌ای، شب‌که‌ای، درختی)، ترکیب‌های تولید متفاوت (بادی، پشتیبان دیزلی) یا شرایط اقلیمی شدید را ندارد.
+
+نمونه‌ی مطالعه، یک ریزشب‌که‌ی ۱۰‑خانه‌ای با توپولوژی حلقوی است که در بخش ۳-۶ توصیف شده است. انتخاب ۱۰ خانه یک انتخاب طراحی برای این پژوهش است و اندازه‌ای را نشان می‌دهد که در آن اثرات نوظهور سطح جامعه قابل‌تشخیص هستند و در عین حال هزینه‌ی محاسباتی قابل‌مدیریت باقی می‌ماند. توپولوژی حلقوی ــ که در آن هر خانه می‌تواند انرژی را با دقیقاً یک همسایه‌ی تعیین‌شده به اشتراک بگذارد ــ برای جداسازی اثر تصمیمات اشتراک از تأثیر مخدوش‌کننده‌ی مسیریابی شب‌که انتخاب شد. در یک توپولوژی شب‌که‌ای یا کاملاً متصل، اقدام یک عامل بر چندین همسایه از طریق مسیرهای مختلف تأثیر می‌گذارد و نسبت دادن پیامدهای مشاهده‌شده به تصمیمات اشتراک فردی را دشوار می‌سازد. توپولوژی حلقوی این ابهام را از بین می‌برد: خانه $i$ فقط با خانه $i+1$ اشتراک می‌گذارد و اثر هر اقدام اشتراک دقیقاً از طریق یک پیوند در زنجیره منتشر می‌شود.
+
+روش نمونه‌گیری برای خانوارها در هر سناریو، طبقه‌بندی‌شده است: ۱۰ خانه بر اساس ترکیب از پیش تعیین‌شده‌ی هر سناریوی آزمایشی به انواع شخصیتی اختصاص داده می‌شوند (بخش ۳-۱۱). در سناریوی مختلط، دقیقاً ۵ خانه به نوع شخصیتی نوع‌گرا و ۵ خانه به نوع pure_selfish اختصاص می‌یابند. این انتساب طبقه‌بندی‌شده تضمین می‌کند که هر سناریو نمایانگر یک دستکاری کنترل‌شده از ترکیب جامعه است، نه یک نمونه‌گیری تصادفی از یک توزیع ــ سناریوی همگی خودخواه دقیقاً شامل ۱۰ عامل خودخواه در هر تصادف‌سازی است و سناریوی مختلط دقیقاً شامل ۵ عامل از هر نوع است. تخصیص انواع شخصیتی خاص به موقعیت‌های خاص در حلقه، در بین تصادف‌سازی‌ها تصادفی می‌شود تا از مخدوش‌شدن نتایج توسط اثرات موقعیت جلوگیری شود.
+
+هر سناریو در ۵ تصادف‌سازی به‌شرح بخش ۳-۳ تکرار می‌شود. تصادف‌سازی‌ها نقش روش‌شناختی نمونه‌گیری مکرر از توزیع پیامدهای تصادفی را ایفا می‌کنند و تکرار لازم برای استنباط آماری را فراهم می‌آورند. این ترکیب انتساب ترکیبی طبقه‌بندی‌شده و تکرار تصادف‌سازی، از طرح آزمایشی استاندارد برای پژوهش‌های مبتنی بر شبیه‌سازی پیروی می‌کند (Montgomery, 2017; Law, 2015).
+
+## ۳-۶- محیط فیزیکی
+
+شبیه‌سازی یک ریزشب‌که‌ی محله‌ی هوشمند خارج از شب‌که را مدل‌سازی می‌کند که از ۱۰ خانه با توپولوژی حلقوی تشکیل شده است، جایی که هر خانه می‌تواند انرژی مازاد را با دقیقاً یک همسایه‌ی تعیین‌شده (خانه‌ی بعدی در حلقه) به اشتراک بگذارد. این توپولوژی حداقلی، اثر تصمیمات اشتراک را از مخدوش‌کننده‌های توپولوژی شب‌که جدا می‌کند (Charbonnier et al., 2022). پارامترهای فیزیکی این محیط شبیه‌سازی — شامل ظرفیت پیک خورشیدی، اندازه‌ی باتری، احتمال روز ابری و الگوهای تقاضا — به‌عنوان نقاط طراحی نماینده برای این پژوهش انتخاب شده‌اند. هدف از این انتخاب، ایجاد شرایطی است که در آن مبادله‌ی انرژی همتا-به-همتا در برخی ساعات امکان‌پذیر و در برخی دیگر ضروری باشد و در نتیجه، اثر شکل‌دهی پاداش مبتنی بر شخصیت بر پویایی‌های اشتراک، قابل‌مشاهده و قابل‌اندازه‌گیری باشد. توجیه هر پارامتر در جدول ۳-۵ به‌طور جداگانه ارائه شده است. همان‌طور که در شکل ۳-۲ دیده می‌شود، هر خانه دقیقاً با یک همسایه در حلقه در ارتباط است.
+
+![توپولوژی حلقوی ریزشب‌که محله‌ای](../results/figures/v02_ring_topology.png)
+
+**شکل (۳-۲):** توپولوژی حلقوی ریزشب‌که محله‌ای با ۱۰ خانه
+
+#### تولید خورشیدی
+
+هر خانه دارای یک پنل خورشیدی با ظرفیت پیک ۳/۱ کیلووات است. تولید خورشیدی از یک منحنی نیم‌سینوسی در طول ساعات روز (۶ صبح تا ۶ بعدازظهر) پیروی می‌کند — یک انتخاب طراحی تحلیلی استاندارد:
+
+$$G(h) = \max\!\left(0,\; G_{\text{max}} \cdot \sin\!\left(\frac{\pi \cdot (h - 6)}{12}\right) \cdot W\right) \qquad \text{(معادله ۳-۱)}$$
+
+که در آن $h$ ساعت (۰–۲۳)، $G_{\text{max}} = 1.3$ کیلووات و $W$ یک ضریب آب‌وهوا است (۱/۰ در روزهای صاف، ۵/۰ در روزهای ابری). در روزهای صاف، تولید کل روزانه تقریباً ۹/۹ کیلووات‌ساعت است. روزهای ابری با احتمال ۱۵ درصد رخ می‌دهند و تولید خورشیدی را ۵۰ درصد کاهش می‌دهند. همان‌طور که در شکل ۳-۳ دیده می‌شود، تولید خورشیدی یک منحنی نیم‌سینوسی را در ساعات ۶ صبح تا ۶ بعدازظهر دنبال می‌کند.
+
+![مدل نیم‌سینوسی تابش خورشیدی](../results/figures/v05_solar_curve.png)
+
+**شکل (۳-۳):** مدل نیم‌سینوسی تابش خورشیدی در طول ساعات روز
+
+پارامترهای این مدل خورشیدی در جدول ۳-۳ خلاصه شده‌اند.
+
+**جدول (۳-۳): پارامترهای تولید خورشیدی**
+
+| نماد             | تعریف                               | واحد    | منبع                          |
+| :--------------- | :---------------------------------- | :------ | :---------------------------- |
+| $h$              | ساعت روز (۰–۲۳)                     | ساعت    | انتخاب طراحی تحلیلی استاندارد |
+| $G_{\text{max}}$ | ظرفیت پیک پنل خورشیدی (۳/۱ کیلووات) | کیلووات | طراحی پژوهش                   |
+| $W$              | ضریب آب‌وهوا (۱/۰ صاف، ۵/۰ ابری)     | —       | طراحی پژوهش                   |
+| $G(h)$           | توان تولید خورشیدی لحظه‌ای           | کیلووات | انتخاب طراحی تحلیلی استاندارد |
+
+#### الگوهای تقاضا
+
+الگوهای تقاضای ساعتی مورد استفاده در شبیه‌سازی در جدول ۳-۴ خلاصه شده‌اند. چهار الگوی متمایز طراحی شده‌اند تا تنوع رفتارهای مصرفی خانوارهای مسکونی را بازنمایی کنند. الگوی صبحگاهی دارای پیک در ساعات ابتدایی روز، الگوی عصرگاهی دارای پیک در ساعات پایانی، الگوی مسطح دارای مصرف یکنواخت، و الگوی شب‌زنده‌دار دارای پیک‌های دیرهنگام است. می‌انگین تقاضای روزانه در تمام الگوها حدود ۸/۸ کیلووات‌ساعت است. این چهار الگو به‌صورت مستقل در بین ۱۰ خانه چرخش می‌یابند.
+
+**جدول (۳-۴): انواع الگوی تقاضا**
+
+| الگو      | الگو                                        | مجموع روزانه      | محدوده‌ی ساعتی        |
+| :-------- | :------------------------------------------ | :---------------- | :------------------- |
+| صبحگاهی   | پیک در ساعت ۸ صبح (۹/۰ کیلووات‌ساعت)         | ۴/۸ ~ کیلووات‌ساعت | ۱/۰–۹/۰ کیلووات‌ساعت  |
+| عصرگاهی   | پیک در ساعت ۸ شب (۲/۱ کیلووات‌ساعت)          | ۶/۹ ~ کیلووات‌ساعت | ۱/۰–۲/۱ کیلووات‌ساعت  |
+| مسطح      | ثابت ۳۵/۰ کیلووات‌ساعت در هر ساعت            | ۴/۸ کیلووات‌ساعت   | ۳۵/۰ کیلووات‌ساعت     |
+| شب‌زنده‌دار | پیک‌های دیرهنگام (۱۰ شب–۱۲ نیمه‌شب)، دیر خواب | ۴/۹ ~ کیلووات‌ساعت | ۰۵/۰–۲/۱ کیلووات‌ساعت |
+
+می‌انگین تقاضای روزانه در تمام الگوها تقریباً ۸/۸ کیلووات‌ساعت است.
+
+![چهار الگوی تقاضای ساعتی](../results/figures/v04_demand_profiles.png)
+
+**شکل (۳-۴):** چهار الگوی تقاضای ساعتی در خانه‌های شبیه‌سازی‌شده
+
+چهار الگوی تقاضای طراحی‌شده برای این پژوهش در شکل ۳-۴ نمایش داده شده است. الگوی صبحگاهی دارای پیک در ساعت ۸ صبح، الگوی عصرگاهی دارای پیک در ساعت ۸ شب، الگوی مسطح دارای مصرف ثابت در تمام ساعات، و الگوی شب‌زنده‌دار دارای پیک‌های دیرهنگام (۱۰ شب تا ۱۲ نیمه‌شب) است. می‌انگین تقاضای روزانه در تمام الگوها حدود ۸/۸ کیلووات‌ساعت است.
+
+#### ذخیره‌سازی باتری
+
+هر خانه دارای یک باتری ۰/۷ کیلووات‌ساعتی است، مقداری نمایندهٔ ظرفیت باتری‌های مسکونی که با مشخصات محصول تجاری LG Chem RESU7H هم‌راستا است. باتری هر روز شبیه‌سازی‌شده را با شارژ ۵۰ درصد (۵/۳ کیلووات‌ساعت) آغاز می‌کند. شارژ و دشارژ با نرخ‌های نامحدود در محدوده‌ی ظرفیت انجام می‌شود و هیچ تخریبی مدل‌سازی نمی‌شود ــ بازده و ظرفیت باتری در طول شبیه‌سازی ثابت باقی می‌مانند.
+
+#### مدل روز ابری
+
+از یک مدل آب‌وهوای دودویی ساده استفاده می‌شود: هر روز یا صاف است (احتمال ۸۵ درصد) یا ابری (احتمال ۱۵ درصد). در یک روز ابری، تولید خورشیدی در $W = 0.5$ ضرب می‌شود و انرژی در دسترس جامعه را نصف می‌کند. این عنصر تصادفی از یادگیری یک خط‌مشی کاملاً قطعی توسط عامل‌ها جلوگیری می‌کند و رویدادهای کمبود گاه‌به‌گاه ایجاد می‌کند که پایداری هنجارهای اشتراک را آزمایش می‌کنند.
+
+**جدول (۳-۵): پارامترهای مرجع فیزیکی (Ground Truth)**
+
+| پارامتر                 | مقدار                     | توجیه انتخاب                                                                                                                                                       |
+| :---------------------- | :------------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| تعداد خانه‌ها            | ۱۰                        | انتخاب طراحی برای تعادل بین اثرات نوظهور سطح جامعه و هزینه‌ی محاسباتی                                                                                               |
+| ظرفیت باتری             | ۰/۷ کیلووات‌ساعت           | هم‌راستا با ظرفیت باتری‌های مسکونی موجود در بازار (نمونه: LG Chem RESU7H)؛ به‌گونه‌ای انتخاب شده که ذخیره‌ی کافی برای یک روز مصرف متوسط فراهم کند                       |
+| پیک خورشیدی             | ۳/۱ کیلووات               | نماینده‌ی یک تأسیسات خورشیدی مسکونی کوچک (۳–۴ پنل با توان اسمی ~۴۰۰ وات)؛ به‌گونه‌ای انتخاب شده که در روزهای صاف، جامعه با مازاد و در روزهای ابری، با کمبود روبرو شود |
+| احتمال ابری             | ۱۵/۰                      | یک انتخاب طراحی برای معرفی عدم‌قطعیت تصادفی در دسترس‌بودن منابع و آزمایش انعطاف‌پذیری هنجارهای اشتراک آموخته‌شده                                                       |
+| وضعیت شارژ اولیه‌ی باتری | ۵۰٪                       | نقطه‌ی می‌انی خنثی برای جلوگیری از سوگیری سیستماتیک به‌سوی احتکار یا اشتراک در ساعات اولیه                                                                            |
+| محدوده‌ی تقاضا           | ۰۵/۰–۲/۱ کیلووات‌ساعت/خانه | محدوده‌ی مصرف ساعتی خانوارهای مسکونی در الگوهای تقاضای طراحی‌شده؛ می‌انگین کل روزانه در حدود ۸/۸ کیلووات‌ساعت                                                          |
+
+مقادیر پارامتری فهرست‌شده در جدول ۳-۵، مختص به محیط شبیه‌سازی این پژوهش هستند و به‌عنوان نقاط طراحی نماینده‌ی شرایط فیزیکی انتخاب شده‌اند. رویکردهای روش‌شناختی استفاده‌شده در این پژوهش — شامل یادگیری کیوی مستقل (Charbonnier et al., 2022)، مدیریت ذخیره‌سازی باتری (Ali et al., 2023)، و مدل‌سازی مبادله‌ی همتا-به-همتا (Kusatake et al., 2023; Zhou & Lund, 2023) — از ادبیات موجود الهام گرفته‌اند، اما مقادیر عددی خاص پارامترها به‌طور مستقل برای این محیط طراحی شده‌اند تا اثر شکل‌دهی پاداش مبتنی بر شخصیت را از مخدوش‌کننده‌های محیطی جدا کنند. این مقادیر در تمام پنج سناریوی آزمایشی ثابت نگه داشته می‌شوند. تنها ترکیب شخصیتی جامعه‌ی عامل‌ها در بین سناریوها تغییر می‌کند و تضمین می‌کند که هرگونه تفاوت مشاهده‌شده در پیامدها به تیمار نسبت داده می‌شود، نه به تغییر در شرایط فیزیکی.
+
+## ۳-۷- مدل شخصیت و نگاشت OCEAN
+
+نگاشت ویژگی‌های شخصیت OCEAN به پارامترهای یادگیری تقویتی در شکل ۳-۵ نمایش داده شده است. همان‌طور که در این شکل دیده می‌شود، هر یک از ویژگی‌های پنج‌عاملی به یک پارامتر خاص در فرایند یادگیری عامل نگاشت می‌شود: توافق‌پذیری به وزن عدالت در تابع پاداش، گشودگی به کف اکتشاف، و روان‌رنجوری به ضریب جریمه خاموشی.
+
+![نگاشت ویژگی‌های OCEAN به پارامترهای یادگیری تقویتی. هر ویژگی شخصیت (ستون راست) به یک پارامتر یادگیری خاص (ستون چپ) نگاشت می‌شود.](../results/figures/v01_ocean_to_rl_mapping.png)
+
+**شکل (۳-۵):** نگاشت ویژگی‌های شخصیت OCEAN به پارامترهای یادگیری تقویتی
+
+#### شخصیت مبتنی بر پاداش
+
+شخصیت هر عامل به‌صورت دو وزن در تابع پاداش آن رمزگذاری می‌شود: $w_{\text{self}}$ (وزن آسایش شخصی) و $w_{\text{fair}}$ (وزن عدالت اجتماعی). این وزن‌ها، پارامترهای وابسته به شخصیت هستند که تابع پاداش تعریف‌شده در بخش ۳-۸ را تعدیل می‌کنند، جایی که $w_{\text{self}} + w_{\text{fair}} = 1.0$. چهار نوع شخصیتی اصلی تعریف می‌شوند؛ تعریف دقیق هر نوع بر اساس وزن‌های پاداش در جدول ۳-۶ نشان داده شده است:
+
+**جدول (۳-۶): تعریف انواع شخصیت**
+
+| نوع           | $w_{\text{self}}$ | $w_{\text{fair}}$ | توصیف رفتاری                                                        |
+| :------------ | :---------------- | :---------------- | :------------------------------------------------------------------ |
+| pure_selfish  | ۰/۱               | ۰/۰               | فقط آسایش خود را بیشینه می‌کند؛ عدالت اجتماعی را کاملاً نادیده می‌گیرد |
+| individualist | ۸/۰               | ۲/۰               | عمدتاً خودخواه است اما آگاهی ملایمی از عدالت دارد                    |
+| prosocial     | ۵/۰               | ۵/۰               | آسایش شخصی و عدالت اجتماعی را به‌طور مساوی متعادل می‌کند              |
+| altruistic    | ۲/۰               | ۸/۰               | عدالت اجتماعی را بر آسایش شخصی اولویت می‌دهد                         |
+
+یک نوع شخصیتی پنجم، `high_openness_innovator`، برای سناریوی اثر نوآور معرفی می‌شود (بخش ۳-۱۱ را ببینید). این نوع، وزن‌های پاداش یکسانی با نوع نوع‌گرا دارد ($w_{\text{self}} = w_{\text{fair}} = 0.5$) اما در پارامترهای اکتشاف خود تفاوت دارد (بخش ۳-۹ را ببینید).
+
+#### زمین‌گذاری در مدل پنج‌عاملی (OCEAN)
+
+انواع شخصیتی استفاده‌شده در این شبیه‌سازی، مطابق با مختصات صریح در فضای شخصیت پنج‌عاملی (OCEAN) هستند (Goldberg, 1990). این زمین‌گذاری در نظریه‌ی روان‌شناختی تثبیت‌شده، سهم اصلی این پایان‌نامه را تشکیل می‌دهد ــ به‌جای ابداع برچسب‌های دلبخواهانه، هر نوع عامل را به یک چارچوب روان‌شناختی به‌خوبی مطالعه‌شده نگاشت می‌کنیم. به‌دنبال جان و سریواستاوا (John & Srivastava, 1999)، توافق‌پذیری، گرایش‌های نوع‌گرایانه را دربر می‌گیرد که ما آن را به‌عنوان $w_{\text{fair}}$ در تابع پاداش پیاده‌سازی می‌کنیم. نگاشت گشودگی به نرخ اکتشاف ($\varepsilon$) سازوکاری اصیل این پژوهش است که از یافته‌های مفهومی مطالعات پیشین درباره‌ی اثر گشودگی بر رفتار اکتشافی و پذیرش اطلاعات (Ren & Xu, 2025) الهام گرفته است، هرچند این مطالعات نگاشتی مستقیم به فراپارامترهای یادگیری تقویتی ارائه نمی‌دهند. جدول ۳-۷ خلاصه‌ای از نگاشت کامل OCEAN‑به‑یادگیری‌تقویتی را ارائه می‌دهد.
+
+**جدول (۳-۷): نگاشت ویژگی‌های OCEAN به رفتار عامل**
+
+| ویژگی OCEAN            | بُعد                | اثر بر عامل                                                      | پارامتر پاداش تحت تأثیر                |
+| :--------------------- | :----------------- | :--------------------------------------------------------------- | :------------------------------------- |
+| توافق‌پذیری (A) — بالا  | جهت‌گیری نوع‌گرایانه | عامل وزن بیشتری به عدالت اجتماعی می‌دهد                           | $w_{\text{fair}}$ افزایش می‌یابد        |
+| توافق‌پذیری (A) — پایین | سلطه‌ی منفعت‌طلبی    | عامل آسایش شخصی را بر اشتراک اولویت می‌دهد                        | $w_{\text{self}}$ افزایش می‌یابد        |
+| وظیفه‌شناسی (C) — بالا  | رفتار سازگار       | عامل بدون توجه به وضعیت باتری، خط‌مشی اشتراک پایداری را حفظ می‌کند | واریانس کاهش $\varepsilon$ کمتر        |
+| گشودگی (O) — بالا      | اکتشاف، تازگی‌جویی  | عامل قبل از همگرایی، راهبردهای اشتراک را طولانی‌تر اکتشاف می‌کند   | $\varepsilon$ اولیه بالاتر، کاهش کندتر |
+| روان‌رنجوری (N) — بالا  | حساسیت به تهدید    | عامل وضعیت‌های خاموشی را شدیدتر جریمه می‌کند                       | ضریب جریمه‌ی خاموشی افزایش می‌یابد       |
+
+جدول ۳-۸ مختصات OCEAN را برای هر نوع شخصیتی شبیه‌سازی نشان می‌دهد.
+
+**جدول (۳-۸): انواع شخصیت به‌صورت مختصات OCEAN**
+
+| نوع شبیه‌سازی            | A           | C     | O        | N     | $w_{\text{self}}$ | $w_{\text{fair}}$ |
+| :---------------------- | :---------- | :---- | :------- | :---- | :---------------- | :---------------- |
+| pure_selfish            | بسیار پایین | متوسط | پایین    | متوسط | ۰/۱               | ۰/۰               |
+| individualist           | پایین       | متوسط | پایین    | متوسط | ۸/۰               | ۲/۰               |
+| prosocial               | متوسط-بالا  | متوسط | متوسط    | متوسط | ۵/۰               | ۵/۰               |
+| altruistic              | بالا        | متوسط | متوسط    | پایین | ۲/۰               | ۸/۰               |
+| high_openness_innovator | متوسط-بالا  | متوسط | **بالا** | متوسط | ۵/۰               | ۵/۰               |
+
+توجه داشته باشید که `high_openness_innovator` تنها در بُعد گشودگی خود با نوع نوع‌گرا تفاوت دارد که به‌صورت نرخ کاهش اکتشاف کندتر ظاهر می‌شود، نه یک وزن پاداش متفاوت. این امر به ما امکان می‌دهد تا اثر رفتار اکتشافی را از ترجیحات عدالت جدا کنیم.
+
+## ۳-۸- طراحی تابع پاداش
+
+تابع پاداش، عنصر کلیدی طراحی است که محدودیت‌های اخلاقی را در هدف یادگیری جاسازی می‌کند:
+
+$$R_i = w_{\text{self}} \cdot C_i + w_{\text{fair}} \cdot F \qquad \text{(معادله ۳-۲)}$$
+
+| نماد              | تعریف                            | واحد | منبع                           |
+| :---------------- | :------------------------------- | :--- | :----------------------------- |
+| $R_i$             | پاداش اسکالر کل برای عامل $i$    | —    | این اثر (معادله ۳-۲)           |
+| $w_{\text{self}}$ | وزن اختصاص‌یافته به آسایش شخصی    | —    | نگاشت OCEAN                    |
+| $C_i$             | سطح آسایش شخصی عامل $i$          | —    | این اثر (معادله ۳-۳)           |
+| $w_{\text{fair}}$ | وزن اختصاص‌یافته به عدالت اجتماعی | —    | اقتباس از Hughes et al. (2018) |
+| $F$               | شاخص عدالت جین برای جامعه        | —    | Jain et al. (1984)             |
+
+آسایش شخصی $C_i$ کسری از تقاضای ساعتی خانه است که تأمین شده است:
+
+$$C_i = \frac{\text{demand met}_i}{\text{demand}_i} \qquad \text{(معادله ۳-۳)}$$
+
+| نماد                   | تعریف                                          | واحد        | منبع                 |
+| :--------------------- | :--------------------------------------------- | :---------- | :------------------- |
+| $C_i$                  | آسایش شخصی (محدوده [۰،۱])                      | —           | این اثر (معادله ۳-۳) |
+| $\text{demand met}\_i$ | انرژی تأمین‌شده از طریق خورشید، باتری یا اشتراک | کیلووات‌ساعت | —                    |
+| $\text{demand}\_i$     | کل برق درخواستی خانوار                         | کیلووات‌ساعت | —                    |
+
+اگر باتری خانه و تولید خورشیدی جاری نتوانند با هم تقاضا را برآورده کنند، کسری تأمین‌نشده منجر به $C_i < 1.0$ می‌شود که ما آن را خاموشی جزئی طبقه‌بندی می‌کنیم. وقتی $C_i < 0.95$، روز به‌عنوان روز خاموشی برای آن خانه طبقه‌بندی می‌شود.
+
+شاخص عدالت جین $F$ در بین همه‌ی خانه‌ها محاسبه می‌شود (Jain, Chiu & Hawe, 1984):
+
+$$F = \frac{\left(\sum_{i=1}^{N} C_i\right)^2}{N \cdot \sum_{i=1}^{N} C_i^2} \qquad \text{(معادله ۳-۴)}$$
+
+| نماد  | تعریف                            | واحد | منبع               |
+| :---- | :------------------------------- | :--- | :----------------- |
+| $F$   | شاخص عدالت جین (محدوده [۱/N, ۱]) | —    | Jain et al. (1984) |
+| $N$   | تعداد خانوارها (۱۰)              | —    | —                  |
+| $C_i$ | سطح آسایش خانوار $i$             | —    | —                  |
+
+که در آن $N$ تعداد خانه‌ها و $C_i$ آسایش خانه‌ی $i$ است. این شاخص از $\frac{1}{N}$ (حداکثر نابرابری — یک خانه همه چیز را دریافت می‌کند، دیگران هیچ) تا ۰/۱ (برابری کامل — همه‌ی خانه‌ها آسایش یکسانی دارند) متغیر است. شاخص جین به‌طور گسترده در ادبیات مهندسی شب‌که و تخصیص منابع استفاده می‌شود زیرا تغییرناپذیر نسبت به مقیاس، پیوسته و مستقل از اندازه‌ی جمعیت است (Jain et al., 1984).
+
+پاداش پس از هر ساعت محاسبه و در طول روز ۲۴ ساعته جمع می‌شود. در پایان هر قسمت (روز)، هر عامل مجموع پاداش‌های ساعتی خود را دریافت می‌کند.
+
+## ۳-۹- الگوریتم یادگیری
+
+هر خانه توسط یک عامل یادگیری کیو جدولی مستقل با مشخصات زیر کنترل می‌شود:
+
+#### فضای وضعیت
+
+وضعیت، یک زوج‌تایی گسسته (ساعت، سطح باتری) است که در آن:
+
+- **ساعت**: ۰–۲۳ (۲۴ مقدار گسسته)
+- **سطح باتری**: به ۴ دسته با استفاده از آستانه‌های ۲۵٪، ۵۰٪، ۷۵٪ از ظرفیت، گسسته‌سازی می‌شود
+
+کل فضای وضعیت: $24 \times 4 = 96$ وضعیت.
+
+#### فضای اقدام
+
+سه اقدام گسسته (جدول ۳-۹) تعیین می‌کنند که چه کسری از انرژی مازاد خالص خانه (تولید منهای تقاضا در ساعت جاری) با همسایه به اشتراک گذاشته شود:
+
+**جدول (۳-۹): فضای اقدام**
+
+| اقدام | کسر اشتراک | رفتار                                      |
+| :---- | :--------- | :----------------------------------------- |
+| ۰     | ۰٪         | نگهداری تمام مازاد برای ذخیره‌سازی در باتری |
+| ۱     | ۵۰٪        | اشتراک نیمی از مازاد، ذخیره‌سازی بقیه       |
+| ۲     | ۱۰۰٪       | اشتراک تمام مازاد، عدم ذخیره‌سازی هیچ‌چیز    |
+
+اگر خانه دارای کسری خالص باشد (تقاضا > تولید)، اقدام به‌اجبار ۰ است (چیزی برای اشتراک وجود ندارد).
+
+#### به‌روزرسانی یادگیری Q
+
+مقدار Q برای هر جفت وضعیت-اقدام با استفاده از قاعده‌ی استاندارد به‌روزرسانی یادگیری کیو جدولی به‌روز می‌شود (Watkins & Dayan, 1992; Sutton & Barto, 2018):
+
+$$Q(s, a) \leftarrow Q(s, a) + \alpha \left[ R + \gamma \max_{a'} Q(s', a') - Q(s, a) \right] \qquad \text{(معادله ۳-۵)} $$
+
+که در آن $\alpha$ نرخ یادگیری، $\gamma$ ضریب تخفیف، $R$ پاداش دریافت‌شده پس از انجام اقدام $a$ در وضعیت $s$ و $s'$ وضعیت بعدی حاصل است. یادگیری کیو جدولی تحت شرایط تقریب تصادفی استاندارد، تضمین می‌شود که به تابع Q بهینه همگرا شود (Watkins & Dayan, 1992).
+
+| نماد      | تعریف                                       | واحد | منبع                   |
+| :-------- | :------------------------------------------ | :--- | :--------------------- |
+| $Q(s, a)$ | تخمین ارزش-اقدام برای وضعیت $s$ و اقدام $a$ | —    | Watkins & Dayan (1992) |
+| $\alpha$  | نرخ یادگیری (۲/۰)                           | —    | Sutton & Barto (2018)  |
+| $R$       | پاداش لحظه‌ای                                | —    | این اثر (معادله ۳-۲)   |
+| $\gamma$  | ضریب تخفیف (۹۹/۰)                           | —    | Sutton & Barto (2018)  |
+| $s, s'$   | وضعیت‌های جاری و بعدی                        | —    | Watkins & Dayan (1992) |
+
+تمام فراپارامترهای یادگیری Q — نرخ یادگیری، ضریب تخفیف، برنامه‌ی اکتشاف، راهبرد مقداردهی اولیه و مدت آموزش — در بخش ۳-۱۴ فهرست شده‌اند. این مقادیر در تمام عامل‌ها و سناریوها یکسان هستند، به‌جز عامل نوآور که کف اکتشاف بالاتری دارد ($\varepsilon_{\min} = 0.05$). مقداردهی اولیه‌ی خوش‌بینانه‌ی مقادیر Q به ۰/۱، عامل‌ها را تشویق می‌کند تا همه‌ی اقدامات را در اوایل آموزش امتحان کنند.
+
+هر بلوک در نمودار جریان، مطابق با یک گام مجزا در حلقه‌ی شبیه‌سازی است و دنباله به‌شرح زیر پیش می‌رود.
+
+بلوک ۱ محیط را در شروع هر قسمت بازنشانی می‌کند. تمام وضعیت‌های باتری به ۵۰ درصد شارژ (۵/۳ کیلووات‌ساعت) مقداردهی اولیه می‌شوند و آب‌وهوای روز از یک توزیع برنولی نمونه‌گیری می‌شود: صاف با احتمال ۸۵ درصد، ابری با احتمال ۱۵ درصد. این نمونه‌گیری تصادفی منفرد، ضریب آب‌وهوا $W$ را برای کل روز تعیین می‌کند و رویدادهای کمبود منابع را معرفی می‌کند که تاب‌آوری هنجارهای اشتراک آموخته‌شده را آزمایش می‌کنند. **دلیل:** وضعیت شارژ اولیه‌ی ۵۰ درصد به‌عنوان نقطه‌ی می‌انی خنثی انتخاب شد که به عامل‌ها اجازه می‌دهد در ساعت اول یا شارژ کنند یا دشارژ، و از سوگیری سیستماتیک به‌سوی احتکار یا اشتراک جلوگیری می‌کند. نمونه‌گیری برنولی آب‌وهوا به‌جای مدل زنجیره‌ای مارکوف انتخاب شد تا مدل محیطی قابل‌مدیریت باقی بماند و در عین حال عدم‌قطعیت تصادفی کافی برای تمایز پاسخ‌های انواع شخصیتی معرفی شود.
+
+بلوک ۲ تولید خورشیدی را برای هر خانه محاسبه می‌کند. با استفاده از معادله (۳-۱)، منحنی تابش نیم‌سینوسی برای هر ساعت از روز (۶ صبح تا ۶ بعدازظهر) ارزیابی می‌شود و توسط ضریب آب‌وهوا $W$ مقیاس‌سازی می‌شود. در روزهای صاف، تولید پیک به ۳/۱ کیلووات در هر خانه می‌رسد و تقریباً ۹/۹ کیلووات‌ساعت در روز تولید می‌کند. در روزهای ابری، تولید نصف می‌شود و کل انرژی در دسترس جامعه را کاهش می‌دهد و شرایط کمبود را ایجاد می‌کند که در آن تصمیمات اشتراک حیاتی می‌شوند. **دلیل:** مدل نیم‌سینوسی، توزیع زنگوله‌ای شکل تابش خورشیدی را در طول ساعات روز تقریب می‌زند و یک انتخاب تحلیلی استاندارد برای مدل‌سازی خروجی فتوولتائیک است. پیک ۳/۱ کیلووات، کوچک‌تر از می‌انگین تأسیسات ثبت‌شده در طرح MCS بریتانیا (۵/۳ تا ۰/۴ کیلووات‌پیک) است و به‌عمد نماینده‌ی خانوارهای با ظرفیت تولید محدودتر انتخاب شده تا سناریوهای کمبود انرژی را در شبیه‌سازی معنادار سازد.
+
+بلوک ۳ الگوهای تقاضا را با استفاده از تخصیص چرخشی چهار نوع الگو (صبحگاهی، عصرگاهی، مسطح، شب‌زنده‌دار) به هر یک از ۱۰ خانه اختصاص می‌دهد. هر الگو، یک مقدار تقاضای ساعتی مشخص می‌کند و کل تقاضای روزانه‌ی هر خانه بسته به نوع الگو از ۴/۸ تا ۶/۹ کیلووات‌ساعت متغیر است. تخصیص چرخشی تضمین می‌کند که هیچ نوع الگوی واحدی در هیچ موقعیت خاصی در توپولوژی حلقوی در بین تصادف‌سازی‌ها غالب نشود. **دلیل:** الگوهای تقاضای متنوع برای ایجاد مکملیت طبیعی در تولید و مصرف معرفی شدند ــ خانه‌ای با پیک تقاضای صبحگاهی، در ساعات عصر خود با مازاد مواجه می‌شود، درحالی‌که خانه‌ای با پیک عصرگاهی، در ساعات صبح خود با مازاد مواجه می‌شود. این مکملیت زمانی، پیش‌شرط ساختاری برای متقابله‌گری است: بدون ناهم‌راستایی زمانی بین عامل‌ها، هیچ انگیزه‌ای برای ذخیره‌سازی انرژی برای اشتراک بعدی وجود نخواهد داشت و آزمایش به یک مسئله‌ی بیشینه‌سازی ذخیره‌سازی پیش‌پاافتاده فرو می‌ریزد.
+
+بلوک ۴ مشاهده‌ی وضعیت عامل را می‌سازد. هر عامل فقط وضعیت محلی خود را مشاهده می‌کند که به‌صورت یک زوج‌تایی (ساعت، سطح باتری گسسته‌شده) صورتبندی می‌شود. ساعت یک متغیر گسسته‌ی ۲۴ مقداری است و سطح باتری با استفاده از آستانه‌های ۲۵٪، ۵۰٪ و ۷۵٪ از ظرفیت ۰/۷ کیلووات‌ساعت به چهار دسته کمّی می‌شود. این امر، فضای وضعیت کل ۹۶ وضعیت گسسته را برای هر عامل تولید می‌کند که به اندازه‌ای بزرگ است که بافت‌های تصمیم‌گیری وابسته به زمان و منابع را دربر گیرد، اما به اندازه‌ای کوچک است که یادگیری کیو جدولی در عرض ۸۰۰۰ قسمت همگرا شود. **دلیل:** طراحی مشاهده‌ی محلی، نتیجه‌ی مستقیم صورتبندی Dec‑POMDP اتخاذشده برای مطالعه‌ی هماهنگی نوظهور بدون اشتراک‌گذاری اطلاعات متمرکز است (Oliehoek & Amato, 2016). اگر عامل‌ها دانش جهانی از وضعیت‌های باتری همسایگان داشتند، مسئله به یک بهینه‌سازی متمرکز تقلیل می‌یافت و چالش هماهنگی غیرمتمرکز به‌کلی کنار گذاشته می‌شد. گسسته‌سازی چهار دسته‌ای به‌عنوان درشت‌ترین وضوحی انتخاب شد که همچنان به عامل‌ها اجازه می‌دهد بین وضعیت‌های خالی، کم، متوسط و پر باتری تمایز قائل شوند ــ دانه‌بندی که آزمایش‌های مقدماتی تأیید کردند برای یادگیری خط‌مشی‌های اشتراک معنادار کافی است و در عین حال جدول Q را قابل‌مدیریت نگه می‌دارد.
+
+بلوک ۵ اقدام اشتراک را از طریق یک سیاست $\varepsilon$-greedy با استفاده از جدول Q جاری عامل انتخاب می‌کند. با احتمال $\varepsilon$، عامل یک اقدام تصادفی انتخاب می‌کند؛ با احتمال $1 - \varepsilon$، اقدام با بالاترین مقدار Q در وضعیت جاری را انتخاب می‌کند. نرخ اکتشاف $\varepsilon$ در هر قسمت کاهش می‌یابد (بلوک ۸) و مقدار حداقلی آن بین عامل‌های استاندارد ($\varepsilon_{\min} = 0.01$) و عامل نوآور ($\varepsilon_{\min} = 0.05$) متفاوت است. این کف بالاتر، ویژگی گشودگی از مدل OCEAN را رمزگذاری می‌کند، زیرا عامل نوآور حتی پس از همگرایی بقیه‌ی جامعه، تمایل بیشتری به رفتار اکتشافی حفظ می‌کند. **دلیل:** سیاست $\varepsilon$-greedy انتخاب شد زیرا یادگیری کیو مستقل در محیط‌های چندعاملی ناایستا، به اکتشاف پایدار در طول آموزش اولیه برای کشف راهبردهای اشتراک شدنی قبل از تثبیت خط‌مشی‌های همسایگان نیاز دارد (Hernandez-Leal et al., 2019). مقادیر متغیر $\varepsilon_{\min}$ پیاده‌سازی مستقیم بُعد گشودگی است ــ کف بالاتر عامل نوآور با حفظ عمدی ناایستایی برای همسایگان خود به شکاف ۳ می‌پردازد و اندازه‌گیری تجربی هزینه‌ی اکتشاف جایگزین را در یک محیط کنترل‌شده امکان‌پذیر می‌سازد (Matignon et al., 2012).
+
+بلوک ۶ پاداش را برای هر عامل پس از اجرای اقدام اشتراک و مشخص‌شدن پیامدهای ساعتی محاسبه می‌کند. پاداش، ترکیب محدب تعریف‌شده در معادله (۳-۲) است: $R_i = w_{\text{self}} \cdot C_i + w_{\text{fair}} \cdot F$. آسایش شخصی $C_i$ (معادله ۳-۳) کسری از تقاضای ساعتی خانه است که توسط تولید خورشیدی، تخلیه‌ی باتری و انرژی اشتراکی دریافت‌شده تأمین شده است. عدالت اجتماعی $F$ (معادله ۳-۴) شاخص جین است که از مقادیر آسایش هر ۱۰ خانه محاسبه می‌شود. وزن‌های $w_{\text{self}}$ و $w_{\text{fair}}$ پارامترهای وابسته به شخصیت توصیف‌شده در بخش ۳-۷ هستند و مجموع آن‌ها همیشه ۰/۱ است. **دلیل:** معماری اشتراک وزن انتخاب شد زیرا به پاداش عدالت اجازه می‌دهد به‌عنوان بخشی از سیستم ارزش ذاتی هر عامل درونی‌سازی شود، نه به‌عنوان یک محدودیت خارجی تحمیل گردد. این امر به شکاف ۲ از بخش ۲-۵ می‌پردازد: با تغییر $w_{\text{fair}}$ در سراسر جمعیت عامل‌ها، شبیه‌سازی ترجیحات عدالت ناهمگنی را تولید می‌کند که رویکردهای محدودیت یکنواخت (Hughes et al., 2018; Jadhav et al., 2025a) نمی‌توانند مدل‌سازی کنند. ترکیب محدب با مجموع واحد تضمین می‌کند که افزایش دغدغه‌ی عدالت لزوماً منفعت‌طلبی را کاهش می‌دهد و یک مبادله‌ی جمع‑صفر در سطح فردی ایجاد می‌کند که ساختار معضل اجتماعی تصمیمات اشتراک واقعی را منعکس می‌کند.
+
+بلوک ۷ قاعده‌ی به‌روزرسانی یادگیری Q (معادله ۳-۵) را بر روی جفت وضعیت-اقدام اجراشده اعمال می‌کند. به‌روزرسانی، مقدار Q را به‌سوی مجموع پاداش فوری و مقدار Q بیشینه‌ی تخفیف‌خورده‌ی وضعیت بعدی جابه‌جا می‌کند. با نرخ یادگیری $\alpha = 0.2$ و ضریب تخفیف $\gamma = 0.99$، عامل وزن قوی بر پیامدهای آینده می‌گذارد و در عین حال انعطاف‌پذیری کافی برای انطباق با شرایط متغیر در طول آموزش اولیه حفظ می‌کند. **دلیل:** یادگیری کیو جدولی به‌جای روش‌های تقریب تابع انتخاب شد زیرا فضای ۹۶ وضعیتی به اندازه‌ای کوچک است که نمایش جدولی دقیق امکان‌پذیر باشد و جدول‌های Q حاصل، شفافیت کامل خط‌مشی را فراهم می‌کنند — هر مقدار وضعیت-اقدام قابل‌بازرسی است و تحلیل نقشه‌ی حرارتی در بخش ۴-۶ را امکان‌پذیر می‌سازد. ضریب تخفیف بالای $\gamma = 0.99$ به‌ویژه برای عامل‌های نوع‌گرا مهم است: زیرا پاداش عدالت اجتماعی $F$ به‌طور هم‌زمان در هر ساعت محاسبه می‌شود، نه با تأخیر، ضریب تخفیف بالا، سیگنال افق بلند متقابله‌گری را حفظ می‌کند — سودی که یک عامل نوع‌گرا زمانی دریافت می‌کند که همسایه ساعات یا روزها بعد انرژی اشتراک‌شده را بازپرداخت کند (May & Huang, 2023).
+
+بلوک ۸ نرخ اکتشاف را با ضرب آن در ۹۹۹/۰ در پایان هر قسمت، مشروط به کف مخصوص هر عامل، کاهش می‌دهد. این برنامه‌ی کاهش نمایی تضمین می‌کند که عامل‌ها در ۱۰۰۰–۲۰۰۰ قسمت اول به‌طور گسترده اکتشاف می‌کنند و سپس به‌تدریج به‌سوی بهره‌برداری حریصانه تغییر می‌کنند. تا قسمت ۸۰۰۰، $\varepsilon$ عامل استاندارد به حدود ۰۰۰۳/۰ کاهش یافته است که بسیار کمتر از کف ۰۱/۰ است، بنابراین کف، احتمال اکتشاف مؤثر در هنگام همگرایی است. **دلیل:** کاهش نمایی به‌جای کاهش پله‌ای انتخاب شد زیرا انتقال نرم‌تری از اکتشاف به بهره‌برداری تولید می‌کند و خطر بی‌ثباتی خط‌مشی ناشی از تغییرات ناگهانی کف اکتشاف را کاهش می‌دهد. کاهش در هر قسمت (نه در هر ساعت) تضمین می‌کند که عامل‌ها انعطاف‌پذیری اکتشافی را در طول هر روز ۲۴ ساعته حفظ می‌کنند و در عین حال اکتشاف را به‌تدریج در طول روزها کاهش می‌دهند. ضریب ۹۹۹/۰ یک انتخاب طراحی تجربی است که اکتشاف کافی برای کشف تعادل‌های همکاری‌گونه را با همگرایی زودهنگام به خط‌مشی‌های زیربهینه متعادل می‌کند؛ این انتخاب با اصول اکتشاف خوش‌بینانه در ادبیات اخیر MARL (Zhang et al., 2025) هم‌راستا است.
+
+بلوک ۹ ساعت شبیه‌سازی را یک ساعت جلو می‌برد. اگر ساعت جاری ۲۳ باشد، قسمت پایان می‌یابد؛ در غیر این صورت، حلقه برای ساعت بعدی به بلوک ۴ بازمی‌گردد. این تکرار ساعتی در هر قسمت، حلقه‌ی داخلی ساختار آموزش دو سطحی (ساعت‌ها درون قسمت‌ها) است، درحالی‌که حلقه‌ی خارجی (قسمت‌ها درون اجراها) توسط بلوک ۱۰ کنترل می‌شود. **دلیل:** وضوح ساعتی برای هم‌راستایی با فواصل کنتور هوشمند مسکونی استاندارد و برای ثبت ساختار روزانه‌ی تولید خورشیدی و تقاضای مسکونی انتخاب شد. بیست‌و‌چهار ساعت در هر قسمت به‌این معناست که هر قسمت آموزش، یک روز عملیاتی کامل را نشان می‌دهد و به عامل‌ها امکان می‌دهد چرخه‌ی کامل کسری صبحگاهی، مازاد ظهرگاهی و کاهش ذخیره‌ی عصرگاهی را بیاموزند. این دانه‌بندی زمانی برای عملکرد معنادار پاداش عدالت ضروری است: شاخص جین محاسبه‌شده بر روی مقادیر آسایش ساعتی، نابرابری درون‌روز را ثبت می‌کند که می‌انگین‌های روزانه آن را پنهان می‌کنند.
+
+بلوک ۱۰ پایان یک قسمت را نشان می‌دهد. در هر ۱۰۰ قسمت، سیستم سنجه‌های سطح جامعه و سطح عامل — می‌انگین آسایش، شاخص عدالت جین، نرخ روزهای خاموشی، هدررفت انرژی و فراوانی اشتراک هر عامل — را در یک پرونده‌ی گزارش برای تحلیل ثبت می‌کند. سپس شبیه‌سازی به قسمت بعدی (بلوک ۱) می‌رود یا پس از ۸۰۰۰ قسمت خاتمه می‌یابد. این بازه‌ی ثبت‌نام ۱۰۰ قسمتی، وضوح زمانی را با سربار ذخیره‌سازی متعادل می‌کند و ۸۰ نقطه‌ی ارزیابی در هر اجرا فراهم می‌کند. **دلیل:** ثبت‌نام در هر ۱۰۰ قسمت به‌جای هر قسمت، سربار ورودی/خروجی دیسک را در سراسر آزمایش ۲۵‑اجرایی (در مجموع ۴۸ می‌لیون تصمیم گام عامل) کاهش می‌دهد و در عین حال مسیر همگرایی سنجه را ثبت می‌کند. پنجره‌ی ارزیابی ۱۰۰۰ قسمتی (قسمت‌های ۷۰۰۱–۸۰۰۰) برای حذف فاز آموزش با واریانس بالا انتخاب شد و تضمین می‌کند که سنجه‌های گزارش‌شده خط‌مشی‌های پایدار را منعکس می‌کنند، همان‌طور که توسط معیار همگرایی مقدار Q مستند در بخش ۴-۱ تأیید شده است. نقطه‌ی پایانی ۸۰۰۰ قسمت برای ایجاد حاشیه‌ی ایمنی ۲۰۰۰ قسمتی فراتر از نقطه‌ی بازرسی همگرایی ۶۰۰۰ قسمتی که در آزمایش‌های مقدماتی شناسایی شد، تعیین گردید.
+
+#### شبه‌کد: یادگیری Q تعدیل‌شده با شخصیت برای اشتراک انرژی
+
+الگوریتم ۳-۱ رویه‌ی کامل آموزش را ارائه می‌دهد.
+
+```
+الگوریتم ۳-۱ یادگیری Q تعدیل‌شده با شخصیت برای اشتراک انرژی
+
+ورودی: تعداد خانه‌ها N = 10، قسمت‌ها E = 8000، ساعت‌ها H = 24
+ورودی: پارامترهای شخصیتی {w_self,i, w_fair,i, ε_min,i} برای هر عامل i
+
+ ۱: برای هر عامل i ∈ {1..N}:
+ ۲:     مقداردهی اولیه Q_i(s, a) = 1.0 برای همه‌ی s ∈ S، a ∈ A
+ ۳:     ε_i ← 1.0
+ ۴:
+ ۵: برای قسمت = ۱ تا E:
+ ۶:     بازنشانی آب‌وهوا (صاف/ابری)، مقداردهی اولیه باتری‌ها به ۵۰٪
+ ۷:     تخصیص الگوهای تقاضا به خانه‌ها (چرخشی)
+ ۸:     solar_i(h) ← G_max · sin(π(h-6)/12) · W   برای هر ساعت h
+ ۹:     daily_reward_i ← 0 برای همه‌ی i
+۱۰:
+۱۱:     برای ساعت h = 0 تا 23:
+۱۲:         برای هر عامل i:
+۱۳:             s ← (h, discretise(battery_i))          ⊲ مشاهده‌ی وضعیت
+۱۴:             a ← ε-greedy(Q_i(s, ·), ε_i)            ⊲ انتخاب اقدام
+۱۵:             surplus_i ← max(0, solar_i(h) - demand_i(h))
+۱۶:             deficit_i ← max(0, demand_i(h) - solar_i(h))
+۱۷:             battery_i ← charge(battery_i, surplus_i) ⊲ فاز ۱: محلی
+۱۸:             unmet_i ← max(0, deficit_i - battery_i)   ⊲ تخلیه‌ی باتری
+۱۹:             battery_i ← discharge(battery_i, deficit_i)
+۲۰:             exportable_i ← max(0, battery_i - capacity) + surplus after charge
+۲۱:             share_i ← a × exportable_i               ⊲ فاز ۲: اشتراک
+۲۲:             ارسال share_i به neighbour(i) در حلقه
+۲۳:             received_i ← دریافت از neighbour(i-1)
+۲۴:             unmet_i ← max(0, unmet_i - received_i)
+۲۵:             battery_i ← min(capacity, battery_i + max(0, received_i - unmet_i))
+۲۶:             C_i ← 1 - (unmet_i / demand_i(h))       ⊲ آسایش ساعتی
+۲۷:             daily_reward_i ← daily_reward_i + C_i
+۲۸:
+۲۹:         F ← jains_fairness_index({C_1, ..., C_N})   ⊲ معادله (۳-۴)
+۳۰:         برای هر عامل i:
+۳۱:             R_i ← w_self,i · C_i + w_fair,i · F     ⊲ معادله (۳-۲)
+۳۲:             s' ← (h+1, discretise(battery_i))
+۳۳:             Q_i(s, a) ← Q_i(s, a) + α[R_i + γ·max_a' Q_i(s', a') - Q_i(s, a)]
+۳۴:
+۳۵:     ε_i ← max(ε_min,i, ε_i × ε_decay)              ⊲ کاهش اکتشاف
+۳۶:     اگر قسمت mod 100 = 0:
+۳۷:         ثبت سنجه‌ها: آسایش، عدالت، نرخ خاموشی، هدررفت
+۳۸:
+۳۹: بازگشت: جدول‌های Q نهایی و سنجه‌های ارزیابی
+```
+
+شبه‌کد، کوپلینگ بین شخصیت و یادگیری را صریح می‌سازد: تابع پاداش هر عامل (خط ۳۱) به وزن‌های شخصیتی آن ($w_{\text{self},i}$، $w_{\text{fair},i}$) بستگی دارد و برنامه‌ی اکتشاف آن (خط ۳۵) به پارامتر گشودگی آن ($\varepsilon_{\min,i}$) بستگی دارد. عامل نوآور تنها در داشتن $\varepsilon_{\min} = 0.05$ به‌جای ۰۱/۰ تفاوت دارد. اقدام اشتراک (خط ۲۱) تعیین می‌کند که چه کسری از مازاد قابل‌صادرات منتقل شود و سازوکار اشتراک دو مرحله‌ای (خطوط ۱۶–۱۹ برای محلی، ۲۱–۲۵ برای اشتراک) توصیف بخش ۳-۱۰ را منعکس می‌کند.
+
+## ۳-۱۰- سازوکار اشتراک انرژی
+
+![سازوکار اشتراک انرژی دو مرحله‌ای. فاز ۱: مصرف و ذخیره‌سازی محلی. فاز ۲: اشتراک مازاد با همسایه در توپولوژی حلقوی.](../results/figures/v03_two_phase_sharing.png)
+
+**شکل (۳-۶):** سازوکار اشتراک انرژی دو مرحله‌ای: مصرف محلی و اشتراک مازاد
+
+همان‌طور که در شکل ۳-۶ دیده می‌شود، فرایند اشتراک انرژی در این شبیه‌سازی از دو مرحله تشکیل شده است. در فاز اول، هر خانه ابتدا از تولید خورشیدی محلی و باتری خود برای تأمین تقاضا استفاده می‌کند. مازاد باقی‌مانده قابل‌صادرات می‌شود. در فاز دوم، عامل تصمیم می‌گیرد چه کسری از این مازاد را با همسایه در توپولوژی حلقوی به اشتراک بگذارد. انرژی دریافتی توسط همسایه ابتدا کسری جاری را پوشش می‌دهد و مابقی در باتری ذخیره می‌شود.
+
+اشتراک انرژی از یک فرایند دو مرحله‌ای در هر ساعت پیروی می‌کند:
+
+فاز ۱ — مصرف و ذخیره‌سازی محلی:
+
+هر خانه ابتدا از تولید خورشیدی جاری خود برای تأمین تقاضای خود استفاده می‌کند. هر مازاد به باتری شارژ می‌شود (تا سقف ظرفیت). هر مازاد باقی‌مانده پس از شارژ باتری، مازاد قابل‌صادرات می‌شود. اگر تولید ناکافی باشد، باتری برای پوشش کسری دشارژ می‌شود. اگر باتری تخلیه شود، خانه با تقاضای تأمین‌نشده (کاهش آسایش) مواجه می‌شود.
+
+فاز ۲ — اشتراک:
+
+اقدام اشتراک تعیین‌شده، تعیین می‌کند که چه کسری از مازاد قابل‌صادرات به همسایه فرستاده شود. خانه‌ی گیرنده ابتدا از انرژی دریافتی برای کاهش هرگونه تقاضای تأمین‌نشده‌ی جاری استفاده می‌کند و سپس مابقی را در باتری خود ذخیره می‌کند (در صورت اجازه‌ی ظرفیت). انرژی که قابل ذخیره یا استفاده نیست، هدر می‌رود. این دنباله به‌این معناست که اشتراک شامل یک ایثار واقعی است: انرژی اشتراک‌گذاری‌شده، انرژی‌ای است که می‌توانست برای استفاده‌ی آینده‌ی خود دهنده ذخیره شود. این امر، تنش اصلی را ایجاد می‌کند که پاداش‌های تعدیل‌شده با شخصیت برای حل آن طراحی شده‌اند.
+
+## ۳-۱۱- ترکیب‌های جامعه (سناریوها)
+
+پنج ترکیب جامعه‌ی متمایز آزمایش می‌شوند (جدول ۳-۱۰) که هر کدام با ۵ تصادف‌سازی (۴۲، ۱۲۳، ۴۵۶، ۷۸۹، ۱۰۱۱) برای قابلیت اطمینان آماری:
+
+**جدول (۳-۱۰): سناریوهای آزمایشی**
+
+| سناریو         | ترکیب                                                               | تعداد کل خانه‌ها | هدف پژوهش                                              |
+| :------------- | :------------------------------------------------------------------ | :-------------- | :----------------------------------------------------- |
+| همگی خودخواه   | ۱۰ × pure_selfish                                                   | ۱۰              | حالت پایه — بدون دغدغه‌ی عدالت                          |
+| همگی نوع‌گرا    | ۱۰ × prosocial                                                      | ۱۰              | کران بالا برای رفتار عدالت‌محور                         |
+| مختلط          | ۵ prosocial + ۵ pure_selfish                                        | ۱۰              | آیا عامل‌های نوع‌گرا می‌توانند عدالت جامعه را ارتقا دهند؟ |
+| نوع‌گرایی متنوع | ۱ altruistic، ۳ prosocial، ۳ individualist، ۳ pure_selfish          | ۱۰              | شخصیت‌های ناهمگن — تنوع واقع‌گرایانه                     |
+| اثر نوآور      | ۱ innovator با O بالا، ۴ prosocial، ۳ individualist، ۲ pure_selfish | ۱۰              | آیا یک عامل کنجکاو بی‌ثبات‌کننده بر سیستم تأثیر می‌گذارد؟ |
+
+![ترکیب‌های جامعه آزمایشی](../results/figures/v06_community_compositions.png)
+
+**شکل (۳-۷):** ترکیب‌های جامعه آزمایشی در پنج سناریو
+
+پنج ترکیب جامعه آزمایشی در شکل ۳-۷ به‌صورت شماتیک نمایش داده شده است. از چپ به راست: همگی خودخواه (۱۰ عامل خودخواه)، همگی نوع‌گرا (۱۰ عامل نوع‌گرا)، مختلط (۵ نوع‌گرا و ۵ خودخواه)، نوع‌گرایی متنوع (۱ نوع‌دوست، ۳ نوع‌گرا، ۳ فردگرا، ۳ خودخواه)، و اثر نوآور (۱ مبتکر، ۴ نوع‌گرا، ۳ فردگرا، ۲ خودخواه). این ترکیب‌ها برای بررسی تأثیر نسبت و تنوع شخصیت‌ها بر پیامدهای سطح جامعه طراحی شده‌اند.
+
+## ۳-۱۲- سنجه‌های عملکرد
+
+هفت سنجه در تمام شبیه‌سازی‌ها ردیابی می‌شوند. هر سنجه در زیر با فرمول، تفسیر و استناد منبع آن تعریف شده است.
+
+می‌انگین آسایش جامعه ($\bar{C}$) رفاه کلی محله را کمّی می‌کند. به‌عنوان می‌انگین کسر تأمین‌شده‌ی تقاضای همه‌ی خانه‌ها در طول پنجره‌ی ارزیابی (۱۰۰۰ قسمت پایانی) محاسبه می‌شود:
+
+$$\bar{C} = \frac{1}{N \cdot T} \sum_{i=1}^{N} \sum_{t=1}^{T} C_{i,t} \qquad \text{(معادله ۴-۱)}$$
+
+که در آن $N = 10$ خانه، $T = 1{,}000$ قسمت ارزیابی و $C_{i,t}$ کسری از کل تقاضای روزانه‌ی خانه $i$ است که در روز $t$ تأمین شده است. این سنجه از ۰ (هیچ تقاضایی برای هیچ خانه‌ای تأمین نشده) تا ۰/۱ (همه‌ی تقاضا برای همه‌ی خانه‌ها تأمین شده) متغیر است. مقادیر بالاتر نشان‌دهنده‌ی رفاه بیشتر جامعه است. این سنجه در مطالعات MARL مدیریت انرژی استاندارد است (Charbonnier et al., 2022).
+
+شاخص عدالت جین ($F$) برابری در توزیع آسایش در بین خانه‌ها را با استفاده از همان فرمول تعریف‌شده در معادله (۳-۴) اندازه‌گیری می‌کند. بر روی پنجره‌ی ارزیابی با استفاده از می‌انگین آسایش هر خانه $\bar{C}\_i$ محاسبه می‌شود:
+
+$$F = \frac{\left(\sum_{i=1}^{N} \bar{C}_i\right)^2}{N \cdot \sum_{i=1}^{N} \bar{C}_i^2} \qquad \text{(معادله ۴-۲)}$$
+
+که در آن $N = 10$ خانه. شاخص از $\frac{1}{N}$ (حداکثر نابرابری) تا ۰/۱ (برابری کامل) متغیر است.
+
+نرخ روزهای خاموشی ($B$) فراوانی روزهایی را ثبت می‌کند که در آن حداقل یک خانه تقاضای تأمین‌نشده‌ی قابل‌توجهی را تجربه می‌کند. روز خاموشی به‌عنوان هر روز $t$ که در آن $\min_i C_{i,t} < 0.95$ تعریف می‌شود:
+
+$$B = \frac{1}{T} \sum_{t=1}^{T} \mathbb{1}\!\left(\min_i C_{i,t} < 0.95\right) \qquad \text{(معادله ۴-۳)}$$
+
+که در آن $\mathbb{1}(\cdot)$ تابع نشانگر است. این سنجه از ۰ (بدون روز خاموشی) تا ۰/۱ (هر روز حداقل یک خاموشی دارد) متغیر است. مقادیر کمتر نشان‌دهنده‌ی سیستم قابل‌اطمینان‌تر است. آستانه‌ی ۹۵/۰ به‌عنوان یک انتخاب طراحی برای تعریف وضعیت خاموشی در این پژوهش در نظر گرفته شده است.
+
+هدررفت انرژی ($W$) کل انرژی مازادی را اندازه‌گیری می‌کند که در هر روز نمی‌توان در جامعه ذخیره یا به اشتراک گذاشت:
+
+$$W = \frac{1}{T} \sum_{t=1}^{T} \sum_{i=1}^{N} \left( \text{exportable surplus}_{i,t} - \text{energy shared}_{i,t} \right)^+ \qquad \text{(معادله ۴-۴)}$$
+
+که در آن بالانویس $+$ نشان می‌دهد که فقط مازاد مثبت پس از اشتراک به‌عنوان هدررفت محاسبه می‌شود. هدررفت زمانی رخ می‌دهد که باتری یک عامل پر است و اقدام اشتراک مازاد را به همسایه منتقل نمی‌کند. هدررفت کمتر نشان‌دهنده‌ی جامعه‌ی کارآمدتر است. این سنجه بر حسب کیلووات‌ساعت در روز بیان می‌شود.
+
+| نماد   | تعریف                              | واحد            | منبع                 |
+| :----- | :--------------------------------- | :-------------- | :------------------- |
+| $W$    | می‌انگین هدررفت انرژی روزانه‌ی جامعه | کیلووات‌ساعت/روز | این اثر (معادله ۴-۴) |
+| $T$    | کل گام‌های زمانی ارزیابی            | ساعت            | —                    |
+| $N$    | کل خانه‌ها (۱۰)                     | —               | —                    |
+| $()^+$ | عملگر بخش مثبت (یکسوساز خطی)       | —               | —                    |
+
+اختلاف آسایش نوع‌گرا در برابر خودخواه، برابری توزیعی را در جوامع مختلط اندازه‌گیری می‌کند. برای هر سناریو، می‌انگین آسایش عامل‌های نوع‌گرا (کسانی که $w_{\text{fair}} \geq 0.5$) با عامل‌های خودخواه (کسانی که $w_{\text{fair}} \leq 0.2$) در طول پنجره‌ی ارزیابی مقایسه می‌شود. شکاف $\Delta C = \bar{C}_{\text{prosocial}} - \bar{C}_{\text{selfish}}$ کمّی می‌کند که آیا عامل‌های نوع‌گرا نسبت به همسایگان خودخواه خود سود می‌برند یا متضرر می‌شوند. شکاف مثبت نشان می‌دهد که وزن‌های پاداش نوع‌گرا، آسایش فردی بالاتری را تولید می‌کنند، علیرغم — یا به‌دلیل — دغدغه‌ی بیشتر آن‌ها نسبت به عدالت اجتماعی.
+
+ضریب جینی ($G$) به‌عنوان سنجه‌ی ثانویه‌ی نابرابری برای اعتبارسنجی یافته‌های عدالت عمل می‌کند. این ضریب به‌عنوان نابرابری آنی بین‌خانه‌ای، در هر قسمت (episode) به‌صورت مقطعی در می‌ان ۱۰ خانه محاسبه و سپس در ۱۰۰۰ قسمت پایانی می‌انگین‌گیری می‌شود؛ این رویکرد نابرابری لحظه‌ای پایدار در طول اجرا را می‌سنجد، نه نابرابری در می‌انگین بلندمدت آسایش هر خانه (Gini, 1912):
+
+$$G = \frac{1}{E} \sum_{e=1}^{E} \left[ \frac{2 \sum_{i=1}^{N} i \cdot C_{(i)}(e)}{N \sum_{i=1}^{N} C_{(i)}(e)} - \frac{N+1}{N} \right] \qquad \text{(معادله ۴-۵)}$$
+
+که در آن $E = 1000$ تعداد قسمت‌های پنجره‌ی ارزیابی، $C_{(i)}(e)$ مقادیر آسایش ۱۰ خانه در قسمت $e$ است که به‌ترتیب صعودی مرتب شده‌اند، و براکت‌ها ضریب جینی مقطعی تک‌قسمتی را نشان می‌دهند. به‌عبارت دیگر، ابتدا در هر قسمت ضریب جینی در بین آسایش لحظه‌ای خانه‌ها محاسبه می‌شود و سپس می‌انگین این مقادیر در پنجره‌ی ارزیابی گزارش می‌گردد؛ می‌انگین‌گیری پس از محاسبه‌ی ضریب جینی انجام می‌شود، نه پیش از آن. ضریب جینی از ۰ (برابری کامل: همه‌ی خانه‌ها آسایش یکسانی دارند) تا تقریباً ۱ (حداکثر نابرابری: یک خانه همه‌ی آسایش را دریافت می‌کند) متغیر است. برخلاف شاخص جین، ضریب جینی به نقل‌وانتقالات در می‌انه‌ی توزیع حساس‌تر است و دیدگاه مکملی در مورد نابرابری ارائه می‌دهد (Kusatake et al., 2023).
+
+| نماد         | تعریف                                        | واحد | منبع        |
+| :----------- | :------------------------------------------- | :--- | :---------- |
+| $G$          | ضریب جینی (محدوده [۰،۱])                     | —    | Gini (1912) |
+| $C_{(i)}(e)$ | آسایش خانه‌ی $i$ام در قسمت $e$، مرتب‌شده صعودی | —    | —           |
+| $E$          | طول پنجره‌ی ارزیابی (۱۰۰۰ قسمت)               | —    | —           |
+| $N$          | تعداد خانوارها (۱۰)                          | —    | —           |
+
+فراوانی اشتراک ($S$) تمایل آموخته‌شده به همکاری را با بررسی جدول Q نهایی هر عامل پس از آموزش اندازه‌گیری می‌کند:
+
+$$S_i = \frac{\left| \{ (s, a) \mid a \in \{1, 2\} \land a = \arg\max_{a'} Q_i(s, a') \} \right|}{|S|} \qquad \text{(معادله ۴-۶)}$$
+
+که در آن $|S| = 96$ تعداد کل وضعیت‌ها است و صورت‌کسر، وضعیت‌هایی را شمارش می‌کند که در آن اقدام حریصانه، اشتراک است (اقدام ۱: اشتراک ۵۰٪، یا اقدام ۲: اشتراک ۱۰۰٪). این سنجه، راهبرد اشتراک آموخته‌شده‌ی عامل را در هنگام همگرایی ثبت می‌کند و بین عامل‌هایی که اشتراک را به‌عنوان یک هنجار درونی‌سازی کرده‌اند و آن‌هایی که فقط مازاد را ذخیره می‌کنند، تمایز قائل می‌شود.
+
+| نماد  | تعریف                               | واحد | منبع                 |
+| :---- | :---------------------------------- | :--- | :------------------- |
+| $S_i$ | فراوانی اشتراک عامل $i$             | —    | این اثر (معادله ۴-۶) |
+| $S$   | تعداد کل وضعیت‌های گسسته (۹۶)        | —    | —                    |
+| $a$   | اقدام حریصانه‌ی انتخاب‌شده توسط خط‌مشی | —    | —                    |
+
+#### نگاشت سنجه‌ها به پرسش‌های پژوهش
+
+برای صریح‌سازی نحوه‌ی پشتیبانی هر نتیجه‌ی کمی از پرسش‌های پژوهشی، جدول ۳-۱۱ هر پرسش پژوهشی را به سنجه‌(های) مرتبط با آن و نقش هر سنجه را در ارزیابی نگاشت می‌کند.
+
+**جدول (۳-۱۱): نگاشت سنجه‌ها به پرسش‌های پژوهش**
+
+| پرسش پژوهشی                                                         | سنجه‌های مرتبط                                                                                        | نقش در ارزیابی                                                                                                                                                                                   |
+| :------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **اصلی:** تأثیر کلی بر کارایی، عدالت و قابلیت اطمینان               | هدررفت انرژی ($W$)؛ شاخص عدالت جین ($F$)؛ می‌انگین آسایش جامعه ($\bar{C}$)؛ نرخ روزهای خاموشی ($B$)   | گزارش سلامت سطح جامعه را ارائه می‌دهند و هر سناریو را با حالت پایه‌ی همگی خودخواه مقایسه می‌کنند تا ارزش کلی پاداش‌های مبتنی بر شخصیت را ارزیابی کنند                                                |
+| **پرسش فرعی ۱:** الگوهای اشتراک نوظهور از هنجارهای عدالت            | فراوانی اشتراک ($S$)؛ نقشه‌های حرارتی جدول Q                                                          | فراوانی اشتراک، تمایل به اشتراک را کمّی می‌کند؛ نقشه‌های حرارتی، پنجره‌ی زمانی را که در آن انواع شخصیتی اشتراک را مؤثرترین می‌آموزند، تجسم می‌کنند                                                     |
+| **پرسش فرعی ۲:** مصالحه‌های بین کارایی و عدالت توزیعی                | هدررفت انرژی ($W$) در مقابل شاخص عدالت جین ($F$) و ضریب جینی ($G$)                                   | آزمون می‌کند که آیا افزایش برابری هزینه‌ی کارایی فنی دارد یا خیر؛ نتایج نشان داد که هیچ تناقضی وجود ندارد، زیرا اشتراک مازاد، هدررفت را کاهش می‌دهد                                                 |
+| **پرسش فرعی ۳:** تغییر رفتار عامل خودخواه از طریق متقابله‌گری نوظهور | اختلاف آسایش نوع‌گرا در برابر خودخواه ($\Delta C$)؛ فراوانی اشتراک عامل‌های خودخواه در سناریوهای مختلط | ارزیابی می‌کند که آیا عامل‌های نوع‌گرا همسایگان خودخواه خود را ارتقا می‌دهند یا خیر؛ شکاف آسایش ثابت می‌کند که عامل‌های نوع‌گرا از طریق متقابله‌گری تثبیت‌شده به آسایش فردی ۹/۲+ درصد بالاتری دست می‌یابند |
+| **پرسش فرعی ۴:** تأثیر عامل نوآور با گشودگی بالا بر پایداری جامعه   | ضریب جینی ($G$)؛ نرخ روزهای خاموشی ($B$)؛ می‌انگین آسایش جامعه ($\bar{C}$)                            | بی‌ثباتی را ثبت می‌کند: افزایش ۲۲ درصدی ضریب جینی و افزایش ۳/۸ درصدی خاموشی‌ها ثابت می‌کند که غیرقابل‌پیش‌بینی بودن فردی، تاب‌آوری سطح جامعه را فرسایش می‌دهد                                            |
+
+## ۳-۱۳- روش‌های تحلیل داده
+
+داده‌های کمی تولیدشده توسط آزمایش‌های شبیه‌سازی با استفاده از ترکیبی از آمار توصیفی، آزمون‌های فرضیه‌ی پارامتریک و تخمین اندازه‌ی اثر تحلیل شدند. تمام تحلیل‌ها با استفاده از کتابخانه‌ی `stats` SciPy (بخش ۳-۴) در آستانه‌ی معنی‌داری $\alpha = 0.05$، مطابق با قراردادهای ادبیات MARL انرژی (Charbonnier et al., 2022; Kusatake et al., 2023) انجام شدند.
+
+برای مقایسه‌های شامل چندین سناریو به‌طور هم‌زمان — مانند آزمون این‌که آیا می‌انگین آسایش جامعه در هر پنج سناریو متفاوت است — از تحلیل واریانس (ANOVA) یک‌طرفه با عامل مستقل سناریو و سنجه‌ی مورد نظر (آسایش، عدالت، نرخ خاموشی، هدررفت یا ضریب جینی) به‌عنوان متغیر وابسته استفاده شد. ANOVA فرض صفر مبنی بر برابری می‌انگین‌های همه‌ی سناریوها را آزمون می‌کند. یک آماره‌ی F معنی‌دار نشان می‌دهد که حداقل یک می‌انگین سناریو با سایرین متفاوت است، اما مشخص نمی‌کند که کدام تفاوت‌های زوجی معنی‌دار هستند. مقایسه‌های پس‌آزمون زوجی با استفاده از آزمون‌های t دو‌نمونه‌ای مستقل با تصحیح بونفرونی برای مقایسه‌های چندگانه در صورت لزوم انجام شدند.
+
+برای مقایسه‌های مستقیم زوجی بین دو سناریوی خاص (به‌عنوان مثال، همگی خودخواه در مقابل همگی نوع‌گرا برای یک سنجه‌ی معین)، آزمون‌های t دو‌نمونه‌ای مستقل با می‌انگین‌های سطح تصادف‌سازی (۵ مقدار در هر سناریو) به‌عنوان مشاهدات اعمال شدند. این آزمون مناسب است زیرا تصادف‌سازی‌های درون هر سناریو، نمونه‌گیری‌های مستقل از همان فرایند تصادفی هستند و هیچ جفت‌سازی طبیعی بین تصادف‌سازی‌های سناریوهای مختلف وجود ندارد. فرض نرمال‌بودن با استفاده از آزمون شاپیرو-ویلک برای هر گروه ارزیابی شد؛ برای اندازه‌های نمونه‌ی استفاده‌شده (۵ مشاهده در هر گروه)، آزمون t در برابر انحرافات متوسط از نرمال‌بودن مقاوم است (Montgomery, 2017).
+
+برای مقایسه‌های انواع عامل درون یک سناریو (به‌عنوان مثال، آسایش عامل نوع‌گرا در مقابل خودخواه در سناریوی مختلط)، از آزمون‌های t زوجی استفاده شد. جفت‌سازی به‌طور طبیعی از طراحی شبیه‌سازی ناشی می‌شود: در هر تصادف‌سازی، عامل‌های نوع‌گرا و خودخواه دنباله‌ی یکسانی از شرایط آب‌وهوا را تجربه می‌کنند و درون یک جامعه‌ی واحد برهم‌کنش دارند، بنابراین پیامدهای آن‌ها مستقل نیستند. آزمون t زوجی با محاسبه‌ی تفاوت بین دو می‌انگین گروه در هر تصادف‌سازی و آزمون این‌که آیا می‌انگین این تفاوت‌های زوجی به‌طور معنی‌داری از صفر متفاوت است، این وابستگی را در نظر می‌گیرد (Field, 2024).
+
+اندازه‌های اثر به‌عنوان $d$ کوهن برای تمام مقایسه‌های t معنی‌دار گزارش شدند و اندازه‌گیری استانداردی از بزرگی تفاوت مشاهده‌شده را فراهم می‌کنند که مستقل از اندازه‌ی نمونه است. $d$ کوهن بر اساس آستانه‌های متعارف تفسیر شد: ۲/۰ (کوچک)، ۵/۰ (متوسط) و ۸/۰ (بزرگ) (Cohen, 1988). آمار توصیفی — می‌انگین و انحراف معیار در بین تصادف‌سازی‌ها — برای همه‌ی سنجه‌ها در همه‌ی سناریوها گزارش می‌شود و مجموعه‌ی کامل نتایج آزمون آماری در جدول ۴-۷ (بخش ۴-۷) ارائه شده است.
+
+## ۳-۱۴- فراپارامترها و آموزش
+
+تمام پارامترهای فیزیکی در جدول ۳-۵ (بخش ۳-۶) خلاصه شده‌اند و در همه‌ی سناریوها ثابت نگه داشته می‌شوند. فراپارامترهای یادگیری Q در جدول ۳-۱۲ فهرست شده‌اند و برای همه‌ی عامل‌ها در هر سناریو اعمال می‌شوند، به‌جز عامل نوآور که کف اکتشاف بالاتری دارد ($\varepsilon_{\min} = 0.05$ به‌جای ۰۱/۰).
+
+**جدول (۳-۱۲): فراپارامترها**
+
+| پارامتر                         | مقدار           | توضیحات                                        |
+| :------------------------------ | :-------------- | :--------------------------------------------- |
+| نرخ یادگیری $\alpha$            | ۲/۰             | استاندارد برای یادگیری کیو جدولی               |
+| ضریب تخفیف $\gamma$             | ۹۹/۰            | وزن قوی بر پاداش‌های آینده (برنامه‌ریزی بلندمدت) |
+| اکتشاف اولیه $\varepsilon$      | ۰/۱             | کاملاً اکتشافی در شروع                          |
+| نرخ کاهش $\varepsilon$          | ۹۹۹/۰           | کاهش تدریجی در هر قسمت                         |
+| حداقل $\varepsilon$ (استاندارد) | ۰۱/۰            | خط‌مشی نهایی تقریباً حریصانه                     |
+| حداقل $\varepsilon$ (نوآور)     | **۰۵/۰**        | نوآور اکتشاف را طولانی‌تر حفظ می‌کند             |
+| مقداردهی اولیه‌ی Q               | ۰/۱ (خوش‌بینانه) | تشویق اکتشاف اولیه                             |
+| قسمت‌ها                          | ۸۰۰۰            | برای همگرایی در فضای ۹۶ وضعیتی کافی است        |
+| تصادف‌سازی در هر سناریو          | ۵               | طراحی پژوهش                                    |
+| پنجره‌ی ارزیابی                  | ۱۰۰۰ آخر        | تخمین‌های می‌انگین پایدار پس از همگرایی          |
+
+نرخ یادگیری $\alpha = 0.2$ و ضریب تخفیف $\gamma = 0.99$ از رویه‌ی استاندارد یادگیری کیو جدولی پیروی می‌کنند (Sutton & Barto, 2018). نرخ کاهش $\varepsilon$ برابر ۹۹۹/۰ و مقداردهی اولیه‌ی خوش‌بینانه ($Q = 1.0$) از طریق آزمایش‌های مقدماتی انتخاب شدند و با اصول اکتشاف خوش‌بینانه در ادبیات اخیر MARL (Zhang et al., 2025) هم‌راستا هستند. مدت آموزش ۸۰۰۰ قسمت از طریق آزمایش‌های مقدماتی تعیین شد: جدول Q ۹۶ وضعیتی در عرض ۴۰۰۰–۶۰۰۰ قسمت همگرا می‌شود و ۸۰۰۰ همگرایی کامل را با حاشیه‌ی ایمنی تضمین می‌کند. تکرار در پنج تصادف‌سازی، با رویه‌های استاندارد طراحی آزمایش‌های شبیه‌سازی‌محور همسو است که تکرار مستقل را برای کنترل تغییرپذیری تصادفی توصیه می‌کنند (Montgomery, 2017; Law, 2015).
+
+#### توجیه فراپارامترها
+
+هر مقدار فراپارامتر از طریق ترکیبی از قرارداد تثبیت‌شده، آزمایش تجربی مقدماتی و ملاحظات نظری مبتنی بر ادبیات MARL انرژی انتخاب شد. توجیه هر پارامتر در زیر ارائه شده است.
+
+**نرخ یادگیری $\alpha = 0.2$.** این مقدار، پرکاربردترین مقدار پیش‌فرض توصیه‌شده برای یادگیری کیو جدولی در فضاهای وضعیت-اقدام گسسته است (Watkins & Dayan, 1992; Sutton & Barto, 2018). در محیط اشتراک انرژی، فضای وضعیت کوچک است (۹۶ وضعیت در هر عامل) و سیگنال پاداش نسبتاً پراکنده است — عامل‌ها فقط یک بار در ساعت بازخورد دریافت می‌کنند — بنابراین نرخ یادگیری نسبتاً بالا برای کسب سریع اولیه بدون فراموشی فاجعه‌بار مناسب است. نرخ یادگیری ۲/۰ از طریق یک پویش مقدماتی غیررسمی در بین مقادیر {۰۵/۰، ۱/۰، ۲/۰، ۵/۰} بر روی سناریوی همگی خودخواه تأیید شد؛ $\alpha = 0.2$ سریع‌ترین همگرایی را به خط‌مشی‌های پایدار تولید کرد، درحالی‌که $\alpha = 0.5$ نوسان را در فاز آموزش پایانی معرفی کرد و $\alpha = 0.05$ به بیش از ۱۵۰۰۰ قسمت برای رسیدن به آستانه‌ی تغییر مقدار Q معادل ۰۱/۰ نیاز داشت.
+
+**ضریب تخفیف $\gamma = 0.99$.** ضریب تخفیف بالا انتخاب شد زیرا تابع پاداش شامل مؤلفه‌ی عدالت اجتماعی (شاخص جین) است که به آسایش هر ده عامل در گام زمانی جاری بستگی دارد، نه به وضعیت‌های آینده. درحالی‌که پاداش فوری بیشتر سیگنال عدالت را دربر می‌گیرد، ضریب تخفیف بالا تضمین می‌کند که عامل‌ها همچنان برای اقداماتی که ممکن است به فرصت‌های اشتراک آینده منجر شوند — به‌عنوان مثال، ذخیره‌سازی انرژی در ساعات مازاد برای امکان‌پذیر کردن اشتراک متقابل در ساعات کسری — ارزش قائل شوند. مقدار ۹۹/۰ در سراسر ادبیات MARL مدیریت انرژی استاندارد است (Bui et al., 2019; Charbonnier et al., 2022) و با افق برنامه‌ریزی مؤثر تقریباً ۱۰۰ ساعت مطابقت دارد که برای ثبت چرخه‌های تقاضای چندساعته کافی است.
+
+**اکتشاف اولیه $\varepsilon = 1.0$ و نرخ کاهش ۹۹۹/۰.** اکتشاف کامل اولیه تضمین می‌کند که عامل‌ها همه‌ی اقدامات را در همه‌ی وضعیت‌ها در طول قسمت‌های اولیه نمونه‌برداری می‌کنند و از همگرایی زودهنگام به خط‌مشی‌های اشتراک زیربهینه جلوگیری می‌کنند. نرخ کاهش ۹۹۹/۰ یک انتخاب طراحی تجربی است که از طریق پویش مقدماتی تأیید شد؛ کاهش تدریجی (نمایی) به‌جای کاهش پله‌ای انتخاب شد تا انتقال نرم‌تری از اکتشاف به بهره‌برداری ایجاد شود. کاهش در هر قسمت اعمال می‌شود (نه در هر گام)، به‌این معنا که $\varepsilon$ در طول هر قسمت ۲۴ ساعته بالا باقی می‌ماند و فقط بین روزها کاهش می‌یابد — یک انتخاب طراحی که انعطاف‌پذیری اکتشافی درون‌قسمتی را حفظ می‌کند و در عین حال به‌تدریج به‌سوی بهره‌برداری در طول اجرای آموزش تغییر می‌کند.
+
+**حداقل $\varepsilon_{\min} = 0.01$ (عامل‌های استاندارد) و $0.05$ (نوآور).** حداقل استاندارد ۰۱/۰ انتخاب شد زیرا تضمین می‌کند که عامل‌ها در هنگام همگرایی یک احتمال اکتشافی کوچک را حفظ می‌کنند و به آن‌ها امکان می‌دهد بدون ایجاد اختلال در خط‌مشی آموخته‌شده، با دنباله‌های نادر آب‌وهوا یا تغییرات رفتار محله سازگار شوند (Matignon et al., 2012). کف بالاتر عامل نوآور به‌میزان ۰۵/۰ برای تضمین این‌که اثر اکتشاف جایگزین در پنجره‌ی آموزش ۸۰۰۰ قسمتی قابل‌تشخیص باشد، انتخاب شد. یک مقایسه‌ی مقدماتی در بین $\varepsilon_{\min} \in \{0.02, 0.05, 0.10\}$ تأیید کرد که ۰۵/۰ در سناریوی اثر نوآور، تخریب قابل‌اندازه‌گیری در سطح جامعه تولید می‌کند و در عین حال زیر آستانه‌ای باقی می‌ماند که در آن خط‌مشی خودِ عامل نوآور کاملاً تصادفی می‌شود.
+
+**مقداردهی اولیه‌ی Q $Q(s, a) = 1.0$.** مقداردهی اولیه‌ی خوش‌بینانه انتخاب شد زیرا عامل‌ها را تشویق می‌کند تا همه‌ی اقدامات را در اوایل آموزش امتحان کنند و از حذف زودهنگام اقدامات اشتراک که ممکن است از طریق متقابله‌گری پاداش‌های بلندمدت بالایی به همراه داشته باشند، جلوگیری می‌کند. در محیط اشتراک انرژی، اقدامات اشتراک هیچ سود آسایش فوری برای دهنده تولید نمی‌کنند و تحت مقداردهی اولیه‌ی بدبینانه، کمتر از حد نمایش داده می‌شوند. مقداردهی اولیه‌ی خوش‌بینانه، رویکردی است که در ادبیات یادگیری تقویتی چندعاملی برای تشویق اکتشاف اولیه به‌کار می‌رود؛ ژانگ و همکاران (Zhang et al., 2025) در چارچوبی مرتبط (اکتشاف خوش‌بینانه‌ی اپسیلون-حریصانه مبتنی بر شب‌که‌ی مقدار Q کمکی) نشان دادند که خوش‌بینی در نمونه‌برداری اقدام می‌تواند از همگرایی زودهنگام به اقدامات مشترک زیربهینه جلوگیری کند؛ اصل مشابهی (تشویق اکتشاف کافی در اوایل آموزش) انگیزه‌ی انتخاب اینجا نیز است، هرچند سازوکار دقیق ژانگ و همکاران (شب‌که‌ی Q کمکی) با مقداردهی اولیه‌ی ساده‌ی این پژوهش متفاوت است.
+
+**مدت آموزش ۸۰۰۰ قسمت.** تعداد قسمت‌ها به‌طور تجربی از طریق پایش همگرایی بر روی سناریوی همگی خودخواه تعیین شد. اجراهای مقدماتی، می‌انگین تغییر مطلق مقدار Q را در نقاط بازرسی متوالی ۱۰۰۰ قسمتی ردیابی کردند؛ همه‌ی سناریوها تا قسمت ۶۰۰۰ به تغییری کمتر از ۰۱/۰ رسیدند و ۲۰۰۰ قسمت بعدی (۶۰۰۱–۸۰۰۰) تغییراتی کمتر از ۰۰۱/۰ نشان دادند. بنابراین، هدف ۸۰۰۰ قسمت با حاشیه‌ی ایمنی ۲۰۰۰ قسمتی انتخاب شد تا تضمین شود که پنجره‌ی ارزیابی، خط‌مشی‌های کاملاً همگرا را در تمام پنج سناریو، از جمله ترکیب نوع‌گرایی متنوع با چهار نوع شخصیتی متمایز آن، منعکس می‌کند.
+
+---
+
+# فصل چهارم
+
+## تجزیه و تحلیل نتایج
+
+این فصل، نتایج شبیه‌سازی را در همه‌ی سناریوها و معیارها ارائه می‌دهد و از می‌انگین‌های سطح جامعه به‌سوی تفاوت‌های نوع عامل، معیارهای نابرابری، سیاست‌های آموخته‌شده و مقایسه با وضعیتِ برترِ دانش پیش می‌رود. تمامی سناریوهای توصیف‌شده در این فصل در برابر حالت پایه‌ی «همگی خودخواه» مقایسه می‌شوند که در آن عامل‌ها تنها آسایش شخصی خود را بهینه‌سازی می‌کنند ($w_{\text{self}} = 1.0, w_{\text{fair}} = 0.0$). هر سناریوی دیگر، شکل‌دهی پاداش تعدیل‌شده با شخصیت را دربر می‌گیرد و در برابر این حالت پایه ارزیابی می‌شود. نتایج در دوازده بخش سازماندهی شده‌اند: مروری بر داده‌های آزمایشی (بخش ۴-۱)، سنجه‌های سطح جامعه (بخش ۴-۲)، تفاوت‌های آسایش بر اساس نوع عامل (بخش ۴-۳)، تحلیل نابرابری از طریق ضریب جینی (بخش ۴-۴)، رفتار اشتراکی آموخته‌شده (بخش ۴-۵)، تحلیل نقشه‌های حرارتی جدول Q از خط‌مشی‌های آموخته‌شده (بخش ۴-۶)، حساسیت به کمبود منابع (بخش ۴-۷)، آزمون معناداری آماری (بخش ۴-۸)، اثر نوآور (بخش ۴-۹)، مقایسه با نتایج وضعیتِ برترِ دانش (بخش ۴-۱۰)، تحلیل علّی تفاوت عملکرد روش‌های مقایسه‌شده (بخش ۴-۱۱) و تحلیل کلی بی‌طرفانه (بخش ۴-۱۲).
+
+## ۴-۱- مقدمه و مروری بر داده‌ها
+
+شبیه‌سازی داده‌ها را در ۲۵ اجرای مستقل (۵ سناریو × ۵ تصادف‌سازی) تولید کرد که هر اجرا شامل ۸۰۰۰ قسمت به‌نمایانگر ۸۰۰۰ روز شبیه‌سازی‌شده بود. تمام سنجه‌ها از ۱۰۰۰ قسمت پایانی هر اجرا، پس از همگرایی جدول‌های Q عامل‌ها محاسبه شدند (برای توجیه همگرایی به بخش ۳-۱۴ مراجعه کنید). تصادف‌سازی‌ها — ۴۲، ۱۲۳، ۴۵۶، ۷۸۹ و ۱۰۱۱ — عناصر تصادفی شبیه‌سازی را کنترل کردند: انتساب آب‌وهوا (صاف یا ابری)، نویز اکتشاف $\varepsilon$-greedy و اختلالات مقداردهی اولیه‌ی Q.
+
+پارامترهای فیزیکی زیربنای تمام اجراها در سراسر سناریوها ثابت نگه داشته شدند. هر یک از ۱۰ خانه در ریزشب‌که‌ی توپولوژی حلقوی، مجهز به یک پنل خورشیدی با پیک ۳/۱ کیلووات و یک باتری ۰/۷ کیلووات‌ساعتی (LG Chem RESU7H) بود. آب‌وهوا از یک توزیع برنولی با احتمال ۸۵ درصد آسمان صاف و احتمال ۱۵ درصد پوشش ابری پیروی می‌کرد که در روزهای ابری، تولید خورشیدی نصف می‌شد. الگوهای تقاضا در چهار نوع (صبحگاهی، عصرگاهی، مسطح و شب‌زنده‌دار) با می‌انگین تقاضای روزانه‌ی تقریباً ۸/۸ کیلووات‌ساعت در هر خانوار چرخش می‌کردند که معادل حدود ۳٬۲۰۰ کیلووات‌ساعت در سال است و اندکی بالاتر از خط پایه‌ی مصرف استاندارد Ofgem (۲٬۷۰۰ کیلووات‌ساعت در سال، معادل حدود ۴/۷ کیلووات‌ساعت در روز) قرار دارد (Ofgem, 2023). چهار نوع تقاضا به‌صورت قطعی اختصاص داده شدند: دو خانه الگوهای صبحگاهی دریافت کردند (اوج مصرف ۶:۰۰–۹:۰۰)، دو خانه الگوهای عصرگاهی (اوج ۱۷:۰۰–۲۱:۰۰)، سه خانه الگوهای مسطح (یکنواخت در ۲۴ ساعت) و سه خانه الگوهای شب‌زنده‌دار (اوج ۲۲:۰۰–۲:۰۰). این توزیع تضمین می‌کرد که ساعات اوج تقاضا در تمام خانه‌ها به‌طور هم‌زمان هم‌راستا نباشند و فرصت‌های طبیعی برای اشتراک همتا-به-همتا زمانی که تولید خورشیدی برای برخی خانه‌ها از تقاضای محلی فراتر می‌رفت اما برای برخی دیگر نه، ایجاد می‌کرد.
+
+هر اجرای ۸۰۰۰ قسمتی تقریباً ۱۲ دقیقه زمان دیواری بر روی سخت‌افزار آزمایشی (Apple M1 Pro، ۱۶ گیگابایت RAM) نیاز داشت. جدول‌های Q برای هر ۱۰ عامل پس از هر ۱۰۰۰ قسمت برای تحلیل برون‌خط ذخیره شدند. همگرایی با محاسبه‌ی می‌انگین تغییر مطلق مقدار Q در نقاط بازرسی متوالی ۱۰۰۰ قسمتی تأیید شد؛ تمام اجراها تا قسمت ۶۰۰۰ تغییراتی کمتر از ۰۱/۰ نشان دادند و ۱۰۰۰ قسمت پایانی (۷۰۰۱–۸۰۰۰) به‌عنوان پنجره‌ی ارزیابی برای تمام سنجه‌های گزارش‌شده استفاده شدند. معیار همگرایی به‌طور یکنواخت در تمام سناریوها اعمال شد و هیچ سناریویی به بیش از ۶۰۰۰ قسمت برای رسیدن به آستانه‌ی ۰۱/۰ نیاز نداشت. پنجره‌ی ارزیابی ۱۰۰۰ قسمتی معادل ۱۰۰۰ روز شبیه‌سازی‌شده یا تقریباً ۷۴/۲ سال عملیات مداوم است و دوره‌ی مشاهده‌ای به‌اندازه‌ای طولانی فراهم می‌کند تا رویدادهای نادر مانند دنباله‌های ابری چندروزه را ثبت کند. در طول پنجره‌ی ارزیابی، احتمال اکتشاف $\varepsilon$-greedy در مقدار حداقلی خود برای هر نوع عامل نگه داشته شد ($\varepsilon_{\min} = 0.01$ برای عامل‌های استاندارد، $\varepsilon_{\min} = 0.05$ برای عامل نوآور) و تضمین می‌کرد که سنجه‌های گزارش‌شده منعکس‌کننده‌ی خط‌مشی‌های آموخته‌شده‌ی عامل‌ها هستند، نه نویز اکتشاف جاری.
+
+۲۵ اجرا به‌طور جمعی ۲۰۰٬۰۰۰ قسمت تجربه تولید کردند (۲۵ اجرا × ۸۰۰۰ قسمت) که هر قسمت یک اقدام در هر گام زمانی برای هر عامل تولید می‌کرد (۲۴ گام زمانی در روز × ۱۰ عامل = ۲۴۰ اقدام در هر قسمت، و در مجموع ۴۸ می‌لیون تصمیم گام عامل در سراسر مجموعه‌ی داده‌های آزمایشی کامل). تمام گزارش‌های اقدام خام، عکس‌های لحظه‌ای جدول Q و سنجه‌های هر قسمت بر روی دیسک برای تحلیل برون‌خط ذخیره شدند. حجم کل داده در تمام اجراها تقریباً ۸/۲ گیگابایت بود که به‌صورت آرایه‌های NumPy فشرده‌شده در دایرکتوری نتایج با یک زیردایرکتوری در هر سناریو ذخیره شد.
+
+جدول ۴-۱ آمار توصیفی را برای هر پنج سناریو در چهار سنجه‌ی سطح جامعه ارائه می‌دهد. مقادیر به‌صورت می‌انگین ± یک انحراف معیار در ۵ تصادف‌سازی گزارش می‌شوند.
+
+**جدول (۴-۱): نتایج توصیفی کامل سطح جامعه (می‌انگین ± انحراف معیار در ۵ تصادف‌سازی)**
+
+| سناریو         | آسایش ($\bar{C}$) | عدالت جین ($F$) | نرخ خاموشی ($B$) | هدررفت انرژی ($W$، کیلووات‌ساعت) |
+| :------------- | :---------------- | :-------------- | :--------------- | :------------------------------ |
+| همگی خودخواه   | ۹۲۰/۰ ± ۰۱۰/۰     | ۹۲۲/۰ ± ۰۱۰/۰   | ۵/۱۴% ± ۴/۱%     | ۹۸/۴ ± ۵۰/۰                     |
+| همگی نوع‌گرا    | ۹۱۴/۰ ± ۰۱۱/۰     | ۹۱۸/۰ ± ۰۱۱/۰   | ۵/۱۴% ± ۴/۱%     | ۴۱/۴ ± ۷۴/۰                     |
+| مختلط          | ۹۲۰/۰ ± ۰۰۷/۰     | ۹۲۳/۰ ± ۰۰۸/۰   | ۵/۱۴% ± ۴/۱%     | ۳۴/۴ ± ۵۵/۰                     |
+| نوع‌گرایی متنوع | ۹۱۴/۰ ± ۰۰۷/۰     | ۹۱۹/۰ ± ۰۰۶/۰   | ۵/۱۴% ± ۴/۱%     | ۹۶/۴ ± ۵۴/۰                     |
+| اثر نوآور      | ۹۰۲/۰ ± ۰۰۸/۰     | ۹۰۷/۰ ± ۰۰۹/۰   | ۷/۱۵% ± ۱/۱%     | ۷۰/۴ ± ۲۷/۰                     |
+
+مقادیر آسایش جامعه از ۹۰۲/۰ (اثر نوآور) تا ۹۲۰/۰ (همگی خودخواه و مختلط) متغیر است. شاخص عدالت جین الگوی مشابهی را دنبال می‌کند، به‌گونه‌ای که سناریوی مختلط به بالاترین مقدار (۹۲۳/۰ ± ۰۰۸/۰) و اثر نوآور به پایین‌ترین مقدار (۹۰۷/۰ ± ۰۰۹/۰) دست می‌یابد. نرخ‌های خاموشی در چهار سناریوی نخست تقریباً یکسان و برابر با ۵/۱۴% هستند، درحالی‌که اثر نوآور نرخ بالاتری معادل ۷/۱۵% را ثبت می‌کند. هدررفت انرژی از ۳۴/۴ کیلووات‌ساعت (مختلط) تا ۹۸/۴ کیلووات‌ساعت (همگی خودخواه) متغیر است و سناریوهای با غلبه‌ی نوع‌گرا به‌سوی مقادیر پایین‌تر گرایش دارند.
+
+## ۴-۲- سنجه‌های سطح جامعه
+
+می‌انگین آسایش جامعه ($\bar{C}$) به‌عنوان می‌انگین کسر تأمین‌شده‌ی تقاضای روزانه‌ی همه‌ی خانه‌ها در طول پنجره‌ی ارزیابی ۱۰۰۰ قسمتی محاسبه شد (معادله ۴-۱). چهار سناریوی نخست — همگی خودخواه، همگی نوع‌گرا، مختلط و نوع‌گرایی متنوع — مقادیر آسایش جامعه را بین ۹۱۴/۰ و ۹۲۰/۰ با انحرافات معیار همپوشان تولید کردند. سناریوهای همگی خودخواه و مختلط هر دو به ۹۲۰/۰ دست یافتند، درحالی‌که همگی نوع‌گرا و نوع‌گرایی متنوع به ۹۱۴/۰ رسیدند. آزمون t مستقل مقایسه‌ی همگی نوع‌گرا (۹۱۴/۰ ± ۰۱۱/۰) در برابر همگی خودخواه (۹۲۰/۰ ± ۰۱۰/۰) مقدار t = ۰٫۸۴۵، p = ۰٫۴۲۲۹ را به‌دست داد که نشان می‌دهد تفاوت ۰۰۶/۰ در آستانه‌ی $\alpha = 0.05$ از نظر آماری معنی‌دار نیست. سناریوی اثر نوآور پایین‌ترین آسایش جامعه را با مقدار ۹۰۲/۰ ± ۰۰۸/۰ تولید کرد که مقداری خارج از محدوده‌ی چهار سناریوی دیگر است.
+
+شاخص عدالت جین ($F$، معادله ۴-۲) برابری توزیع آسایش را در بین خانه‌ها اندازه‌گیری می‌کند و مقادیر نزدیک‌تر به ۰/۱ نشان‌دهنده‌ی توزیع عادلانه‌تر است. سناریوی مختلط بالاترین مقدار را تولید کرد (۹۲۳/۰ ± ۰۰۸/۰) که اندکی بالاتر از همگی خودخواه (۹۲۲/۰ ± ۰۱۰/۰) است. سناریوی همگی نوع‌گرا (۹۱۸/۰ ± ۰۱۱/۰) و نوع‌گرایی متنوع (۹۱۹/۰ ± ۰۰۶/۰) در یک رده‌ی می‌انی با می‌انگین عدالت پایین‌تر قرار گرفتند. اثر نوآور پایین‌ترین عدالت را تولید کرد (۹۰۷/۰ ± ۰۰۹/۰) با می‌انگینی ۸/۱ درصد پایین‌تر از سناریوی مختلط. انحرافات معیار سنجه‌ی عدالت از ۰۰۶/۰ (نوع‌گرایی متنوع) تا ۰۱۱/۰ (همگی نوع‌گرا) متغیر بود که نشان می‌دهد تغییرپذیری بین‌تصادف‌سازی در پیامدهای عدالت در بین سناریوها قابل‌مقایسه بوده است.
+
+نرخ روزهای خاموشی ($B$، معادله ۴-۳) نسبت روزهای ارزیابی را ثبت می‌کند که در آن حداقل یک خانه آسایش زیر ۹۵/۰ را تجربه کرده است. چهار سناریو — همگی خودخواه، همگی نوع‌گرا، مختلط و نوع‌گرایی متنوع — نرخ‌های خاموشی یکسان ۵/۱۴% ± ۴/۱% تولید کردند. سناریوی اثر نوآور نرخ بالاتری معادل ۷/۱۵% ± ۱/۱% تولید کرد. انحراف معیار ۴/۱% در چهار سناریوی نخست با احتمال ۱۵ درصد روز ابری استفاده‌شده در مدل آب‌وهوا مطابقت دارد و نشان می‌دهد که رویدادهای خاموشی عمدتاً توسط تصادفی‌سازی آب‌وهوا تعیین می‌شوند، نه توسط ترکیب شخصیتی عامل‌ها. نرخ خاموشی اثر نوآور به‌میزان ۷/۱۵% نشان‌دهنده‌ی ۲/۱ روز خاموشی اضافی در هر ۱۰۰ روز عملیات نسبت به سایر سناریوها است.
+
+هدررفت انرژی ($W$، معادله ۴-۴) مازاد تولیدی را اندازه‌گیری می‌کند که نه قابل ذخیره‌سازی است و نه قابل اشتراک، و بر حسب کیلووات‌ساعت در روز بیان می‌شود. سناریوی مختلط کمترین هدررفت را تولید کرد (۳۴/۴ ± ۵۵/۰ کیلووات‌ساعت) و پس از آن همگی نوع‌گرا (۴۱/۴ ± ۷۴/۰ کیلووات‌ساعت) قرار گرفت. هدررفت انرژی در سناریوی مختلط (۳۴/۴ کیلووات‌ساعت) نسبت به سناریوی همگی خودخواه (۹۸/۴ کیلووات‌ساعت) حدود ۹/۱۲ درصد کمتر بود (معادل ۶۴/۰ کیلووات‌ساعت در روز). آزمون t زوجی بین هدررفت همگی خودخواه و مختلط (با تصادف‌سازی‌های مشترک) مقدار t = ۱٫۸۷، p = ۰٫۱۴ را به‌دست داد که در α = 0.05 معنی‌دار نیست. به‌طور جداگانه، مقایسه‌ی همگی خودخواه با همگی نوع‌گرا (کاهش ۵/۱۱٪) نیز معنی‌دار نبود (t = ۱٫۴۲۲، p = ۰٫۱۹۳). واریانس درون‌سناریویی، به‌ویژه در شرایط همگی نوع‌گرا (انحراف معیار ۷۴/۰ کیلووات‌ساعت)، نشان‌دهنده‌ی تأثیر دنباله‌های آب‌وهوای تصادفی بر تولید مازاد روزانه است. سناریوی نوع‌گرایی متنوع هدررفتی معادل ۹۶/۴ ± ۵۴/۰ کیلووات‌ساعت تولید کرد که تقریباً با حالت پایه‌ی همگی خودخواه یکسان است، علیرغم این‌که شامل طیفی از انواع شخصیتی از جمله یک عامل بسیار نوع‌دوستانه بود.
+
+یک ANOVA یک‌طرفه در تمام پنج سناریو برای آسایش جامعه معنی‌دار بود (F(4, 20) = 3.362, p = 0.0293). بررسی پس‌آزمون نشان می‌دهد که این معنی‌داری عمدتاً توسط سناریوی اثر نوآور با آسایش پایین‌تر (۹۰۲/۰ ± ۰۰۸/۰) ایجاد می‌شود، زیرا تفاوت‌های بین چهار سناریوی نخست در محدوده‌ی تغییرات تصادفی قرار دارد. هنگامی که سناریوی اثر نوآور از ANOVA حذف شد، چهار سناریوی باقی‌مانده تفاوت معنی‌داری در آسایش جامعه نشان ندادند (F(3, 16) = 0.6745, p = 0.5802). الگوی مشابهی برای شاخص عدالت جین در جهت مشاهده شد اما به آستانه‌ی معنی‌داری معمول نرسید: ANOVA یک‌طرفه شامل هر پنج سناریو معنی‌دار نبود (F(4, 20) = 71/2، p = 060/0)؛ حذف اثر نوآور نیز تفاوت معنی‌داری در بین چهار سناریوی باقی‌مانده ایجاد نکرد (F(3, 16) = 54/0، p = 663/0). همان‌طور که در شکل ۴-۱ دیده می‌شود، الگوی جداسازی اثر نوآور در هر سه پنل تکرار می‌شود.
+
+![سنجه‌های سطح جامعه در پنج سناریو. سه پنل نشان می‌دهند: (الف) می‌انگین آسایش جامعه، (ب) شاخص عدالت جین و (ج) نرخ روزهای خاموشی. نوارهای خطا نشان‌دهنده‌ی ±۱ انحراف معیار در ۵ تصادف‌سازی هستند. نوارها از چپ به راست: همگی خودخواه، همگی نوع‌گرا، مختلط، نوع‌گرایی متنوع، اثر نوآور.](../results/figures/v13_community_metrics.png)
+
+**شکل (۴-۱):** سنجه‌های سطح جامعه در پنج سناریو: آسایش، عدالت و نرخ خاموشی
+
+## ۴-۳- تفاوت آسایش بر اساس نوع عامل
+
+در جوامع مختلط، مقادیر آسایش عامل‌های نوع‌گرا ($w_{\text{fair}} \geq 0.5$) و عامل‌های خودخواه ($w_{\text{fair}} \leq 0.2$) به‌طور جداگانه محاسبه شدند تا مشخص شود که آیا وزن‌های پاداش مبتنی بر شخصیت، پیامدهای متفاوتی را در سطح فردی تولید می‌کنند یا خیر. جدول ۴-۲ این نتایج را در سه سناریویی که شامل هر دو نوع شخصیتی هستند، ارائه می‌دهد.
+
+**جدول (۴-۲): تفکیک آسایش بر اساس نوع عامل**
+
+| سناریو         | آسایش نوع‌گرا  | آسایش خودخواه | تفاوت                  | آزمون t زوجی             |
+| :------------- | :------------ | :------------ | :--------------------- | :----------------------- |
+| مختلط          | ۹۳۵/۰ ± ۰۰۷/۰ | ۹۰۵/۰ ± ۰۱۰/۰ | ۰۲۹/۰+ (۲٫۹ واحد درصد) | t(4) = 8.487, p = 0.0011 |
+| نوع‌گرایی متنوع | ۹۲۴/۰ ± ۰۰۹/۰ | ۹۰۴/۰ ± ۰۱۲/۰ | ۰۲۰/۰+ (۲٫۰ واحد درصد) | t(4) = 2.834, p = 0.0472 |
+| اثر نوآور\*    | ۹۱۲/۰ ± ۰۱۱/۰ | ۸۹۲/۰ ± ۰۰۸/۰ | ۰۱۹/۰+ (۱٫۹ واحد درصد) | —                        |
+
+_\*توجه: در سناریوی اثر نوآور، گروه نوع‌گرا شامل عامل نوآور به‌اضافه‌ی چهار عامل نوع‌گرا است؛ گروه خودخواه شامل سه عامل فردگرا و دو عامل خودخواه است. سناریوی نوع‌گرایی متنوع نیز ترکیب پیچیده‌ای دارد (یک نوع‌دوستانه، سه نوع‌گرا، سه فردگرا، سه pure_selfish)، بنابراین گروه‌های نوع‌گرا و خودخواه آن، انواع غیریکنواخت را تجمیع می‌کنند._
+
+در سناریوی مختلط، عامل‌های نوع‌گرا به می‌انگین آسایش ۹۳۵/۰ ± ۰۰۷/۰ دست یافتند، درحالی‌که عامل‌های خودخواه در همان جامعه به ۹۰۵/۰ ± ۰۱۰/۰ رسیدند. تفاوت ۰۲۹/۰+ (۲٫۹ واحد درصد) در آزمون t زوجی معنی‌دار بود (t(4) = 8.487, p = 0.0011). در سناریوی نوع‌گرایی متنوع، عامل‌های نوع‌گرا به ۹۲۴/۰ ± ۰۰۹/۰ در برابر ۹۰۴/۰ ± ۰۱۲/۰ برای عامل‌های خودخواه دست یافتند؛ تفاوت ۰۲۰/۰+ (۲٫۰ واحد درصد) که آن‌هم معنی‌دار بود (t(4) = 2.834, p = 0.0472). در سناریوی اثر نوآور، عامل‌های نوع‌گرا (شامل عامل نوآور) به ۹۱۲/۰ ± ۰۱۱/۰ در برابر ۸۹۲/۰ ± ۰۰۸/۰ برای عامل‌های خودخواه دست یافتند؛ تفاوتی معادل ۰۱۹/۰، اگرچه ترکیب مختلط گروه‌ها، قابلیت مقایسه را با دو سناریوی دیگر محدود می‌کند. مزیت نوع‌گرایانه در هر سه سناریوی مقایسه، از نظر جهت‌گیری یکنواخت بود: در هر تصادف‌سازی از سناریوهای مختلط و نوع‌گرایی متنوع، گروه نوع‌گرا نسبت به گروه خودخواه در همان جامعه عملکرد بهتری داشت. همان‌طور که در شکل ۴-۲ دیده می‌شود، این مزیت در هر دو سناریوی مختلط و نوع‌گرایی متنوع تکرار می‌شود.
+
+انحرافات معیار تفاوت‌های آسایش در بین تصادف‌سازی‌ها در سناریوی مختلط ۰۰۷/۰ و در سناریوی نوع‌گرایی متنوع ۰۱۴/۰ بود که نشان می‌دهد مزیت نوع‌گرایانه در سناریوی مختلط در بین تصادف‌سازی‌های تصادفی سازگار و در سناریوی نوع‌گرایی متنوع متغیرتر بوده است. در سناریوی مختلط، کوچک‌ترین مزیت نوع‌گرایانه در ۵ تصادف‌سازی +۲٫۱ واحد درصد و بزرگ‌ترین آن +۳٫۸ واحد درصد بود که توزیعی فشرده را نشان می‌دهد. در سناریوی نوع‌گرایی متنوع، پراکندگی بیشتری در بین تصادف‌سازی‌ها مشاهده شد: تصادف‌سازی ۱۲۳ عملاً بدون مزیت نوع‌گرایانه بود (۰۵/۰- واحد درصد)، درحالی که بزرگ‌ترین مزیت در تصادف‌سازی ۱۰۱۱ (+۱۴/۴ واحد درصد) به دست آمد. اندازه‌ی اثر (d کوهن) برای مزیت نوع‌گرایانه در سناریوی مختلط ۷۹/۳ بود، درحالی‌که در سناریوی نوع‌گرایی متنوع ۲۷/۱ بود که هم تفاوت می‌انگین کوچک‌تر و هم واریانس بزرگ‌تر در شرایط دوم را منعکس می‌کند.
+
+![آسایش عامل‌های نوع‌گرا در مقابل خودخواه در جوامع مختلط. نوارهای زوجی، می‌انگین آسایش (۱۰۰۰ قسمت پایانی) عامل‌های نوع‌گرا (آبی) و عامل‌های خودخواه (قرمز) را در هر جامعه‌ی مختلط نشان می‌دهند. نوارهای خطا ±۱ انحراف معیار در ۵ تصادف‌سازی هستند.](../results/figures/v14_agent_comfort_split.png)
+
+**شکل (۴-۲):** مقایسه آسایش عامل‌های نوع‌گرا و خودخواه در جوامع مختلط
+
+مکانیسم متقابله‌گری نوظهور در جوامع مختلط در شکل ۴-۳ به‌صورت شماتیک نشان داده شده است. چرخه فضیلت‌مند نوع‌گرایانه (سبز) نشان می‌دهد که چگونه اشتراک مازاد در ساعات اوج خورشیدی، سطح باتری همسایگان را تثبیت کرده و از آبشارهای خاموشی جلوگیری می‌کند. در مقابل، چرخه شرورانه خودخواهانه (قرمز) احتکار را تقویت کرده و سیستم را شکننده‌تر می‌سازد.
+
+![چرخه متقابله‌گری در جوامع مختلط. چرخه‌ی فضیلت‌مند نوع‌گرایانه (سبز) و چرخه‌ی شرورانه‌ی خودخواهانه (قرمز) نشان می‌دهد که چگونه اشتراک اولیه می‌تواند بازگشت انرژی در ساعات کسری را ایجاد کند.](../results/figures/v07_reciprocity_cycle.png)
+
+**شکل (۴-۳):** چرخه متقابله‌گری: چرخه فضیلت‌مند نوع‌گرایانه و چرخه شرورانه خودخواهانه
+
+## ۴-۴- تحلیل نابرابری (ضریب جینی)
+
+ضریب جینی ($G$، معادله ۴-۵) به‌صورت مقطعی در هر قسمت در بین آسایش لحظه‌ای ۱۰ خانه محاسبه و سپس در ۱۰۰۰ قسمت پایانی می‌انگین‌گیری شد (رویکرد توصیف‌شده در بخش ۳-۱۲) و سنجه‌ی ثانویه‌ای از نابرابری فراهم کرد که نسبت به شاخص جین به نقل‌وانتقالات در می‌انه‌ی توزیع حساس‌تر است (Kusatake et al., 2023). جدول ۴-۳ مقادیر جینی و رتبه‌بندی آن‌ها را ارائه می‌دهد.
+
+**جدول (۴-۳): ضریب جینی بر اساس سناریو (می‌انگین ± انحراف معیار در ۵ تصادف‌سازی)**
+
+| سناریو         | ضریب جینی       | رتبه (از عادلانه‌ترین → ناعادلانه‌ترین) |
+| :------------- | :-------------- | :------------------------------------ |
+| مختلط          | ۰۷۹۰/۰ ± ۰۰۶۷/۰ | ۱                                     |
+| همگی خودخواه   | ۰۷۹۶/۰ ± ۰۰۸۷/۰ | ۲                                     |
+| نوع‌گرایی متنوع | ۰۸۴۴/۰ ± ۰۰۵۸/۰ | ۳                                     |
+| همگی نوع‌گرا    | ۰۸۴۹/۰ ± ۰۰۹۸/۰ | ۴                                     |
+| اثر نوآور      | ۰۹۶۲/۰ ± ۰۰۷۹/۰ | ۵                                     |
+
+سناریوی مختلط کمترین ضریب جینی را تولید کرد (۰۷۹۰/۰ ± ۰۰۶۷/۰) که نشان‌دهنده‌ی عادلانه‌ترین توزیع آسایش در بین خانه‌ها است. سناریوی همگی خودخواه تقریباً به همان اندازه عادلانه بود (۰۷۹۶/۰ ± ۰۰۸۷/۰) با انحرافات معیار همپوشان. نوع‌گرایی متنوع (۰۸۴۴/۰ ± ۰۰۵۸/۰) و همگی نوع‌گرا (۰۸۴۹/۰ ± ۰۰۹۸/۰) یک خوشه‌ی می‌انی را با می‌انگین نابرابری بالاتر تشکیل دادند. اثر نوآور بالاترین ضریب جینی را تولید کرد (۰۹۶۲/۰ ± ۰۰۷۹/۰) که نشان‌دهنده‌ی افزایش ۲۲ درصدی نسبت به سناریوی مختلط و افزایش ۱۳ درصدی نسبت به ناعادلانه‌ترین سناریوی بعدی (همگی نوع‌گرا) است. به‌عبارت مطلق، در پنجره‌ی ارزیابی، خانه‌ی دارای بالاترین آسایش به‌طور می‌انگین ۸/۱۲ درصد از کل آسایش جامعه را در سناریوی اثر نوآور به خود اختصاص داد، در مقایسه با ۸/۱۱ درصد در سناریوی مختلط؛ این سهم‌ها از توزیع مقطعی آسایش در هر قسمت محاسبه و سپس در ۱۰۰۰ قسمت پایانی می‌انگین‌گیری شده‌اند و با جهت افزایش ضریب جینی ناشی از اثر نوآور هم‌خوانی دارند.
+
+نابرابری بالای اثر نوآور در ۴ تصادف‌سازی از ۵ تصادف‌سازی با ضریب جینی بالاتر از می‌انگین سناریوهای غیرنوآور سازگار بود. تنها تصادف‌سازی ۴۲ مقدار جینی برابر ۱۱۱/۰ داشت که به‌طور قابل‌توجهی از سایر تصادف‌سازی‌ها بالاتر بود. انحرافات معیار چهار سناریوی غیرنوآور (محدوده: ۰۰۵۸/۰ تا ۰۰۹۸/۰) به‌طور قابل‌توجهی همپوشان داشتند که نشان می‌دهد تفاوت‌های رتبه‌بندی در بین این سناریوها از نظر آماری پایدار نیستند. ضریب جینی اثر نوآور (۰۹۶۲/۰) از کران بالای فواصل اطمینان ۹۵ درصد سناریوهای مختلط (۰۸۷۳/۰)، همگی خودخواه (۰۹۰۴/۰) و نوع‌گرایی متنوع (۰۹۱۶/۰) فراتر رفت، اما با کران بالای سناریوی همگی نوع‌گرا (۰۹۷۱/۰) همپوشانی داشت. یک آزمون t زوجی مقایسه‌ی ضریب جینی سناریوی مختلط با اثر نوآور این جدایی را تأیید کرد (t(4) = -2.84, p = 0.047). همان‌طور که در شکل ۴-۴ دیده می‌شود، منحنی لورنز اثر نوآور از خط برابری انحراف بیشتری نسبت به سناریوی مختلط دارد.
+
+![منحنی لورنز می‌انگین توزیع‌های مقطعی هر قسمت در پنجره‌ی ارزیابی — مقایسه سناریوی مختلط و اثر نوآور](../results/figures/v11_lorenz_curve.png)
+
+**شکل (۴-۴):** منحنی لورنز می‌انگین توزیع‌های مقطعی هر قسمت (۱۰۰۰ قسمت پایانی): مقایسه توزیع آسایش در سناریوی مختلط و اثر نوآور
+
+توزیع نابرابری آسایش در بین خانه‌ها در شکل ۴-۵ با استفاده از ضریب جینی مقایسه شده است. همان‌طور که در این شکل دیده می‌شود، سناریوی مختلط کمترین نابرابری (۰۷۹/۰) و سناریوی اثر نوآور بیشترین نابرابری (۰۹۶/۰) را تولید کرده‌اند. افزایش ۲۲ درصدی ضریب جینی در اثر نوآور، نشان‌دهنده تأثیر مخرب رفتار اکتشافی یک عامل منفرد بر توزیع عادلانه منابع است.
+
+![ضریب جینی آسایش در بین خانه‌ها برای هر سناریو. نوارها می‌انگین را در ۵ تصادف‌سازی نشان می‌دهند که در ۱۰۰۰ قسمت پایانی یک اجرای آموزش ۸۰۰۰ قسمتی ارزیابی شده‌اند. نوارهای خطا ±۱ انحراف معیار را نشان می‌دهند.](../results/figures/v15_gini_comparison.png)
+
+**شکل (۴-۵):** ضریب جینی آسایش در بین خانه‌ها برای هر سناریو
+
+## ۴-۵- رفتار اشتراکی آموخته‌شده
+
+فراوانی اشتراک ($S_i$، معادله ۴-۶) نسبت وضعیت‌های جدول Q نهایی هر عامل را اندازه‌گیری می‌کند که در آن اقدام حریصانه، اشتراک مازاد است (اقدام ۱: اشتراک ۵۰٪، یا اقدام ۲: اشتراک ۱۰۰٪). این سنجه، تمایل آموخته‌شده به همکاری را در هنگام همگرایی ثبت می‌کند. جدول ۴-۴ می‌انگین فراوانی اشتراک را بر اساس گروه عامل و سناریو گزارش می‌دهد.
+
+**جدول (۴-۴): فراوانی اشتراک بر اساس نوع عامل و سناریو (می‌انگین ± انحراف معیار در ۵ تصادف‌سازی)**
+
+| سناریو         | گروه عامل    | می‌انگین فراوانی اشتراک |
+| :------------- | :----------- | :--------------------- |
+| همگی خودخواه   | همه‌ی عامل‌ها  | ۱۳۰۴/۰ ± ۰۲۴۲/۰        |
+| همگی نوع‌گرا    | همه‌ی عامل‌ها  | ۱۲۸۳/۰ ± ۰۲۷۰/۰        |
+| مختلط          | گروه نوع‌گرا  | ۱۳۹۲/۰ ± ۰۲۰۰/۰        |
+| مختلط          | گروه خودخواه | ۱۳۰۸/۰ ± ۰۲۷۷/۰        |
+| نوع‌گرایی متنوع | گروه نوع‌گرا  | ۱۲۶۰/۰ ± ۰۳۱۶/۰        |
+| نوع‌گرایی متنوع | گروه خودخواه | ۱۲۶۴/۰ ± ۰۲۹۷/۰        |
+| اثر نوآور      | گروه کاوشگر  | ۱۳۳۳/۰ ± ۰۲۹۰/۰        |
+| اثر نوآور      | گروه خودخواه | ۱۳۱۳/۰ ± ۰۲۷۵/۰        |
+
+فراوانی اشتراک در تمام انواع عامل و سناریوها از ۶۰/۱۲% تا ۹۲/۱۳% از وضعیت‌ها متغیر بود که نشان می‌دهد همه‌ی عامل‌ها در هنگام همگرایی در تقریباً ۱ از ۷ تا ۱ از ۸ وضعیت، اشتراک را آموختند. بالاترین فراوانی اشتراک در گروه نوع‌گرا در سناریوی مختلط مشاهده شد (۹۲/۱۳% ± ۰۰/۲%) و پایین‌ترین آن در گروه نوع‌گرا در سناریوی نوع‌گرایی متنوع بود (۶۰/۱۲% ± ۱۶/۳%). تفاوت بین بالاترین و پایین‌ترین گروه ۳۲/۱ واحد درصد بود. این محدوده‌ی باریک ۳۲/۱ واحد درصدی بین بالاترین و پایین‌ترین گروه در تمام ترکیب‌های شخصیتی، ویژگی‌های ساختاری محیط را منعکس می‌کند: کسری از وضعیت‌ها که در آن اشتراک اقدام بهینه است، توسط فیزیک تولید خورشیدی و ذخیره‌سازی باتری محدود می‌شود، نه توسط ترجیحات عدالت عامل‌ها.
+
+در سناریوی مختلط، فراوانی اشتراک گروه نوع‌گرا (۹۲/۱۳% ± ۰۰/۲%) ۸۴/۰ واحد درصد بالاتر از گروه خودخواه (۰۸/۱۳% ± ۷۷/۲%) بود. گروه خودخواه در سناریوی مختلط با نرخی (۰۸/۱۳%) اشتراک می‌گذاشت که تقریباً با سناریوی پایه‌ی همگی خودخواه (۰۴/۱۳%) یکسان بود. در سناریوی نوع‌گرایی متنوع، گروه‌های نوع‌گرا و خودخواه با نرخ‌های تقریباً یکسانی اشتراک می‌گذاشتند (۶۰/۱۲% و ۶۴/۱۲%) که نشان می‌دهد وجود یک عامل بسیار نوع‌دوستانه ($w_{\text{fair}} = 0.8$) تمایل اشتراکی سایر عامل‌ها را افزایش نداده است. در سناریوی اثر نوآور، گروه کاوشگر (نوآور به‌اضافه‌ی چهار عامل نوع‌گرا) با نرخ ۳۳/۱۳% ± ۹۰/۲% و گروه خودخواه با نرخ ۱۳/۱۳% ± ۷۵/۲% اشتراک می‌گذاشتند.
+
+انحرافات معیار از ۰۰/۲% تا ۱۶/۳% متغیر بود که نشان‌دهنده‌ی تنوع قابل‌توجه بین‌تصادف‌سازی در رفتار اشتراک آموخته‌شده است. در سناریوی مختلط، انحراف معیار گروه نوع‌گرا به‌میزان ۰۰/۲% پایین‌ترین در بین تمام گروه‌ها بود، درحالی‌که گروه نوع‌گرای نوع‌گرایی متنوع بالاترین مقدار را داشت (۱۶/۳%). یک آزمون t مستقل مقایسه‌ی فراوانی اشتراک گروه نوع‌گرا در سناریوی مختلط با حالت پایه‌ی همگی خودخواه معنی‌دار نبود (t(8) = 0.684, p = 0.513) و تأیید کرد که افزایش ۸۸/۰ واحد درصدی در محدوده‌ی تغییرات تصادفی قرار دارد. همان‌طور که در شکل ۴-۶ دیده می‌شود، این تفاوت‌ها در سطح چند واحد درصد باقی می‌مانند.
+
+![نسبت وضعیت‌های جدول Q که در آن بهترین اقدام هر نوع عامل، اشتراک است (اقدام ۱ یا ۲). نوارها می‌انگین را در بین عامل‌های هر نوع در هر سناریو نشان می‌دهند. نوارهای خطا ±۱ انحراف معیار در ۵ تصادف‌سازی هستند.](../results/figures/v16_sharing_frequency.png)
+
+**شکل (۴-۶):** نسبت وضعیت‌هایی که بهترین اقدام، اشتراک است بر اساس نوع عامل
+
+## ۴-۶- نقشه‌های حرارتی جدول Q — خط‌مشی‌های آموخته‌شده
+
+شکل ۴-۷ می‌انگین مقادیر Q را در هر ساعت برای عامل‌های نماینده در تمام پنج سناریو، به‌صورت نقشه‌های حرارتی تجسم می‌کند. هر نقشه‌ی حرارتی، بازده بلندمدت موردانتظار (مقدار Q) را برای هر یک از سه اقدام اشتراک (۰٪، ۵۰٪، ۱۰۰٪ در محور y) در ۲۴ ساعت روز (محور x)، به‌طور می‌انگین در تمام چهار سطح وضعیت باتری، نمایش می‌دهد. سلول‌های روشن‌تر (زرد/قرمز) نشان‌دهنده‌ی مقادیر Q بالاتر هستند.
+
+![می‌انگین مقادیر Q در هر ساعت برای عامل‌های نماینده. ردیف بالا عامل ۰ را در هر سناریو نشان می‌دهد؛ ردیف پایین یک عامل مقابل را نشان می‌دهد (عامل ۳ در چهار سناریوی نخست، عامل ۸ در اثر نوآور). محور y: سه اقدام اشتراک (۰٪، ۵۰٪، ۱۰۰٪). محور x: ساعت روز (۰–۲۳). شدت رنگ، می‌انگین مقدار Q را نشان می‌دهد که در تمام سطوح وضعیت باتری می‌انگین گرفته شده است.](../results/qtable_heatmaps.png)
+
+**شکل (۴-۷):** نقشه‌های حرارتی مقادیر Q می‌انگین‌شده در هر ساعت برای عامل‌های نماینده
+
+در سناریوی همگی خودخواه، عامل ۰ (pure_selfish) مقادیر Q متمرکز بر اقدام اشتراک ۰٪ را در تمام ۲۴ ساعت نشان داد و مقادیر پایین (آبی تیره) برای هر دو اقدام اشتراک ۵۰٪ و ۱۰۰٪ داشت. هیچ تغییری زمانی قابل‌مشاهده نبود — ترجیح عامل برای احتکار در طول روز یکنواخت بود. می‌انگین مقدار Q برای اقدام اشتراک ۰٪ در تمام ساعات و وضعیت‌های باتری تقریباً ۸۹/۱ بود، درحالی‌که حداکثر مقدار Q برای اقدام اشتراک ۵۰٪ برابر با ۸۲/۰ (ساعت ۱۴، باتری پر) بود که نشان می‌دهد اشتراک هرگز در هیچ وضعیتی برای این نوع عامل با احتکار رقابت نمی‌کرد.
+
+در سناریوی همگی نوع‌گرا، عامل ۰ (نوع‌گرا، $w_{\text{fair}} = 0.5$) الگوی متفاوتی را نشان داد. در ساعات ۱۰ تا ۱۶ — متناظر با اوج تولید خورشیدی — مقادیر Q برای اقدامات اشتراک ۵۰٪ و ۱۰۰٪ نسبت به حالت پایه‌ی همگی خودخواه به‌طور محسوسی افزایش یافت. اقدام اشتراک ۰٪ در ساعات غیرتولید (ساعت‌های ۱۷ تا ۲۳ و ۰ تا ۶)، زمانی که انرژی ذخیره‌شده برای تقاضای عصرگاهی و صبحگاهی موردنیاز بود، ترجیح داده می‌شد.
+
+در سناریوی مختلط، عامل ۰ (نوع‌گرا) گرم شدن قوی ظهرگاهی را برای اقدامات اشتراک نشان داد که بیشتر از سناریوی همگی نوع‌گرا برجسته بود. عامل ۳ (pure_selfish در جامعه‌ی مختلط) الگوی متفاوتی از حالت پایه‌ی همگی خودخواه نشان داد: مقداری گرم شدن ظهرگاهی برای اقدام اشتراک ۵۰٪ قابل‌مشاهده بود، درحالی‌که در محیط خودخواه همگن وجود نداشت.
+
+در سناریوی نوع‌گرایی متنوع، عامل ۰ (نوع‌دوستانه، $w_{\text{fair}} = 0.8$) گسترده‌ترین سیگنال اشتراک را در بین هر عامل غیرنوآور نشان داد، با مقادیر Q بالاتر برای اقدامات اشتراک ۵۰٪ و ۱۰۰٪ که ساعات ۸ تا ۱۸ را دربر می‌گرفت. اقدام اشتراک-۵۰٪ مقادیر Q به‌ویژه بالایی را در این پنجره نشان داد. عامل ۳ (فردگرا، $w_{\text{fair}} = 0.2$) گرم شدن ظهرگاهی ملایمی نسبت به عامل نوع‌دوستانه نشان داد و مقادیر اشتراک بالاتر تنها در ساعات ۱۲ تا ۱۵ دیده می‌شد.
+
+در سناریوی اثر نوآور، عامل ۰ (high\*openness*innovator، $\varepsilon_{\min} = 0.05$) الگوی اشتراکی را نشان داد که وجود داشت اما کمتر از عامل نوع‌دوستانه متمرکز بود، با مقادیر Q بالاتر برای اقدامات اشتراک که در ساعات ۸ تا ۱۸ گسترده شده بودند اما با شدت‌های پایین‌تر. مقادیر Q عامل نوآور برای اقدام اشتراک ۵۰٪ حداکثر شدت تقریباً ۲۵/۱ را در ساعت ۱۳ نشان داد، در مقایسه با ۵۱/۱ برای عامل نوع‌دوستانه در همان ساعت. عامل ۸ (pure_selfish در جامعه‌ی نوآور) ضعیف‌ترین سیگنال اشتراک را در بین هر عامل خودخواه در تمام سناریوها نشان داد و هیچ گرم شدن ظهرگاهی قابل‌مشاهده‌ای نداشت. مقادیر Q برای اقدامات اشتراک عامل ۸ در تمام ساعات و وضعیت‌های باتری زیر ۵۰/۰ باقی ماند که نشان می‌دهد غیرقابل‌پیش‌بینی بودن عامل نوآور، انگیزه‌ی عامل خودخواه را برای اشتراک حتی بیشتر از حالت پایه‌ی همگی خودخواه کاهش داده است.
+
+جدول ۴-۵ الگوهای کیفی مشاهده‌شده در بین انواع عامل را خلاصه می‌کند.
+
+**جدول (۴-۵): الگوهای کیفی نقشه‌های حرارتی بر اساس نوع عامل**
+
+| نوع عامل                | الگوی اشتراک            | پنجره‌ی ساعتی | شدت پیک     |
+| :---------------------- | :---------------------- | :----------- | :---------- |
+| pure_selfish            | اشتراک مشاهده نشد       | هیچ          | بسیار پایین |
+| individualist           | اشتراک ظهرگاهی گاه‌به‌گاه | ۱۲–۱۵        | پایین       |
+| prosocial               | اشتراک ظهرگاهی منظم     | ۱۰–۱۶        | متوسط       |
+| altruistic              | اشتراک گسترده و مکرر    | ۸–۱۸         | بالا        |
+| high_openness_innovator | اشتراک گسترده و اکتشافی | ۸–۱۸         | متوسط-بالا  |
+
+تحلیل نقشه‌ی حرارتی، یک گرادیان در رفتار اشتراک آموخته‌شده را تأیید می‌کند که به‌طور یکنواخت با وزن عدالت مطابقت دارد: عامل‌های نوع‌دوستانه ($w_{\text{fair}} = 0.8$) گسترده‌ترین و شدیدترین سیگنال اشتراک را نشان دادند، پس از آن عامل‌های نوع‌گرا ($w_{\text{fair}} = 0.5$)، سپس فردگرایان ($w_{\text{fair}} = 0.2$) و عامل‌های خودخواه محض ($w_{\text{fair}} = 0.0$) هیچ سیگنال اشتراکی نشان ندادند. عامل نوآور، علیرغم اشتراک وزن عدالت با نوع نوع‌گرا، الگوی اشتراک کم‌تمرکزتری نسبت به عامل نوع‌گرای استاندارد نشان داد که با کف اکتشاف بالاتر آن مطابقت دارد و نویز را وارد خط‌مشی آموخته‌شده می‌کند.
+
+## ۴-۷- حساسیت به کمبود منابع
+
+برای آزمون این‌که آیا مزیت عامل نوع‌گرا در شرایط کمبود منابع بیشتر نیز پایدار می‌ماند، سناریوی مختلط با سه سطح احتمال ابری — ۱۵٪ (پایه)، ۲۵٪ و ۳۵٪ — درحالی‌که تمام پارامترهای دیگر ثابت نگه داشته شدند، دوباره اجرا شد. شرایط احتمال ابری ۲۵٪ و ۳۵٪ به‌ترتیب نشان‌دهنده‌ی کمبود متوسط و شدید هستند و تولید خورشیدی در روزهای ابری نسبت به روزهای صاف، مانند مدل آب‌وهوای پایه، نصف می‌شود. این دو سطح ابری بالاتر، تعداد موردانتظار روزهای تولید بالا در هر پنجره‌ی ارزیابی ۱۰۰۰ قسمتی را از ۸۵۰ (در ۱۵٪ ابری) به ترتیب به ۷۵۰ و ۶۵۰ کاهش می‌دهند و فراوانی دنباله‌های تولید پایین چندروزه را افزایش می‌دهند. جدول ۴-۶ مقادیر آسایش را برای گروه‌های عامل نوع‌گرا و خودخواه در هر سطح کمبود، به‌طور می‌انگین در ۵ تصادف‌سازی، ارائه می‌دهد. همان‌طور که در شکل ۴-۸ دیده می‌شود، شکاف مزیت نوع‌گرایانه در تمام سطوح کمبود حفظ می‌شود.
+
+![آسایش عامل‌های نوع‌گرا در مقابل خودخواه به‌عنوان تابعی از احتمال روز ابری. هر نقطه، می‌انگین آسایش (۱۰۰۰ قسمت پایانی) را برای عامل‌های نوع‌گرا (آبی) و خودخواه (قرمز) نشان می‌دهد که در ۵ تصادف‌سازی می‌انگین گرفته شده است. نوارهای خطا ±۱ انحراف معیار را نشان می‌دهند.](../results/figures/v18_scarcity_sensitivity.png)
+
+**شکل (۴-۸):** آسایش عامل‌های نوع‌گرا در مقابل خودخواه بر حسب احتمال روز ابری
+
+**جدول (۴-۶): آسایش بر اساس احتمال ابری و نوع عامل (می‌انگین ± انحراف معیار، ۵ تصادف‌سازی)**
+
+| احتمال ابری | آسایش نوع‌گرا    | آسایش خودخواه   | شکاف (واحد درصد) | آماره t | p-value |
+| :---------- | :-------------- | :-------------- | :--------------- | :------ | :------ |
+| ۱۵% (پایه)  | ۹۳۴۵/۰ ± ۰۰۶۳/۰ | ۹۰۵۱/۰ ± ۰۰۸۶/۰ | ۹۵/۲             | ۴۸۷/۸   | ۰۰۱۱/۰  |
+| ۲۵%         | ۸۶۳۱/۰ ± ۰۲۲۱/۰ | ۸۳۷۳/۰ ± ۰۲۴۵/۰ | ۵۸/۲             | ۷۵۹/۶   | ۰۰۲۵/۰  |
+| ۳۵%         | ۸۱۲۵/۰ ± ۰۲۷۱/۰ | ۷۸۲۰/۰ ± ۰۱۴۲/۰ | ۰۵/۳             | ۴۵۲/۲   | ۰۷۰۳/۰  |
+
+در احتمال ابری پایه‌ی ۱۵٪، عامل‌های نوع‌گرا به آسایش ۹۳۴۵/۰ ± ۰۰۶۳/۰ و عامل‌های خودخواه به ۹۰۵۱/۰ ± ۰۰۸۶/۰ دست یافتند که شکافی معادل ۹۵/۲ واحد درصد بود (t(4) = 8.487, p = 0.0011؛ این مقدار با همان مجموعه‌داده‌ی زیربنایی گزارش‌شده در بخش ۴-۳ سازگار است). در احتمال ابری ۲۵٪، آسایش نوع‌گرا به ۸۶۳۱/۰ ± ۰۲۲۱/۰ و آسایش خودخواه به ۸۳۷۳/۰ ± ۰۲۴۵/۰ کاهش یافت که شکافی معادل ۵۸/۲ واحد درصد بود (t(4) = 6.759, p = 0.0025). در احتمال ابری ۳۵٪، آسایش نوع‌گرا ۸۱۲۵/۰ ± ۰۲۷۱/۰ و آسایش خودخواه ۷۸۲۰/۰ ± ۰۱۴۲/۰ بود که شکافی معادل ۰۵/۳ واحد درصد را نشان می‌داد (t(4) = 2.452, p = 0.0703).
+
+کاهش مطلق آسایش از حالت پایه به احتمال ابری ۳۵٪ برای عامل‌های نوع‌گرا ۱۲۲/۰ (از ۹۳۴۵/۰ به ۸۱۲۵/۰) و برای عامل‌های خودخواه ۱۲۳/۰ (از ۹۰۵۱/۰ به ۷۸۲۰/۰) بود که نشان‌دهنده‌ی کاهش تقریباً ۱۳ درصدی از حالت پایه برای هر دو گروه است. شکاف مزیت نوع‌گرایانه در هر سه سطح کمبود بین ۵۸/۲ و ۰۵/۳ واحد درصد پایدار ماند و هیچ روند یکنواختی نداشت. شکاف در ۲۵٪ (۵۸/۲ واحد درصد) اندکی باریک‌تر از حالت پایه (۹۵/۲ واحد درصد) و ۳۵٪ (۰۵/۳ واحد درصد) بود، اما تفاوت‌های بین این اندازه‌های شکاف از نظر معنی‌داری آزمون نشدند.
+
+انحرافات معیار با افزایش احتمال ابری به‌طور قابل‌توجهی افزایش یافت. برای عامل‌های نوع‌گرا، انحراف معیار از ±۰۰۶۳/۰ در ۱۵٪ به ±۰۲۷۱/۰ در ۳۵٪ افزایش یافت (افزایش ۳/۴ برابری). برای عامل‌های خودخواه، از ±۰۰۸۶/۰ به ±۰۱۴۲/۰ افزایش یافت (افزایش ۷/۱ برابری). افزایش بیشتر در تغییرپذیری نوع‌گرا با این واقعیت سازگار است که آسایش عامل‌های نوع‌گرا بیشتر به پویایی‌های سطح جامعه (وضعیت‌ها و اقدامات همسایگان آن‌ها) بستگی دارد تا آسایش عامل‌های خودخواه، و آن پویایی‌های جامعه در شرایط کمبود متغیرتر می‌شوند. مزیت نوع‌گرایانه از نظر جهت‌گیری در همهٔ ۱۵ ترکیب تصادف‌سازی-ابر (عامل‌های نوع‌گرا در همهٔ ۱۵ مقایسه‌ی زوجی، عملکرد بهتری نسبت به عامل‌های خودخواه داشتند) سازگار بود.
+
+معنی‌داری آماری برای مزیت نوع‌گرایانه در حالت پایه‌ی ۱۵٪ (p = 0.0011) و در احتمال ابری ۲۵٪ (p = 0.0025) به‌دست آمد. در احتمال ابری ۳۵٪، واریانس افزایش‌یافته توان آماری را زیر آستانه‌ی $\alpha = 0.05$ کاهش داد (p = 0.0703)، حتی اگر شکاف جهتی از نظر اندازه مشابه بود. یک تحلیل توان پس‌آزمون نشان می‌دهد که تشخیص تفاوت ۵/۲ واحد درصد با توان ۸۰٪ در سطوح واریانس مشاهده‌شده در احتمال ابری ۳۵٪، به تقریباً ۱۸ تصادف‌سازی در هر شرایط نیاز دارد.
+
+## ۴-۸- آزمون معناداری آماری
+
+جدول ۴-۷ آزمون‌های آماری اصلی انجام‌شده در تمام سناریوها و مقایسه‌های نوع عامل را خلاصه می‌کند. تمام آزمون‌ها از $\alpha = 0.05$ به‌عنوان آستانه‌ی معنی‌داری استفاده کردند.
+
+**جدول (۴-۷): نتایج آزمون‌های آماری**
+
+| آزمون | مقایسه                                                 | نوع آزمون    | درجه‌ی آزادی | آماره      | p-value | معنی‌دار ($\alpha = 0.05$)؟ |
+| :---- | :----------------------------------------------------- | :----------- | :---------- | :--------- | :------ | :------------------------- |
+| ۱     | همگی خودخواه در مقابل همگی نوع‌گرا (آسایش جامعه)        | t مستقل      | ۸           | t = ۰٫۸۴۵  | ۴۲۲۹/۰  | خیر                        |
+| ۲     | نوع‌گرا در مقابل خودخواه در مختلط (آسایش عامل)          | t زوجی       | ۴           | t = ۸٫۴۸۷  | ۰۰۱۱/۰  | بله                        |
+| ۳     | نوع‌گرا در مقابل خودخواه در نوع‌گرایی متنوع (آسایش عامل) | t زوجی       | ۴           | t = ۲٫۸۳۴  | ۰۴۷۲/۰  | بله                        |
+| ۴     | اثر نوآور در مقابل مختلط (آسایش جامعه)                 | t مستقل      | ۸           | t = ۳٫۵۶۲- | ۰۰۷۴/۰  | بله                        |
+| ۵     | آسایش جامعه در تمام ۵ سناریو                           | ANOVA یک‌طرفه | (۴،۲۰)      | F = ۳٫۳۶۲  | ۰۲۹۳/۰  | بله                        |
+
+آزمون ۱ آسایش جامعه‌ی همگی خودخواه (۹۲۰/۰ ± ۰۱۰/۰) را با همگی نوع‌گرا (۹۱۴/۰ ± ۰۱۱/۰) مقایسه کرد. آزمون t مستقل تفاوت معنی‌داری نشان نداد (t(8) = 0.845, p = 0.4229). فاصله‌ی اطمینان ۹۵ درصد برای تفاوت از ۰۱۰/۰- تا ۰۲۲/۰+ را دربر گرفت که شامل صفر بود.
+
+آزمون ۲ آسایش عامل نوع‌گرا (۹۳۵/۰ ± ۰۰۷/۰) را با آسایش عامل خودخواه (۹۰۵/۰ ± ۰۱۰/۰) در سناریوی مختلط مقایسه کرد. آزمون t زوجی معنی‌دار بود (t(4) = 8.487, p = 0.0011). می‌انگین تفاوت ۰۲۹/۰ با فاصله‌ی اطمینان ۹۵ درصد [۰۲۰/۰،۰۳۹/۰] بود.
+
+آزمون ۳ آسایش عامل نوع‌گرا (۹۲۴/۰ ± ۰۰۹/۰) را با آسایش عامل خودخواه (۹۰۴/۰ ± ۰۱۲/۰) در سناریوی نوع‌گرایی متنوع مقایسه کرد. آزمون t زوجی معنی‌دار بود (t(4) = 2.834, p = 0.0472). می‌انگین تفاوت ۰۲۰/۰ با فاصله‌ی اطمینان ۹۵ درصد [۰۰۰۴/۰،۰۴۰/۰] بود.
+
+آزمون ۴ سناریوی اثر نوآور (۹۰۲/۰ ± ۰۰۸/۰) را با سناریوی مختلط (۹۲۰/۰ ± ۰۰۷/۰) برای آسایش جامعه مقایسه کرد. آزمون t مستقل معنی‌دار بود (t(8) = -3.562, p = 0.0074). فاصله‌ی اطمینان ۹۵ درصد برای تفاوت [۰۳۰/۰-, ۰۰۶/۰-] بود. d کوهن برای این مقایسه ۲۵/۲ بود که نشان‌دهنده‌ی اندازه‌ی اثر بزرگ است — می‌انگین آسایش جامعه در سناریوی اثر نوآور ۲۵/۲ انحراف معیار زیر می‌انگین سناریوی مختلط بود.
+
+آزمون ۵ یک ANOVA یک‌طرفه را در تمام پنج سناریو برای آسایش جامعه اعمال کرد. نتیجه معنی‌دار بود (F(4, 20) = 3.362, p = 0.0293). بررسی پس‌آزمون نشان می‌دهد که اثر نوآور محرک اصلی این معنی‌داری است. هنگامی که سناریوی اثر نوآور حذف شد، ANOVA یک‌طرفه در چهار سناریوی باقی‌مانده معنی‌دار نبود (F(3, 16) = 0.6745, p = 0.5802) و تأیید کرد که چهار سناریوی غیرنوآور در سطح $\alpha = 0.05$ از نظر آماری قابل‌تشخیص نیستند.
+
+## ۴-۹- اثر نوآور
+
+سناریوی اثر نوآور یک عامل منفرد با $\varepsilon_{\min} = 0.05$ (نوآور، پیاده‌سازی گشودگی بالا از مدل OCEAN) را به جامعه‌ای که در غیر این صورت از چهار عامل نوع‌گرا، سه فردگرا و دو pure*selfish تشکیل شده بود، معرفی کرد. عامل نوآور وزن‌های پاداش یکسانی با نوع نوع‌گرا داشت ($w_{\text{self}} = w_{\text{fair}} = 0.5$)؛ تنها تفاوت آن با عامل‌های نوع‌گرا، نرخ حداقل اکتشاف بالاتر بود. سناریوی مختلط ترکیب جامعه‌ی یکسانی داشت (پنج نوع‌گرا، سه فردگرا، دو pure_selfish) اما با تمام عامل‌ها با استفاده از $\varepsilon_{\min} = 0.01$. جدول ۴-۸ مقایسه‌ی بین این دو سناریو را در تمام پنج سنجه‌ی جامعه ارائه می‌دهد.
+
+**جدول (۴-۸): سنجه‌های جامعه — مقایسه‌ی مختلط در برابر اثر نوآور**
+
+| سنجه         | مختلط                   | اثر نوآور               | تغییر مطلق        | تغییر نسبی |
+| :----------- | :---------------------- | :---------------------- | :---------------- | :--------- |
+| آسایش جامعه  | ۹۲۰/۰ ± ۰۰۷/۰           | ۹۰۲/۰ ± ۰۰۸/۰           | ۰۱۸/۰-            | ۰/۲%-      |
+| عدالت جین    | ۹۲۳/۰ ± ۰۰۸/۰           | ۹۰۷/۰ ± ۰۰۹/۰           | ۰۱۶/۰-            | ۷/۱%-      |
+| نرخ خاموشی   | ۵/۱۴% ± ۴/۱%            | ۷/۱۵% ± ۱/۱%            | ۲/۱+ واحد درصد    | ۳/۸%+      |
+| ضریب جینی    | ۰۷۹۰/۰ ± ۰۰۶۷/۰         | ۰۹۶۲/۰ ± ۰۰۷۹/۰         | ۰۱۷۲/۰+           | ۲۲%+       |
+| هدررفت انرژی | ۳۴/۴ ± ۵۵/۰ کیلووات‌ساعت | ۷۰/۴ ± ۲۷/۰ کیلووات‌ساعت | ۳۶/۰+ کیلووات‌ساعت | ۳/۸%+      |
+
+آسایش جامعه در سناریوی اثر نوآور (۹۰۲/۰ ± ۰۰۸/۰) کمتر از سناریوی مختلط (۹۲۰/۰ ± ۰۰۷/۰) بود که کاهش ۰/۲ درصدی را نشان می‌دهد. شاخص عدالت جین از ۹۲۳/۰ ± ۰۰۸/۰ به ۹۰۷/۰ ± ۰۰۹/۰ کاهش یافت (کاهش ۷/۱ درصدی). نرخ خاموشی از ۵/۱۴% ± ۴/۱% به ۷/۱۵% ± ۱/۱% افزایش یافت (افزایش ۳/۸ درصدی). ضریب جینی از ۰۷۹۰/۰ ± ۰۰۶۷/۰ به ۰۹۶۲/۰ ± ۰۰۷۹/۰ افزایش یافت (افزایش ۲۲ درصدی). هدررفت انرژی از ۳۴/۴ ± ۵۵/۰ کیلووات‌ساعت به ۷۰/۴ ± ۲۷/۰ کیلووات‌ساعت افزایش یافت (افزایش ۳/۸ درصدی). هر چهار سنجه در یک جهت حرکت کردند — آسایش و عدالت پایین‌تر، نابرابری و هدررفت بالاتر — که نشان‌دهنده‌ی تخریب مداوم پیامدهای جامعه است.
+
+آزمون t مستقل برای آسایش جامعه بین دو سناریو معنی‌دار بود (t(8) = -3.562, p = 0.0074, d کوهن = 2.25). ضریب جینی بالاتر اثر نوآور در ۴ تصادف‌سازی از ۵ تصادف‌سازی از کران بالای فاصله‌ی اطمینان ۹۵ درصد سناریوی مختلط فراتر رفت.
+
+فراوانی اشتراک عامل نوآور در هنگام همگرایی (۳۳/۱۳% ± ۹۰/۲%) تفاوت قابل‌توجهی با گروه نوع‌گرا در سناریوی مختلط (۹۲/۱۳% ± ۰۰/۲%) نداشت. کف اکتشاف بالاتر عامل نوآور به نرخ اشتراک تجمعی بالاتری تبدیل نشد. این جدایی بین نرخ اکتشاف و تمایل اشتراک نشان می‌دهد که تخریب سطح جامعه‌ی اثر نوآور نه به‌دلیل اشتراک بیشتر یا کمتر عامل نوآور نسبت به سایر عامل‌ها، بل‌که به‌دلیل غیرقابل‌پیش‌بینی بودن آن در محیط یادگیری همسایگان است. همان‌طور که در شکل ۴-۹ به‌صورت شماتیک نشان داده شده است، مکانیسم اثر نوآور در بی‌ثبات‌سازی یادگیری همسایگان نهفته است، نه در کاهش اشتراک خود عامل.
+
+![مکانیسم اثر نوآور](../results/figures/v08_innovator_effect.png)
+
+**شکل (۴-۹):** مکانیسم اثر نوآور: بی‌ثبات‌سازی تعادل همکاری‌گونه
+
+## ۴-۱۰- اقتباس از اصول الگوریتمی پژوهش‌های مرتبط
+
+برای مقایسه‌ی روش‌محور و کنترل‌شده با وضعیتِ برترِ دانش، چهار رویکرد مقایسه‌ای کلیدی (چاربونیه، کوساتا‌که، به‌رونانی، می و هوانگ) به‌همراه هر پنج سناریوی OCEAN‑MARL این مطالعه و یک خط پایه‌ی کنترل بدون یادگیری (همیشه عدم اشتراک‌گذاری) در محیطِ کاملاً یکسانِ این مطالعه (۱۰ خانه، پیک خورشیدی ۳/۱ کیلووات، باتری ۰/۷ کیلووات‌ساعت، احتمال ابری ۱۵٪) با ۵ تصادف‌سازی بازتولید و اجرا شدند.
+
+### ۴-۱۰-۱- روش‌شناسی بازتولید روش‌های مقایسه‌ای
+
+برخلاف رویه‌ی رایج در برخی پژوهش‌های مشابه که مقادیر گزارش‌شده در نشریات اصلی را مستقیماً به‌عنوان مبنای مقایسه به‌کار می‌برند، این مطالعه مکانیزم اصلی هر روش مقایسه‌ای را در محیط شبیه‌سازی یکسان با OCEAN‑MARL پیاده‌سازی و اجرا کرد تا مقایسه‌ی آماری معتبری می‌ان روش‌ها امکان‌پذیر باشد. جدول ۴-۹ مشخصات پیاده‌سازی هر روش، سازگاری‌های لازم نسبت به مقاله‌ی اصلی و ابرپارامترهای استفاده‌شده را خلاصه می‌کند.
+
+**جدول (۴-۹): مشخصات بازتولید هر روش مقایسه‌ای**
+
+| روش                       | سازوکار اصلی پیاده‌سازی‌شده                                                        | سازگاری نسبت به مقاله‌ی اصلی                                                                                                                                                                                                               | ابرپارامترهای کلیدی                                                                            |
+| :------------------------ | :------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------- |
+| چاربونیه و همکاران (۲۰۲۲) | یادگیری کیوی مستقل با پاداش حاشیه‌ای (کانترفکتوال) و به‌روزرسانی هیسترتیک نامتقارن | پاداش حاشیه‌ای به‌صورت کانترفکتوال پایان‌روز محاسبه شد (نه هم‌ساعت)، زیرا نسخه‌ی هم‌ساعت در این محیط سیگنال صفر تولید می‌کرد؛ فضای حالت/اقدام با OCEAN‑MARL یکسان نگه داشته شد                                                                   | α=۰۱/۰، β (کاهش هیسترتیک)=۵/۰، γ=۹۹/۰، ε₀=۵/۰ با کاهش ۹۹۹/۰                                    |
+| کوساتا‌که و همکاران (۲۰۲۳) | بهینه‌سازی چندهدفه‌ی تکاملی (NSGA‑II) روی دوگانه‌ی کارایی–عدالت، بدون حلقه‌ی یادگیری | هر روز به‌صورت مستقل با NSGA‑II حل شد (۶۰ جمعیت، ۴۰ نسل)؛ به‌جای ۸۰۰۰ قسمت آموزشی، ۵۰۰ روز مستقل در هر تصادف‌سازی اجرا شد                                                                                                                    | جمعیت=۶۰، نسل=۴۰، انتخاب راه‌حل نهایی با معیار F1−F2                                            |
+| به‌رونانی و همکاران (۲۰۲۳) | جست‌وجوی تعادل نش تعمیم‌یافته (GNE) با بهترین‌پاسخ گرادیانی تصویرشده تحت قید عدالت  | سطح بالای بازی استکلبرگ (تعیین قیمت شب‌که) به دلیل نبود سازوکار قیمت‌گذاری در محیط حذف شد؛ معیار «کاهش هزینه» با واحد انرژی (کیلووات‌ساعت هدررفته+تأمین‌نشده) جایگزین آسایش شد، زیرا آسایش نسبت به تصمیم اهداکننده در این محیط بدون تغییر است | λ (وزن قید عدالت)=۰/۱ (تحلیل حساسیت با λ=۵ نیز انجام شد)، η (نرخ گرادیان)=۱/۰، حداکثر ۵۰ تکرار |
+| می و هوانگ (۲۰۲۳)         | بهینه‌سازی سیاست نزدیک‌شونده (PPO) مستقل با شب‌که‌ی بازیگر-منتقد کوچک                | سطح برنامه‌ریز قیمت (لایه‌ی دوم مقاله‌ی اصلی) به دلیل نبود سازوکار قیمت حذف شد؛ فقط سطح عامل با فضای اقدام گسسته‌ی یکسان با OCEAN‑MARL پیاده‌سازی شد                                                                                           | نرخ یادگیری=۰۰۰۳/۰، γ=۹۹۸/۰، GAE λ=۹۸/۰، اندازه‌ی دسته=۲۵۶                                      |
+
+هر چهار روش پیش از اجرای کامل، با یک آزمون صحت‌سنجی کوتاه (اجرای کوتاه‌مدت به‌همراه بررسی همگرایی، نسبت سیاست حریصانه به سناریوی مبنا و توزیع اقدام) اعتبارسنجی شدند تا از رفتار غیرمنحط (مانند فروپاشی به سیاست پیش‌فرض یا سیگنال پاداش صفر) اطمینان حاصل شود. جزئیات کامل این آزمون‌ها، شامل مواردی که در تلاش نخست به مشکل برخوردند و پس از اصلاح (مانند تغییر افق زمانی پاداش چاربونیه از هم‌ساعت به پایان‌روز، و تغییر سنجه‌ی سود به‌رونانی از آسایش به واحد انرژی) اصلاح شدند، در پرونده‌های گزارش صحت‌سنجی ضمیمه (`results/baseline_*_validation/`, `results/baseline_*_sanity/`) مستند شده‌اند. این رویکرد—مستندسازی صریح خطاهای اولیه‌ی پیاده‌سازی و اصلاح آن‌ها به‌جای پنهان‌کردن آن‌ها—سازگار با استانداردهای گزارش‌دهی شفاف در پژوهش‌های محاسباتی است. همان‌طور که در شکل‌های ۴-۱۰ تا ۴-۱۳ دیده می‌شود، نمودارهای زیر روند صحت‌سنجی هر روش را نشان می‌دهند.
+
+![منحنی صحت‌سنجی بازتولید چاربونیه (پاداش حاشیه‌ای پایان‌روز)](../results/baseline_charbonnier_validation/results_plot.png)
+
+**شکل (۴-۱۰):** صحت‌سنجی بازتولید روش چاربونیه (پاداش حاشیه‌ای پایان‌روز)
+
+![بررسی زمان‌بندی و همگرایی بازتولید کوساتا‌که (بهینه‌سازی تکاملی NSGA-II)](../results/baseline_kusatake_timing/results_plot.png)
+
+**شکل (۴-۱۱):** بررسی زمان‌بندی و همگرایی بازتولید روش کوساتا‌که (بهینه‌سازی تکاملی)
+
+![صحت‌سنجی بازتولید به‌رونانی (جست‌وجوی تعادل نش تعمیم‌یافته)](../results/baseline_behrunani_sanity/results_plot.png)
+
+**شکل (۴-۱۲):** صحت‌سنجی بازتولید روش به‌رونانی (جست‌وجوی تعادل نش تعمیم‌یافته)
+
+![صحت‌سنجی بازتولید می و هوانگ (بهینه‌سازی سیاست نزدیک‌شونده)](../results/baseline_may_huang_sanity/results_plot.png)
+
+**شکل (۴-۱۳):** صحت‌سنجی بازتولید روش می و هوانگ (بهینه‌سازی سیاست نزدیک‌شونده)
+
+برای دو روش، تحلیل حساسیت اضافی نسبت به یک تصمیم طراحی انجام شد. برای بازتولید به‌رونانی، وزن قید عدالت λ=۵ (در برابر مقدار مبنای λ=۱) در ۵ تصادف‌سازی کامل بررسی شد و نتیجه‌ای پایین‌تر و پرنوسان‌تر به‌دست داد (F = ۸۳۲۴/۱ ± ۰۶۴۸/۰ در برابر ۸۳۸۶/۱ ± ۰۱۶۴/۰ برای λ=۱، با انحراف معیار حدود چهار برابر)؛ این یافته انتخاب λ=۱ به‌عنوان مقدار مبنا را تأیید می‌کند و نشان می‌دهد افزایش وزن قید عدالت در این محیط، به‌جای بهبود، صرفاً واریانس را افزایش می‌دهد. برای بازتولید می و هوانگ، نسخه‌ی تقویت‌شده با جریمه‌ی هدررفت (به‌جای ۸۰۰۰ قسمت آموزشی، با ۳۰۰۰ قسمت به دلیل محدودیت منابع محاسباتی) نتیجه‌ای عملاً بدون تغییر تولید کرد (F = ۷۹۸۵/۱ ± ۰۱۳۰/۰ در برابر ۸۱۴۳/۱ ± ۰۱۷۳/۰ برای نسخه‌ی اصلی PPO)؛ ازآنجا‌که این مقایسه در افق زمانی آموزشی کوتاه‌تری انجام شد، تفاوت آن با نسخه‌ی اصلی را نمی‌توان به‌طور قطعی به وجود یا عدم وجود سیگنال هدررفت نسبت داد، اما دست‌کم نشان می‌دهد افزودن این سیگنال به‌تنهایی کاستیِ ساختاریِ این روش را برطرف نمی‌کند.
+
+جدول ۴-۱۰ نتایج این بازتولیدِ کنترل‌شده را گزارش می‌کند.
+
+**جدول (۴-۱۰): نتایج بازتولیدِ کنترل‌شده‌ی روش‌های مقایسه‌ای در محیط یکسان این مطالعه (می‌انگین ± انحراف معیار در ۵ تصادف‌سازی)**
+
+| سناریو / روش                                  | آسایش           | عدالت جین       | آسایش + عدالت (F) | نرخ قطعی (%) | اتلاف (kWh) |
+| :-------------------------------------------- | :-------------- | :-------------- | :---------------- | :----------- | :---------- |
+| OCEAN‑MARL همگی خودخواه                       | ۹۱۹۵/۰ ± ۰۰۹۸/۰ | ۹۲۲۵/۰ ± ۰۰۹۷/۰ | ۸۴۲۰/۱ ± ۰۱۹۵/۰   | ۵/۱۴ ± ۴/۱   | ۹۸/۴ ± ۵۰/۰ |
+| OCEAN‑MARL همگی نوع‌گرا                        | ۹۱۳۹/۰ ± ۰۱۱۲/۰ | ۹۱۷۶/۰ ± ۰۱۰۷/۰ | ۸۳۱۵/۱ ± ۰۲۱۹/۰   | ۵/۱۴ ± ۴/۱   | ۴۱/۴ ± ۷۴/۰ |
+| OCEAN‑MARL مختلط                              | ۹۱۹۸/۰ ± ۰۰۷۵/۰ | ۹۲۳۴/۰ ± ۰۰۷۷/۰ | ۸۴۳۲/۱ ± ۰۱۵۰/۰   | ۵/۱۴ ± ۴/۱   | ۳۴/۴ ± ۵۵/۰ |
+| OCEAN‑MARL نوع‌گرایی متنوع                     | ۹۱۴۰/۰ ± ۰۰۶۸/۰ | ۹۱۸۵/۰ ± ۰۰۶۱/۰ | ۸۳۲۵/۱ ± ۰۱۲۸/۰   | ۵/۱۴ ± ۴/۱   | ۹۶/۴ ± ۵۴/۰ |
+| OCEAN‑MARL اثر نوآور                          | ۹۰۱۸/۰ ± ۰۰۸۵/۰ | ۹۰۶۹/۰ ± ۰۰۹۴/۰ | ۸۰۸۸/۱ ± ۰۱۷۸/۰   | ۷/۱۵ ± ۱/۱   | ۷۰/۴ ± ۲۷/۰ |
+| Charbonnier et al. (بازتولید)                 | ۹۴۰۱/۰ ± ۰۰۶۶/۰ | ۹۴۳۳/۰ ± ۰۰۷۶/۰ | ۸۸۳۴/۱ ± ۰۱۴۱/۰   | ۵/۱۴ ± ۷/۰   | ۰۲/۴ ± ۴۱/۰ |
+| Kusatake et al. (بازتولید)                    | ۹۳۸۷/۰ ± ۰۰۶۴/۰ | ۹۴۳۳/۰ ± ۰۰۶۲/۰ | ۸۸۲۰/۱ ± ۰۱۲۵/۰   | ۶/۱۵ ± ۶/۱   | ۲۲/۴ ± ۱۰/۰ |
+| Behrunani et al. (بازتولید)                   | ۹۱۷۱/۰ ± ۰۰۸۴/۰ | ۹۲۱۵/۰ ± ۰۰۸۰/۰ | ۸۳۸۶/۱ ± ۰۱۶۴/۰   | ۶/۱۵ ± ۶/۱   | ۰۰/۰ ± ۰۰/۰ |
+| May & Huang (بازتولید)                        | ۹۰۵۸/۰ ± ۰۰۸۹/۰ | ۹۰۸۵/۰ ± ۰۰۸۴/۰ | ۸۱۴۳/۱ ± ۰۱۷۳/۰   | ۳/۱۷ ± ۳/۳   | ۶۶/۴ ± ۴۳/۰ |
+| خط پایه‌ی کنترل: always_default (بدون یادگیری) | ۹۲۴۹/۰ ± ۰۰۵۱/۰ | ۹۲۴۹/۰ ± ۰۰۵۱/۰ | ۸۴۹۸/۱ ± ۰۱۰۳/۰   | ۰/۱۵ ± ۰/۱   | ۸۲/۸ ± ۱۱/۰ |
+
+تمام ردیف‌ها در محیط یکسان (۱۰ خانه، پیک ۳/۱ کیلووات، باتری ۰/۷ کیلووات‌ساعت، احتمال ابری ۱۵٪) با ۵ تصادف‌سازی به‌دست آمده‌اند. ستون F مجموع آسایش و عدالت جین است و مبنای آزمون‌های آماری این بخش را تشکیل می‌دهد.
+
+نتایج بازتولیدِ کنترل‌شده، تصویری متفاوت از برآوردهای صرفاً متنی ارائه می‌دهند. بهترین عملکرد در محیط یکسان متعلق به بازتولید چاربونیه (آسایش ۹۴۰۱/۰، عدالت ۹۴۳۳/۰، F = ۸۸۳۴/۱) و کوساتا‌که (آسایش ۹۳۸۷/۰، عدالت ۹۴۳۳/۰، F = ۸۸۲۰/۱) است که هر دو به‌طور معنی‌دار از سناریوی مختلط بهتر عمل کردند (چاربونیه در برابر مختلط: t = 4.357+، p = 0.0121؛ کوساتا‌که در برابر مختلط: t = 7.107+، p = 0.0021). تحلیل واریانس یک‌طرفه روی شاخص F در ۱۰ گروه، تفاوت بین‌گروهی معنی‌داری را تأیید کرد (F = 11.706، p < 0.001). در مقابل، سناریوی مختلط (F = ۸۴۳۲/۱)، همگی خودخواه (F = ۸۴۲۰/۱) و خط پایه‌ی کنترل (F = ۸۴۹۸/۱) از نظر آماری قابل‌تشخیص نبودند (مختلط در برابر کنترل: t = 0.635‑، p = 0.5601؛ مختلط در برابر همگی خودخواه: t = 0.194‑، p = 0.8559). تفاوت اصلی می‌ان این سه، در اتلاف انرژی است: خط پایه‌ی کنترل که هرگز اشتراک نمی‌گذارد، اتلافی بیشتر از هر روش یادگیری‌محور تولید می‌کند (۸۲/۸ در برابر ۰۲/۴ تا ۹۸/۴ کیلووات‌ساعت در روز؛ یعنی از ۸/۱ تا ۲/۲ برابر).
+
+عامل‌های نوع‌گرا در سناریوی مختلط به ۹/۲ واحد درصد آسایش بالاتر نسبت به همسایگان خودخواه دست یافتند، یک مقایسه‌ی درون‌سناریویی که در مطالعات مقایسه در دسترس نیست و همگی فقط سنجه‌های تجمعی سطح جامعه را گزارش می‌کنند. مطالعات مقایسه همچنین از الگوریتم‌های مختلفی استفاده کردند: یادگیری کیو مستقل (Charbonnier et al., 2022)، بهینه‌سازی سیاست نزدیک‌شونده (May & Huang, 2023)، بهینه‌سازی تکاملی (Kusatake et al., 2023) و شب‌که‌های عصبی گراف (Aloor et al., 2024)، درحالی‌که این مطالعه از یادگیری کیو مستقل استفاده کرد. مقایسه‌ی عددی مستقیم به دلیل عدم وجود انحرافات معیار گزارش‌شده در برخی مطالعات و تفاوت‌ها در تعداد خانه‌های شبیه‌سازی‌شده، مدل‌های تصادفی‌سازی آب‌وهوا و ظرفیت‌های باتری محدود است. مطالعه‌ی حاضر از ۱۰ خانه با باتری‌های ۰/۷ کیلووات‌ساعت و آب‌وهوای برنولی با احتمال ابری ۱۵٪ استفاده کرد؛ می و هوانگ (۲۰۲۳) از ۵۰ خانوار با ظرفیت‌های ناهمگن باتری (هر یک معادل ۲۵٪ نرخ بیشینه‌ی شارژ/دشارژ ظرفیت خود، بدون یک مقدار واحد) و داده‌های آب‌وهوای سوئد (لودویکا، دالارنا) استفاده کردند؛ کوساتا‌که و همکاران (۲۰۲۳) از ۱۰ تولیدکننده-مصرف‌کننده استفاده کردند (ظرفیت باتری در منبع مشخص نشده است)؛ به‌رونانی و همکاران (۲۰۲۳) از سه هاب انرژی (در مقیاس صنعتی/متوسط/مسکونی، نه سطح خانوار) استفاده کردند که بزرگ‌ترین هاب آن باتری ۷۵۰ کیلووات‌ساعتی دارد؛ مقیاسی که با سه روش بازتولیدشده‌ی دیگر تفاوت بنیادی دارد. همین تفاوت‌های محیطی، مقایسه‌ی مستقیم مقادیر گزارش‌شده در نشریات را ناممکن می‌سازد؛ بنابراین جدول ۴-۱۱ مقادیر گزارش‌شده در نشریات اصلی را تنها به‌عنوان اطلاعات زمینه‌ای ارائه می‌کند و مبنای مقایسه‌ی این مطالعه، بازتولیدِ کنترل‌شده‌ی جدول ۴-۱۰ است. در آن بازتولید، سناریوی مختلط نه بالاترین عملکرد را دارد و نه پایین‌ترین؛ عملکرد آن از بازتولید چاربونیه و کوساتا‌که پایین‌تر و از بازتولید می و هوانگ و اثر نوآور بالاتر است و از نظر آماری با خط پایه‌ی کنترل تفاوت معنی‌دار ندارد. مقادیر گزارش‌شده در نشریات باید با توجه به این شرایط آزمایشی متفاوت، به‌عنوان نشان‌دهنده تفسیر شوند، نه مستقیماً قابل مقایسه.
+
+دو یافته‌ی مکانیزمی اضافی از بازتولیدهای کنترل‌شده حاصل شد که در تفسیر جدول ۴-۱۰ اهمیت دارند. نخست، عملکرد بازتولید کوساتا‌که (بهینه‌سازی چندهدفه‌ی تکاملی) در ۴۱۱ روز از ۵۰۰ روز شبیه‌سازی‌شده (٪۸۲ روزهای آفتابی) به دلیل اشباع سنجه‌های آسایش و عدالت (هر دو برابر ۱/۰) عملاً یک انتخاب دلبخواه از می‌ان جبهه‌ی پارتو است، نه یک بهینه‌سازی معنادار؛ تنها در ۸۹ روز ابری از ۵۰۰ روز (٪۱۸)، الگوریتم واقعاً بین خط‌مشی‌های اشتراک تمایز قائل می‌شود (آسایش ۶۰۷/۰ در برابر ۵۰۰/۰ برای عدم اشتراک، بهبود ۲۱٪+). بنابراین مقدار پوشش‌داده‌شده در جدول ۴-۱۰ برای این روش، عمدتاً می‌انگین یک سازوکار غیرحساس به سیاست است. دوم، هدررفت انرژی صفرِ گزارش‌شده برای بازتولید به‌رونانی (نظریه‌بازی) پیامد مستقیم سازوکار آن است: هر عامل به‌صورت می‌وپیک (کوته‌نگر) در سطح هر ساعت، هدررفت خود را کمینه می‌کند، اما این امر به قیمت آسایش جامعه‌ی نسبتاً پایین تمام می‌شود (۹۱۷۱/۰ — دومین پایین‌ترین در می‌ان چهار روش بازتولیدشده، پس از می و هوانگ با ۹۰۵۸/۰)، زیرا بازی تک‌ساعته فاقد هماهنگی می‌ان‌ساعتی باتری است که روش‌های یادگیرنده (چاربونیه، OCEAN‑MARL) از آن بهره می‌برند.
+
+**جدول (۴-۱۱): مقادیر گزارش‌شده در نشریات اصلی (اطلاعات زمینه‌ای؛ شرایط آزمایشی با محیط این مطالعه متفاوت است)**
+
+| مطالعه                    | روش                     | سازوکار عدالت        | آسایش جامعه | شاخص عدالت جین |
+| :------------------------ | :---------------------- | :------------------- | :---------- | :------------- |
+| Charbonnier et al. (2022) | یادگیری کیو مستقل (IQL) | هیچ (صرفاً کارایی)    | —           | —              |
+| May & Huang (2023)        | MARL (PPO)              | محدودیت برابری درآمد | —           | —              |
+| Kusatake et al. (2023)    | بهینه‌سازی تکاملی        | هدف عدالت سود        | —           | —              |
+| Behrunani et al. (2023)   | بازی GNE غیرمتمرکز      | واریانس کاهش هزینه   | —           | —              |
+
+† _این پژوهش‌ها به‌جای سنجه‌های آسایش و عدالت جین، نتایج خود را به‌ترتیب در واحدهای پوند بر ساعت (صرفه‌جویی)، ین ژاپن (سود)، کرون سوئد (زیان خالص) و درصد کاهش هزینه گزارش کرده‌اند. مقادیر عددی قابل مقایسه مستقیم با این مطالعه وجود ندارد._
+
+_توضیح: مطالعه‌ی Aloor et al. (2024) که پیش‌تر در این جدول به‌عنوان یک مطالعه‌ی مقایسه‌ای انرژی گنجانده شده بود، از این جدول حذف شد؛ زیرا موضوع اصلی آن ناوبری چندعاملی رباتیک/حمل‌ونقل است (سنجه‌ی عدالت: ضریب تغییرات مسافت طی‌شده)، نه اشتراک انرژی، و مقادیر پیشین نسبت‌داده‌شده به آن در این بافت قابل استناد نبودند. این مطالعه در بخش ۲ به‌عنوان مرجع نظری مرتبط با سنجه‌های عدالت در MARL حفظ شده است، اما از مقایسه‌ی کمّی سطح انرژی خارج شده است._
+
+تمایز دیگر به غیرمتمرکز بودن کامل رویکرد حاضر بازمی‌گردد. مطالعه‌ی حاضر از یادگیری کیو مستقل بدون اشتراک‌گذاری پارامتر یا اطلاعات وضعیت استفاده کرد و آسایش جامعه‌ی ۹۲۰/۰ سناریوی مختلط را به‌عنوان یک پیامد کاملاً غیرمتمرکز ارائه داد. در بین مطالعات مقایسه، بازتولید شاربونیه و همکاران (۲۰۲۲) از نظر سازوکار هماهنگی به این مطالعه نزدیک‌ترین است: آن نیز مانند رویکرد حاضر از یادگیری کیو مستقل با جدول‌های Q با اندازه‌ی ثابت استفاده می‌کند که حریم خصوصی را با به اشتراک نگذاشتن داده‌های شخصی حفظ می‌کند. بااین‌حال، نتایج آن در منبع اصلی به‌صورت صرفه‌جویی پولی (پوند بر ساعت) گزارش شده‌اند، نه به‌صورت سنجه‌ی آسایش؛ بنابراین عدد آسایشی در منبع اصلی برای مقایسه‌ی مستقیم با آسایش ۹۲۰/۰ این مطالعه گزارش نشده است و مبنای مقایسه‌ی عددی، بازتولیدِ کنترل‌شده‌ی جدول ۴-۱۰ است. همان‌طور که در شکل ۴-۱۴ دیده می‌شود، مقایسه‌ی عملکرد روش‌ها باید در چارچوب تفاوت‌های محیطی تفسیر شود.
+
+![مقایسه با آخرین دستاوردهای علمی](../results/figures/v10_sota_comparison.png)
+
+**شکل (۴-۱۴):** مقایسه عملکرد روش‌های مختلف با آخرین دستاوردهای علمی: می‌انگین آسایش جامعه و شاخص عدالت جین برای پنج سناریوی OCEAN-MARL این پژوهش و روش‌های مقایسه‌ای (نوارها = می‌انگین ± انحراف معیار در ۵ تصادف‌سازی). چهار روش مقایسه‌ای (Charbonnier و همکاران، Kusatake و همکاران، Behrunani و همکاران، May و Huang) به‌همراه کنترل عدم اشتراک در محیط یکسان این پژوهش بازتولید شده‌اند؛ مقادیر نمایش‌داده‌شده نتایج واقعی بازتولید کنترل‌شده (جدول ۴-۱۰) است، نه مقادیر تخمین‌زده‌شده از نشریات اصلی.
+
+## ۴-۱۱- تحلیل علّی تفاوت عملکرد روش‌های مقایسه‌شده
+
+برای شناسایی علت تفاوت عملکرد روش‌های مقایسه‌شده نسبت به سناریوی مبنا (عدم اشتراک‌گذاری)، یک بررسی کنترل‌شده دوعاملی طراحی شد که در آن دو متغیر به‌طور مستقل تغییر داده شدند: (الف) نوع تابع هدف (اجتماعی/بدون نقش در برابر وزن‌دهی‌شده بر اساس شخصیت) و (ب) افق زمانی پاداش (لحظه‌ای در برابر پایان‌روز/کانترفکتوال). نتایج در جدول ۴-۱۲ خلاصه شده‌اند.
+
+**جدول (۴-۱۲): تحلیل دوعاملیِ کنترل‌شده (نوع تابع هدف × افق زمانی پاداش) روی شاخص F**
+
+ستون F مقدار ارزیابی در فاز آموزش (می‌انگین ۱۰۰۰ قسمت پایانی) را گزارش می‌کند؛ ستون «F (حریصانه)» ارزیابی قطعی خط‌مشی پس از آموزش (بدون اکتشاف، ε→۰) است. ستون «بهبود نسبت به سناریوی مبنا» به‌صورت F حریصانه − F حریصانه‌ی کنترل (۸۸۵۰/۱) محاسبه می‌شود و بنابراین مستقیماً از ستون حریصانه قابل‌اشتقاق است. F حریصانه‌ی سلول A — سناریوی مرجع که مقادیرش پیش‌تر در جدول ۴-۱۰ گزارش شده — محاسبه نشده است (—).
+
+| سلول   | تابع هدف           | افق زمانی پاداش        | قاعده‌ی یادگیری Q  | F      | F (حریصانه) | بهبود نسبت به سناریوی مبنا |
+| :----- | :----------------- | :--------------------- | :---------------- | :----- | :---------- | :------------------------- |
+| A      | شخصیت‌محور          | لحظه‌ای (سناریوی اصلی)  | متقارن            | ۸۴۵۳/۱ | —           | —                          |
+| B      | شخصیت‌محور          | پایان‌روز / کانترفکتوال | متقارن            | ۸۳۶۱/۱ | ۸۸۵۰/۱      | ۰۰۰۰/۰+                    |
+| C      | اجتماعی (چاربونیه) | پایان‌روز / کانترفکتوال | هیسترتیک نامتقارن | ۸۷۱۴/۱ | ۹۰۵۷/۱      | ۰۲۰۷/۰+                    |
+| D / D2 | اجتماعی            | پایان‌روز / کانترفکتوال | متقارن            | ۸۳۵۹/۱ | ۸۸۵۰/۱      | ۰۰۰۰/۰+                    |
+
+نتایج نشان می‌دهند که نه نوع تابع هدف (شخصیت‌محور در برابر اجتماعی) و نه افق زمانی پاداش، به‌تنهایی علت عملکرد ضعیف‌تر OCEAN-MARL نسبت به سناریوی مبنا نیستند؛ زیرا حتی با جایگزینی تابع هدف اجتماعی چاربونیه (سلول D2)، همچنان قاعده یادگیری Q مورد استفاده در OCEAN-MARL (مقداردهی اولیه خوش‌بینانه با به‌روزرسانی متقارن) به تراز سناریوی مبنا همگرا می‌شود (بهبود = 0.0000+). در مقابل، الگوریتم چاربونیه با نرخ یادگیری نامتقارن و پایین (هیسترتیک) با همان تابع هدف و افق زمانی، به بهبود معنادار (+۰.۰۲۰۷) دست می‌یابد. این یافته عامل علّی را به‌طور دقیق به قاعده به‌روزرسانی یادگیری محدود می‌کند: مقداردهی اولیه خوش‌بینانه (Q≈۱.۰) در ترکیب با به‌روزرسانی متقارن، در شرایطی که سیگنال پاداش نزدیک به صفر است، منجر به عدم شکسته‌شدن تساوی بین کنش‌ها می‌شود و سیاست حریصانه نهایی عملاً معادل کنش پیش‌فرض (عدم اشتراک‌گذاری) باقی می‌ماند.
+
+این یافته به‌جای آن‌که ضعفی در طراحی OCEAN-MARL باشد، بینشی روش‌شناختی ارائه می‌دهد: در محیط‌های با ظرفیت باتری نسبتاً بالا که سیگنال پاداش لحظه‌ای کم‌دامنه است، انتخاب قاعده به‌روزرسانی یادگیری (نه صرفاً طراحی تابع پاداش) عاملی تعیین‌کننده در ظهور رفتار اشتراک‌گذاری است.
+
+## ۴-۱۲- تحلیل کلی بی‌طرفانه
+
+نتایج آزمایشی تصویر مختلطی را ارائه می‌دهند که شایسته‌ی ارزیابی صادقانه است. چندین یافته با انتظارات نظری هم‌راستا بودند، درحالی‌که برخی دیگر از پیش‌بینی‌های اولیه منحرف شدند یا به معنی‌داری آماری نرسیدند. این بخش، ارزیابی متعادلی از آنچه روش به دست آورد، جایی که کوتاهی کرد و چرا، ارائه می‌دهد.
+
+یک نقطه‌ی قوت روش‌شناختی اصلی مطالعه، پیاده‌سازی موفق ناهمگنی عامل زمین‌گذاری‌شده‌ی روان‌شناختی در یک چارچوب یادگیری کاملاً غیرمتمرکز است. نگاشت OCEAN‑به‑یادگیری‌تقویتی پیامدهای فردی قابل‌اندازه‌گیری متمایزی تولید کرد: عامل‌های نوع‌گرا در جوامع مختلط به ۹/۲ واحد درصد آسایش بالاتر نسبت به همسایگان خودخواه دست یافتند (p = 0.0011) و این مزیت از نظر جهت‌گیری در همهٔ ۱۵ ترکیب تصادف‌سازی-کمبود سازگار بود. توپولوژی حلقوی به‌طور مؤثر پویایی‌های اشتراک را از مخدوش‌کننده‌های مسیریابی جدا کرد و پروتکل همگرایی — تأیید تغییرات مقدار Q زیر ۰۱/۰ تا قسمت ۶۰۰۰ — ثابت کرد که سنجه‌های گزارش‌شده منعکس‌کننده‌ی خط‌مشی‌های پایدار هستند، نه نویز اکتشاف جاری. این انتخاب‌های طراحی به‌طور جمعی، اعتبار درونی ادعای علی مبنی بر این‌که ترکیب شخصیتی پیامدهای نوظهور جامعه را شکل می‌دهد، تقویت می‌کنند.
+
+بااین‌حال، نتایج سطح جامعه کمتر از مقایسه‌های فردی درون‌سناریویی قاطع بودند. عدم وجود تفاوت معنی‌دار آماری در آسایش جامعه بین سناریوهای همگی خودخواه و همگی نوع‌گرا (p = 0.423) و کاهش هدررفت انرژی جهت‌داری اما معنی‌دار نشده‌ی ۹/۱۲٪ در سناریوی مختلط نسبت به حالت پایه (p = 0.14) نشان می‌دهد که محدودیت‌های ساختاری محیط، کل دستاوردهای رفاهی قابل‌دستیابی از طریق طراحی پاداش عدالت‌آگاه را به‌تنهایی محدود می‌کند. پنجره‌ی مازادِ تنها-در-ظهر به‌این معناست که فرصت‌های اشتراک کم‌یاب هستند؛ همه‌ی انواع عامل تنها در ۱۲–۱۴ درصد از وضعیت‌ها اشتراک می‌گذاشتند و فضای کمی برای آشکار شدن تفاوت‌های شخصیتی در سطح تجمعی باقی می‌گذاشتند. سناریوی نوع‌گرایی متنوع روایت را پیچیده‌تر می‌کند: با داشتن یک عامل نوع‌دوستانه، سه عامل نوع‌گرا، سه فردگرا و سه عامل خودخواه، آسایش جامعه (۹۱۴/۰) و هدررفت (۹۶/۴ کیلووات‌ساعت) تقریباً یکسان با حالت پایه‌ی همگی خودخواه تولید کرد که نشان می‌دهد یک اقلیت نوع‌گرای باریک که توسط اکثریت غیرنوع‌گرای بزرگ‌تری احاطه شده است، تحت شرایط آزمایش‌شده، هنجارهای جامعه را به‌طور قابل‌اطمینانی تغییر نمی‌دهد.
+
+تحلیل حساسیت یک شرط مرزی اضافی را بر مزیت نوع‌گرایانه آشکار کرد. در احتمال ابری ۳۵٪، مزیت آسایش نوع‌گرایانه به‌میزان ۰۵/۳ واحد درصد از نظر جهت‌گیری پایدار ماند اما به معنی‌داری آماری نرسید (p = 0.0703، آزمون t زوجی). در احتمال ابری ۲۵٪، این مزیت (۵۸/۲ واحد درصد) همچنان معنی‌دار بود (p = 0.0025، آزمون t زوجی). این الگو نشان می‌دهد که مزیت واقعی است اما در شرایط کمبود شدید شکننده است، جایی که واریانس افزایش‌یافته در پویایی‌های جامعه، توان آماری را در تعداد تصادف‌سازی‌های فعلی کاهش می‌دهد. یک تحلیل توان پس‌آزمون نشان داد که برای تشخیص تفاوت ۵/۲ واحد درصد با توان ۸۰٪ در احتمال ابری ۳۵٪، تقریباً ۱۸ تصادف‌سازی در هر شرایط موردنیاز است که رقمی بیش از ۵ تصادف‌سازی‌های فعلی است.
+
+اثر نوآور مستحکم‌ترین یافته‌ی آماری و از نظر تئوری شگفت‌انگیز را تولید کرد. یک عامل منفرد با گشودگی بالا، نابرابری جامعه را ۲۲ درصد افزایش داد (t(4) = -2.84, p = 0.047) و آسایش جامعه را ۰/۲ درصد نسبت به سناریوی مختلط که در غیر این صورت یکسان بود، کاهش داد (t(8) = -3.562, p = 0.0074, d کوهن = 2.25). بااین‌حال، فراوانی اشتراک خودِ عامل نوآور (۳۳/۱۳%) تقریباً از گروه نوع‌گرا در سناریوی مختلط (۹۲/۱۳%) قابل‌تشخیص نبود و نشان می‌دهد که آسیب نه از اشتراک کمتر عامل نوآور، بل‌که از ناپایداری که در محیط یادگیری همسایگان ایجاد می‌کند، ناشی می‌شود. این جدایی بین توزیع اقدام خودِ عامل و پیامد خارجی آن در سطح جامعه در فرضیه‌های اصلی پیش‌بینی نشده بود و محدودیتی از استفاده از نرخ اکتشاف به‌عنوان یک جانشین ساده برای تأثیر نوع‌گرایانه یا ضداجتماعی را برجسته می‌کند.
+
+به‌طور خلاصه، قابل‌اطمینان‌ترین مشارکت مطالعه، مزیت درون‌سناریویی نوع‌گرایانه و توصیف اثر نوآور است. متزلزل‌ترین مشارکت آن، ادعای بهبود کارایی سطح جامعه توسط طراحی پاداش عدالت‌آگاه است که همچنان از نظر جهت‌گیری پشتیبانی می‌شود اما در مقیاس آزمایشی فعلی از نظر آماری غیرقطعی باقی می‌ماند. چارچوب با موفقیت نشان می‌دهد که شکل‌دهی پاداش تعدیل‌شده با شخصیت امکان‌پذیر است و تفاوت‌های فردی قابل‌تفسیری تولید می‌کند؛ این‌که آیا تحت طیف وسیع‌تری از شرایط محیطی، پیامدهای سطح جامعه‌ای برتر قابل‌اطمینانی تولید می‌کند یا خیر، پرسشی باز باقی می‌ماند که کارهای آینده با تعداد تصادف‌سازی‌های بیشتر و توپولوژی‌های پیچیده‌تر باید به آن بپردازند.
+
+# فصل پنجم
+
+## نتیجه‌گیری
+
+## ۵-۱- نتیجه‌گیری
+
+### ۵-۱-۱- خلاصه‌ی یافته‌ها
+
+نتایج آزمایشی که از ۲۵ اجرای مستقل شبیه‌سازی (۵ سناریو × ۵ تصادف‌سازی، هر کدام ۸۰۰۰ قسمت) به‌دست آمد، از پنج یافته‌ی اصلی در سطح آسایش جامعه، آسایش فردی، نابرابری، رفتار یادگیری و حساسیت به کمبود پشتیبانی می‌کند.
+
+**یافته‌ی ۱: عامل‌های نوع‌گرا به آسایش فردی بالاتری دست می‌یابند.** در جوامع مختلط، عامل‌های دارای وزن‌های پاداش نوع‌گرا ($w_{\text{self}} = w_{\text{fair}} = 0.5$) به ۹/۲ واحد درصد آسایش بالاتر نسبت به همسایگان خودخواه دست یافتند (p = 0.0011). این مزیت از طریق متقابله‌گری غیرمستقیم نوظهور پدیدار می‌شود: عامل‌های نوع‌گرا در ساعات اوج تولید خورشیدی، مازاد خود را به اشتراک می‌گذارند و سطح باتری همسایگان را تثبیت می‌کنند و از آبشارهای خاموشی که در غیر این صورت کل جامعه را تحت تأثیر قرار می‌دهند، جلوگیری می‌نمایند. عامل نوع‌گرا به‌طور نامتناسبی از این تثبیت سود می‌برد، زیرا هرگز عاملی نیست که آبشار شکست را آغاز کند.
+
+**یافته‌ی ۲: مزیت نوع‌گرایانه در سطوح مختلف کمبود پایدار است.** هنگامی که احتمال ابری از ۱۵٪ (پایه) به ۳۵٪ (کمبود شدید) تغییر داده شد، شکاف مزیت آسایش نوع‌گرایانه در ۵/۲–۰/۳ واحد درصد پایدار ماند. هر دو گروه عامل نوع‌گرا و خودخواه تقریباً ۱۳ درصد از آسایش پایه‌ی خود را در شرایط کمبود از دست دادند، اما شکاف بین آن‌ها کاهش نیافت. این نشان می‌دهد که طراحی پاداش عدالت‌گرا، سودی قابل‌اعتماد و نه مشروط فراهم می‌کند — این مزیت صرفاً یک امتیاز برای شرایط پرمنبع نیست.
+
+**یافته‌ی ۳: عدالت و کارایی در سطح جامعه در تضاد جمع‑صفر نیستند.** سناریوهای همگی خودخواه، همگی نوع‌گرا و مختلط به آسایش جامعه‌ی تقریباً یکسان (~۹۲/۰) و نرخ‌های خاموشی (۵/۱۴%) دست یافتند و هیچ تفاوت معنی‌دار آماری نداشتند (ANOVA F = 3.362, p = 0.0293 که صرفاً توسط اثر نوآور ایجاد شده است). هدررفت انرژی در سناریوی مختلط به‌طور جهت‌دار پایین‌تر بود (کاهش ۹/۱۲% نسبت به همگی خودخواه، p = 0.14)، اگرچه این کاهش به معنی‌داری آماری نرسید. پیامد آن این است که جاسازی عدالت در توابع پاداش، در این محیط هزینه‌ی کارایی به همراه ندارد.
+
+**یافته‌ی ۴: اثر نوآور — رفتار اکتشافی همکاری را بی‌ثبات می‌کند.** یک عامل منفرد با گشودگی بالا ($\varepsilon_{\min} = 0.05$ به‌جای ۰۱/۰) آسایش جامعه را ۲ درصد کاهش داد، نابرابری را ۲۲ درصد افزایش داد و نرخ خاموشی را ۳/۸ درصد نسبت به جامعه‌ی معادل بدون عامل نوآور افزایش داد. سازوکار، غیرقابل‌پیش‌بینی بودن است: اکتشاف ادامه‌دار عامل نوآور مانع از تشکیل انتظارات پایدار درباره‌ی در دسترس‌بودن انرژی توسط سایر عامل‌ها می‌شود و تعادل همکاری‌گونه‌ای را که در جوامع مختلط پدیدار می‌شود، تخریب می‌کند.
+
+**یافته‌ی ۵: رفتار اشتراک به بافت وابسته است.** تحلیل جدول Q نشان داد که همه‌ی انواع عامل تنها در ۱۲–۱۴ درصد از وضعیت‌ها اشتراک می‌گذارند که نشان می‌دهد انگیزه‌ی ساختاری برای اشتراک در این محیط محدود است. بااین‌حال، زمان‌بندی و بافت اشتراک در بین انواع شخصیتی تفاوت قابل‌توجهی دارد — عامل‌های نوع‌دوستانه در یک پنجره‌ی گسترده (۸ صبح تا ۶ بعدازظهر) اشتراک می‌گذارند، درحالی‌که عامل‌های نوع‌گرا اشتراک را به ساعات اوج خورشیدی (۱۰ صبح تا ۴ بعدازظهر) محدود می‌کنند، زمانی که مازاد در غیر این صورت هدر می‌رفت.
+
+#### ۵-۱-۱-۱- تبیین عملکرد پایه: چرا آسایش مطلق جامعه بهبود نیافت؟
+
+نتایج نشان داد که سناریوهای اصلی این پژوهش — شامل همگی خودخواه، همگی نوع‌گرا و مختلط — از نظر آسایش مطلق جامعه تفاوت معنی‌داری با خط پایهٔ «همیشه عدم اشتراک» ندارند (به بخش ۴-۱۱ مراجعه کنید). این یافته، در نگاه اول، با انتظار نظری که طراحی پاداش عدالت‌آگاه باید رفاه جمعی را بهبود بخشد، در تناقض است. بااین‌حال، تحلیل دقیق‌تر داده‌های شبیه‌سازی، چهار عامل ساختاری را آشکار می‌کند که این عملکرد پایه را تبیین می‌کنند.
+
+**نخست، فرصت‌های اشتراک ذاتی در محیط محدود است.** تحلیل فراوانی اشتراک نشان داد که در سناریوی مختلط، مازاد قابل‌صادرات تنها در ۵/۳۷ درصد از گام‌های زمانی در دسترس است. عامل‌ها در ۲/۱۸ درصد از گام‌ها به‌طور واقعی اشتراک می‌گذارند، به‌این معنا که در شرایطی که اشتراک فیزیکی ممکن است، تنها در حدود نیمی از مواقع (۲/۱۸ درصد از ۵/۳۷ درصد) اقدام به اشتراک می‌کنند. این فاصله نشان می‌دهد که حتی با سیاست‌های اشتراک آموخته‌شده، بخش قابل‌توجهی از مازاد بالقوه به‌دلیل محدودیت‌های ساختاری — همچون هم‌راستایی زمانی تولید و تقاضا در سراسر جامعه — هدر می‌رود.
+
+**دوم، جدول‌های Q آموخته‌شده در سناریوهای مختلط و خودخواه تفاوت ناچیزی دارند.** تحلیل توزیع مقادیر Q نشان داد که عامل‌های نوع‌گرا در سناریوی مختلط تنها در ۹/۶ درصد از وضعیت‌ها، سیاستی متفاوت از خط پایهٔ خودخواه دارند. می‌انگین مقادیر Q در سناریوی مختلط (۹۳۴/۳ برای عامل‌های نوع‌گرا و ۸۰۷/۳ برای عامل‌های خودخواه) و خط پایهٔ خودخواه (۸۶۴/۳) عملاً یکسان است. این همگرایی نشان می‌دهد که فضای وضعیت ۹۶ تایی و ساختار پاداش پراکنده، عامل‌ها را به‌سوی سیاست‌های مشابهی سوق می‌دهد، صرف‌نظر از وزن‌های عدالت آن‌ها. وجود تفاوت تنها در ۷ درصد از وضعیت‌ها، تأثیر محدود شکل‌دهی پاداش بر عملکرد تجمعی را توجیه می‌کند.
+
+**سوم، کاهش هدررفت انرژی — اگرچه جهت‌دار و از نظر زیست‌محیطی مطلوب است — به آسایش مطلق جامعه ترجمه نمی‌شود.** تحلیل حساسیت ظرفیت باتری نشان داد که در هر دو ظرفیت ۵/۰ و ۷/۰ کیلووات‌ساعت، کاهش هدررفت انرژی نسبت به خط پایهٔ عدم اشتراک از نظر آماری معنی‌دار است (۰۵/۰ > p در هر دو مورد)، اما افزایش آسایش جامعه در هیچ‌یک از این دو ظرفیت به معنی‌داری آماری نمی‌رسد. به‌عبارت دیگر، هدررفتی که کاهش می‌یابد، عمدتاً مازادی است که در غیاب اشتراک دور ریخته می‌شد، اما این مازاد به‌گونه‌ای توزیع نمی‌شود که کسری‌های بحرانی خانوارها را به‌طور سیستماتیک پوشش دهد. این یافته نشان می‌دهد که کاهش هدررفت و افزایش آسایش، دو هدف متمایز هستند که تحت شرایط آزمایش‌شده، هم‌بستگی کامل ندارند.
+
+**چهارم، همبستگی بین وزن عدالت جامعه و کاهش هدررفت، ضعیف و غیرمعنی‌دار است.** تحلیل همبستگی در سطح تصادف‌سازی نشان داد که ضریب همبستگی پیرسون بین می‌انگین وزن عدالت جامعه ($\bar{w}_{fair}$) و کاهش هدررفت، ۲۸۴/۰ = r با مقدار ۱۷۰/۰ = p است. حتی جامعهٔ کاملاً خودخواه (۰ = $\bar{w}_{fair}$) هدررفت را از ۸۲/۸ کیلووات‌ساعت (خط پایه) به ۹۸/۴ کیلووات‌ساعت کاهش می‌دهد — کاهشی معادل ۴۳ درصد. این نشان می‌دهد که عامل اصلی کاهش هدررفت، وجود هرگونه سازوکار اشتراک (حتی با انگیزهٔ کاملاً خودخواهانه) است، نه شدت دغدغهٔ عدالت عامل‌ها. کاهش هدررفت اضافی که با افزایش وزن عدالت به‌دست می‌آید، در بهترین حالت حاشیه‌ای و از نظر آماری غیرقطعی است.
+
+**نتیجهٔ تحلیلی:** عملکرد پایهٔ آسایش مطلق جامعه، نتیجهٔ محدودیت‌های ساختاری محیط شبیه‌سازی (فرصت‌های محدود اشتراک، فضای وضعیت گسسته، و هم‌راستایی زمانی تولید و تقاضا) است، نه شکست طراحی پاداش. مشارکت اصلی این پژوهش — همان‌طور که در بخش ۵-۱-۱ مستند شد — در بهبود توزیعی آسایش در جوامع مختلط و کاهش جهت‌دار هدررفت انرژی است، نه در افزایش مطلق رفاه جمعی. این تمایز از اهمیت روش‌شناختی برخوردار است: در محیط‌هایی با ظرفیت باتری بالا یا فرصت‌های اشتراک محدود، طراحی پاداش عدالت‌آگاه ممکن است به آسایش مطلق بیشتر منجر نشود، اما همچنان می‌تواند پیامدهای توزیعی عادلانه‌تری تولید کند.
+
+#### ۵-۱-۱-۲- آزمون فرضیه‌های پژوهش
+
+نتایج شبیه‌سازی، چهار فرضیه‌ی پژوهش را به‌شرح زیر مورد آزمون قرار داد:
+
+**فرضیه ۱ (کاهش هدررفت انرژی در جوامع نوع‌گرا):** جوامع با وزن‌های پاداش نوع‌گرا، هدررفت انرژی کمتری نسبت به جوامع کاملاً خودخواه نشان دادند (کاهش ۹/۱۲ درصدی در سناریوی مختلط نسبت به همگی خودخواه)، اما این کاهش از نظر آماری معنی‌دار نبود (۱۴/۰ = p، آزمون t زوجی). بنابراین، فرضیهٔ ۱ به‌طور کامل تأیید نمی‌شود، هرچند جهت کاهش هدررفت در تمام سناریوهای اشتراک‌محور سازگار بود.
+
+**فرضیه ۲ (مزیت آسایش عامل‌های نوع‌گرا):** عامل‌های نوع‌گرا در جوامع مختلط به آسایش بالاتری نسبت به همسایگان خودخواه دست یافتند (۹/۲ واحد درصد، ۰۰۱۱/۰ = p). این مزیت از طریق مکانیسم متقابله‌گری نوظهور پدیدار شد. بنابراین، فرضیهٔ ۲ **تأیید می‌شود**.
+
+**فرضیه ۳ (پایداری مزیت نوع‌گرایانه در شرایط کمبود):** مزیت آسایش نوع‌گرایانه در احتمالات ابری ۲۵٪ (۵۸/۲ واحد درصد، ۰۰۲۵/۰ = p) و ۳۵٪ (۰۵/۳ واحد درصد، ۰۷۰۳/۰ = p) از نظر جهت‌گیری پایدار بود. در احتمال ابری ۲۵٪ همچنان معنی‌دار بود؛ در ۳۵٪ به دلیل افزایش واریانس، معنی‌داری آماری کاهش یافت. بنابراین، فرضیهٔ ۳ **تا حدی تأیید می‌شود** (پایداری جهتی تأیید شد، اما در شدیدترین سطح کمبود به معنی‌داری آماری نرسید).
+
+**فرضیه ۴ (بی‌ثبات‌کنندگی عامل نوآور):** حضور یک عامل منفرد با کف اکتشاف بالا (نوآور) باعث افزایش ۲۲ درصدی ضریب جینی (t(4) = -2.84، p = 0.047) و کاهش ۲ درصدی آسایش جامعه شد (t(8) = -3.562، p = 0.0074، d کوهن = ۲۵/۲). بنابراین، فرضیهٔ ۴ **تأیید می‌شود**.
+
+### ۵-۱-۲- نتیجه‌گیری نهایی
+
+این پایان‌نامه بررسی کرد که چگونه ترجیحات عدالت ناهمگن و مبتنی بر شخصیت، پویایی‌های اشتراک انرژی نوظهور را در یک ریزشب‌که‌ی محله‌ی هوشمند چندعاملی شکل می‌دهند. واحد مرکزی تحلیل، خانوار مصرف‌کننده-تولیدکننده‌ی خودمختار است که به‌عنوان یک عامل یادگیری کیو مستقل مدل‌سازی شده است که تابع پاداش و برنامه‌ی اکتشاف آن توسط مختصاتی در فضای شخصیت پنج‌عاملی (OCEAN) پارامتریزه می‌شود. این پژوهش در نقطه‌ی تلاقی یادگیری تقویتی چندعاملی، مهندسی قدرت و علوم اجتماعی محاسباتی قرار دارد و این پرسش را مطرح می‌کند که آیا تنوع روان‌شناختی که جوامع انسانی را مشخص می‌کند، می‌تواند به‌طور سیستماتیک در عامل‌های انرژی خودمختار رمزگذاری شود و اگر چنین است، چه پیامدهایی در سطح سیستم برای کارایی، برابری و تاب‌آوری به دنبال خواهد داشت.
+
+انگیزه‌ی این پژوهش از یک شکاف ساختاری در ادبیات موجود مدیریت انرژی همتا-به-همتا ناشی می‌شود. دهه‌ها پژوهش در سیستم‌های انرژی غیرمتمرکز، سازوکارهای هماهنگ‌سازی مؤثری را تولید کرده است — از بازارهای مبتنی بر قیمت تا پروتکل‌های تسویه‌حساب نظریه‌بازی تا کنترل‌کننده‌های یادگیری تقویتی عمیق — بااین‌حال، هر پارادایم مسلط، مصرف‌کنندگان-تولیدکنندگان را به‌عنوان بیشینه‌سازهای مطلوبیت عقلانی اقتصادی با اهداف یکنواخت مدل‌سازی می‌کند.
+
+این فرض، مجموعه‌ای از شواهد رفتاری را نادیده می‌گیرد که نشان می‌دهد مشارکت‌کنندگان انسانی در بافت‌های اشتراک منابع، ترجیحات اجتماعی ذاتی و ناهمگنی دارند که قابل تقلیل به سیگنال‌های قیمتی یا ساختارهای بازدهی دانش مشترک نیستند. پیامد آن این است که مدل‌های موجود، نرخ‌های اشتراک واقعی را به‌طور سیستماتیک دست‌کم می‌گیرند، مشوق‌های قیمتی موردنیاز برای پیامدهای عادلانه را بیش‌تخمین می‌زنند و در محاسبه‌ی هنجارهای نوظهوری که جوامع از طریق برهم‌کنش مکرر توسعه می‌دهند، ناکام می‌مانند.
+
+هیچ مطالعه‌ی پیشینی ناهمگنی عامل را در یک مدل روان‌شناختی معتبر از شخصیت در یک محیط اشتراک انرژی با زمین‌فیزیکی زمین‌گذاری نکرده است و هیچ مطالعه‌ی پیشینی بررسی نکرده است که آیا چنین ناهمگنی تفاوت‌های قابل‌اندازه‌گیری در هر دو رفاه فردی و هماهنگی سطح جامعه تولید می‌کند یا خیر.
+
+برای پر کردن این شکاف، یک چارچوب شکل‌دهی پاداش تعدیل‌شده با شخصیت توسعه داده شد که دو بُعد از مدل شخصیت OCEAN را به پارامترهای خاص یادگیری تقویتی چندعاملی نگاشت می‌کند. توافق‌پذیری به‌عنوان وزن $w_{\text{fair}}$ اختصاص‌یافته به شاخص عدالت جین در تابع پاداش هر عامل پیاده‌سازی می‌شود و طیفی از خودخواهی محض ($w_{\text{fair}} = 0.0$) تا نوع‌دوستی قوی ($w_{\text{fair}} = 0.8$) ایجاد می‌کند. گشودگی به تجربه به‌عنوان کف اکتشاف حداقلی در سیاست $\varepsilon$-greedy پیاده‌سازی می‌شود و عامل‌های استاندارد ($\varepsilon_{\min} = 0.01$) را از عامل نوآور ($\varepsilon_{\min} = 0.05$) متمایز می‌سازد. سه بُعد باقی‌مانده‌ی پنج‌عاملی — وظیفه‌شناسی، برون‌گرایی و روان‌رنجوری — در سطوح می‌انگین جمعیتی نگه داشته می‌شوند و به پژوهش امکان می‌دهند تا اثرات دو ویژگی دستکاری‌شده را جدا کند.
+
+عامل‌ها از طریق یادگیری کیو جدولی مستقل در یک ریزشب‌که‌ی توپولوژی حلقوی با ده خانوار و با تولید خورشیدی، الگوهای تقاضا، ذخیره‌سازی باتری و تصادفی‌سازی آب‌وهوای زمین‌فیزیکی یاد می‌گیرند. پنج ترکیب جامعه‌ی آزمایشی (همگی خودخواه، همگی نوع‌گرا، مختلط، نوع‌گرایی متنوع و اثر نوآور) در ۵ تصادف‌سازی آزمایش شدند و ۲۵ اجرای مستقل شبیه‌سازی با ۸۰۰۰ قسمت در هر کدام را تولید کردند.
+
+نتایج شبیه‌سازی از چهار یافته‌ی اصلی پشتیبانی می‌کند.
+
+نخست، عامل‌های نوع‌گرا در جوامع مختلط، به آسایش فردی قابل‌اندازه‌گیری بالاتری نسبت به همسایگان خودخواه دست می‌یابند، با شکافی معادل ۹/۲ واحد درصد (p = 0.0011) در شرایط پایه. این مزیت به متقابله‌گری غیرمستقیم نوظهور قابل‌نسبت است: عامل‌های نوع‌گرا در ساعات اوج تولید خورشیدی، مازاد خود را به اشتراک می‌گذارند و سطح باتری همسایگان را تثبیت می‌کنند و از کسری‌های آبشاری که در غیر این صورت در طول حلقه منتشر می‌شوند، جلوگیری می‌نمایند. از آنجا که عامل‌های نوع‌گرا هرگز آبشار شکستی را که بعداً از آن سود می‌برند، آغاز نمی‌کنند، آسایش بالاتر آن‌ها یک پیامد ساختاری از راهبرد اشتراک آن‌ها است، نه یک مصنوع از تابع پاداش.
+
+دوم، این مزیت در سطوح مختلف کمبود پایدار است: هنگامی که احتمال ابری از ۱۵٪ به ۳۵٪ افزایش یافت، شکاف آسایش نوع‌گرایانه در ۵/۲–۰/۳ واحد درصد پایدار ماند و نشان می‌دهد که طراحی پاداش عدالت‌گرا، سودی قابل‌اعتماد و نه مشروط فراهم می‌کند.
+
+سوم، در سطح جامعه، عدالت و کارایی در تضاد جمع‑صفر نیستند: سناریوی مختلط هدررفت انرژی را ۹/۱۲ درصد نسبت به حالت پایه‌ی همگی خودخواه کاهش داد و به مقادیر کمی بالاتر شاخص عدالت جین دست یافت، اگرچه کاهش هدررفت تحت تعداد تصادف‌سازی‌های فعلی به معنی‌داری آماری نرسید (p = 0.14).
+
+چهارم، اثر نوآور نشان داد که یک عامل منفرد با گشودگی بالا، تعادل‌های همکاری‌گونه را بی‌ثبات می‌کند و نابرابری جامعه را ۲۲ درصد افزایش می‌دهد (t(4) = -2.84, p = 0.047) و می‌انگین آسایش را ۰/۲ درصد از طریق سازوکار غیرقابل‌پیش‌بینی بودن برای همسایگان کاهش می‌دهد (t(8) = -3.562, p = 0.0074, d کوهن = 2.25).
+
+تبیین تحلیلی این نتایج در برهم‌کنش بین پاداش‌های تعدیل‌شده با شخصیت، محیط اشتراک کم‌فروغ و ساختار زمانی Dec‑POMDP نهفته است. یادگیری Q با $\gamma = 0.99$ به‌طور خاص برای کشف پاداش‌های متقابله‌گری با تأخیر طولانی مناسب است: ضریب تخفیف، سیگنال اعتباری را از یک اقدام اشتراک صبحگاهی تا سود بعدازظهر که تولید می‌کند، حفظ می‌کند و به عامل‌های نوع‌گرا امکان می‌دهد تا بازده‌های سطح جامعه‌ی سخاوت خود را درونی‌سازی کنند.
+
+مدل آب‌وهوای دودویی و توپولوژی حلقوی محیطی ایجاد می‌کنند که در آن فرصت‌های اشتراک به‌طور طبیعی در ساعات ظهر متمرکز می‌شوند و فضای اقدام پراکنده (سه تصمیم اشتراک گسسته در ۹۶ وضعیت) بزرگی تفاوت‌های قابل‌دستیابی بین انواع شخصیتی را در سطح تجمعی محدود می‌کند. در نتیجه، قابل‌اطمینان‌ترین سیگنال در داده‌ها، می‌انگین سطح جامعه نیست، بل‌که شکاف توزیعی درون جوامع مختلط است، جایی که مزیت نوع‌گرایانه قابل‌مشاهده است زیرا هر دو گروه دنباله‌های آب‌وهوایی یکسان را تجربه می‌کنند و درون یک شب‌که‌ی واحد برهم‌کنش دارند.
+
+اثر نوآور، در مقابل، از طریق یک سازوکار متمایز عمل می‌کند: نویز اکتشاف بالاتر مانع از تشکیل تداعی‌های پایدار بین زمان روز، وضعیت باتری و انرژی دریافتی موردانتظار توسط همسایگان می‌شود و دقیقاً همان سازوکار متقابله‌گری را که عامل‌های نوع‌گرا به آن متکی هستند، تخریب می‌کند.
+
+این پژوهش به سه حوزه‌ی ادبیات متمایز کمک می‌کند. در حوزه‌ی یادگیری تقویتی چندعاملی، چارچوب، رویکردی منسجم برای رمزگذاری تنوع عامل زمین‌گذاری‌شده‌ی روان‌شناختی در معماری‌های استاندارد یادگیری Q معرفی می‌کند. این چارچوب نشان می‌دهد که ناهمگنی شخصیت را می‌توان بدون قربانی‌کردن تفسیرپذیری و تضمین‌های همگرایی روش‌های جدولی مدل‌سازی کرد — پلی بین مدل‌سازی شناختی و یادگیری توزیع‌شده که کارهای پیشین در یک بافت مدیریت منابع امتحان نکرده‌اند.
+
+کمک به مهندسی انرژی، کمی و عملی است. طراحی پاداش عدالت‌آگاه، کارایی فنی را جریمه نمی‌کند؛ بل‌که هدررفت انرژی را تا ۹/۱۲ درصد در جوامع مختلط کاهش می‌دهد — روندی جهت‌دار که در این اندازه‌ی نمونه به معنی‌داری آماری معمول نرسید (p = ۰٫۱۴). این یافته، پیامدهای مستقیمی برای ساختارهای تعرفه و طراحی‌های کنترل‌کننده‌ای دارد که در ریزشب‌که‌های همتا-به-همتا استفاده می‌شوند، جایی که فرض متعارف مبادله‌ی برابری-کارایی، چارچوب‌های نظارتی را شکل داده است.
+
+برای علوم اجتماعی محاسباتی، این مطالعه نشان می‌دهد که هنجارهای همکاری می‌توانند از طریق یادگیری صرفاً خودخواهانه در جوامع مختلط پدیدار شوند. عامل‌های خودخواه در جوامع مختلط، علیرغم عدم دریافت پاداش عدالت مستقیم، اشتراک را آموختند. هزینه‌ی اجتماعی رفتار اکتشافی در یک محیط مدیریت منابع فیزیکی، قابل‌کمّی‌سازی و غیرقابل‌چشم‌پوشی اثبات شد. اثر نوآور به‌عنوان یک یافته‌ی هشداردهنده برای ایمنی هوش مصنوعی عمل می‌کند: سیستم‌هایی که برای کشف راهبردهای بهینه از طریق اکتشاف طراحی شده‌اند، ممکن است ناخواسته اعتماد و متقابله‌گری موردنیاز برای رفاه جمعی را تضعیف کنند و نشان می‌دهد که پایداری هماهنگی شایسته‌ی توجه صریح در کنار بهینگی یادگیری است.
+
+چهار گسترش، محدودیت‌های شناسایی‌شده در این پژوهش را برطرف می‌کنند.
+
+تحول پویای شخصیت، آزمون می‌کند که آیا عامل‌های نوع‌گرا هنگامی که با همسایگان غیرمتقابل‌گرای مداوم جفت می‌شوند، سخاوت خود را حفظ می‌کنند و آیا عامل‌های استثمارشده با تغییر به‌سوی وزن‌های پاداش خودخواهانه‌تر، سازگار می‌شوند. این به‌احتمال‌زیاد مهم‌ترین جهت‌گیری است: فرض ایستای فعلی ممکن است پایداری تعادل‌های همکاری‌گونه را در افق‌های زمانی طولانی‌تر بیش‌تخمین بزند.
+
+یادگیری تقویتی عمیق با فضای وضعیت پیوسته، دومین گسترش طبیعی است. ارزیابی DQN، PPO یا MAPPO مشخص می‌کند که آیا اثرات ناشی از شخصیت به سطوح دانه‌بندی‌تر باتری، الگوهای تقاضا و توپولوژی‌های شب‌که‌ای که روش‌های جدولی نمی‌توانند در خود جای دهند، مقیاس‌پذیر هستند یا خیر.
+
+جهت‌گیری سوم، به واقع‌گرایی محیطی مربوط می‌شود. مدل‌های آب‌وهوای همبسته‌ی زمانی — فرایندهای تابش زنجیره‌ای مارکوف مبتنی بر داده‌های تاریخی — باید جایگزین انتزاع دودویی شوند تا استحکام را در رویدادهای کمبود گسترده‌ای که بهتر الگوهای هواشناسی واقعی را منعکس می‌کنند، آزمایش کنند.
+
+در نهایت، توپولوژی‌های شب‌که‌ای بزرگ‌تر و پیچیده‌تر شایسته‌ی بررسی هستند. گراف‌های جهان‌کوچک و مقیاس‌آزاد، مقیاس و ساختاری را آشکار می‌کنند که در آن مزیت نوع‌گرایانه شروع به کاهش می‌کند و اثر نوآور تقویت یا تضعیف می‌شود. این گسترش‌ها با هم، چارچوب OCEAN‑MARL را از یک اثبات مفهوم به یک روش‌شناسی طراحی معتبر برای سیستم‌های انرژی خودمختار در مقیاس اجتماعی تکامل می‌دهند.
+
+### ۵-۱-۳- دستاوردهای پژوهش
+
+این پژوهش سه دستاورد اصلی برای حوزه‌های یادگیری تقویتی چندعاملی، مدیریت سیستم‌های انرژی و علوم اجتماعی محاسباتی به ارمغان می‌آورد.
+
+نخست، چارچوب شکل‌دهی پاداش زمین‌گذاری‌شده‌ی روان‌شناختی را معرفی می‌کند که ویژگی‌های پنج‌عاملی (OCEAN) شخصیت را به پارامترهای خاص یادگیری تقویتی چندعاملی نگاشت می‌کند. این چارچوب، توافق‌پذیری را به‌عنوان وزن عدالت در تابع پاداش هر عامل، گشودگی را به‌عنوان نرخ حداقل اکتشاف، وظیفه‌شناسی را به‌عنوان واریانس کاهش $\varepsilon$ و روان‌رنجوری را به‌عنوان ضریب‌های جریمه‌ی خاموشی رمزگذاری می‌کند. به‌جای در نظر گرفتن تنوع عامل به‌عنوان یک پارامتر مزاحم یا تحمیل برچسب‌های رفتاری دلبخواهانه، نگاشت OCEAN‑به‑یادگیری‌تقویتی چارچوبی مبتنی بر نظریه فراهم می‌آورد که ابعاد خاص شخصیت را به پارامترهای یادگیری خاص پیوند می‌زند. این چارچوب کلی است و می‌تواند در هر حوزه‌ای از MARL که تنوع عامل‌ها به‌گونه‌ای انسانی مطلوب است، از هماهنگی وسایل نقلیه‌ی خودران گرفته تا رباتیک مشارکتی و تیم‌سازی انسان‑هوش‌مصنوعی، به‌کار گرفته شود.
+
+دوم، این مطالعه شواهد کمی ارائه می‌دهد که طراحی پاداش عدالت‌آگاه، کارایی فنی را قربانی نمی‌کند و در عین حال برابری توزیعی معنی‌داری در سطح فردی ایجاد می‌کند. یافته‌ی مبنی بر این‌که جوامع مختلط با حضور عامل‌های نوع‌گرا، هدررفت انرژی را تا ۹/۱۲ درصد نسبت به حالت‌های پایه‌ی کاملاً خودخواه کاهش می‌دهند — روندی جهت‌دار که در این اندازه‌ی نمونه به معنی‌داری آماری معمول نرسید (p = ۰٫۱۴) — پیامدهای عملی بالقوه برای طراحی بازارهای انرژی همتا-به-همتا و تعرفه‌های ریزشب‌که‌های محلی دارد. یافته‌ی مبنی بر این‌که عامل‌های نوع‌گرا در جوامع مختلط به ۹/۲ واحد درصد آسایش بالاتر نسبت به همسایگان خودخواه دست می‌یابند (p = ۰٫۰۰۱۱) — مقایسه‌ای درون‌سناریویی که در مطالعات پیشین در دسترس نیست — نشان می‌دهد که افزایش کارایی به‌بهای کاهش آسایش عامل‌های نوع‌گرا تمام نمی‌شود. این نتیجه با بینش شهودی که رفتار نوع‌دوستانه در یک محیط با منابع محدود باید همراه با ایثار باشد، تناقض دارد.
+
+سوم، کشف اثر نوآور به‌عنوان یک نتیجه‌ی هشداردهنده برای ایمنی هوش مصنوعی در سیستم‌های اشتراک منابع اجتماعی عمل می‌کند. یک عامل منفرد که رفتار اکتشافی آن از هنجار جامعه منحرف می‌شود، می‌تواند نابرابری را ۲۲ درصد افزایش دهد و نشان می‌دهد که پایداری هماهنگی باید به‌عنوان یک هدف طراحی درجه‌یک در مدیریت منابع چندعاملی در نظر گرفته شود. سیستم‌هایی که برای کشف راهبردهای بهینه از طریق اکتشاف طراحی شده‌اند، ممکن است ناخواسته اعتماد و متقابله‌گری موردنیاز برای رفاه جمعی را تضعیف کنند. این یافته، ادبیات مربوط به اکتشاف جایگزین در MARL همکاری‌گونه را به حوزه‌ی مدیریت منابع فیزیکی گسترش می‌دهد، جایی که هزینه‌ی اجتماعی رفتار اکتشافی قبلاً کمّی‌سازی نشده بود.
+
+### ۵-۱-۴- محدودیت‌های پژوهش
+
+پنج دسته محدودیت، تفسیر این نتایج را محدود می‌کنند.
+
+نخستین محدودیت، مربوط به ساده‌سازی مدل محیطی است. مدل آب‌وهوای دودویی (صاف در مقابل ابری با احتمال ثابت ۱۵٪) یک انتزاع عمدی است که عدم‌قطعیت تصادفی را بدون پیچیدگی هواشناسی واقعی ثبت می‌کند. بااین‌حال، تابش خورشیدی واقعی از فرایندهای مارکوف پیوسته با همبستگی زمانی پیروی می‌کند — یک روز ابری به احتمال زیاد با روز ابری دیگری دنبال می‌شود (Richardson, 1981). عدم وجود چنین خودهمبستگی به‌این معناست که شبیه‌سازی، مدت زمان رویدادهای کمبود را دست‌کم می‌گیرد و بنابراین ممکن است توانایی عامل‌ها را برای بازیابی از کسری‌های گسترده بیش‌تخمین بزند. در یک محیط آب‌وهوایی با همبستگی زمانی، یک عامل نوع‌گرا که در روز اول مازاد خود را به اشتراک می‌گذارد، اگر پوشش ابری ادامه یابد، ممکن است در روز دوم با باتری تخلیه‌شده مواجه شود و به‌طور بالقوه باعث شود وزن عدالت خود را به‌گونه‌ای کاهش دهد که طراحی پاداش ایستا اجازه نمی‌دهد.
+
+ضریب کاهش ثابت ۵/۰ در روزهای ابری، تأثیر پله‌ای سطوح مختلف پوشش ابری را ثبت نمی‌کند — شرایط ابری واقعی ممکن است تابش را ۷۰–۹۰ درصد کاهش دهد، نه دقیقاً ۵۰ درصد. مدل فیزیکی، تخریب باتری (که ظرفیت قابل‌استفاده را در پنجره‌ی ارزیابی ۱۰۰۰ روزه (معادل ۷۴/۲ سال) و در کل شبیه‌سازی ۸۰۰۰ روزه (معادل ۹/۲۱ سال) کاهش می‌دهد)، تلفات اینورتر تقریباً ۵–۱۰ درصد و تلفات انتقال در توپولوژی حلقوی را حذف می‌کند. هر یک از این عوامل حذف‌شده می‌تواند انرژی مطلق در دسترس برای اشتراک را کاهش دهد و به‌طور بالقوه مزیت نسبی احتکار در مقابل اشتراک را به‌گونه‌ای تغییر دهد که پارامترسازی فعلی ثبت نمی‌کند. این ساده‌سازی‌ها برای جداسازی اثر شکل‌دهی پاداش مبتنی بر شخصیت از مخدوش‌کننده‌های محیطی ضروری بودند، اما تعمیم‌پذیری نتایج کمی را به اقلیم‌های معتدل با تغییرپذیری خورشیدی متوسط و سخت‌افزار ذخیره‌سازی جدید محدود می‌کنند.
+
+دومین محدودیت، فرض شخصیت ایستا است. شخصیت‌های عامل در طول دوره‌ی آموزش ۸۰۰۰ قسمتی ثابت باقی می‌مانند، به‌این معنا که $w_{\text{self}}$ و $w_{\text{fair}}$ هرگز در پاسخ به پیامدهای برهم‌کنش به‌روز نمی‌شوند. در جوامع انسانی واقعی، تمایل به اشتراک ایستا نیست: عاملی که سخاوت آن توسط همسایگان خودخواه به‌طور مکرر استثمار می‌شود، ممکن است وزن عدالت خود را در برهم‌کنش‌های بعدی کاهش دهد — پدیده‌ای که در اقتصاد رفتاری به‌عنوان فروپاشی همکاری مشروط در بازی‌های کالای عمومی مستند شده است (Fischbacher & Gächter, 2010). برعکس، عاملی که متقابله‌گری سخاوتمندانه را تجربه می‌کند، ممکن است جهت‌گیری نوع‌گرایانه‌ی خود را در طول زمان افزایش دهد.
+
+طراحی فعلی، یک عکس‌برداری لحظه‌ای از نحوه‌ی عملکرد ترکیب‌های شخصیتی مختلف را ثبت می‌کند، اما نمی‌تواند به پایداری پویای هنجارهای اشتراک بپردازد: این‌که آیا عامل‌های نوع‌گرا هنگامی که با همسایگان خودخواهی که متقابله‌گری نمی‌کنند جفت می‌شوند، رفتار خود را حفظ می‌کنند یا خیر. اگر عامل‌های نوع‌گرا در پاسخ به استثمار، به‌تدریج به‌سوی وزن‌های پاداش خودخواهانه تغییر کنند، پیامدهای مطلوب سناریوی مختلط ممکن است در افق‌های زمانی طولانی‌تر از پنجره‌ی ۸۰۰۰ قسمتی شبیه‌سازی‌شده در اینجا تخریب شود. یک مدل شخصیت پویا، آزمون می‌کند که آیا سازوکار متقابله‌گری نوظهور خودتقویت‌کننده است یا خودتضعیف‌کننده.
+
+سومین محدودیت، مربوط به محدوده‌ی شب‌که و کلیت الگوریتمی است. توپولوژی حلقوی ۱۰‑خانه‌ای نسبت به محله‌های واقعی (۵۰–۵۰۰ خانوار) کوچک است و اتصال تک‌همسایه، ساختار شب‌که را به‌عنوان یک متغیر آزمایشی حذف می‌کند. در شب‌که‌های بزرگ‌تر یا با تراکم اتصال بیشتر، انتشار منافع اشتراک و بی‌ثباتی ناشی از اکتشاف ممکن است از پویایی‌های کیفی متفاوتی پیروی کند: اثر نوآور می‌تواند تقویت شود اگر اقدامات غیرقابل‌پیش‌بینی عامل نوآور بر چندین همسایه به‌طور هم‌زمان تأثیر بگذارد، یا می‌تواند تضعیف شود اگر مسیرهای اشتراک زائد، واریانس سطح فردی را بافر کنند.
+
+تنها یادگیری کیو جدولی آزمایش شد. روش‌های یادگیری تقویتی عمیق — شامل DQN، PPO و MAPPO — می‌توانند سطوح پیوسته‌ی باتری، الگوهای تقاضای دانه‌بندی‌تر و بازنمایی‌های وضعیت غنی‌تر را مدیریت کنند و ممکن است رفتارهای اشتراک نوظهور متفاوتی تولید کنند زیرا تقریب‌زننده‌های تابع در بین وضعیت‌ها به‌گونه‌ای تعمیم می‌دهند که روش‌های جدولی نمی‌توانند. رویکرد جدولی عمدی بود: نقشه‌های حرارتی مقدار Q مستقیماً خط‌مشی آموخته‌شده را برای هر جفت وضعیت-اقدام آشکار می‌کنند و تفسیرپذیری را فراهم می‌آورند که تقریب‌زننده‌های تابع یادگیری تقویتی عمیق آن را مبهم می‌کنند. بااین‌حال، کلیت الگوریتمی آزمایش‌نشده باقی می‌ماند و یافته‌ها به محیط جدولی محدود می‌شوند. عدم وجود یک کانال ارتباطی عامل — هیچ سازوکاری برای سیگنال‌دهی اقدامات اشتراک موردنظر یا مذاکره‌ی متقابله‌گری توسط عامل‌ها — واقع‌گرایی سازوکار هماهنگی را بیشتر محدود می‌کند و ممکن است عملکرد قابل‌دستیابی با حتی زیرساخت ارتباطی حداقلی را دست‌کم بزند.
+
+چهارمین محدودیت، محدودیت‌های توان آماری است. پنج تصادف‌سازی در هر سناریو، قابلیت اطمینان پایه‌ای را فراهم می‌کند — اثر نوآور در ۴ تصادف‌سازی از ۵ تصادف‌سازی سازگار است و جهت مزیت نوع‌گرایانه در همهٔ ۱۵ ترکیب تصادف‌سازی-کمبود سازگار است — اما تشخیص اندازه‌های اثر کوچک‌تر را در سنجه‌های سطح جامعه محدود می‌کند. کاهش هدررفت انرژی جهت‌داری اما معنی‌دار نشده‌ی ۹/۱۲٪ در سناریوی مختلط، از نظر جهت‌گیری با پیش‌بینی نظری سازگار است اما از نظر آماری معنی‌دار نیست (p = 0.14).
+
+یک تحلیل توان پس‌آزمون نشان می‌دهد که تشخیص تفاوت ۵/۲ واحد درصدی در آسایش با توان ۸۰٪ در سطح واریانس مشاهده‌شده در احتمال ابری ۳۵٪، به تقریباً ۱۸ تصادف‌سازی در هر شرایط نیاز دارد. گنجاندن تصادف‌سازی‌های بیشتر — ۲۰ یا ۳۰ — فواصل اطمینان را تنگ‌تر می‌کند و امکان تشخیص اثرات ظریف‌تر شخصیتی را فراهم می‌آورد، به‌ویژه در سناریوهای با واریانس بالا مانند شرایط همگی نوع‌گرا (انحراف معیار ۷۴/۰ کیلووات‌ساعت برای هدررفت انرژی).
+
+تحلیل حساسیت کمبود از ۳ به ۵ تصادف‌سازی گسترش یافت، زیرا یک روند اولیه پایدار نماند و نشان داد که حتی افزایش حاشیه‌ای در تکرار، قابلیت اطمینان را بهبود می‌بخشد. پارامتر اثر نوآور ($\varepsilon_{\min} = 0.05$ در مقابل ۰۱/۰) نیز در طیفی از مقادیر آزمایش نشد — آزمایش تک‌مقداری فعلی، یافته‌ی کمی را که افزایش ۵ برابری کف اکتشاف، افزایش ۲۲ درصدی ضریب جینی را تولید می‌کند، محدود می‌کند، اما رابطه‌ی دوز-پاسخ بین شدت اکتشاف و بی‌ثباتی جامعه را مشخص نمی‌کند.
+
+پنجمین محدودیت، مربوط به خودِ روش‌شناسی ارزیابی است. تمام سنجه‌ها از ۱۰۰۰ قسمت پایانی یک اجرای آموزش ۸۰۰۰ قسمتی محاسبه می‌شوند، با این فرض که این پنجره منعکس‌کننده‌ی خط‌مشی‌های همگرا است. درحالی‌که همگرایی از طریق پایش تغییر مقدار Q تأیید شد، این رویه فقط آزمایش می‌کند که جدول‌های Q تثبیت شده‌اند، نه این‌که خط‌مشی‌ها بهینه هستند. یادگیری کیو مستقل در محیط‌های چندعاملی ناایستا هیچ تضمین همگرایی ندارد و پنجره‌ی ارزیابی ثابت ممکن است یک بهینه‌ی محلی را ثبت کند، نه یک بهینه‌ی سراسری. علاوه بر این، فرض استقلال بین تصادف‌سازی‌ها برای مطالعات شبیه‌سازی استاندارد است، اما اگر دو تصادف‌سازی به‌طور تصادفی دنباله‌های آب‌وهوایی یکسانی را در اوایل آموزش تولید کنند، از نظر فنی نقض می‌شود که می‌تواند مسیرهای خط‌مشی همبسته را ایجاد کند. هیچ آزمونی برای استقلال تصادف‌سازی انجام نشد، اگرچه احتمال دنباله‌های برنولی یکسان در ۸۰۰۰ گام ناچیز است.
+
+یکی از یافته‌های جانبی این پژوهش، اهمیت انتخاب قاعده به‌روزرسانی یادگیری (در کنار طراحی تابع پاداش) در ظهور رفتارهای اشتراک‌گذاری تحت سیگنال‌های پاداش کم‌دامنه است. پژوهش‌های آتی می‌توانند اثر ترکیب رویکرد شخصیت‌محور پیشنهادی این پایان‌نامه با قواعد به‌روزرسانی نامتقارن (مانند یادگیری هیسترتیک) را بررسی کنند تا مشخص شود آیا این ترکیب می‌تواند هم بهبود مطلق آسایش و هم پویایی‌های توزیعی مبتنی بر شخصیت را هم‌زمان حاصل کند.
+
+#### ۵-۱-۴-۱- تهدیدات اعتبار (روایی)
+
+چهار دسته تهدید برای اعتبار، از طبقه‌بندی وهلین و همکاران (Wohlin et al., 2012) پیروی می‌کنند. اعتبار داخلی توسط تصادف‌سازی‌های ثابت تهدید می‌شود که ممکن است دنباله‌های آب‌وهوایی غیرنماینده تولید کرده باشند. درحالی‌که ۵ تصادف‌سازی در هر سناریو این نگرانی را کاهش می‌دهد، یک مجموعه‌ی تصادف‌سازی بزرگ‌تر حفاظت قوی‌تری را فراهم می‌کند. اعتبار سازه با استفاده از سنجه‌های معتبر (شاخص عدالت جین، ضریب جینی) و آزمون‌های آماری استاندارد پشتیبانی می‌شود، اما نگاشت از ویژگی‌های OCEAN به پارامترهای یادگیری تقویتی همچنان یک سازه‌ی نظری باقی می‌ماند، نه یک ابزار روان‌شناختی تجربی معتبر. اعتبار بیرونی توسط مقیاس کوچک (۱۰ خانه)، مدل آب‌وهوای ساده‌شده و الگوریتم منفرد (یادگیری کیو جدولی) محدود می‌شود. یافته‌ها نباید بدون اعتبارسنجی بیشتر به محله‌های جهان واقعی تعمیم داده شوند. اعتبار نتیجه‌گیری توسط پایداری اثر نوآور در ۴ تصادف‌سازی از ۵ تصادف‌سازی و سازگاری جهت‌دار مزیت نوع‌گرایانه در همهٔ ۱۵ ترکیب تصادف‌سازی-کمبود پشتیبانی می‌شود، اما عدم معنی‌داری آماری برای کاهش هدررفت انرژی (p = 0.14) اعتمادی را که با آن می‌توان این نتیجه را گرفت، محدود می‌کند.
+
+## ۵-۲- پیشنهادات آتی
+
+### ۵-۲-۱- پیشنهادهایی برای پژوهش‌های آینده
+
+چهار گسترش، محدودیت‌های شناسایی‌شده در بالا را برطرف می‌کنند. مهم‌ترین گسترش، تحول پویای شخصیت است که شخصیت را به‌عنوان یک ویژگی پویا و نه ایستا مدل‌سازی می‌کند. عامل‌هایی که رفتار نوع‌گرایانه‌ی آن‌ها به‌طور مکرر استثمار می‌شود، می‌توانند در طول زمان خودخواه‌تر شوند، درحالی‌که آن‌هایی که متقابله‌گری سخاوتمندانه را تجربه می‌کنند، ممکن است نوع‌گراتر شوند. چنین مدلی آزمون می‌کند که آیا مزیت نوع‌گرایانه‌ای که در این مطالعه مشاهده شد، تحت تغییر ترجیحات درون‌زا پایدار است یا خیر. این امر می‌تواند با افزودن یک فرایند یادگیری ثانویه که $w_{\text{self}}$ و $w_{\text{fair}}$ را بر اساس پیامدهای برهم‌کنش اخیر به‌روز می‌کند، پیاده‌سازی شود.
+
+دوم، یادگیری تقویتی با فضای وضعیت پیوسته، آزمون می‌کند که آیا اثرات ناشی از شخصیت به محیط‌های واقع‌گرایانه‌تر مقیاس‌پذیر هستند یا خیر. یادگیری کیو جدولی فعلی، فضای وضعیت را به ۹۶ وضعیت گسسته محدود می‌کند. روش‌های یادگیری تقویتی عمیق (DQN، PPO، MAPPO) امکان سطوح پیوسته‌ی باتری، الگوهای تقاضای دانه‌بندی‌تر و بازنمایی‌های وضعیت غنی‌تر را فراهم می‌کنند و آزمون می‌کنند که آیا روش‌های عمیق، تفاوت‌های شخصیتی مشاهده‌شده در محیط جدولی را تقویت یا تضعیف می‌کنند.
+
+سوم، مدل‌سازی واقع‌گرایانه‌ی آب‌وهوا و تقاضا، یافته‌ها را تقویت می‌کند. جایگزینی مدل آب‌وهوای دودویی با فرایندهای تصادفی زنجیره‌ای مارکوف یا مبتنی بر داده بر اساس داده‌های تابش تاریخی، استحکام یافته‌ها را در رویدادهای کمبود همبسته‌ی زمانی آزمایش می‌کند و الگوهای تقاضای مبتنی بر زمان مصرف که به‌طور فصلی تغییر می‌کنند، واقع‌گرایی بیشتری را معرفی می‌کنند.
+
+چهارم، توپولوژی‌های شب‌که‌ای بزرگ‌تر و پیچیده‌تر باید بررسی شوند. مقیاس‌گذاری شبیه‌سازی به ۵۰–۵۰۰ خانه با توپولوژی‌های غیرحلقوی (به‌عنوان مثال، شب‌که‌های جهان‌کوچک یا مقیاس‌آزاد) نشان می‌دهد که آیا مزیت نوع‌گرایانه و اثر نوآور به جوامع بزرگ‌تر تعمیم می‌یابند یا خیر. فاصله‌ی شب‌که ممکن است منافع آبشاری اشتراک را رقیق کند و به‌طور بالقوه بزرگی اثرات ناشی از شخصیت را کاهش دهد. مقیاس‌های می‌انی (۲۰–۳۰ خانه) نیز باید آزمایش شوند تا مقیاسی را شناسایی کنند که در آن مزیت نوع‌گرایانه شروع به کاهش می‌کند و یک نقطه‌ی انتقال بین محیط ریزشب‌که‌ی فعلی و استقرار محله‌ی واقعی فراهم می‌آورد. توپولوژی حلقوی ۱۰‑خانه‌ای فعلی برای وضوح تحلیلی انتخاب شد، اما ریزشب‌که‌های واقعی الگوهای اتصال ناهمگن، فواصل متغیر همتا و توپولوژی‌های پویا را نشان می‌دهند که ممکن است پویایی‌های اشتراک مشاهده‌شده در اینجا را تغییر دهند.
+
+پنجم، سازوکارهای ارتباطی و قراردادی می‌توانند اثر نوآور را کاهش دهند. معرفی کانال‌های ارتباطی عامل — حتی سیگنال‌دهی ساده درباره‌ی اقدامات اشتراک موردنظر — می‌تواند به عامل‌ها اجازه دهد با وجود اکتشاف، هماهنگ شوند و سیستم‌های شهرت یا هنجارهای اشتراک تحمیل‌شده توسط جامعه، مسیر دیگری را برای آزمون این‌که آیا سازوکارهای نهادی می‌توانند غیرقابل‌پیش‌بینی بودن سطح فردی را جبران کنند، نشان می‌دهد. یک پروتکل اشتراک مبتنی بر شهرت که در آن عامل‌ها رفتار اشتراک گذشته‌ی یکدیگر را ردیابی می‌کنند، یک سازوکار حافظه‌ی اجتماعی را معرفی می‌کند که ممکن است اثر بی‌ثبات‌کننده‌ی عامل‌های اکتشافی را سرکوب کند.
+
+### ۵-۲-۲- پیشنهادهای عملی
+
+یافته‌های این پژوهش از پنج توصیه‌ی عملی برای طراحی سیستم‌های مدیریت انرژی محله‌ی هوشمند پشتیبانی می‌کنند.
+
+**نخست، پیاده‌سازی هرگونه سازوکار اشتراک — حتی با انگیزه‌های کاملاً خودخواهانه — کاهش قابل‌توجهی در هدررفت انرژی به همراه دارد.** تحلیل نشان داد که جامعهٔ کاملاً خودخواه، هدررفت انرژی را از ۸۲/۸ به ۹۸/۴ کیلووات‌ساعت در روز کاهش می‌دهد (کاهشی معادل ۴۳ درصد). بنابراین، نخستین اولویت طراحان سیستم، ایجاد زیرساخت فنی برای مبادلهٔ همتا-به-همتا است، حتی پیش از آن‌که نگرانی‌های عدالت در توابع پاداش گنجانده شوند.
+
+**دوم، جاسازی عدالت در توابع پاداش — به‌صورت ترکیبی وزنی از آسایش شخصی و شاخص عدالت جین — پیامدهای توزیعی به‌مراتب عادلانه‌تری با عدم کاهش کارایی قابل‌توجه تولید می‌کند.** در جوامع مختلط، عامل‌های نوع‌گرا به ۹/۲ واحد درصد آسایش بالاتر نسبت به همسایگان خودخواه دست یافتند (۰۰۱۱/۰ = p). این یک اصلاح محاسباتی سبک است که برای هر سیستم انرژی مبتنی بر MARL قابل‌اعمال است. بااین‌حال، طراحان سیستم باید انتظار داشته باشند که تأثیر این جاسازی بر آسایش مطلق جامعه، در محیط‌هایی با ظرفیت باتری بالا یا فرصت‌های اشتراک محدود، ناچیز باشد.
+
+**سوم، سیاست‌های اشتراک باید به‌جای بیشینه‌سازی آسایش مطلق جامعه، بر کاهش نابرابری توزیعی متمرکز شوند.** تحلیل نشان داد که کاهش هدررفت و افزایش آسایش، دو هدف متمایز هستند که تحت شرایط آزمایش‌شده، هم‌بستگی کامل ندارند. هدررفتی که کاهش می‌یابد، عمدتاً مازادی است که در غیاب اشتراک دور ریخته می‌شد، اما این مازاد به‌گونه‌ای توزیع نمی‌شود که کسری‌های بحرانی خانوارها را به‌طور سیستماتیک پوشش دهد. بنابراین، طراحان سیستم باید معیارهای عدالت توزیعی (مانند شاخص جین یا ضریب جینی) را به‌عنوان اهداف اصلی طراحی در نظر بگیرند و موفقیت را صرفاً با می‌انگین آسایش جامعه نسنجند.
+
+**چهارم، خط‌مشی‌های قطعی و پایدار در بافت‌های اشتراک منابع اجتماعی، بر خط‌مشی‌های بسیار اکتشافی ارجحیت دارند.** عامل‌هایی که باید اکتشاف کنند، باید این کار را به‌گونه‌ای هماهنگ و آگاه از جامعه انجام دهند. یافتهٔ اثر نوآور نشان داد که یک عامل منفرد با گشودگی بالا، نابرابری جامعه را ۲۲ درصد افزایش می‌دهد (t(4) = -2.84، p = 0.047). عامل‌های اکتشافی باید یا از نقش‌های مدیریت منابع حیاتی حذف شوند یا به کانال‌های ارتباطی مجهز شوند که به سایر عامل‌ها امکان پیش‌بینی رفتار آن‌ها را بدهد.
+
+**پنجم، جاسازی عدالت به‌عنوان یک ویژگی طراحی دائمی به‌جای تطبیقی، توسط تحلیل حساسیت پشتیبانی می‌شود.** مزیت نوع‌گرایانه در هر دو شرایط منابع فراوان و کمیاب به‌طور مداوم پایدار ماند (شکاف ۵/۲ تا ۰/۳ واحد درصد در احتمالات ابری ۲۵٪ و ۳۵٪) و یک وزن عدالت ثابت را به‌یک انتخاب طراحی قابل‌اعتماد تبدیل می‌کند. یک سازوکار عدالت پویا یا تطبیقی تحت شرایط آزمایش‌شده ضروری نیست؛ سادگی و پایداری ارجح هستند.
+
+**به‌طور خلاصه:** طراحان سیستم‌های مدیریت انرژی محله‌ای باید (۱) ابتدا زیرساخت اشتراک فیزیکی را پیاده‌سازی کنند، (۲) معیارهای عدالت توزیعی را به‌عنوان اهداف اصلی در نظر بگیرند، (۳) انتظار داشته باشند که جاسازی عدالت تأثیر محدودی بر آسایش مطلق در محیط‌های با ظرفیت باتری بالا داشته باشد، (۴) از استقرار عامل‌های بسیار اکتشافی در نقش‌های حیاتی خودداری کنند، و (۵) از طرح‌های وزنی ساده و ثابت به‌جای سازوکارهای تطبیقی پیچیده استفاده کنند.
+
+---
+
+# منابع
+
+- Ali, K. H., Abusara, M., Tahir, A. A., & Das, S. (2023). Dual-layer Q-learning strategy for energy management of battery storage in grid-connected microgrids. _Energies_, 16(3), 1334.
+- Aloor, J. J., Nayak, S., Dolan, S., & Balakrishnan, H. (2024). Cooperation and fairness in multi-agent reinforcement learning. _ACM Journal on Autonomous Transportation Systems_, 2(2), 1–25.
+- Behrunani, V. N., Irvine, A., Belgioioso, G., Heer, P., Lygeros, J., & Dörfler, F. (2023). Designing fairness in autonomous peer-to-peer energy trading. _IFAC-PapersOnLine_, 56(2), 3751–3756.
+- BloombergNEF. (2023). _New Energy Outlook 2023_. BloombergNEF.
+- Bui, V.-H., Hussain, A., & Kim, H.-M. (2019). Q-learning-based operation strategy for community battery energy storage system (CBESS) in microgrid system. _Energies_, 12(9), 1789.
+- Charbonnier, F., Morstyn, T., & McCulloch, M. D. (2022). Scalable multi-agent reinforcement learning for distributed control of residential energy flexibility. _Applied Energy_, 314, 118825.
+- Cohen, J. (1988). _Statistical Power Analysis for the Behavioral Sciences_ (2nd ed.). Lawrence Erlbaum Associates.
+- Fehr, E., & Gächter, S. (2000). Cooperation and punishment in public goods experiments. _American Economic Review_, 90(4), 980–994.
+- Fehr, E., & Schmidt, K. M. (1999). A theory of fairness, competition, and cooperation. _Quarterly Journal of Economics_, 114(3), 817–868.
+- Field, A. (2024). _Discovering Statistics Using IBM SPSS Statistics_ (6th ed.). SAGE Publications.
+- Fischbacher, U., & Gächter, S. (2010). Social preferences, beliefs, and the dynamics of free riding in public goods experiments. _American Economic Review_, 100(1), 541–556.
+
+- Gini, C. (1912). _Variabilità e mutabilità: contributo allo studio delle distribuzioni e delle relazioni statistiche_. C. Cuppini.
+- Goldberg, L. R. (1990). An alternative "description of personality": The Big-Five factor structure. _Journal of Personality and Social Psychology_, 59(6), 1216–1229.
+- Hardin, G. (1968). The tragedy of the commons. _Science_, 162(3859), 1243–1248.
+- Hernandez-Leal, P., Kartal, B., & Taylor, M. E. (2019). A survey and critique of multiagent deep reinforcement learning. _Autonomous Agents and Multi-Agent Systems_, 33(6), 750–797.
+- Hughes, E., Leibo, J. Z., Phillips, M. G., Tuyls, K., Dueñez-Guzman, E., García-Castañeda, A., ... & Graepel, T. (2018). Inequity aversion improves cooperation in intertemporal social dilemmas. _Advances in Neural Information Processing Systems_, 31.
+- IEA. (2022). _World Energy Outlook 2022_. International Energy Agency.
+- IEA PVPS. (2023). _Trends in Photovoltaic Applications 2023_. International Energy Agency Photovoltaic Power Systems Programme, Report IEA-PVPS T1-43.
+- Jadhav, S., Sevak, B., Das, S., Hussain, A., Su, W., & Bui, V.-H. (2025a). FairMarket-RL: LLM-guided fairness shaping for multi-agent reinforcement learning in peer-to-peer markets. _arXiv preprint_, arXiv:2506.22708.
+- Jadhav, S., Sevak, B., Das, S., Hussain, A., Su, W., & Bui, V.-H. (2025b). Scalable fairness shaping with LLM-guided multi-agent reinforcement learning for peer-to-peer electricity markets. arXiv preprint, arXiv:2508.18610.
+- Jain, R., Chiu, D. M., & Hawe, W. R. (1984). A quantitative measure of fairness and discrimination for resource allocation in shared computer systems. _DEC Technical Report_, 301.
+- John, O. P., & Srivastava, S. (1999). The Big-Five trait taxonomy: History, measurement, and theoretical perspectives. In L. A. Pervin & O. P. John (Eds.), _Handbook of Personality: Theory and Research_ (2nd ed., pp. 102–138). Guilford Press.
+- Kollock, P. (1998). Social dilemmas in cyberspace. In P. Kollock & M. Smith (Eds.), _Communities in Cyberspace_ (pp. 219–237). Routledge.
+- Kusatake, E., Imahori, M., & Shinomiya, N. (2023). A peer-to-peer energy trading model for optimizing both efficiency and fairness. _Energies_, 16(14), 5501.
+- Law, A. M. (2015). _Simulation Modeling and Analysis_ (5th ed.). McGraw-Hill Education.
+- LG Energy Solution. (n.d.). _RESU7H Residential Energy Storage System: Product Specification_. LG Energy Solution. Retrieved from https://www.lgessbattery.com/m/us/home-battery/product-info.lg
+- Lowe, R., Wu, Y., Tamar, A., Harb, J., Abbeel, P., & Mordatch, I. (2017). Multi-agent actor-critic for mixed cooperative-competitive environments. _Advances in Neural Information Processing Systems_, 30.
+- Matignon, L., Laurent, G. J., & Le Fort-Piat, N. (2012). Independent reinforcement learners in cooperative Markov games: A survey regarding coordination problems. _The Knowledge Engineering Review_, 27(1), 1–31.
+- May, R., & Huang, P. (2023). A multi-agent reinforcement learning approach for investigating and optimising peer-to-peer prosumer energy markets. _Applied Energy_, 334, 120705.
+- McCrae, R. R., & Costa, P. T. (2003). _Personality in Adulthood: A Five-Factor Theory Perspective_ (2nd ed.). Guilford Press.
+- Montgomery, D. C. (2017). _Design and Analysis of Experiments_ (9th ed.). Wiley.
+- Moret, F., & Pinson, P. (2019). Energy collectives: A community and fairness based approach to future electricity markets. _IEEE Transactions on Power Systems_, 34(5), 3994–4004.
+- Ofgem. (2023). Decision on Typical Domestic Consumption Values (TDCVs). Office of Gas and Electricity Markets.
+- Oliehoek, F. A., & Amato, C. (2016). _A Concise Introduction to Decentralized POMDPs_. Springer.
+- Ostrom, E. (1990). _Governing the Commons: The Evolution of Institutions for Collective Action_. Cambridge University Press.
+- Park, J. S., O'Brien, J. C., Cai, C. J., Morris, M. R., Liang, P., & Bernstein, M. S. (2023). Generative agents: Interactive simulacra of human behavior. _Proceedings of the 36th Annual ACM Symposium on User Interface Software and Technology_, 1–22.
+- Rashid, T., Samvelyan, M., Schroeder, C., Farquhar, G., Foerster, J., & Whiteson, S. (2018). QMIX: Monotonic value function factorisation for deep multi-agent reinforcement learning. _Proceedings of the 35th International Conference on Machine Learning_, 4295–4304.
+- Rathnayaka, A. J., Potdar, V. M., Dillon, T., Hussain, O., & Chang, E. (2014). A methodology to find influential prosumers in prosumer community groups. _IEEE Transactions on Industrial Informatics_, 10(1), 706–713.
+- Ren, M., & Xu, W. (2025). The Impact of Big Five Personality Traits on AI Agent Decision-Making in Public Spaces: A Social Simulation Study. _arXiv preprint_, arXiv:2503.15497.
+- Skoplaki, E., & Palyvos, J. A. (2009). On the temperature dependence of photovoltaic module electrical performance: A review of efficiency/power correlations. _Solar Energy_, 83(5), 614–624.
+- Sutton, R. S., & Barto, A. G. (2018). _Reinforcement Learning: An Introduction_ (2nd ed.). MIT Press.
+- Tan, M. (1993). Multi-agent reinforcement learning: Independent versus cooperative agents. _Proceedings of the 10th International Conference on Machine Learning_, 330–337.
+- Towers, M., Kwiatkowski, A., Terry, J., Balis, J. U., De Cola, G., Deleu, T., ... & Younis, O. G. (2024). Gymnasium: A standard interface for reinforcement learning environments. _arXiv preprint_, arXiv:2407.17032.
+- Tushar, W., Saha, T. K., Yuen, C., Smith, D., & Poor, H. V. (2020). Peer-to-peer trading in electricity networks: An overview. _IEEE Transactions on Smart Grid_, 11(4), 3185–3200.
+- Watkins, C. J. C. H., & Dayan, P. (1992). Q-learning. _Machine Learning_, 8(3), 279–292.
+- Weng, Y., & Lee, H.-W. (2026). How exploration breaks cooperation in shared-policy multi-agent reinforcement learning. arXiv preprint, arXiv:2601.05509.
+- Wohlin, C., Runeson, P., Höst, M., Ohlsson, M. C., Regnell, B., & Wesslén, A. (2012). _Experimentation in Software Engineering_. Springer.
+- Zhang, R., Wang, S., Chen, W., Zhou, Y., Zhao, Z., Zhang, Z., Zhang, R., & Albrecht, S. V. (2025). Optimistic epsilon-greedy exploration for cooperative multi-agent reinforcement learning. _arXiv preprint_, arXiv:2502.03506.
+- Zhou, Y., & Lund, P. D. (2023). Peer-to-peer energy sharing and trading of renewable energy in smart communities — trading pricing models, decision-making and agent-based collaboration. _Renewable Energy_, 207, 177–193.
+
+---
+

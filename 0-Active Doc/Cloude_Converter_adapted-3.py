@@ -115,6 +115,8 @@ Table of Contents / List of Tables / List of Figures fields.
 
 import argparse
 import copy
+import html
+import os
 import re
 import shutil
 import subprocess
@@ -223,20 +225,160 @@ _PERSIAN_CONTEXT_RE = {
     "?": re.compile(r"([\u0600-\u06FF\u0750-\u077F])\s*\?\s*([\u0600-\u06FF\u0750-\u077F])"),
 }
 
+_SAFE_PUNCT_RE = re.compile(
+    r"(?:"
+    r"(?P<seg_persian>[\u0600-\u06FF\u0750-\u077F\u200C\s،؛؟:.]+)"  # Persian chars + punct
+    r"|(?P<seg_other>[^$\u0600-\u06FF\u0750-\u077F]+)"                 # everything else (Latin, digits, URLs, math)
+    r"|\$(?P<seg_math>[^$]+)\$"                                         # inline math
+    r"|\x60(?P<seg_code>[^\x60]+)\x60"                                  # code span
+    r")"
+)
+
 def normalize_persian_punctuation(text: str) -> str:
     if not is_persian(text):
         return text
-    # Only replace ASCII punctuation when flanked by Persian characters,
-    # preventing corruption of English citations (e.g. "et al., 2025a")
+    # Step A: replace ASCII punctuation when flanked by Persian characters
     for ascii_p, fa_p in _PUNCT_MAP.items():
         pattern = _PERSIAN_CONTEXT_RE[ascii_p]
         text = pattern.sub(r"\1" + fa_p + r"\2", text)
-    # remove space(s) immediately before Persian punctuation
-    text = re.sub(r"\s+([،؛؟:.])", r"\1", text)
-    # ensure exactly one space after punctuation unless at end of string
-    # or immediately followed by more punctuation / whitespace already
-    text = re.sub(r"([،؛؟:])(?!\s|$)", r"\1 ", text)
-    return text
+    # Steps B+C: span-aware — only operate on Persian prose segments,
+    # skip decimals, URLs, citations, math, code
+    parts = []
+    last = 0
+    for m in _SAFE_PUNCT_RE.finditer(text):
+        if m.start() > last:
+            # gap text — leave untouched
+            parts.append(text[last:m.start()])
+        if m.group("seg_persian"):
+            seg = m.group("seg_persian")
+            # Step B: remove space(s) before Persian punctuation
+            seg = re.sub(r"\s+([،؛؟:.])", r"\1", seg)
+            # Step C: force space after punctuation (not period)
+            seg = re.sub(r"([،؛؟:])(?!\s|$)", r"\1 ", seg)
+            parts.append(seg)
+        elif m.group("seg_math") is not None:
+            parts.append("$" + m.group("seg_math") + "$")
+        elif m.group("seg_code") is not None:
+            parts.append("`" + m.group("seg_code") + "`")
+        else:
+            parts.append(m.group("seg_other"))
+        last = m.end()
+    if last < len(text):
+        parts.append(text[last:])
+    return "".join(parts)
+
+
+# ==========================================================================
+# PRE-CONVERSION VALIDATION
+# ==========================================================================
+
+def validate_markdown(md_text: str) -> list:
+    """Scan the Markdown source for issues that would cause DOCX rendering
+    problems.  Returns a list of (severity, line_number, message) tuples.
+    Severity is 'error' (will break rendering) or 'warn' (may cause issues).
+
+    Checks (per Collective-md-to-docx-standards §XVI):
+    - Arabic ي / ك instead of Persian ی / ک
+    - Incorrect ZWNJ usage (space where ZWNJ expected)
+    - Repeated spaces
+    - English comma/semicolon/question-mark in Persian context
+    - Unclosed math delimiters
+    - Malformed tables
+    - Duplicate heading IDs
+    """
+    issues = []
+    lines = md_text.split("\n")
+    heading_ids = {}
+
+    # Precompiled patterns
+    arabic_yeh_re = re.compile(r'[\u064A]')      # Arabic ي
+    arabic_kaf_re = re.compile(r'[\u0643]')       # Arabic ك
+    repeated_space_re = re.compile(r'  +')        # 2+ spaces
+    eng_comma_fa_re = re.compile(r'[\u0600-\u06FF]\s*,\s*[\u0600-\u06FF]')
+    eng_semicolon_fa_re = re.compile(r'[\u0600-\u06FF]\s*;\s*[\u0600-\u06FF]')
+    eng_qmark_fa_re = re.compile(r'[\u0600-\u06FF]\s*\?\s*[\u0600-\u06FF]')
+    heading_re = re.compile(r'^(#{1,4})\s+(.*)$')
+    table_row_re = re.compile(r'^\s*\|(.+)\|\s*$')
+
+    in_code_block = False
+    unclosed_math = False
+    math_start_line = 0
+    table_col_counts = []
+
+    for i, line in enumerate(lines, 1):
+        stripped = line.strip()
+
+        # Track code blocks (skip validation inside)
+        if stripped.startswith("```"):
+            in_code_block = not in_code_block
+            continue
+        if in_code_block:
+            continue
+
+        # Skip YAML front matter
+        if i <= 2 and stripped == "---":
+            continue
+
+        # --- Arabic character detection ---
+        for m in arabic_yeh_re.finditer(line):
+            issues.append(('warn', i, f"Arabic ي (U+064A) at col {m.start()+1}; use Persian ی (U+06CC)"))
+        for m in arabic_kaf_re.finditer(line):
+            issues.append(('warn', i, f"Arabic ك (U+0643) at col {m.start()+1}; use Persian ک (U+06A9)"))
+
+        # --- Repeated spaces (skip table rows and images) ---
+        if not table_row_re.match(line) and not stripped.startswith("!") and not stripped.startswith("|"):
+            for m in repeated_space_re.finditer(line):
+                issues.append(('warn', i, f"Repeated spaces at col {m.start()+1}"))
+
+        # --- English punctuation in Persian context ---
+        if eng_comma_fa_re.search(line):
+            issues.append(('warn', i, "English comma ',' between Persian characters; use '،'"))
+        if eng_semicolon_fa_re.search(line):
+            issues.append(('warn', i, "English semicolon ';' between Persian characters; use '؛'"))
+        if eng_qmark_fa_re.search(line):
+            issues.append(('warn', i, "English question mark '?' between Persian characters; use '؟'"))
+
+        # --- Unclosed math delimiters ---
+        dollar_count = line.count("$") - line.count("\\$")
+        if dollar_count % 2 != 0:
+            if unclosed_math:
+                unclosed_math = False
+            else:
+                unclosed_math = True
+                math_start_line = i
+
+        # --- Heading ID tracking ---
+        hm = heading_re.match(line)
+        if hm:
+            import hashlib
+            h_text = hm.group(2).strip()
+            h_id = hashlib.md5(h_text.encode()).hexdigest()[:8]
+            if h_id in heading_ids:
+                issues.append(('warn', i, f"Duplicate heading ID with line {heading_ids[h_id]}: '{h_text[:50]}'"))
+            else:
+                heading_ids[h_id] = i
+
+    if unclosed_math:
+        issues.append(('error', math_start_line, "Unclosed math delimiter '$'"))
+
+    return issues
+
+
+def print_validation_report(issues: list):
+    """Print validation results. Called before conversion."""
+    if not issues:
+        print("[validation] No issues found.")
+        return
+    errors = [i for i in issues if i[0] == 'error']
+    warnings = [i for i in issues if i[0] == 'warn']
+    print(f"\n--- Pre-conversion validation ({len(errors)} error(s), {len(warnings)} warning(s)) ---")
+    for severity, line_no, msg in errors[:20]:
+        print(f"  [ERROR]   L{line_no}: {msg}")
+    for severity, line_no, msg in warnings[:30]:
+        print(f"  [WARN]    L{line_no}: {msg}")
+    if len(warnings) > 30:
+        print(f"  ... and {len(warnings) - 30} more warnings")
+    print("--- end validation ---\n")
 
 
 # ==========================================================================
@@ -396,6 +538,21 @@ def add_footnote_reference_run(paragraph, footnote_id: int):
 
 _OMML_CACHE: dict = {}
 
+def _normalize_latex(latex_str: str) -> str:
+    """Fix common LaTeX escaping issues before passing to pandoc/OMML.
+
+    - ``\\_`` → ``_``: escaped underscores are invalid in LaTeX math mode
+      and cause pandoc conversion failures.
+    - ``\\{`` / ``\\}`` → ``{`` / ``}``: escaped braces (rare but possible).
+    """
+    s = latex_str
+    s = s.replace("\\_", "_")
+    s = s.replace("\\{", "{")
+    s = s.replace("\\}", "}")
+    s = s.replace("\\^", "^")
+    return s
+
+
 def latex_to_omml(latex_str: str, display: bool = False):
     """Convert a LaTeX string to a native Word equation element using pandoc.
 
@@ -403,6 +560,7 @@ def latex_to_omml(latex_str: str, display: bool = False):
     (display).  Returns ``None`` when pandoc is unavailable or the conversion
     fails; the caller should fall back to plain-text rendering.
     """
+    latex_str = _normalize_latex(latex_str)
     cache_key = (latex_str, display)
     if cache_key in _OMML_CACHE:
         return _OMML_CACHE[cache_key]
@@ -783,8 +941,96 @@ INLINE_TOKEN_RE = re.compile(
     r"|(`(?P<code>.+?)`)"                 # `code`
     r"|(\$(?P<eq>[^$]+)\$)"               # $equation$  (or \(...\) normalized to $...$)
     r"|(\[\^(?P<fnref>[^\]]+)\])"         # [^footnote-id]
-    r"|(?P<latin>(?:[\(\[\{]\s*)?[a-zA-Z](?:[a-zA-Z0-9\.\-&:@/ _]*?[a-zA-Z0-9\)\]\}\.])?)" # Latin/English runs
 )
+
+
+def _bidi_class(ch):
+    """Return 'RTL', 'LTR', 'NUM', 'PUNCT', or 'WS' for a character."""
+    cp = ord(ch)
+    if 0x0600 <= cp <= 0x06FF or 0x0750 <= cp <= 0x077F or 0xFB50 <= cp <= 0xFDFF or 0xFE70 <= cp <= 0xFEFF:
+        return 'RTL'
+    if ch in '\u200C\u200D\u200E\u200F\u2066\u2067\u2068\u2069':
+        return 'WS'
+    if ch.isascii() and ch.isalpha():
+        return 'LTR'
+    if ch.isdigit():
+        return 'NUM'
+    if ch.isspace():
+        return 'WS'
+    return 'PUNCT'
+
+
+_BRACKET_PAIRS = {'(': ')', '[': ']'}
+_BRACKET_CLOSERS = {v: k for k, v in _BRACKET_PAIRS.items()}
+
+
+def _resolve_bracket_classes(text, classes, base_rtl):
+    """Mutate *classes* in place so each matched bracket pair shares one
+    direction, chosen from the dominant direction of its enclosed content
+    (falling back to the paragraph's base direction when the content is
+    directionally neutral). This mirrors the Unicode bidi algorithm's rule
+    for resolving "neutral" mirrored characters like parentheses/brackets,
+    instead of letting each paren be classified alone as PUNCT."""
+    stack = []
+    for i, ch in enumerate(text):
+        if ch in _BRACKET_PAIRS:
+            stack.append(i)
+        elif ch in _BRACKET_CLOSERS:
+            for j in range(len(stack) - 1, -1, -1):
+                if text[stack[j]] == _BRACKET_CLOSERS[ch]:
+                    open_i = stack.pop(j)
+                    del stack[j:]
+                    rtl_count = 0
+                    ltr_count = 0
+                    for k in range(open_i + 1, i):
+                        if classes[k] == 'RTL':
+                            rtl_count += 1
+                        elif classes[k] == 'LTR':
+                            ltr_count += 1
+                    if rtl_count > ltr_count:
+                        pair_cls = 'RTL'
+                    elif ltr_count > rtl_count:
+                        pair_cls = 'LTR'
+                    else:
+                        pair_cls = 'RTL' if base_rtl else 'LTR'
+                    classes[open_i] = pair_cls
+                    classes[i] = pair_cls
+                    break
+
+
+def _tokenize_bidi_spans(text, base_rtl=False):
+    """Split text into (substring, direction) pairs.
+
+    *base_rtl* is the paragraph's overall direction; it's used as the
+    tie-breaker for directionally-neutral bracket pairs (e.g. a
+    parenthesis around a number) so bracket runs don't get stranded as
+    their own isolated LTR span in the middle of RTL text.
+    """
+    if not text:
+        return []
+    classes = [_bidi_class(ch) for ch in text]
+    _resolve_bracket_classes(text, classes, base_rtl)
+    spans = []
+    current_class = classes[0]
+    current = text[0]
+    for idx in range(1, len(text)):
+        ch = text[idx]
+        cls = classes[idx]
+        # Keep a decimal/thousands separator glued to a surrounding NUM run
+        # (e.g. "3.14" or "1,000") instead of splitting off its own PUNCT span.
+        if (cls == 'PUNCT' and ch in '.,' and current_class == 'NUM'
+                and idx + 1 < len(text) and classes[idx + 1] == 'NUM'):
+            cls = 'NUM'
+        if cls == current_class or (cls == 'WS' and current_class != 'WS'):
+            current += ch
+            if cls != 'WS':
+                current_class = cls
+        else:
+            spans.append((current, current_class))
+            current = ch
+            current_class = cls
+    spans.append((current, current_class))
+    return spans
 
 
 def add_inline_runs(paragraph, text, cfg, rtl=None, normalize_punct=True):
@@ -804,16 +1050,20 @@ def _process_inline(paragraph, text, cfg, rtl, normalize_punct,
     *default_bold* / *default_italic* are inherited from parent formatting
     contexts (e.g. inside ``**…**``) and applied to plain-text segments.
     """
-    # Normalize \(...\) to $...$ so both LaTeX and Markdown math delimiters work
-    text = text.replace(r"\(", "$").replace(r"\)", "$")
+    # Normalize \(...\) to $...$ so both LaTeX and Markdown math delimiters work.
+    # Use regex to match \(...\) as a unit, avoiding corruption of text like
+    # "something \(is\) a test" where backslash-paren is not math.
+    text = re.sub(r'\\\((.+?)\\\)', r'$\1$', text)
     pos = 0
     for m in INLINE_TOKEN_RE.finditer(text):
         if m.start() > pos:
             segment = text[pos:m.start()]
             if normalize_punct and rtl:
                 segment = normalize_persian_punctuation(segment)
-            _append_run(paragraph, segment, cfg, rtl,
-                        bold=default_bold, italic=default_italic)
+            for span_text, span_cls in _tokenize_bidi_spans(segment, base_rtl=rtl):
+                span_rtl = (span_cls == 'RTL')
+                _append_run(paragraph, span_text, cfg, span_rtl,
+                            bold=default_bold, italic=default_italic)
         if m.group("b_i") is not None:
             _process_inline(paragraph, m.group("b_i"), cfg, rtl, normalize_punct,
                             default_bold=True, default_italic=True)
@@ -846,16 +1096,15 @@ def _process_inline(paragraph, text, cfg, rtl, normalize_punct,
                 print(f"[warn] footnote reference [^{label}] has no matching "
                       f"definition; left as plain text.", file=sys.stderr)
                 _append_run(paragraph, f"[^{label}]", cfg, rtl)
-        elif m.group("latin") is not None:
-            _append_run(paragraph, m.group("latin"), cfg, rtl=False,
-                        bold=default_bold, italic=default_italic)
         pos = m.end()
     if pos < len(text):
         segment = text[pos:]
         if normalize_punct and rtl:
             segment = normalize_persian_punctuation(segment)
-        _append_run(paragraph, segment, cfg, rtl,
-                    bold=default_bold, italic=default_italic)
+        for span_text, span_cls in _tokenize_bidi_spans(segment, base_rtl=rtl):
+            span_rtl = (span_cls == 'RTL')
+            _append_run(paragraph, span_text, cfg, span_rtl,
+                        bold=default_bold, italic=default_italic)
 
 
 def _append_run(paragraph, text, cfg, rtl, bold=False, italic=False, mono=False, equation=False):
@@ -898,6 +1147,7 @@ TABLE_CAPTION_RE = re.compile(
 )
 ORDERED_RE = re.compile(r"^\s*(\d+)[.)]\s+(.*)$")
 UNORDERED_RE = re.compile(r"^\s*[-*+]\s+(.*)$")
+IEEE_REF_RE = re.compile(r"^\s*\[(\d+)\]\s+(.*)$")
 HEADING_RE = re.compile(r"^(#{1,4})\s+(.*)$")
 FOOTNOTE_DEF_RE = re.compile(r"^\[\^([^\]]+)\]:\s*(.*)$")
 DISPLAY_MATH_RE = re.compile(r"^\$\$(.+)\$\$\s*$")
@@ -922,6 +1172,21 @@ def strip_yaml_frontmatter(md_text: str):
                       "(pip install pyyaml --break-system-packages)", file=sys.stderr)
             return meta, body
     return {}, md_text
+
+
+def _strip_body_front_matter(body_text: str) -> str:
+    """When YAML front matter already generated title/abstract/TOC pages,
+    strip the hand-written duplicates from the markdown body.
+
+    Removes everything before the first '# فصل' (Chapter) heading.
+    If no such heading is found, returns the body unchanged (safe fallback).
+    """
+    import re as _re
+    chapter_re = _re.compile(r"^#\s+فصل\s+", _re.MULTILINE)
+    m = chapter_re.search(body_text)
+    if m:
+        return body_text[m.start():]
+    return body_text
 
 
 def extract_footnote_definitions(lines):
@@ -1025,6 +1290,10 @@ def add_caption(doc, kind, caption_text, cfg, state, position="above"):
 
     p = doc.add_paragraph(style="Caption")
     set_paragraph_rtl(p, True)
+    pPr = p._p.get_or_add_pPr()
+    tblCaption = OxmlElement('w:tblCaption')
+    tblCaption.set(qn('w:val'), 'Table' if kind == "table" else 'Figure')
+    pPr.append(tblCaption)
     label_run = p.add_run(label)
     label_run.bold = True
     label_run.italic = True
@@ -1044,6 +1313,7 @@ def add_caption(doc, kind, caption_text, cfg, state, position="above"):
 
 def convert_markdown_body(doc: Document, md_text: str, cfg: dict, state: dict, lint: dict):
     lines = md_text.split("\n")
+    lines = [html.unescape(line) for line in lines]
     lines, footnote_defs = extract_footnote_definitions(lines)
     cfg["_footnotes"]["defs"].update(footnote_defs)
 
@@ -1214,6 +1484,11 @@ def convert_markdown_body(doc: Document, md_text: str, cfg: dict, state: dict, l
                     state["chapter"] += 1
                     state["table"] = 0
                     state["figure"] = 0
+            # Detect references section for IEEE numbering (H1 or H2)
+            _ref_headings = {"منابع", "منابع فارسی", "منابع غیرفارسی"}
+            if text.strip() in _ref_headings:
+                state["in_references"] = True
+                state["ref_counter"] = 0
             style_name = f"Heading {level}"
             p = doc.add_paragraph(style=style_name)
             rtl = is_persian(text)
@@ -1256,14 +1531,47 @@ def convert_markdown_body(doc: Document, md_text: str, cfg: dict, state: dict, l
             just_after_heading = False
             continue
 
+        # ---- IEEE [N] reference entry (inside or outside references section) -
+        ref_m = IEEE_REF_RE.match(line)
+        if ref_m:
+            ref_num = ref_m.group(1)
+            ref_text = ref_m.group(2)
+            p = doc.add_paragraph()
+            rtl = is_persian(ref_text)
+            set_paragraph_rtl(p, rtl)
+            # Add [N] label as bold run
+            label_run = p.add_run(f"[{ref_num}] ")
+            label_run.bold = True
+            set_run_fonts(label_run, latin_font=cfg["en_font"], cs_font=cfg["fa_body_font"])
+            set_run_rtl(label_run, False)
+            # Add the rest of the reference text
+            add_inline_runs(p, ref_text, cfg, rtl=rtl)
+            just_after_heading = False
+            i += 1
+            continue
+
         # ---- unordered list ------------------------------------------------
         if UNORDERED_RE.match(line):
             while i < n and UNORDERED_RE.match(lines[i]):
                 text = UNORDERED_RE.match(lines[i]).group(1)
-                p = doc.add_paragraph(style="List Bullet")
-                rtl = is_persian(text)
-                set_paragraph_rtl(p, rtl)
-                add_inline_runs(p, text, cfg, rtl=rtl)
+                if state["in_references"]:
+                    # IEEE numbered reference: [1] Author. (Year). ...
+                    state["ref_counter"] += 1
+                    label = "[{}]".format(state["ref_counter"])
+                    p = doc.add_paragraph(style="List Number")
+                    rtl = is_persian(text)
+                    set_paragraph_rtl(p, rtl)
+                    # Add the [N] label as a separate run, then the rest
+                    label_run = p.add_run(label + " ")
+                    label_run.bold = True
+                    set_run_fonts(label_run, latin_font=cfg["en_font"], cs_font=cfg["fa_body_font"])
+                    set_run_rtl(label_run, False)
+                    add_inline_runs(p, text, cfg, rtl=rtl)
+                else:
+                    p = doc.add_paragraph(style="List Bullet")
+                    rtl = is_persian(text)
+                    set_paragraph_rtl(p, rtl)
+                    add_inline_runs(p, text, cfg, rtl=rtl)
                 i += 1
             just_after_heading = False
             continue
@@ -1324,6 +1632,13 @@ def _lint_paragraph(text, lint):
         sc = _word_count(sentence)
         if sc > 35:
             lint["long_sentences"].append((sc, sentence[:60]))
+    # Typography checks (Collective standards §XVI)
+    # Check for inconsistent percent signs
+    if "%" in text and "٪" in text:
+        lint["mixed_percent"].append(text[:60])
+    # Check for inconsistent decimal separators (Arabic ٫ mixed with English .)
+    if "٫" in text and re.search(r'\d+\.\d+', text):
+        lint["mixed_decimals"].append(text[:60])
 
 
 def print_lint_report(lint):
@@ -1345,8 +1660,20 @@ def print_lint_report(lint):
               f"(guidance: 15-25 words average, 35 max). First few:")
         for sc, snippet in lint["long_sentences"][:5]:
             print(f"    ({sc} words) {snippet}...")
-    if not any([lint["short_paragraphs"], lint["long_paragraphs"], lint["long_sentences"]]):
-        print("[ok] No paragraph/sentence-length issues detected.")
+    # Typography checks
+    if lint.get("mixed_percent"):
+        print(f"[warn] {len(lint['mixed_percent'])} paragraph(s) mix '%' and '٪' (Arabic percent). "
+              f"Use one consistently. First few:")
+        for snippet in lint["mixed_percent"][:3]:
+            print(f"    {snippet}...")
+    if lint.get("mixed_decimals"):
+        print(f"[warn] {len(lint['mixed_decimals'])} paragraph(s) mix '.' and '٫' (Arabic decimal separator). "
+              f"Use one consistently. First few:")
+        for snippet in lint["mixed_decimals"][:3]:
+            print(f"    {snippet}...")
+    if not any([lint["short_paragraphs"], lint["long_paragraphs"], lint["long_sentences"],
+                lint.get("mixed_percent", []), lint.get("mixed_decimals", [])]):
+        print("[ok] No paragraph/sentence-length or typography issues detected.")
     print("--- end report ---\n")
 
 
@@ -1417,6 +1744,7 @@ def inject_footnotes_part(docx_path: Path, footnotes_xml: bytes):
     matching relationship, and the content-type override. This is done as
     a zip-level patch because python-docx has no footnotes API."""
     tmp_fd, tmp_path = tempfile.mkstemp(suffix=".docx")
+    os.close(tmp_fd)
     Path(tmp_path).unlink()  # we just want a free filename
     tmp_path = Path(tmp_path)
 
@@ -1494,6 +1822,113 @@ def _open_doc(template_path=None):
     return Document()
 
 
+def _register_caption_labels(doc):
+    """Register 'Table' and 'Figure' caption labels in the numbering part
+    so Word's TOC \\c \"Table\" / \\c \"Figure\" fields can find them."""
+    from docx.oxml import OxmlElement
+    from docx.oxml.ns import qn as _qn
+
+    numbering_part = doc.part.numbering_part
+    if numbering_part is None:
+        return
+
+    numbering = numbering_part.numbering_definitions._numbering
+
+    # Check if caption labels already exist
+    existing_labels = set()
+    for num in numbering.findall(_qn("w:num")):
+        for child in num:
+            if child.tag == _qn("w:caption"):
+                existing_labels.add(child.get(_qn("w:name")))
+
+    if "Table" in existing_labels and "Figure" in existing_labels:
+        return
+
+    # Find the highest abstractNumId and numId in use
+    max_abstract = -1
+    max_num = -1
+    for an in numbering.findall(_qn("w:abstractNum")):
+        val = an.get(_qn("w:abstractNumId"))
+        if val is not None:
+            max_abstract = max(max_abstract, int(val))
+    for num in numbering.findall(_qn("w:num")):
+        val = num.get(_qn("w:numId"))
+        if val is not None:
+            max_num = max(max_num, int(val))
+
+    # Add abstractNum entries for Table and Figure caption labels
+    for label_name, start_val in [("Table", 1), ("Figure", 1)]:
+        max_abstract += 1
+        max_num += 1
+
+        abstract_num = OxmlElement("w:abstractNum")
+        abstract_num.set(_qn("w:abstractNumId"), str(max_abstract))
+        lvl = OxmlElement("w:lvl")
+        lvl.set(_qn("w:ilvl"), "0")
+        num_fmt = OxmlElement("w:numFmt")
+        num_fmt.set(_qn("w:val"), "decimal")
+        lvl.append(num_fmt)
+        lvl_text = OxmlElement("w:lvlText")
+        lvl_text.set(_qn("w:val"), "%1")
+        lvl.append(lvl_text)
+        start = OxmlElement("w:start")
+        start.set(_qn("w:val"), str(start_val))
+        lvl.append(start)
+        abstract_num.append(lvl)
+        # Place abstractNum before any num elements
+        first_num = numbering.find(_qn("w:num"))
+        if first_num is not None:
+            numbering.insert(list(numbering).index(first_num), abstract_num)
+        else:
+            numbering.append(abstract_num)
+
+        num_el = OxmlElement("w:num")
+        num_el.set(_qn("w:numId"), str(max_num))
+        abs_ref = OxmlElement("w:abstractNumId")
+        abs_ref.set(_qn("w:val"), str(max_abstract))
+        num_el.append(abs_ref)
+        caption = OxmlElement("w:caption")
+        caption.set(_qn("w:name"), label_name)
+        caption.set(_qn("w:pos"), "afterText")
+        caption.set(_qn("w:sep"), ":")
+        num_el.append(caption)
+        numbering.append(num_el)
+
+
+def _fix_toc_fields_rtl(doc):
+    """Make all TOC field paragraphs RTL so the list renders correctly for
+    a Persian thesis (page numbers on the left, text on the right)."""
+    from docx.oxml.ns import qn as _qn
+    ns_w = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+
+    for p in doc.paragraphs:
+        # Check if this paragraph contains a TOC field
+        p_elem = p._p
+        instr_texts = p_elem.findall(".//" + _qn("w:instrText"))
+        has_toc = False
+        for it in instr_texts:
+            if it.text and "TOC" in it.text:
+                has_toc = True
+                break
+        if not has_toc:
+            continue
+
+        # Make this paragraph RTL
+        pPr = p_elem.get_or_add_pPr()
+        bidi = pPr.find(_qn("w:bidi"))
+        if bidi is None:
+            bidi = OxmlElement("w:bidi")
+            pPr.append(bidi)
+        bidi.set(_qn("w:val"), "1")
+
+        # Set paragraph alignment to right (for RTL visual)
+        jc = pPr.find(_qn("w:jc"))
+        if jc is None:
+            jc = OxmlElement("w:jc")
+            pPr.append(jc)
+        jc.set(_qn("w:val"), "right")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Convert a Farsi Markdown thesis into an IAU-styled .docx file "
@@ -1555,7 +1990,6 @@ def main():
         add_bismillah_page(doc, cfg)                              # page الف (hidden number)
         add_farsi_title_page(doc, meta, cfg)                      # page ب
         add_english_title_page(doc, meta, cfg)                    # page ج
-        doc.add_page_break()
         add_simple_fa_page(doc, "سپاسگزاری", meta.get("acknowledgements"), cfg)   # page د
         add_simple_fa_page(doc, "تقدیم", meta.get("dedication"), cfg)             # page ه
         add_toc_pages(doc, cfg)
@@ -1574,8 +2008,17 @@ def main():
         set_section_page_numbering(doc.sections[0], fmt="decimal", start=1)
         add_footer_page_numbers(doc.sections[0], cfg)
 
-    state = {"chapter": 0, "table": 0, "figure": 0}
-    lint = {"short_paragraphs": [], "long_paragraphs": [], "long_sentences": [], "heading_levels": set()}
+    if has_front_matter:
+        body_text = _strip_body_front_matter(body_text)
+
+    state = {"chapter": 0, "table": 0, "figure": 0, "in_references": False, "ref_counter": 0}
+    lint = {"short_paragraphs": [], "long_paragraphs": [], "long_sentences": [], "heading_levels": set(),
+            "mixed_percent": [], "mixed_decimals": []}
+
+    # Pre-conversion validation (Collective standards §XVI)
+    validation_issues = validate_markdown(body_text)
+    print_validation_report(validation_issues)
+
     convert_markdown_body(doc, body_text, cfg, state, lint)
 
     if has_front_matter and meta.get("abstract_en"):
@@ -1583,6 +2026,9 @@ def main():
         add_abstract_page(doc, "Abstract", meta["abstract_en"], meta.get("abstract_en_keywords"), cfg, rtl=False)
         doc.add_page_break()
         add_english_title_page(doc, meta, cfg)
+
+    _register_caption_labels(doc)
+    _fix_toc_fields_rtl(doc)
 
     output_path = Path(args.output_docx)
     doc.save(str(output_path))

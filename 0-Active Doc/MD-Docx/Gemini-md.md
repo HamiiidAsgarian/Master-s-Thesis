@@ -1,0 +1,21 @@
+To be completely blunt: **expecting a one-click, flawless conversion of a mixed Farsi/English academic Markdown file to Word via Pandoc is unrealistic.** Pandoc’s intermediate syntax tree is not fully bidirectional (BiDi) aware, and Microsoft Word defaults to Left-to-Right (LTR) rendering unless explicitly overridden. You *will* experience formatting breaks, and you must rely on a tightly controlled environment and manual post-processing to fix them.
+
+Here is the comprehensive breakdown of failure points and how to mitigate them:
+
+| Feature                       | Markdown (MD) Structure Risk                                                      | Pandoc -> Word Conversion Problem                                                                                              | Ideal Mitigation                                                                                                   |
+| ----------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| **Mixed BiDi & Parentheses**  | Visual vs. logical order mismatch in editors makes reading and editing painful.   | Punctuation jumps to the wrong side; `(تست)` becomes `)تست(`.                                                                  | Write strictly in logical order. Set `dir: rtl` and `lang: fa-IR` in the YAML frontmatter.                         |
+| **LaTeX Formulas**            | Farsi inside math blocks breaks visual editor flow.                               | Pandoc converts LaTeX to Word OMML. RTL OMML is buggy: variables flip, alignment breaks, and Farsi defaults to "Cambria Math". | Keep math strictly LTR/English where possible. Use a Word VBA macro post-conversion to fix equation justification. |
+| **Citations & Bibliography**  | Mixing English and Farsi citation keys creates a unified, disorganized list.      | Sorts strictly LTR. Uses English terms ("et al.") instead of Farsi ("همکاران").                                                | Use a localized Persian CSL file (`--csl=persian.csl`). For dual bibliographies, you must use custom Lua filters.  |
+| **Tables**                    | Native MD tables are typed visually LTR, making Farsi column alignment confusing. | Pandoc renders all tables as LTR (Column 1 is placed on the far left).                                                         | Select tables in Word post-conversion and manually change Table Properties to "Right-to-Left".                     |
+| **TOC & List of Figures**     | Typed sequentially, but numbering (e.g., `1.1.1`) often displays backwards in MD. | The generated TOC aligns left; page numbers appear on the wrong side.                                                          | Use a **`--reference-doc`**. You must pre-configure a Word template so all TOC and Caption styles are set to RTL.  |
+| **Decimal Numbers & Digits**  | Typing an English period (`3.14`) instead of a Farsi Momayyez (`۳٫۱۴`).           | Numbers remain English unless explicitly typed in Farsi, or Word overrides them.                                               | Type Farsi digits explicitly, or set Word Options > Advanced > Numeral to "Context".                               |
+| **Symbols & ZWNJ (نیم‌فاصله)** | ZWNJ is invisible in many MD editors, leading to missing spaces or typos.         | UTF-8 passes through cleanly, but justified text in Word may stretch ZWNJ awkwardly depending on the font.                     | Ensure your `--reference-doc` uses standard Farsi fonts (e.g., Vazirmatn, B Nazanin) for the "Normal" style.       |
+
+To achieve the ideal workflow, you cannot just run standard conversion commands. Your pipeline must integrate a heavily customized Word template (`--reference-doc=template.docx`) where every style is manually set to RTL, alongside a localized CSL file for citations.
+
+Configure a Persian CSL file
+
+Lua filters for dual bibliographies
+
+VBA Macros for RTL fixing

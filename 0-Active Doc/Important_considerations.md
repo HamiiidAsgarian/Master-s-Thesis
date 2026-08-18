@@ -2,9 +2,11 @@
 
 **Scope:** Persian M.Sc. thesis project on OCEAN-personality MARL energy sharing in smart neighborhoods.
 **Repo root:** `/Users/hamidasgharian/Desktop/Thesis/sim`
-**Active thesis file:** `0-Active Doc/Thesis_v9-3.md` (this is the ONLY live document — `thesis_v9-2 B.md` and older snapshots are historical).
-**Read first (authoritative):** `0-Active Doc/AUDIT_REPORT_v9-2.md` (research-integrity audit), `0-Active Doc/AUDIT_PROGRESS.md` (progress checkpoint), `results/Result_Help.md` (figure/data registry).
-**Last updated:** 2026-08-16 (figures regenerated in `generate_all_Visuals2.py`; new **شکل ۲-۱** conceptual-framework figure added to §2-5-1 and فهرست اشکال as `results/figures/v2_1_conceptual_framework.png`).
+**Active thesis file:** `0-Active Doc/Thesis_v9-5.md` (this is the ONLY live document — `thesis_v9-3.md` and older snapshots are historical).
+**Read first (authoritative):** `0-Active Doc/AUDIT_REPORT_v9-2.md` (research-integrity audit), `0-Active Doc/AUDIT_PROGRESS.md` (progress checkpoint), `results/Result_Help.md` (figure/data registry + all verified numbers in sections I–L).
+**Last updated:** 2026-08-20 (full numeric audit completed — 87+ table values + 16 statistical
+tests verified; `Result_Help.md` sections I–L added with all verified numbers).
+Previous: 2026-08-16 (figures regenerated; شکل ۲-۱ added).
 
 This file exists so any agent (new or resumed, with or without history) can work without
 re-discovering the same pitfalls, mis-reading the same conventions, or re-introducing errors
@@ -15,7 +17,17 @@ figures, or running statistical comparisons.
 
 ## 1. THE #1 PITFALL: The Farsi decimal convention (memorize this)
 
-The thesis uses a **non-standard decimal notation**: numbers are written as
+**RESOLUTION (2026-08-20):** The slash-decimal notation has been **eliminated** from the thesis.
+All ~800 instances were converted to proper `٫` (Arabic Decimal Separator) notation.
+The section below is preserved as historical reference — if you see any remaining `X/Y`
+patterns in the thesis, they are errors that should be converted.
+
+The thesis now uses the **standard Persian decimal notation** with `٫` (U+066D):
+- `۰٫۸` = 0.8 (correct, no longer 8.0)
+- `۷٫۰` = 7.0
+- `۱٫۳` = 1.3
+
+**Historical convention (ELIMINATED):** numbers were written as
 `[fractional digits]/[integer part]`, which reads as **`integer.fraction`**.
 
 | Written | Means | NOT |
@@ -253,3 +265,206 @@ if archiving, **keep the `.csv`/`.txt` beside `baseline_comparison.png`**.
 - Only 2 of 22 figures are cited in prose (شکل ۳-۱, شکل ۴-۷) — add «شکل X-Y را ببینید» call-outs.
 - Candidate optional figures (not generated): training/convergence learning curves,
   fairness–efficiency trade-off visual, aggregated battery-capacity chart.
+
+---
+
+## 13. Farsi–English number & formatting translation guide (comprehensive)
+
+> **Read this before writing or editing ANY number, unit, percentage, or statistical value
+> in the thesis.** This section consolidates every formatting rule discovered during the
+> 2026-08-20 numeric audit.
+
+### 13-1. Digit systems
+
+| System | Digits | Where used in thesis |
+|---|---|---|
+| Persian-Indic | ۰ ۱ ۲ ۳ ۴ ۵ ۶ ۷ ۸ ۹ | All Persian prose (table cells, body text, captions, abstracts) |
+| Western Arabic | 0 1 2 3 4 5 6 7 8 9 | Code, CSVs, config files, English abstract, figure axes, references |
+
+**Rule:** Persian prose → Persian digits. English prose / code → Western digits. Never mix
+within a single cell or sentence.
+
+### 13-2. Decimal separators
+
+| Symbol | Unicode | Name | Where used |
+|---|---|---|---|
+| `٫` | U+066D | Arabic Decimal Separator | Persian prose: `۰٫۹۲۰` = 0.920 |
+| `.` | U+002E | Full Stop | English prose, code, CSVs: `0.920` |
+
+**Rule:** Persian text ALWAYS uses `٫` not `.`. English text ALWAYS uses `.` not `٫`.
+
+**Common error:** Copy-pasting `0.920` into Persian prose. This renders as `0.920` with a
+Western dot — looks wrong and breaks text search. Must convert to `۰٫۹۲۰`.
+
+**Quick conversion table (Persian digits → with `٫`):**
+- 0.920 → `۰٫۹۲۰`
+- 4.34 → `۴٫۳۴`
+- 0.0011 → `۰٫۰۰۱۱`
+- 7.0 → `۷٫۰`
+- 1.8834 → `۱٫۸۸۳۴`
+
+### 13-3. Slash-decimal notation (Section 1 supplement)
+
+The thesis uses a **non-standard** notation `[fractional]/[integer]` = `integer.fraction`.
+This is NOT a fraction. It is a visual inversion. See Section 1 for full table.
+
+**After the 2026-08-20 audit:** All ~800 slash-decimal instances across the thesis were
+converted to proper `٫` decimal notation. The slash-decimal convention should NOT be
+re-introduced. If you encounter any remaining `X/Y` patterns in Persian text, convert to
+`Y.X` using `٫` as the decimal separator.
+
+### 13-4. Percentage symbols
+
+| Symbol | Unicode | Name | Where used |
+|---|---|---|---|
+| `٪` | U+066A | Arabic Percent Sign | Persian prose: `۱۴٫۵ درصد` or `۱۴٫۵٪` |
+| `%` | U+0025 | Percent Sign | English prose, code, CSVs: `14.5%` |
+
+**Convention in this thesis:** Percentages are written as `[number] درصد` (the word "percent")
+in Persian prose, not with the `٪` symbol. Use `٪` only in compact table cells or when the
+word "درصد" would be redundant.
+
+**Examples:**
+- Persian prose: `۱۴٫۵ درصد` ✓ (NOT `۱۴٫۵٪` in body text)
+- Table cell: `۱۴٫۵٪` ✓ (compact form)
+- English: `14.5%` ✓
+
+### 13-5. Thousands separator
+
+| Symbol | Unicode | Where used |
+|---|---|---|
+| `٬` | U+066C | Rarely — only for large numbers in Persian prose if needed |
+| `,` | U+002C | English prose, code: `2,700` |
+
+**Thesis convention:** Large numbers in Persian use the word form or no separator:
+- `۲٬۷۰۰` or `۲۷۰۰` (both acceptable; thesis uses unseparated)
+- `۲۵ اجرا` (25 runs — no thousands separator needed)
+- `۴۸ میلیون` (48 million — word form)
+
+### 13-6. Comma, semicolon, colon, dash
+
+| Symbol | Persian | English | Unicode |
+|---|---|---|---|
+| Comma | `،` (U+060C) | `,` (U+002C) | Different characters |
+| Semicolon | `؛` (U+061B) | `;` (U+003B) | Different characters |
+| Colon | `:` (same) | `:` (same) | Same character |
+| En dash | `–` (U+2013) | `–` (U+2013) | Same character |
+| Em dash | `—` (U+2014) | `—` (U+2014) | Same character |
+| Hyphen-minus | `-` (U+002D) | `-` (U+002D) | Same, but avoid in Persian text |
+
+**Rule:** Persian prose MUST use `،` (Arabic comma) and `؛` (Arabic semicolon). Using `,`
+and `;` in Persian text is a visible error.
+
+### 13-7. Statistical notation in Persian
+
+Statistical symbols are kept in their **original Western/Latin form** even within Persian
+text. They are NOT transliterated or converted to Persian digits.
+
+| Symbol | In Persian text | Example |
+|---|---|---|
+| t-statistic | `t` (Latin, italic via `$t$`) | `$t(۴) = 8.487$` — note: the number uses Persian digits but `t` stays Latin |
+| p-value | `p` (Latin, italic via `$p$`) | `$p = ۰٫۰۰۱۱$` |
+| F-statistic | `F` (Latin, italic via `$F$`) | `$F(4, ۲۰) = 3.362$` |
+| Cohen's d | `d` (Latin, italic via `$d$`) | `$d$ کوهن = 2.25` |
+| Alpha | `$\alpha$` | `$\alpha = ۰٫۰۵$` |
+| Epsilon | `$\varepsilon$` | `$\varepsilon$` |
+| Gamma | `$\gamma$` | `$\gamma = ۰٫۹۹$` |
+| Standard deviation | انحراف معیار (Persian) | NOT "SD" in Persian text |
+| Mean | می‌انگین (Persian) | NOT "mean" in Persian text |
+
+**Critical:** The digits INSIDE statistical expressions follow the same Persian digit rule.
+Correct: `$t(۴) = 8.487$` or `$t(4) = ۸٫۴۸۷$` — but be consistent.
+The thesis currently uses **Western digits for statistical values** (t=8.487, p=0.0011)
+even in Persian prose. This is acceptable for statistical notation but must be consistent.
+
+### 13-8. Units
+
+Units are kept in **Western/Latin script** even within Persian text:
+
+| Unit | Symbol | Persian text example |
+|---|---|---|
+| Kilowatt-hour | `kWh` or `کیلووات‌ساعت` | `۷٫۰ کیلووات‌ساعت` or `۷٫۰ kWh` |
+| Kilowatt | `kW` or `کیلووات` | `۱٫۳ کیلووات` |
+| Percentage | `درصد` or `٪` | `۱۴٫۵ درصد` |
+
+**Rule:** Unit symbols (kWh, kW, W, h) are ALWAYS Western script. The spelled-out Persian
+word form (`کیلووات‌ساعت`) is also acceptable. Never use Persian digits inside unit symbols.
+
+### 13-9. Decimal precision conventions
+
+The thesis is consistent about decimal precision:
+
+| Metric type | Decimal places | Examples |
+|---|---|---|
+| Comfort, fairness (ratios 0–1) | 3 in tables, 3 in prose | `۰٫۹۲۰`, `۰٫۰۰۷` |
+| Comfort/F in Table 4-10 (4dp precision) | 4 in tables | `۰٫۹۱۹۵`, `۱٫۸۴۲۰` |
+| Gini coefficient | 4 in tables | `۰٫۰۷۹۰`, `۰٫۰۹۶۲` |
+| Blackout rate (percentage) | 1 decimal as pct | `۱۴٫۵ درصد` or `0.145` |
+| Waste (kWh) | 2 in tables | `۴٫۹۸`, `۰٫۵۰` |
+| SD for waste (kWh) | 2 | `۰٫۵۰`, `۰٫۷۴` |
+| t-statistics | 3 | `8.487`, `−3.562` |
+| p-values | 4 | `0.0011`, `0.4229` |
+| Cohen's d | 2 | `2.25`, `3.79` |
+| F-statistics | 3 | `3.362`, `11.706` |
+
+**Rule:** Do not add unnecessary trailing zeros beyond what the thesis convention uses.
+Do not reduce precision below what's in the verified tables (e.g., don't round `۰٫۰۷۹۰`
+to `۰٫۰۸`).
+
+### 13-10. Minus/negative signs
+
+| Context | Symbol | Example |
+|---|---|---|
+| Negative t/F values in Persian prose | `−` (U+2212, MINUS SIGN) | `t = −3.562` or `t = ۳٫۵۶۲-` |
+| Directional change in prose | `-` after number or word | `۰٫۰۱۸-` (decrease of 0.018) |
+| Negative values in tables | `−` prefix or `‑` suffix | Thesis uses both; be consistent |
+
+**Thesis convention:** Persian text typically places the minus AFTER the number as a suffix:
+`t = ۳٫۵۶۲-` or `تفاوت ۰٫۰۱۸-`. English text places it before: `t = −3.562`.
+
+### 13-11. Mixed Persian/English in the same table
+
+Tables in the thesis sometimes mix Persian row labels with English column headers or
+statistical symbols. This is acceptable but follow these rules:
+
+- Row labels: Persian (`همگی خودخواه`, `مختلط`, `اثر نوآور`)
+- Column headers: Persian with math symbols (`آسایش ($\bar{C}$)`, `عدالت جین ($F$)`)
+- Cell values: Persian digits with `٫` decimal separator
+- Statistical symbols in cells: Latin (t, p, F, d) — these stay Latin
+
+### 13-12. Common translation pitfalls (checklist)
+
+| Pitfall | Wrong | Correct | Why |
+|---|---|---|---|
+| Western dot in Persian text | `۰.۹۲۰` | `۰٫۹۲۰` | Must use Arabic decimal separator |
+| Persian comma in English text | `0,920` | `0.920` | English uses dot, not comma, for decimal |
+| Latin comma in Persian text | `۱۰،۰۰۰` ← wrong | `۱۰٬۰۰۰` or `۱۰۰۰۰` | Persian comma `،` for lists, `٬` for thousands |
+| Slash-decimal reintroduced | `۰/۸` | `۸٫۰` | Slash notation was eliminated in 2026-08-20 audit |
+| Western `%` in Persian body | `۱۴.۵٪` | `۱۴٫۵ درصد` | Use word form in body, `٪` only in compact cells |
+| Persian digits in code | `alpha = ۰٫۲` | `alpha = 0.2` | Code/config is always Western |
+| Western digits in Persian table | `0.920 ± 0.010` | `۰٫۹۲۰ ± ۰٫۰۱۰` | Persian tables use Persian digits |
+| Units in Persian script only | `۷٫۰ کیلووات‌ساعتی` | `۷٫۰ کیلووات‌ساعت` | Remove the determinative suffix for units |
+| Trailing zeros inconsistency | `۰٫۰۷۹` vs `۰٫۰۷۹۰` | Match the table convention | Gini uses 4dp: `۰٫۰۷۹۰` |
+| Parentheses mismatch | `t(4)` in Persian | `t(۴)` | Digits inside parens follow Persian rule |
+| Figure axis labels | Persian text on axis | Keep English on axes | Figures use English/Western for axes |
+| `p`-value text notation | `p-value` in Persian | `$p$-value` or `مقدار $p$` | Statistical symbols stay Latin/italic |
+
+### 13-13. Quick conversion cheat-sheet
+
+**English number → Persian:**
+
+| English | Persian | Formula |
+|---|---|---|
+| 0.920 | ۰٫۹۲۰ | Replace `0`→`۰`, `9`→`۹`, `2`→`۲`, `.`→`٫` |
+| 14.5% | ۱۴٫۵ درصد | Same conversion + word "درصد" |
+| 4.34 kWh | ۴٫۳۴ کیلووات‌ساعت | Same conversion |
+| t = 8.487 | t = ۸٫۴۸۷ | t stays Latin; digits converted |
+| p = 0.0011 | p = ۰٫۰۰۱۱ | p stays Latin; digits converted |
+| F(4, 20) = 3.362 | F(۴, ۲۰) = ۳٫۳۶۲ | F stays Latin; digits converted |
+| −3.562 | ۳٫۵۶۲− | Minus moves to suffix position |
+
+**Persian digits mapping:**
+
+```
+۰=0  ۱=1  ۲=2  ۳=3  ۴=4  ۵=5  ۶=6  ۷=7  ۸=8  ۹=9
+```
