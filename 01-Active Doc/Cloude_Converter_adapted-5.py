@@ -959,8 +959,10 @@ def add_simple_fa_page(doc, heading_fa, body_text, cfg):
 
 
 def add_toc_pages(doc, cfg):
-    # فهرست مطالب — a real Word TOC field. This one is reliable because it
-    # scans built-in Heading 1-4 paragraph styles, which genuinely exist.
+    # فهرست مطالب — self-generated via bookmarks + PAGEREF fields, matching
+    # the approach used for فهرست جداول/اشکال/فرمول‌ها.  Word's built-in
+    # TOC \o "1-4" field overrides bidi styling on Ctrl+A F9, producing
+    # LTR-rendered entries; the bookmark approach avoids this entirely.
     _para(doc, "فهرست مطالب", cfg["fa_chapter_font"], cfg["en_font"], 16, space_after=12)
     note = doc.add_paragraph()
     set_paragraph_rtl(note, True)
@@ -969,9 +971,18 @@ def add_toc_pages(doc, cfg):
     nr.font.size = Pt(10)
     set_run_fonts(nr, latin_font=cfg["en_font"], cs_font=cfg["fa_body_font"])
     set_run_rtl(nr, True)
-    field_p = doc.add_paragraph()
-    set_paragraph_rtl(field_p, True)
-    add_field(field_p, 'TOC \\o "1-4" \\h \\z \\u', "")
+    # Drop a bookmarked marker paragraph; finalize_generated_lists() will
+    # replace it with RTL TOC entries + PAGEREF fields.
+    marker = doc.add_paragraph()
+    marker_id = 9999
+    marker_name = "__GEN_LIST_MARKER_toc__"
+    b = OxmlElement('w:bookmarkStart')
+    b.set(qn('w:id'), str(marker_id))
+    b.set(qn('w:name'), marker_name)
+    marker._p.insert(0, b)
+    e = OxmlElement('w:bookmarkEnd')
+    e.set(qn('w:id'), str(marker_id))
+    marker._p.append(e)
     doc.add_page_break()
 
     # فهرست جداول / فهرست اشکال / فهرست فرمول‌ها — Word's \c "Table"/"Figure"/
@@ -1003,13 +1014,46 @@ def add_toc_pages(doc, cfg):
 
 def finalize_generated_lists(doc, cfg, state):
     """Replace the marker paragraphs from add_toc_pages() with the actual
-    فهرست جداول / فهرست اشکال / فهرست فرمول‌ها content, now that
-    convert_markdown_body() has registered every caption via a bookmark.
-    Each entry uses a PAGEREF field (a plain, reliable Word field type --
-    unlike \\c "Table"/"Figure" TOC-field discovery, PAGEREF only needs the
+    فهرست مطالب / فهرست جداول / فهرست اشکال / فهرست فرمول‌ها content, now
+    that convert_markdown_body() has registered every heading and caption
+    via bookmarks.  Each entry uses a PAGEREF field (a plain, reliable
+    Word field type -- unlike TOC \\c fields, PAGEREF only needs the
     target bookmark to exist, so it updates correctly on Ctrl+A, F9)."""
     toc_lists = state.get("toc_lists", {"table": [], "figure": [], "equation": []})
 
+    # ---- فهرست مطالب (self-generated from bookmarked headings) --------
+    toc_marker_name = "__GEN_LIST_MARKER_toc__"
+    toc_marker_bm = None
+    for bm in doc.element.body.iter(qn('w:bookmarkStart')):
+        if bm.get(qn('w:name')) == toc_marker_name:
+            toc_marker_bm = bm
+            break
+    if toc_marker_bm is not None:
+        toc_marker_p = toc_marker_bm.getparent()
+        while toc_marker_p is not None and toc_marker_p.tag != qn('w:p'):
+            toc_marker_p = toc_marker_p.getparent()
+        if toc_marker_p is not None:
+            toc_headings = state.get("toc_headings", [])
+            if not toc_headings:
+                note_p = doc.add_paragraph()
+                set_paragraph_rtl(note_p, True)
+                nr = note_p.add_run("(موردی برای نمایش در این فهرست یافت نشد.)")
+                nr.italic = True
+                set_run_fonts(nr, latin_font=cfg["en_font"], cs_font=cfg["fa_body_font"])
+                set_run_rtl(nr, True)
+                toc_marker_p.addprevious(note_p._p)
+            else:
+                for level, heading_text, bm_name in toc_headings:
+                    style_name = f"TOC {min(level, 4)}"
+                    entry_p = doc.add_paragraph(style=style_name)
+                    set_paragraph_rtl(entry_p, True)
+                    add_inline_runs(entry_p, heading_text, cfg, rtl=True, normalize_punct=False)
+                    entry_p.add_run("\t")
+                    add_field(entry_p, f'PAGEREF {bm_name} \\h', "?")
+                    toc_marker_p.addprevious(entry_p._p)
+            toc_marker_p.getparent().remove(toc_marker_p)
+
+    # ---- فهرست جداول / فهرست اشکال / فهرست فرمول‌ها --------------------
     for list_key in ("table", "figure", "equation"):
         marker_name = f"__GEN_LIST_MARKER_{list_key}__"
         marker_bm = None
@@ -1740,6 +1784,14 @@ def convert_markdown_body(doc: Document, md_text: str, cfg: dict, state: dict, l
             rtl = is_persian(text)
             set_paragraph_rtl(p, rtl)
             add_inline_runs(p, text, cfg, rtl=rtl)
+            # Bookmark the heading so finalize_generated_lists() can build
+            # فهرست مطالب with PAGEREF fields (avoids Word's TOC field
+            # which overrides bidi styling on Ctrl+A F9).
+            state["_bm_counter"] = state.get("_bm_counter", 1000) + 1
+            toc_bm = f"__TOC_H{level}_{state['_bm_counter']}__"
+            _add_bookmark(p, toc_bm, state["_bm_counter"])
+            state.setdefault("toc_headings", [])
+            state["toc_headings"].append((level, text, toc_bm))
             lint["heading_levels"].add(level)
             just_after_heading = True
             i += 1

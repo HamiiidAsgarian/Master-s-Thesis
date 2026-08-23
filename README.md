@@ -2,7 +2,7 @@
 
 ## What It Is
 
-A **Multi-Agent Reinforcement Learning (MARL)** simulation of a smart neighborhood micro-grid where houses (agents) decide whether to share surplus solar energy with neighbours. Each agent follows a fixed personality profile (selfish, prosocial, altruistic, ...) that shapes its reward function, enabling the study of emergent fairness and efficiency trade‑offs under resource scarcity.
+A **Multi-Agent Reinforcement Learning (MARL)** simulation of a smart neighborhood micro-grid where houses (agents) decide whether to share surplus solar energy with neighbours. Each agent follows a fixed personality profile (selfish, prosocial, altruistic, ...) that shapes its reward function, enabling the study of emergent fairness and efficiency trade-offs under resource scarcity.
 
 The project also implements **four literature baselines** (Charbonnier marginal-IQL, Kusatake NSGA-II, Behrunani GNE, May & Huang PPO), an **always-default control**, a **battery-capacity sensitivity scan**, and an **end-of-day counterfactual reward variant** used to isolate *why* the main approach underperforms doing-nothing on comfort/fairness while still delivering large waste reductions.
 
@@ -117,13 +117,13 @@ Take-aways:
   thesis consumes into `results/figures/vNN_*.png` (150 dpi, white background), including the
   Persian (Farsi) schematic/conceptual figures via the `fa()` shaping pipeline
   (`arabic_reshaper` + `bidi` + `Geeza Pro`/`DejaVu Sans`). Files: `v01`–`v18` (v17 intentionally
-  absent) plus `v2_1_conceptual_framework.png` (شکل ۲-۱). The thesis document (`0-Active Doc/Thesis_v9-5.md`)
+  absent) plus `v2_1_conceptual_framework.png` (شکل ۲-۱). The thesis document (`01-Active Doc/Thesis_V4.md`)
   references **only** these files — always update the `vNN_*` twin here, not the legacy `results/*.png`.
   See `Code_Output_data_visuals_Map.md` for the full per-figure map.
 
 ### Training curves & thesis text utilities
 - **`generate_training_curves.py`** — Regenerates two training convergence figures from per-episode data (`results/training_convergence_per_episode.csv`): `fig_training_convergence.png` (main plot, smoothed mean ± SD, y 0.80–1.0) and `fig_training_early.png` (standalone early-training raw behavior, episodes 0–1000, y 0.0–1.0).
-- **`convert_persian_digits.py`** — Converts Latin digits in Persian body text to Persian-Indic digits (۰–۹) while protecting code blocks, math, bibliography, citations, and English spans. Use: `python convert_persian_digits.py "0-Active Doc/Thesis_v9-5.md"`.
+- **`convert_persian_digits.py`** — Converts Latin digits in Persian body text to Persian-Indic digits (۰–۹) while protecting code blocks, math, bibliography, citations, and English spans. Use: `python convert_persian_digits.py "01-Active Doc/Thesis_V4.md"`.
 
 ### Re-analysis / reproduction
 - **`gini_cloud_reanalysis.py`** — Re-runs `mixed` and `innovator_effect` (all 5 seeds), validates each run against the saved `final_metrics.csv` (max |re-run − saved| < 1e-9), writes `results/gini_reanalysis.csv`, and runs a paired t-test on Gini (`--task gini`). Also re-runs the cloud-scarcity scan (cloud 0.15/0.25/0.35) with Welch/Student t-tests → `results/cloud_sensitivity_reanalysis.csv` (`--task cloud`).
@@ -192,11 +192,11 @@ python gini_cloud_reanalysis.py --task cloud   # cloud-scarcity re-run (0.15/0.2
 python gini_more_scenarios.py              # validated Gini for 3 more scenarios
 python generate_all_Visuals2.py            # regenerate ALL thesis figures (results/figures/vNN_*.png)
 python generate_training_curves.py         # training convergence figure (English, Y 0.80–1.0)
-python convert_persian_digits.py "0-Active Doc/Thesis_v9-5.md"   # Latin→Persian digit conversion
+python convert_persian_digits.py "01-Active Doc/Thesis_V4.md"   # Latin→Persian digit conversion
 
 # MD → DOCX (Persian RTL thesis with proper BiDi and citation handling)
-cd "0-Active Doc"
-python Cloude_Converter_adapted.py Thesis_v9-5.md Thesis_v9-5.docx
+cd "01-Active Doc"
+python Cloude_Converter_adapted-5.py Thesis_V4.md ../../HamidOutput/Hamid_Thesis_V4.docx
 ```
 
 The always-default control is pre-computed under `results/control_always_default/seed_<N>/` (computed via `run_simulation` with sharing forced to 0%).
@@ -223,34 +223,52 @@ offgrid-energy-marl/
 ├── generate_training_curves.py  # Training convergence figure (English labels)
 ├── convert_persian_digits.py    # Latin→Persian digit converter for thesis text
 ├── thesis_plot_style.py         # Canonical style module (palette, fa(), apply_rc, save_fig)
-├── agent.py, environment.py, simulation.py, t.py   # legacy/alternate code (unused)
+├── support_analysis.py          # Additional analysis utilities
+├── generate_all_Visuals3.py     # Extended figure generator variant
 ├── requirements.txt              # Python dependencies
 ├── README.md                     # Project overview, technical reference, and usage (this file)
-├── 0-Active Doc/                 # Main thesis documents (see below)
-│   ├── Thesis_v9-5.md            # THE LIVE THESIS (source Markdown, Persian RTL)
-│   ├── Cloude_Converter_adapted.py  # MD→DOCX converter (BiDi, citations, tables, images)
+├── Code_Output_data_visuals_Map.md  # Script-to-figure mapping reference
+├── 01-Active Doc/                # Main thesis documents and converter
+│   ├── Thesis_V4.md             # THE LIVE THESIS (source Markdown, Persian RTL)
+│   ├── Cloude_Converter_adapted-5.py  # MD→DOCX converter (BiDi, citations, tables, images, RTL lists)
 │   ├── postprocess_docx.py       # Post-processing for generated DOCX
+│   ├── verify_converter.py       # Converter regression/verification tests
 │   ├── Important_considerations.md  # Handoff guide for future agents
-│   └── check list.md             # Tracking/revision checklist
-└── results/                      # Output directory (generated)
-    ├── all_selfish/  all_prosocial/  mixed/
-    ├── varied_altruism/  innovator_effect/     # 5 seeds each: seed_<N>/{final_metrics.csv, config.json, results_plot.png}
-    ├── control_always_default/                 # always-share-0% control (5 seeds)
-    ├── baseline_charbonnier/ + baseline_charbonnier_validation/
-    ├── baseline_kusatake/ + baseline_kusatake_timing/
-    ├── baseline_behrunani/ + ..._lambda5_sensitivity/ + ..._sanity/
-    ├── baseline_may_huang/ + ..._waste_sensitivity/ + ..._sanity/
-    ├── ocean_marl_endofday_sanity/ + ..._community/ + ..._community_homogeneous/
-    ├── battery_sensitivity/                    # batt3.5/  batt5/  batt7/  batt9/  summary.csv
-    ├── baseline_comparison.{csv,txt,png}       # Chapter-4 comparison + stats + isolation 2×2
-    ├── gini_reanalysis.csv  gini_more_scenarios.csv  cloud_sensitivity_reanalysis.csv
-    ├── community_metrics.png  agent_type_comfort.png
-    ├── convergence_training.png              # training convergence (English, all 5 scenarios)
-    ├── fig_training_early.png                # early training raw exploration (eps 0–1000)
-    ├── qtable_heatmaps.png  gini_comparison.png
-    ├── sharing_frequency.png  sensitivity_cloud.png
-    ├── statistical_tests.txt
-    └── figures/                                # thesis figures (v01–v18 + v2_1, produced by generate_all_Visuals2.py)
+│   ├── Writing-considerations.md # Writing style and conventions
+│   ├── Hamid_Energy-Marl_Thesis.docx  # Reference/template DOCX
+│   ├── rtl-filter.lua            # RTL filter for Pandoc (if needed)
+│   └── قالب پایان نامه.docx      # University thesis template
+├── HamidOutput/                  # Generated thesis output
+│   └── Hamid_Thesis_V4.docx      # Latest generated thesis document
+├── 00-Stash/                     # Archived old files (superseded)
+│   ├── ACADEMIC_v3_Fa.md         # Previous thesis draft
+│   ├── ACADEMIC_v3_Fa.docx       # Previous thesis output
+│   ├── ACADEMIC_v3_Fa_restructured.md
+│   ├── Rules.md / Rules2.md      # Old authoring rules
+│   ├── Merged_Rules.md           # Merged rules document
+│   ├── Cloude_Final_Rules.md     # Previous converter rules
+│   ├── ReviewPlan.md             # Old review plan
+│   └── Secions_org_and_Word_count.md  # Old section organization
+├── results/                      # Output directory (generated)
+│   ├── all_selfish/  all_prosocial/  mixed/
+│   ├── varied_altruism/  innovator_effect/     # 5 seeds each: seed_<N>/{final_metrics.csv, config.json, results_plot.png}
+│   ├── control_always_default/                 # always-share-0% control (5 seeds)
+│   ├── baseline_charbonnier/ + baseline_charbonnier_validation/
+│   ├── baseline_kusatake/ + baseline_kusatake_timing/
+│   ├── baseline_behrunani/ + ..._lambda5_sensitivity/ + ..._sanity/
+│   ├── baseline_may_huang/ + ..._waste_sensitivity/ + ..._sanity/
+│   ├── ocean_marl_endofday_sanity/ + ..._community/ + ..._community_homogeneous/
+│   ├── battery_sensitivity/                    # batt3.5/  batt5/  batt7/  batt9/  summary.csv
+│   ├── baseline_comparison.{csv,txt,png}       # Chapter-4 comparison + stats + isolation 2×2
+│   ├── gini_reanalysis.csv  gini_more_scenarios.csv  cloud_sensitivity_reanalysis.csv
+│   ├── community_metrics.png  agent_type_comfort.png
+│   ├── convergence_training.png              # training convergence (English, all 5 scenarios)
+│   ├── fig_training_early.png                # early training raw exploration (eps 0–1000)
+│   ├── qtable_heatmaps.png  gini_comparison.png
+│   ├── sharing_frequency.png  sensitivity_cloud.png
+│   ├── statistical_tests.txt
+│   └── figures/                                # thesis figures (v01–v18 + v2_1, produced by generate_all_Visuals2.py)
+└── venv/                         # Python virtual environment (git-ignored)
 ```
 
 ## Related Documents
@@ -258,8 +276,9 @@ offgrid-energy-marl/
 - **`Code_Output_data_visuals_Map.md`** — Script-by-script map of every `.py` file: what it does,
   what data/visuals it generates, its styling system, and the thesis figure numbers. Read this
   before optimizing/styling any script.
-- **`0-Active Doc/`** — The **main thesis documents**: `Thesis_v9-5.md` (the ONLY live thesis),
-  `Cloude_Converter_adapted.py` (MD→DOCX converter with Persian RTL, BiDi, and citation LTR wrapping),
+- **`01-Active Doc/`** — The **main thesis documents**: `Thesis_V4.md` (the ONLY live thesis),
+  `Cloude_Converter_adapted-5.py` (MD→DOCX converter with Persian RTL, BiDi, self-generated RTL lists via bookmark+PAGEREF, and citation LTR wrapping),
   `Important_considerations.md` (handoff guide for future agents — read before editing claims or
-  figures), and `check list.md` (tracking/revision checklist).
-
+  figures), and `Writing-considerations.md` (writing style and conventions).
+- **`HamidOutput/`** — Generated thesis DOCX output: `Hamid_Thesis_V4.docx`.
+- **`00-Stash/`** — Archived old files (previous drafts, rules, and templates — kept for reference only).
