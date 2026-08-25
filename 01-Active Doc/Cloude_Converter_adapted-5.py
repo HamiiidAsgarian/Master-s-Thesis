@@ -1553,13 +1553,17 @@ def add_caption(doc, kind, caption_text, cfg, state, position="above"):
     if kind == "table":
         state["table"] += 1
         num = state["table"]
-        label = f"جدول {to_persian_digits(chapter)}-{to_persian_digits(num)}"
+        label_word = "جدول"
+        label_num = f"{to_persian_digits(chapter)}-{to_persian_digits(num)}"
         list_key = "table"
     else:
         state["figure"] += 1
         num = state["figure"]
-        label = f"شکل {to_persian_digits(chapter)}-{to_persian_digits(num)}"
+        label_word = "شکل"
+        label_num = f"{to_persian_digits(chapter)}-{to_persian_digits(num)}"
         list_key = "figure"
+
+    label = f"{label_word} {label_num}"
 
     p = doc.add_paragraph(style="Caption")
     set_paragraph_rtl(p, True)
@@ -1568,11 +1572,21 @@ def add_caption(doc, kind, caption_text, cfg, state, position="above"):
     bm_name = f"_GenCap_{list_key}_{state['_bm_counter']}"
     _add_bookmark(p, bm_name, state["_bm_counter"])
 
-    label_run = p.add_run(label)
-    label_run.bold = True
-    label_run.italic = True
-    set_run_fonts(label_run, latin_font=cfg["en_font"], cs_font=cfg["fa_caption_font"])
-    set_run_rtl(label_run, True)
+    # Split caption label into two runs to prevent bidi reordering of numbers.
+    # In an RTL paragraph, a single run like "جدول ۴-۱" gets the numeric part
+    # reversed to "۱-۴" by Word's bidirectional algorithm. Splitting the
+    # Persian word (RTL) and the number (LTR) into separate runs forces the
+    # number to display in correct chapter-item order.
+    label_word_run = p.add_run(label_word + " ")
+    label_word_run.bold = True
+    label_word_run.italic = True
+    set_run_fonts(label_word_run, latin_font=cfg["en_font"], cs_font=cfg["fa_caption_font"])
+    set_run_rtl(label_word_run, True)
+    label_num_run = p.add_run(label_num)
+    label_num_run.bold = True
+    label_num_run.italic = True
+    set_run_fonts(label_num_run, latin_font=cfg["en_font"], cs_font=cfg["fa_caption_font"])
+    set_run_rtl(label_num_run, False)  # LTR so numbers display in correct order
     if caption_text:
         sep_run = p.add_run(": ")
         set_run_fonts(sep_run, latin_font=cfg["en_font"], cs_font=cfg["fa_caption_font"])
