@@ -22,7 +22,7 @@ All ~800 instances were converted to proper `٫` (Arabic Decimal Separator) nota
 The section below is preserved as historical reference — if you see any remaining `X/Y`
 patterns in the thesis, they are errors that should be converted.
 
-The thesis now uses the **standard Persian decimal notation** with `٫` (U+066D):
+The thesis now uses the **standard Persian decimal notation** with `٫` (U+066B):
 - `۰٫۸` = 0.8 (correct, no longer 8.0)
 - `۷٫۰` = 7.0
 - `۱٫۳` = 1.3
@@ -288,7 +288,7 @@ within a single cell or sentence.
 
 | Symbol | Unicode | Name | Where used |
 |---|---|---|---|
-| `٫` | U+066D | Arabic Decimal Separator | Persian prose: `۰٫۹۲۰` = 0.920 |
+| `٫` | U+066B | Arabic Decimal Separator | Persian prose: `۰٫۹۲۰` = 0.920 |
 | `.` | U+002E | Full Stop | English prose, code, CSVs: `0.920` |
 
 **Rule:** Persian text ALWAYS uses `٫` not `.`. English text ALWAYS uses `.` not `٫`.
@@ -370,7 +370,7 @@ text. They are NOT transliterated or converted to Persian digits.
 | Epsilon | `$\varepsilon$` | `$\varepsilon$` |
 | Gamma | `$\gamma$` | `$\gamma = ۰٫۹۹$` |
 | Standard deviation | انحراف معیار (Persian) | NOT "SD" in Persian text |
-| Mean | می‌انگین (Persian) | NOT "mean" in Persian text |
+| Mean | میانگین (Persian) | NOT "mean" in Persian text |
 
 **Critical:** The digits INSIDE statistical expressions follow the same Persian digit rule.
 Correct: `$t(۴) = 8.487$` or `$t(4) = ۸٫۴۸۷$` — but be consistent.
@@ -415,12 +415,13 @@ to `۰٫۰۸`).
 
 | Context | Symbol | Example |
 |---|---|---|
-| Negative t/F values in Persian prose | `−` (U+2212, MINUS SIGN) | `t = −3.562` or `t = ۳٫۵۶۲-` |
-| Directional change in prose | `-` after number or word | `۰٫۰۱۸-` (decrease of 0.018) |
-| Negative values in tables | `−` prefix or `‑` suffix | Thesis uses both; be consistent |
+| Negative t/F values in Persian prose | `−` (U+2212, MINUS SIGN) | `t = −۳٫۵۶۲` |
+| Directional change in prose | `−` (U+2212, MINUS SIGN) as prefix | `−۰٫۰۱۸` (decrease of 0.018) |
+| Negative values in tables | `−` (U+2212, MINUS SIGN) as prefix | `−3.562`; never a suffix |
 
-**Thesis convention:** Persian text typically places the minus AFTER the number as a suffix:
-`t = ۳٫۵۶۲-` or `تفاوت ۰٫۰۱۸-`. English text places it before: `t = −3.562`.
+**Thesis convention:** the minus sign is ALWAYS a prefix, in Persian and English alike, and always
+`−` (U+2212) — never a trailing hyphen-minus and never U+2011:
+`t = −۳٫۵۶۲` and `تفاوت −۰٫۰۱۸`. (The earlier suffix style `۳٫۵۶۲-` is retired.)
 
 ### 13-11. Mixed Persian/English in the same table
 
@@ -461,7 +462,7 @@ statistical symbols. This is acceptable but follow these rules:
 | t = 8.487 | t = ۸٫۴۸۷ | t stays Latin; digits converted |
 | p = 0.0011 | p = ۰٫۰۰۱۱ | p stays Latin; digits converted |
 | F(4, 20) = 3.362 | F(۴, ۲۰) = ۳٫۳۶۲ | F stays Latin; digits converted |
-| −3.562 | ۳٫۵۶۲− | Minus moves to suffix position |
+| −3.562 | −۳٫۵۶۲ | Minus stays in prefix position |
 
 **Persian digits mapping:**
 

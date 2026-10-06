@@ -294,6 +294,31 @@ def normalize_persian_punctuation(text: str) -> str:
 # PRE-CONVERSION VALIDATION
 # ==========================================================================
 
+def _is_arabic_block(ch):
+    return '\u0600' <= ch <= '\u06FF'
+
+
+def find_english_comma_in_persian(line):
+    """Locate ASCII commas sitting between two Persian characters.
+
+    A comma flanked by digits on *both* sides is statistical notation —
+    degrees of freedom such as ``F(۴, ۲۰)`` — or a thousands separator, not
+    prose, so it is deliberately left alone.
+    """
+    hits = []
+    for m in re.finditer(',', line):
+        before = line[:m.start()].rstrip()
+        after = line[m.end():].lstrip()
+        if not before or not after:
+            continue
+        if not _is_arabic_block(before[-1]) or not _is_arabic_block(after[0]):
+            continue
+        if before[-1].isdigit() and after[0].isdigit():
+            continue
+        hits.append(m)
+    return hits
+
+
 def validate_markdown(md_text: str) -> list:
     """Scan the Markdown source for issues that would cause DOCX rendering
     problems.  Returns a list of (severity, line_number, message) tuples.
@@ -319,8 +344,8 @@ def validate_markdown(md_text: str) -> list:
     eng_comma_fa_re = re.compile(r'[\u0600-\u06FF]\s*,\s*[\u0600-\u06FF]')
     eng_semicolon_fa_re = re.compile(r'[\u0600-\u06FF]\s*;\s*[\u0600-\u06FF]')
     eng_qmark_fa_re = re.compile(r'[\u0600-\u06FF]\s*\?\s*[\u0600-\u06FF]')
-    heading_re = re.compile(r'^(#{1,4})\s+(.*)$')
     table_row_re = re.compile(r'^\s*\|(.+)\|\s*$')
+    heading_re = re.compile(r'^(#{1,4})\s+(.*)$')
 
     in_code_block = False
     unclosed_math = False
@@ -353,8 +378,10 @@ def validate_markdown(md_text: str) -> list:
                 issues.append(('warn', i, f"Repeated spaces at col {m.start()+1}"))
 
         # --- English punctuation in Persian context ---
-        if eng_comma_fa_re.search(line):
-            issues.append(('warn', i, "English comma ',' between Persian characters; use '،'"))
+        for cm in find_english_comma_in_persian(line):
+            issues.append(('warn', i,
+                           f"English comma ',' between Persian characters "
+                           f"at col {cm.start() + 1}; use '،'"))
         if eng_semicolon_fa_re.search(line):
             issues.append(('warn', i, "English semicolon ';' between Persian characters; use '؛'"))
         if eng_qmark_fa_re.search(line):
@@ -958,19 +985,22 @@ def add_simple_fa_page(doc, heading_fa, body_text, cfg):
     doc.add_page_break()
 
 
-def add_toc_pages(doc, cfg):
+def add_toc_pages(doc, cfg, dev_toc_note: bool = False):
     # فهرست مطالب — self-generated via bookmarks + PAGEREF fields, matching
     # the approach used for فهرست جداول/اشکال/فرمول‌ها.  Word's built-in
     # TOC \o "1-4" field overrides bidi styling on Ctrl+A F9, producing
     # LTR-rendered entries; the bookmark approach avoids this entirely.
     _para(doc, "فهرست مطالب", cfg["fa_chapter_font"], cfg["en_font"], 16, space_after=12)
-    note = doc.add_paragraph()
-    set_paragraph_rtl(note, True)
-    nr = note.add_run("(در Word پس از باز کردن فایل، Ctrl+A سپس F9 را بزنید تا این فهرست به‌روزرسانی شود.)")
-    nr.italic = True
-    nr.font.size = Pt(10)
-    set_run_fonts(nr, latin_font=cfg["en_font"], cs_font=cfg["fa_body_font"])
-    set_run_rtl(nr, True)
+    if dev_toc_note:
+        # Drafting aid only — kept out of the printed/submitted document unless
+        # explicitly requested via --dev-toc-note.
+        note = doc.add_paragraph()
+        set_paragraph_rtl(note, True)
+        nr = note.add_run("(در Word پس از باز کردن فایل، Ctrl+A سپس F9 را بزنید تا این فهرست به‌روزرسانی شود.)")
+        nr.italic = True
+        nr.font.size = Pt(10)
+        set_run_fonts(nr, latin_font=cfg["en_font"], cs_font=cfg["fa_body_font"])
+        set_run_rtl(nr, True)
     # Drop a bookmarked marker paragraph; finalize_generated_lists() will
     # replace it with RTL TOC entries + PAGEREF fields.
     marker = doc.add_paragraph()
@@ -2269,6 +2299,9 @@ def main():
     parser.add_argument("--template", default=None,
                         help="Path to a .docx template file; its styles are used as the base while "
                              "branch-specific fonts/margins still override where needed")
+    parser.add_argument("--dev-toc-note", action="store_true",
+                        help="Insert the 'press Ctrl+A then F9 in Word' note under فهرست مطالب "
+                             "(drafting aid; omit for the final document)")
     args = parser.parse_args()
 
     cfg = dict(BRANCH_PROFILES[args.branch])
@@ -2311,7 +2344,7 @@ def main():
         add_english_title_page(doc, meta, cfg)                    # page ج
         add_simple_fa_page(doc, "سپاسگزاری", meta.get("acknowledgements"), cfg)   # page د
         add_simple_fa_page(doc, "تقدیم", meta.get("dedication"), cfg)             # page ه
-        add_toc_pages(doc, cfg)
+        add_toc_pages(doc, cfg, args.dev_toc_note)
         add_abbreviations_page(doc, meta.get("abbreviations"), cfg)
         if meta.get("abstract_fa"):
             add_abstract_page(doc, "چکیده", meta["abstract_fa"], meta.get("abstract_fa_keywords"), cfg, rtl=True)
